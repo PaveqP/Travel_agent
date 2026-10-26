@@ -362,3 +362,67 @@ class DialogueTests(unittest.IsolatedAsyncioTestCase):
         options = compose(TRIP, rows, 1, preferred_stays=[stay.id])
         self.assertEqual(options[0].stay.id, stay.id)
         self.assertEqual(len(options), 3)
+
+    async def test_greeting_bypasses_trip_requirements_and_extra_model_calls(self):
+        runner, present, lookup = AsyncMock(), AsyncMock(), AsyncMock()
+        decision = SupervisorDecision(
+            action="chat", reply="Привет! Я помогу спланировать поездку в Большой Сочи."
+        )
+        graph = build_graph(
+            AsyncMock(return_value=decision), runner, InMemorySaver(), present, lookup
+        )
+        result = await graph.ainvoke(
+            {"messages": [HumanMessage(content="Привет, кто ты такой?")], "calls": 0},
+            {"configurable": {"thread_id": "hello"}},
+        )
+        self.assertEqual(result["answer"], decision.reply)
+        self.assertEqual(result["messages"][-1].content, decision.reply)
+        self.assertNotIn("origin", result["answer"])
+        for dependency in (runner, present, lookup):
+            dependency.assert_not_called()
+
+    async def test_smalltalk_cannot_mutate_existing_trip(self):
+        state = planned()
+        state.update(
+            calls=0, selected=state["options"][0]["id"], research={"sources": []}
+        )
+        decision = SupervisorDecision(
+            action="chat",
+            reply="Пожалуйста!",
+            patch=TripDelta(adults=6),
+            refresh=["transport"],
+        )
+        runner = AsyncMock()
+        graph = build_graph(AsyncMock(return_value=decision), runner, InMemorySaver())
+        result = await graph.ainvoke(state, {"configurable": {"thread_id": "thanks"}})
+        for field in ("constraints", "revision", "options", "selected", "research"):
+            self.assertEqual(result[field], state[field])
+        runner.assert_not_called()
+
+    async def test_greeting_then_planning_asks_human_question(self):
+        decisions = AsyncMock(
+            side_effect=[
+                SupervisorDecision(action="chat", reply="Привет! Чем помочь?"),
+                SupervisorDecision(
+                    action="compose", patch=TripDelta(origin="Москва", adults=2)
+                ),
+            ]
+        )
+        runner = AsyncMock()
+        graph = build_graph(decisions, runner, InMemorySaver())
+        cfg = {"configurable": {"thread_id": "conversation"}}
+        await graph.ainvoke(
+            {"messages": [HumanMessage(content="Привет")], "calls": 0}, cfg
+        )
+        result = await graph.ainvoke(
+            {
+                "messages": [HumanMessage(content="Хочу из Москвы, нас двое")],
+                "calls": 0,
+            },
+            cfg,
+        )
+        self.assertEqual(result["constraints"]["origin"], "Москва")
+        self.assertEqual(result["constraints"]["adults"], 2)
+        self.assertEqual(result["answer"], "Когда хотите поехать и на сколько дней?")
+        self.assertEqual(len(result["messages"]), 4)
+        runner.assert_not_called()

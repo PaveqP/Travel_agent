@@ -72,9 +72,7 @@ async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
                 response.raise_for_status()
                 print("Агент:", response.json()["message"])
             else:
-                print(
-                    "Агент: Обрабатываю запрос. Если нужен поиск у поставщиков, это может занять несколько минут."
-                )
+                print("Агент: Думаю…")
                 response = await client.post(
                     f"/trips/{trip_id}/messages",
                     json={"message": text, "revision": revision},

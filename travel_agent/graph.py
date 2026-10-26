@@ -36,6 +36,13 @@ async def supervise(state: TripState, decide) -> dict:
         }
     try:
         decision = SupervisorDecision.model_validate(await decide(state))
+        if decision.action == "chat":
+            return {
+                "decision": {"action": "chat"},
+                "answer": decision.reply
+                or "Привет! Я помогу спланировать поездку в Большой Сочи: подобрать транспорт, проживание и занятия. Расскажите, какой отдых вам хочется.",
+                "calls": state.get("calls", 0) + 1,
+            }
         current = TripConstraints.model_validate(state.get("constraints", {}))
         revised, affected = (
             apply_delta(current, decision.patch)
@@ -90,7 +97,13 @@ async def supervise(state: TripState, decide) -> dict:
         answer = "В сохранённых данных нет подтверждённого ответа на этот вопрос."
     elif revised.missing():
         action = "clarify"
-        answer = decision.question or "Уточните: " + ", ".join(revised.missing())
+        questions = {
+            "origin": "Из какого города вы планируете ехать?",
+            "start": "Когда хотите поехать и на сколько дней?",
+            "end": "До какого числа планируете остаться?",
+            "adults": "Сколько взрослых поедет?",
+        }
+        answer = decision.question or questions[revised.missing()[0]]
     elif not revised.purpose and not revised.interests:
         action = "clarify"
         answer = "Для чего едете и какой отдых хотите: море и прогулки, горы, спокойный отдых или работа? Что важно при выборе отеля?"
@@ -256,6 +269,7 @@ def build_graph(decide, run, checkpointer, present=None, research=None):
         "supervisor",
         lambda s: s["decision"]["action"],
         {
+            "chat": "finish",
             "clarify": "finish",
             "unsupported": "finish",
             "answer": "explain",

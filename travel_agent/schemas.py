@@ -49,6 +49,7 @@ class TripDelta(BaseModel):
 class SupervisorDecision(BaseModel):
     model_config = ConfigDict(extra="forbid")
     action: Literal[
+        "chat",
         "clarify",
         "transport",
         "stays",
@@ -58,6 +59,7 @@ class SupervisorDecision(BaseModel):
         "research",
         "unsupported",
     ]
+    reply: str = Field(default="", max_length=1200)
     research_role: Role = "experience"
     selected_option_id: str | None = None
     patch: TripDelta = Field(default_factory=TripDelta)
