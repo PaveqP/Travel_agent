@@ -6,6 +6,7 @@ from langchain_core.language_models import BaseChatModel
 
 from travel_agent.schemas import Candidate, SupervisorDecision
 from travel_agent.state import TripState
+from travel_agent.agents.supervisor.response import option_context
 
 
 def llm_decider(model: BaseChatModel, prompt: str):
@@ -18,6 +19,8 @@ def llm_decider(model: BaseChatModel, prompt: str):
             "today": str(date.today()),
             "phase": "delegate" if state.get("calls", 0) else "extract_request",
             "constraints": state.get("constraints", {}),
+            "options": option_context(state),
+            "selected": state.get("selected"),
             "results": {
                 r: {"status": v["status"], "warnings": v["warnings"]}
                 for r, v in state.get("results", {}).items()

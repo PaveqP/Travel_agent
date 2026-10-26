@@ -15,7 +15,7 @@ from pydantic import ValidationError
 from integrations.mcp.client import runtime_call
 from integrations.schemas.models import Coordinates, Money, Provenance
 from travel_agent.engine import area_of
-from travel_agent.schemas import Candidate, Role, TripConstraints
+from travel_agent.schemas import Candidate, Role, TripConstraints, WebEvidence
 
 from travel_agent.agents.transport.tools import (
     TOOL_NAMES as TRANSPORT_TOOLS,
@@ -244,6 +244,7 @@ def build_tools(
     warnings: list[str],
     counts: dict[str, int],
     center: Coordinates | None = None,
+    web_evidence: list[WebEvidence] | None = None,
 ):
     key_names = {
         "transport": ("TRAVELPAYOUTS_TOKEN", "YANDEX_RASP_API_KEY", "TAVILY_API_KEY"),
@@ -343,6 +344,8 @@ def build_tools(
                                 )[:2000],
                             }
                         )
+                if web_evidence is not None:
+                    web_evidence.extend(WebEvidence(**row, retrieved_at=datetime.now(timezone.utc)) for row in results)
                 return {
                     "status": "ok" if results else "empty",
                     "evidence": "catalog",

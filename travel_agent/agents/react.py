@@ -45,6 +45,7 @@ async def run_react(
 ) -> SpecialistResult:
     evidence: dict[str, Candidate] = {}
     warnings: list[str] = []
+    selected_ids: list[str] = []
     counts = {"tools": 0}
     tools = build_tools(
         role, trip, revision, client, env, evidence, warnings, counts, center
@@ -94,6 +95,7 @@ async def run_react(
             elif not selection.source_ids and evidence:
                 warnings.append("empty_selection")
             else:
+                selected_ids = selection.source_ids
                 evidence = {
                     **{ident: evidence[ident] for ident in selection.source_ids},
                     **evidence,
@@ -122,4 +124,5 @@ async def run_react(
         candidates=list(evidence.values()),
         warnings=list(dict.fromkeys(warnings)),
         tool_calls=counts["tools"],
+        selected_ids=selected_ids,
     )

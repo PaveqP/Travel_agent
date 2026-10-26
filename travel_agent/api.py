@@ -9,11 +9,14 @@ import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException
 from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.memory import InMemorySaver
+from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
 from langgraph.store.memory import InMemoryStore
 from langgraph.store.postgres.aio import AsyncPostgresStore
 
 from travel_agent.agents.model import create_model
+from travel_agent.agents.research import research
+from travel_agent.agents.supervisor.response import llm_presenter
 from travel_agent.agents.supervisor.agent import llm_decider
 from travel_agent.agents.transport.agent import run as run_transport
 from travel_agent.agents.stays.agent import run as run_stays
@@ -31,7 +34,12 @@ from travel_agent.schemas import (
 from datetime import datetime, timezone
 
 
-def create_app(graph=None, store=None, tokens: tuple[str, ...] = ()) -> FastAPI:
+def create_app(
+    graph=None,
+    store=None,
+    tokens: tuple[str, ...] = (),
+    local_database: str | None = None,
+) -> FastAPI:
     locks: dict[str, asyncio.Lock] = {}
 
     @asynccontextmanager
@@ -51,7 +59,14 @@ def create_app(graph=None, store=None, tokens: tuple[str, ...] = ()) -> FastAPI:
                 client = await stack.enter_async_context(
                     httpx.AsyncClient(timeout=35, follow_redirects=False)
                 )
-                if config.database_url:
+                if local_database:
+                    saver = await stack.enter_async_context(
+                        AsyncSqliteSaver.from_conn_string(local_database)
+                    )
+                    await saver.setup()
+                    app.state.store = InMemoryStore()
+                    app.state.persistent = True
+                elif config.database_url:
                     dsn = config.database_url.get_secret_value()
                     saver = await stack.enter_async_context(
                         AsyncPostgresSaver.from_conn_string(dsn)
@@ -67,10 +82,14 @@ def create_app(graph=None, store=None, tokens: tuple[str, ...] = ()) -> FastAPI:
                     app.state.store = InMemoryStore()
                     app.state.persistent = False
                 prompts = read_prompts()
+                models = {
+                    role: create_model(config, client)
+                    for role in ("transport", "stays", "experience")
+                }
                 runners = {
                     role: partial(
                         run,
-                        model=create_model(config, client),
+                        model=models[role],
                         client=client,
                         env=env,
                         prompt=prompts[role],
@@ -84,7 +103,20 @@ def create_app(graph=None, store=None, tokens: tuple[str, ...] = ()) -> FastAPI:
                 }
                 supervisor_model = create_model(config, client)
                 app.state.graph = build_graph(
-                    llm_decider(supervisor_model, prompts["supervisor"]), runners, saver
+                    llm_decider(supervisor_model, prompts["supervisor"]),
+                    runners,
+                    saver,
+                    present=llm_presenter(
+                        create_model(config, client, max_tokens=4096),
+                        prompts["response"],
+                    ),
+                    research=partial(
+                        research,
+                        models=models,
+                        client=client,
+                        env=env,
+                        prompt=prompts["research"],
+                    ),
                 )
             yield
 
@@ -117,8 +149,10 @@ def create_app(graph=None, store=None, tokens: tuple[str, ...] = ()) -> FastAPI:
                 ("constraints", {}),
                 ("revision", 0),
                 ("answer", ""),
+                ("plan_answer", ""),
                 ("options", []),
                 ("results", {}),
+                ("research", {}),
                 ("selected", None),
                 ("bookings", {}),
             )

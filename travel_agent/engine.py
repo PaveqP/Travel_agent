@@ -34,8 +34,8 @@ def apply_delta(current: TripConstraints, delta: TripDelta) -> tuple[TripConstra
         affected.add('transport')
     if patch.keys() & {'destination', 'hotel'}:
         affected.update(('stays', 'experience'))
-    if 'interests' in patch:
-        affected.add('experience')
+    if patch.keys() & {'purpose', 'interests'}:
+        affected.update(('stays', 'experience'))
     return revised, affected
 
 
@@ -60,7 +60,7 @@ def usable(c: Candidate, trip: TripConstraints, now: datetime) -> bool:
     return True
 
 
-def compose(trip: TripConstraints, candidates: list[Candidate], revision: int, now: datetime | None = None) -> list[TripOption]:
+def compose(trip: TripConstraints, candidates: list[Candidate], revision: int, now: datetime | None = None, preferred_stays: list[str] | None = None) -> list[TripOption]:
     now = now or datetime.now(timezone.utc)
     if trip.missing():
         return []
@@ -103,7 +103,8 @@ def compose(trip: TripConstraints, candidates: list[Candidate], revision: int, n
         if trip.budget and budget.known_subtotal > trip.budget:
             warnings.append('Известная часть расходов превышает бюджет')
         options.append(TripOption(id=ident, revision=revision, transport=flight, stay=stay, budget=budget, days=days, warnings=warnings))
-    ordered = sorted(options, key=lambda o: o.budget.known_subtotal)
+    preferred = set(preferred_stays or [])
+    ordered = sorted(options, key=lambda o: (bool(preferred) and (o.stay is None or o.stay.id not in preferred), o.budget.known_subtotal))
     diversified: list[TripOption] = []
     seen: set[str] = set()
     for option in ordered:
@@ -111,6 +112,6 @@ def compose(trip: TripConstraints, candidates: list[Candidate], revision: int, n
         if key not in seen:
             diversified.append(option)
             seen.add(key)
-        if len(diversified) == 3:
+        if len(diversified) == 5:
             break
     return diversified

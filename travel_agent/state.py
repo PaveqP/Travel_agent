@@ -16,3 +16,6 @@ class TripState(TypedDict, total=False):
     answer: str
     bookings: dict
     selected: str | None
+
+    research: dict
+    plan_answer: str

@@ -21,3 +21,5 @@ reports/raw/
 
 build/
 dist/
+
+.travel-agent/

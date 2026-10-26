@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import json
 import sys
+from functools import partial
 from datetime import datetime, timezone
 from decimal import Decimal
 from pathlib import Path
@@ -13,6 +14,8 @@ from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.memory import InMemorySaver
 
 from travel_agent.agents.model import create_model
+from travel_agent.agents.supervisor.response import llm_presenter
+from travel_agent.agents.research import research
 from travel_agent.agents.transport.agent import run as run_transport
 from travel_agent.agents.stays.agent import run as run_stays
 from travel_agent.agents.experience.agent import run as run_experience
@@ -27,6 +30,7 @@ async def main() -> None:
     parser.add_argument("--budget-usd", required=True, type=Decimal)
     parser.add_argument("--output", default="/tmp/travel-live.json")
     parser.add_argument("--extended", action="store_true")
+    parser.add_argument("--dialogue", action="store_true")
     parser.add_argument("--repeat", type=int, choices=range(1, 4), default=1)
     args = parser.parse_args()
     if not 0 < args.budget_usd <= 1:
@@ -44,6 +48,7 @@ async def main() -> None:
                     "calls": calls,
                     "reserved_usd": str(reserved),
                     "reported_cost_usd": str(spent),
+                    "pending_reserve_usd": str(pending),
                     "role_results": role_results,
                 },
                 ensure_ascii=False,
@@ -125,12 +130,31 @@ async def main() -> None:
             return result
 
         graph = build_graph(
-            llm_decider(model, prompts["supervisor"]), run, InMemorySaver()
+            llm_decider(model, prompts["supervisor"]),
+            run,
+            InMemorySaver(),
+            present=llm_presenter(
+                create_model(config, client, max_tokens=4096), prompts["response"]
+            ),
+            research=partial(
+                research,
+                models={r: create_model(config, client) for r in runners},
+                client=client,
+                env=env,
+                prompt=prompts["research"],
+            ),
         )
         messages = [
             "Хочу из Москвы в Сочи, двое взрослых, бюджет 100000 рублей, интересуют море и прогулки.",
             "С 12 по 16 ноября 2026 года. Подбери варианты перелёта, отеля и прогулок.",
         ]
+        if args.dialogue:
+            messages = [
+                "Хочу из Москвы в Сочи с 12 по 16 ноября 2026 года. Двое взрослых, бюджет 100000 рублей.",
+                "Цель — спокойный отдых, гулять у моря. Подбери разные варианты.",
+                "Сравни первый и второй варианты по известной стоимости, какой дешевле? Ничего не меняй.",
+                "Есть ли бассейн у отеля из первого варианта? Проверь в интернете, поездку не меняй.",
+            ]
         if args.extended:
             messages += [
                 "Замени отель на Mirror Residence, билеты оставь прежними.",
@@ -177,6 +201,7 @@ async def main() -> None:
                             "calls": calls,
                             "reserved_usd": str(reserved),
                             "reported_cost_usd": str(spent),
+                            "pending_reserve_usd": str(pending),
                         },
                         ensure_ascii=False,
                         indent=2,
@@ -192,6 +217,7 @@ async def main() -> None:
                             "calls": calls,
                             "reserved_usd": str(reserved),
                             "reported_cost_usd": str(spent),
+                            "pending_reserve_usd": str(pending),
                         },
                         ensure_ascii=False,
                     ),
@@ -209,6 +235,17 @@ async def main() -> None:
                     and all(o["stay"] and o["transport"] for o in turns[1]["options"]),
                 }
             )
+            if args.dialogue:
+                checks[-1].update(
+                    purpose_clarified=not turns[0]["constraints"].get("purpose"),
+                    natural_answer="Подойдёт:" in turns[1]["answer"]
+                    and "known_subtotal" not in turns[1]["answer"],
+                    comparison_without_search=not turns[2]["delegated"]
+                    and turns[2]["revision"] == turns[1]["revision"],
+                    research_without_replanning=not turns[3]["delegated"]
+                    and turns[3]["decision"]["action"] == "research"
+                    and turns[3]["options"] == turns[1]["options"],
+                )
             if args.extended:
                 checks[-1].update(
                     hotel_preserves_transport="transport" not in turns[2]["delegated"]

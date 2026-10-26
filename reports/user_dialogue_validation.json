@@ -1,0 +1,340 @@
+{
+  "date": "2026-10-26",
+  "mode": "Read-only live workflow before final response fix; final presenter additionally tested on the captured live results",
+  "checks_before_response_fix": [
+    {
+      "repetition": 0,
+      "clarified_without_search": true,
+      "full_plan": true,
+      "purpose_clarified": true,
+      "natural_answer": false,
+      "comparison_without_search": true,
+      "research_without_replanning": true
+    }
+  ],
+  "turns": [
+    {
+      "message": "Хочу из Москвы в Сочи с 12 по 16 ноября 2026 года. Двое взрослых, бюджет 100000 рублей.",
+      "decision": {
+        "action": "clarify",
+        "research_role": "experience",
+        "selected_option_id": null,
+        "patch": {
+          "origin": "Москва",
+          "destination": "Сочи",
+          "start": "2026-11-12",
+          "end": "2026-11-16",
+          "adults": 2,
+          "budget": "100000",
+          "purpose": null,
+          "hotel": null,
+          "interests": null
+        },
+        "question": "Отлично, параметры записал: Москва → Сочи, 12–16 ноября 2026, двое взрослых, бюджет 100 000 ₽. А какой отдых хочется — например, пляж и прогулки у моря, горы и лыжи или что-то ещё?",
+        "task": "",
+        "source_ids": [],
+        "refresh": []
+      },
+      "constraints": {
+        "origin": "Москва",
+        "destination": "Сочи",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "budget": "100000",
+        "purpose": null,
+        "hotel": null,
+        "interests": []
+      },
+      "revision": 1,
+      "status": "needs_input",
+      "delegated": [],
+      "options": [],
+      "role_warnings": {}
+    },
+    {
+      "message": "Цель — спокойный отдых, гулять у моря. Подбери разные варианты.",
+      "decision": {
+        "action": "compose",
+        "research_role": "experience",
+        "selected_option_id": null,
+        "patch": {
+          "origin": null,
+          "destination": null,
+          "start": null,
+          "end": null,
+          "adults": null,
+          "budget": null,
+          "purpose": null,
+          "hotel": null,
+          "interests": null
+        },
+        "question": "",
+        "task": "",
+        "source_ids": [],
+        "refresh": []
+      },
+      "constraints": {
+        "origin": "Москва",
+        "destination": "Сочи",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "budget": "100000",
+        "purpose": "Спокойный отдых, прогулки у моря",
+        "hotel": null,
+        "interests": [
+          "море",
+          "прогулки",
+          "спокойный отдых"
+        ]
+      },
+      "revision": 2,
+      "status": "ready",
+      "delegated": [
+        "transport",
+        "stays",
+        "experience"
+      ],
+      "options": [
+        {
+          "id": "10a1248ad6eab955",
+          "hotel": "Отель Сочи Галерея Парк",
+          "known_subtotal": "18180.0",
+          "confirmed_total": null
+        },
+        {
+          "id": "c2986cba485dac6b",
+          "hotel": "Централ Резиденс 3* by Provence",
+          "known_subtotal": "18880.0",
+          "confirmed_total": null
+        },
+        {
+          "id": "bfd4c4a2e4ba0d79",
+          "hotel": "Локалита",
+          "known_subtotal": "20240.0",
+          "confirmed_total": null
+        },
+        {
+          "id": "b71da99e868d8ffc",
+          "hotel": "Эльпида",
+          "known_subtotal": "20420.0",
+          "confirmed_total": null
+        },
+        {
+          "id": "7ccc8b2a73482552",
+          "hotel": "Однокомнатная квартира на улице: Батумское ш., 28Ак1",
+          "known_subtotal": "21468.0",
+          "confirmed_total": null
+        }
+      ],
+      "role_warnings": {
+        "transport": [],
+        "stays": [],
+        "experience": [
+          "agent_limit"
+        ]
+      }
+    },
+    {
+      "message": "Сравни первый и второй варианты по известной стоимости, какой дешевле? Ничего не меняй.",
+      "decision": {
+        "action": "answer",
+        "research_role": "experience",
+        "selected_option_id": null,
+        "patch": {
+          "origin": null,
+          "destination": null,
+          "start": null,
+          "end": null,
+          "adults": null,
+          "budget": null,
+          "purpose": null,
+          "hotel": null,
+          "interests": null
+        },
+        "question": "",
+        "task": "",
+        "source_ids": [
+          "avia:a04a671250bf5957059b93641b16b16a+937d82482a644f9bebf38abdd5e5bb05",
+          "hotel:7653053",
+          "hotel:11736117"
+        ],
+        "refresh": []
+      },
+      "constraints": {
+        "origin": "Москва",
+        "destination": "Сочи",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "budget": "100000",
+        "purpose": "Спокойный отдых, прогулки у моря",
+        "hotel": null,
+        "interests": [
+          "море",
+          "прогулки",
+          "спокойный отдых"
+        ]
+      },
+      "revision": 2,
+      "status": "ready",
+      "delegated": [],
+      "options": [
+        {
+          "id": "10a1248ad6eab955",
+          "hotel": "Отель Сочи Галерея Парк",
+          "known_subtotal": "18180.0",
+          "confirmed_total": null
+        },
+        {
+          "id": "c2986cba485dac6b",
+          "hotel": "Централ Резиденс 3* by Provence",
+          "known_subtotal": "18880.0",
+          "confirmed_total": null
+        },
+        {
+          "id": "bfd4c4a2e4ba0d79",
+          "hotel": "Локалита",
+          "known_subtotal": "20240.0",
+          "confirmed_total": null
+        },
+        {
+          "id": "b71da99e868d8ffc",
+          "hotel": "Эльпида",
+          "known_subtotal": "20420.0",
+          "confirmed_total": null
+        },
+        {
+          "id": "7ccc8b2a73482552",
+          "hotel": "Однокомнатная квартира на улице: Батумское ш., 28Ак1",
+          "known_subtotal": "21468.0",
+          "confirmed_total": null
+        }
+      ],
+      "role_warnings": {
+        "transport": [],
+        "stays": [],
+        "experience": [
+          "agent_limit"
+        ]
+      }
+    },
+    {
+      "message": "Есть ли бассейн у отеля из первого варианта? Проверь в интернете, поездку не меняй.",
+      "decision": {
+        "action": "research",
+        "research_role": "stays",
+        "selected_option_id": null,
+        "patch": {
+          "origin": null,
+          "destination": null,
+          "start": null,
+          "end": null,
+          "adults": null,
+          "budget": null,
+          "purpose": null,
+          "hotel": null,
+          "interests": null
+        },
+        "question": "",
+        "task": "Отель «Отель Сочи Галерея Парк», район Сочи (координаты 43.587547, 39.724262), проживание 2026-11-12 — 2026-11-16, 2 взрослых. Проверить и подтвердить по доступным источникам, есть ли у отеля бассейн: если да — крытый или открытый, работает ли в ноябре, платный ли доступ для гостей. Если данных о бассейне нет — явно указать, что подтверждения нет.",
+        "source_ids": [
+          "hotel:7653053"
+        ],
+        "refresh": []
+      },
+      "constraints": {
+        "origin": "Москва",
+        "destination": "Сочи",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "budget": "100000",
+        "purpose": "Спокойный отдых, прогулки у моря",
+        "hotel": null,
+        "interests": [
+          "море",
+          "прогулки",
+          "спокойный отдых"
+        ]
+      },
+      "revision": 2,
+      "status": "ready",
+      "delegated": [],
+      "options": [
+        {
+          "id": "10a1248ad6eab955",
+          "hotel": "Отель Сочи Галерея Парк",
+          "known_subtotal": "18180.0",
+          "confirmed_total": null
+        },
+        {
+          "id": "c2986cba485dac6b",
+          "hotel": "Централ Резиденс 3* by Provence",
+          "known_subtotal": "18880.0",
+          "confirmed_total": null
+        },
+        {
+          "id": "bfd4c4a2e4ba0d79",
+          "hotel": "Локалита",
+          "known_subtotal": "20240.0",
+          "confirmed_total": null
+        },
+        {
+          "id": "b71da99e868d8ffc",
+          "hotel": "Эльпида",
+          "known_subtotal": "20420.0",
+          "confirmed_total": null
+        },
+        {
+          "id": "7ccc8b2a73482552",
+          "hotel": "Однокомнатная квартира на улице: Батумское ш., 28Ак1",
+          "known_subtotal": "21468.0",
+          "confirmed_total": null
+        }
+      ],
+      "role_warnings": {
+        "transport": [],
+        "stays": [],
+        "experience": [
+          "agent_limit"
+        ]
+      }
+    }
+  ],
+  "final_presentation": {
+    "answer": "Для спокойных прогулок у моря важнее район проживания, чем цена: перелёт во всех пяти вариантах один и тот же, с дневным прилётом и дневным вылетом, а различаются только объекты размещения и их район. Поэтому смотрите в первую очередь на локацию — данных о расстоянии до моря, тишине, питании и условиях возврата в подборке нет, так что подтвердить «спокойность» или близость пляжа по этим карточкам невозможно.\n\nИзвестные суммы — это поисковые промежуточные итоги за перелёт плюс проживание; в них не входят питание, местный транспорт, развлечения и возможные доплаты, и это не подтверждённая полная стоимость. Наличие тарифов тоже не гарантировано. Блок впечатлений собрался частично, так что программа прогулок проработана не полностью.\n\nКоротко по вариантам: самый дешёвый из известных — отель в Сочи; квартира в Сочи и объект в Сириусе дороже; вариант в Красной Поляне — не прибрежный район, для моря понадобятся переезды.\nМосква → Сочи, 2026-11-12 — 2026-11-16; взрослых: 2.\n\n1. Отель Сочи Галерея Парк — Сочи\nПерелёт: Победа / Utair; прилёт 2026-11-12T15:20:00+03:00, обратный вылет 2026-11-16T15:10:00+03:00.\nБилеты и проживание: известная сумма 18180.0 ₽ на всю группу и весь период.\nПодойдёт: Отель в Сочи и самый низкий известный промежуточный итог среди этих вариантов — разумная отправная точка, если район Сочи вам подходит.\nКомпромисс: Подтверждений близости к морю, тишины, питания и условий возврата нет; итог неполный и не является полной стоимостью.\n\n2. Централ Резиденс 3* by Provence — Сочи\nПерелёт: Победа / Utair; прилёт 2026-11-12T15:20:00+03:00, обратный вылет 2026-11-16T15:10:00+03:00.\nБилеты и проживание: известная сумма 18880.0 ₽ на всю группу и весь период.\nПодойдёт: Тоже Сочи, но заметно другой вариант размещения по названию и известному итогу — есть с чем сравнить внутри одного района.\nКомпромисс: Известный итог выше, чем у отеля в Сочи из первой карточки, а данных о расположении относительно моря и об услугах нет.\n\n3. Локалита — Сириус\nПерелёт: Победа / Utair; прилёт 2026-11-12T15:20:00+03:00, обратный вылет 2026-11-16T15:10:00+03:00.\nБилеты и проживание: известная сумма 20240.0 ₽ на всю группу и весь период.\nПодойдёт: Единственный вариант в Сириусе — другая часть побережья, если хочется сменить район, а не оставаться в Сочи.\nКомпромисс: Район отличается от остальных вариантов, поэтому прогулки и поездки придётся планировать от Сириуса; расстояние до моря и инфраструктура не подтверждены.\n\n4. Эльпида — Красная Поляна\nПерелёт: Победа / Utair; прилёт 2026-11-12T15:20:00+03:00, обратный вылет 2026-11-16T15:10:00+03:00.\nБилеты и проживание: известная сумма 20420.0 ₽ на всю группу и весь период.\nПодойдёт: Вариант в Красной Поляне может подойти, если помимо моря интересны горы и смена обстановки.\nКомпромисс: Это не прибрежный район: для прогулок у моря потребуются переезды, что плохо сочетается с заявленной целью спокойного отдыха у воды.\n\n5. Однокомнатная квартира на улице: Батумское ш., 28Ак1 — Сочи\nПерелёт: Победа / Utair; прилёт 2026-11-12T15:20:00+03:00, обратный вылет 2026-11-16T15:10:00+03:00.\nБилеты и проживание: известная сумма 21468.0 ₽ на всю группу и весь период.\nПодойдёт: Квартира в Сочи даёт формат самостоятельного размещения, если вам важнее отдельное жильё, чем гостиничный номер.\nКомпромисс: Самый высокий известный промежуточный итог из пяти; сведений о кухне, удобствах, близости моря и доплатах нет.\nПитание, местные переезды, активности и дополнительные сборы не включены. Полная стоимость неизвестна; наличие и бронирование не подтверждены.\nКакой вариант обсудим? Можно спросить об отеле или районе, изменить пожелания или выбрать номер варианта.",
+    "usage": {
+      "reserve_usd": 0.048796,
+      "prompt_tokens": 6248,
+      "completion_tokens": 1526,
+      "total_tokens": 7774,
+      "cost": 0.003088,
+      "is_byok": false,
+      "prompt_tokens_details": {
+        "cached_tokens": 0,
+        "cache_write_tokens": 0,
+        "audio_tokens": 0,
+        "video_tokens": 0
+      },
+      "cost_details": {
+        "upstream_inference_cost": 0.003088,
+        "upstream_inference_prompt_cost": 0.001562,
+        "upstream_inference_completions_cost": 0.001526
+      },
+      "completion_tokens_details": {
+        "reasoning_tokens": 693,
+        "image_tokens": 0,
+        "audio_tokens": 0
+      },
+      "finish_reason": "tool_calls"
+    },
+    "natural_answer": true
+  },
+  "llm_workflow_reported_usd": "0.012316742",
+  "llm_diagnostic_reported_usd": "0.00163648",
+  "conservative_session_spend_usd": "0.9417640764",
+  "tavily_live": "not_tested_missing_key",
+  "offline": "56 passed; 1 PostgreSQL integration skipped"
+}

@@ -2,11 +2,11 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-PromptName = Literal["supervisor", "transport", "stays", "experience"]
-PROMPT_NAMES = ("supervisor", "transport", "stays", "experience")
+PromptName = Literal["supervisor", "transport", "stays", "experience", "response", "research"]
+PROMPT_NAMES = ("supervisor", "transport", "stays", "experience", "response", "research")
 
 
-@lru_cache(maxsize=4)
+@lru_cache(maxsize=6)
 def load_prompt(name: PromptName) -> str:
     if name not in PROMPT_NAMES:
         raise ValueError("Unknown agent prompt")

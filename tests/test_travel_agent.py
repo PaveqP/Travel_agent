@@ -21,7 +21,7 @@ from travel_agent.tools import ALLOWED, build_tools, normalize, public_url
 from integrations.schemas.models import Coordinates
 
 FIXTURES = json.loads((Path(__file__).parent / 'fixtures/searches.json').read_text())
-TRIP = TripConstraints(origin='Москва', start='2026-11-12', end='2026-11-16', adults=2)
+TRIP = TripConstraints(purpose='Прогулки', origin='Москва', start='2026-11-12', end='2026-11-16', adults=2)
 NOW = datetime.now(timezone.utc)
 
 
@@ -35,7 +35,7 @@ async def decide(state):
     message = state['messages'][-1].content
     patch = TripDelta()
     if not current.origin:
-        patch = TripDelta(origin='Москва', adults=2)
+        patch = TripDelta(origin='Москва', adults=2, purpose='Прогулки')
     if 'даты' in message:
         patch = TripDelta(start=TRIP.start, end=TRIP.end)
     if 'отель' in message:
