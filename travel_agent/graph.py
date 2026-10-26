@@ -1,6 +1,7 @@
 import logging
 from datetime import date, datetime, timezone
 from functools import partial
+from decimal import Decimal
 
 from langchain_core.exceptions import OutputParserException
 from langchain_core.messages import AIMessage
@@ -9,7 +10,7 @@ from langgraph.graph import END, START, StateGraph
 from openai import APIError
 from pydantic import ValidationError
 
-from travel_agent.engine import apply_delta, compose, diagnose, flight_fits, simulate_purchase, usable
+from travel_agent.engine import apply_delta, compose, diagnose, offer_card, search_dates, simulate_purchase, stay_matches, transport_matches, usable
 from travel_agent.schemas import BookingRequest, Candidate, ResearchResult, SpecialistResult, SupervisorDecision, TripConstraints, TripDelta, TripScenario
 from travel_agent.state import TripState
 
@@ -39,7 +40,10 @@ async def supervise(state: TripState, decide) -> dict:
         current = TripConstraints.model_validate(state.get('constraints', {}))
         revised, affected = apply_delta(current, decision.patch) if not state.get('calls', 0) and decision.action not in ('answer', 'research') else (current, set())
     except (ValidationError, ValueError, OutputParserException, APIError, TimeoutError) as exc:
-        logging.getLogger(__name__).warning('supervisor outcome=%s', type(exc).__name__)
+        paths = [(e['loc'], e['type']) for e in exc.errors(include_input=False, include_url=False)] if isinstance(exc, ValidationError) else []
+        logging.getLogger(__name__).warning('supervisor outcome=%s fields=%s', type(exc).__name__, paths)
+        if any(r.get('candidates') for r in state.get('results', {}).values()) and state.get('stage'):
+            return {'decision': {'action': 'present'}, 'requested_choice': None, 'notice': 'Новое условие не удалось применить. Показываю сохранённые предложения с датами и актуальностью; прежний выбор сохранён.'}
         return stop('Не удалось обработать новое сообщение. Предыдущий план и выбор сохранены; повторите запрос.', 'error')
     if decision.action in ('answer', 'research'):
         update = {'decision': decision.model_dump(mode='json'), 'requested_choice': None}
@@ -56,7 +60,7 @@ async def supervise(state: TripState, decide) -> dict:
     changed = current != revised
     work = {**state, 'constraints': revised.model_dump(mode='json'), 'stage': stage, 'requested_choice': None,
             'revision': state.get('revision', 0) + int(changed or bool(affected)), 'calls': state.get('calls', 0) + 1,
-            'decision': decision.model_dump(mode='json')}
+            'decision': decision.model_dump(mode='json'), 'notice': ''}
     work.setdefault('options', [])
     if not state.get('stage') and state.get('options'):
         old = next((o for o in state['options'] if o['id'] == state.get('selected')), state['options'][0])
@@ -69,8 +73,6 @@ async def supervise(state: TripState, decide) -> dict:
         results = dict(state.get('results', {}))
         if 'stays' in affected and revised.hotel and any(c.role == 'stays' and usable(c, revised, now) for c in all_candidates(state)) and 'stays' not in decision.refresh:
             affected.discard('stays')
-        for role in affected:
-            results.pop(role, None)
         work['results'] = results
         if 'transport' in affected:
             work.update(stage='transport', selected_transport=None, selected_stay=None, pending_check_in=None)
@@ -109,18 +111,32 @@ async def supervise(state: TripState, decide) -> dict:
             if work.get('pending_check_in') and choice in {c.id for c in all_candidates(work) if c.role == 'transport'}:
                 stage = 'transport'
             role = 'transport' if stage == 'transport' else 'stays'
-            candidate = next((c for c in all_candidates(work) if c.id == choice and c.role == role and usable(c, revised, now)), None)
-            if candidate is None or role == 'transport' and not flight_fits(candidate, revised):
-                return {**work, **stop('Предложение устарело или не относится к текущему этапу. Обновите поиск.')}
+            candidate = next((c for c in all_candidates(work) if c.id == choice and c.role == role), None)
+            if candidate is None:
+                return {**work, **stop('Выберите предложение из текущего списка.')}
+            if role == 'transport' and not transport_matches(candidate, revised, now):
+                if candidate.start and candidate.end and (candidate.start, candidate.end) in search_dates(revised):
+                    revised, _ = apply_delta(revised, TripDelta(start=candidate.start, end=candidate.end))
+                work.update(stage='transport', constraints=revised.model_dump(mode='json'), selected_transport=None, selected_stay=None,
+                            options=[], selected=None, revision=work['revision'] + 1, notice='Проверяю выбранное предложение у агрегатора; сохранённая цена не считается подтверждённой.')
+                return {**work, 'decision': {'action': 'transport', 'task': decision.task}}
+            if role == 'stays' and not stay_matches(candidate, revised, now):
+                return {**work, 'notice': 'Обновляю проживание для выбранных билетов. Сохранённые варианты остаются видимыми.', 'decision': {'action': 'stays', 'task': decision.task}}
             transport = selected_candidate(work, 'transport') if role == 'stays' else None
             subtotal = candidate.price.amount + (transport.price.amount if transport else 0)
             if revised.party_budget and subtotal > revised.party_budget:
-                return {**work, **stop('Известная сумма выбранных компонентов уже превышает бюджет всей группы. Выберите другой вариант или измените бюджет.')}
+                work['notice'] = 'Известная сумма выбранных компонентов выше бюджета. Показываю её как альтернативу; перед покупкой бюджет нужно согласовать.'
             if role == 'transport':
-                work.update(selected_transport=choice, selected_stay=None, stage='stays', options=[], selected=None)
-                if candidate.arrival_at.date() != revised.stay_start or candidate.return_departure_at.date() != revised.stay_end:
-                    work['pending_check_in'] = candidate.arrival_at.date().isoformat()
+                revised, _ = apply_delta(revised, TripDelta(start=candidate.start, end=candidate.end,
+                    check_in=candidate.arrival_at.date(), check_out=candidate.return_departure_at.date(),
+                    clear=['nights'] if revised.nights and revised.nights != (candidate.return_departure_at.date() - candidate.arrival_at.date()).days else []))
+                work.update(constraints=revised.model_dump(mode='json'), selected_transport=choice, selected_stay=None, stage='stays', options=[], selected=None, pending_check_in=None)
+                work['results'] = {k: v for k, v in work.get('results', {}).items() if k not in ('stays', 'experience')}
+                work['notice'] = f'Билеты выбраны на {candidate.start:%d.%m}–{candidate.end:%d.%m}. Проживание подбираю под фактический прилёт: {revised.stay_start:%d.%m}–{revised.stay_end:%d.%m}.'
             else:
+                if not usable(candidate, revised, now):
+                    revised, _ = apply_delta(revised, TripDelta(destination=candidate.area, clear=['hotel']))
+                    work.update(constraints=revised.model_dump(mode='json'), notice=f'Выбран отель в районе {candidate.area}. Программу построю от него.')
                 work.update(selected_stay=choice, stage='itinerary', options=[], selected=None)
                 work['results'] = {k: v for k, v in work.get('results', {}).items() if k != 'experience'}
         elif stage == 'itinerary' and choice in {o['id'] for o in work.get('options', [])}:
@@ -142,16 +158,21 @@ async def supervise(state: TripState, decide) -> dict:
         work['pending_check_in'] = None
     if work['stage'] == 'scenarios':
         return {**work, 'decision': {'action': 'present'}}
-    if revised.missing():
+    missing = revised.missing()
+    if search_dates(revised):
+        missing = [field for field in missing if field not in ('start', 'end')]
+        if not revised.start or not revised.end:
+            work['notice'] = 'Для предварительной выдачи использую указанный месяц/диапазон и длительность поездки; если длительность не названа — 7 ночей. Точные даты согласуются выбором билетов.'
+    if missing:
         questions = {'origin': 'Из какого города вы планируете ехать?', 'start': 'Когда хотите поехать и на сколько дней?', 'end': 'До какого числа планируете остаться?', 'adults': 'Сколько взрослых поедет?'}
-        return {**work, **stop(decision.question or questions[revised.missing()[0]])}
-    if revised.start < date.today():
+        return {**work, **stop(decision.question or questions[missing[0]])}
+    if revised.start and revised.start < date.today() and not search_dates(revised):
         return {**work, **stop('Укажите будущие даты поездки.')}
-    duration = (revised.end - revised.start).days
-    stay_nights = (revised.stay_end - revised.stay_start).days
-    if revised.duration_days and duration + 1 != revised.duration_days or revised.nights and stay_nights != revised.nights:
+    duration = (revised.end - revised.start).days if revised.start and revised.end else None
+    stay_nights = (revised.stay_end - revised.stay_start).days if revised.stay_start and revised.stay_end else None
+    if not (revised.date_from and revised.date_to) and duration is not None and (revised.duration_days and duration + 1 != revised.duration_days or revised.nights and stay_nights != revised.nights):
         return {**work, **stop(f'На выбранные даты получается {stay_nights} ночей и {duration + 1} календарных дней. Сохраняем даты или ранее указанную длительность?')}
-    if decision.action == 'clarify':
+    if decision.action == 'clarify' and work['stage'] not in ('transport', 'stays'):
         return {**work, **stop(decision.question or 'Уточните пожелания к текущему этапу.')}
     for role in ('transport', 'stays'):
         candidate = selected_candidate(work, role)
@@ -179,7 +200,12 @@ async def supervise(state: TripState, decide) -> dict:
     if role == 'experience' and not work.get('selected_stay'):
         work.update(stage='stays')
         role = 'stays'
-    work['decision'] = {'action': role if role and role not in work.get('results', {}) else 'present', 'task': decision.task}
+    cached = [c for c in all_candidates(work) if c.role == role]
+    fresh = any(transport_matches(c, revised, now) if role == 'transport' else usable(c, revised, now) for c in cached)
+    refresh = role and (role in affected or role not in work.get('results', {}) or role in ('transport', 'stays') and not fresh)
+    if refresh and cached:
+        work['notice'] = 'Обновляю предложения по текущим условиям; сохранённые цены показываю с пометками актуальности.'
+    work['decision'] = {'action': role if refresh else 'present', 'task': decision.task}
     return work
 
 
@@ -192,6 +218,9 @@ async def specialist(state: TripState, run, config: RunnableConfig) -> dict:
     result = SpecialistResult.model_validate(await run(TripConstraints.model_validate(state['constraints']), state['revision'], task, [hotel] if role == 'experience' and hotel else []))
     if result.revision != state['revision'] or result.role != role or any(c.role != role for c in result.candidates):
         result = SpecialistResult(role=role, revision=state['revision'], status='partial', warnings=['stale_or_invalid_result'])
+    previous = [Candidate.model_validate(c) for c in state.get('results', {}).get(role, {}).get('candidates', [])]
+    merged = {c.id: c for c in [*previous, *result.candidates]}
+    result.candidates = list(merged.values())[-100:]
     return {'results': {**state.get('results', {}), role: result.model_dump(mode='json')}}
 
 
@@ -210,35 +239,34 @@ def present_stage(state: TripState) -> dict:
 
     stage = state.get('stage', 'scenarios')
     choices = []
+    cards = []
     update = {}
     if stage == 'scenarios':
         choices = [{'id': s['id'], 'title': s['title'], 'details': f"{s['destination']}. {s['purpose']} Компромисс: {s['tradeoff']}"} for s in state.get('scenarios', [])]
     elif stage in ('transport', 'stays'):
         trip = TripConstraints.model_validate(state['constraints'])
-        rows = [c for c in all_candidates(state) if c.role == stage and usable(c, trip, datetime.now(timezone.utc)) and (stage != 'transport' or flight_fits(c, trip))]
+        rows = [c for c in all_candidates(state) if c.role == stage]
         preferred = set(state.get('results', {}).get(stage, {}).get('selected_ids', []))
-        rows.sort(key=lambda c: (c.id not in preferred, c.price.amount))
-        for row in rows[:5]:
-            details = f"Прилёт {row.arrival_at:%d.%m.%Y %H:%M}, обратный вылет {row.return_departure_at:%d.%m.%Y %H:%M}." if stage == 'transport' else f"{row.area}; проживание {row.start:%d.%m.%Y} — {row.end:%d.%m.%Y}."
-            if row.departure_at:
-                details = f"Вылет {row.departure_at:%d.%m.%Y %H:%M}. " + details
-            if row.duration_minutes:
-                details += f" В пути туда {row.duration_minutes} мин."
-            if row.transfers is not None:
-                details += f" Пересадок туда: {row.transfers}."
-            choices.append({'id': row.id, 'title': row.name, 'details': details, 'price': row.price.model_dump(mode='json')})
+        cards = [offer_card(c, trip).model_dump(mode='json') for c in rows]
+        cards.sort(key=lambda c: (not c['selectable'], c['freshness'] == 'expired', bool({'different_area', 'different_hotel'} & set(c['warnings'])), c['id'] not in preferred, Decimal(c['price']['amount']) if c['price'] else Decimal('Infinity')))
+        cards = cards[:30]
+        choices = [{**c, 'details': c['description']} for c in cards]
         update['diagnostics'] = diagnose(trip, all_candidates(state)).model_dump(mode='json')
     elif stage == 'itinerary':
         update.update(planning(state))
+        trip = TripConstraints.model_validate(state['constraints'])
+        cards = [offer_card(c, trip).model_copy(update={'selectable': False}).model_dump(mode='json') for c in all_candidates(state) if c.role == 'experience'][:30]
         choices = [{'id': o['id'], 'title': 'Согласовать программу и перейти к корзине', 'details': 'Проверенные места и свободное время; стоимость дополнительных услуг отдельно.'} for o in update['options'] if o.get('transport') and o.get('stay')]
     elif stage == 'review':
         update.update(planning(state))
+        trip = TripConstraints.model_validate(state['constraints'])
+        cards = [offer_card(c, trip).model_dump(mode='json') for role in ('transport', 'stays') if (c := selected_candidate(state, role)) is not None]
         choices = [{'id': o['id'], 'title': 'Корзина поездки', 'details': 'Билеты, проживание и предложенная программа.'} for o in update['options'] if o.get('transport') and o.get('stay')]
         update['selected'] = choices[0]['id'] if choices else None
     status = 'booked' if stage == 'booked' else 'ready' if stage == 'review' and choices else 'needs_choice' if choices else 'partial'
-    work = {**state, **update, 'choices': choices, 'status': status}
+    work = {**state, **update, 'choices': choices, 'cards': cards, 'status': status}
     answer = render_stage(work)
-    return {**update, 'choices': choices, 'status': status, 'answer': answer, 'plan_answer': answer}
+    return {**update, 'choices': choices, 'cards': cards, 'status': status, 'answer': answer, 'plan_answer': answer}
 
 
 def finish(state: TripState) -> dict:

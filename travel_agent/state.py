@@ -31,3 +31,5 @@ class TripState(TypedDict, total=False):
     requested_choice: str | None
     receipt: dict
     profile_update: list[str] | None
+    cards: list[dict]
+    notice: str

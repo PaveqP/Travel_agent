@@ -172,6 +172,8 @@ def create_app(
                 ("selected_transport", None),
                 ("selected_stay", None),
                 ("choices", []),
+                ("cards", []),
+                ("notice", ""),
                 ("pending_check_in", None),
                 ("receipt", {}),
             )

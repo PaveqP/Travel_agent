@@ -14,7 +14,7 @@ from travel_agent.agents.experience.agent import run as run_experience
 from travel_agent.api import create_app
 from travel_agent.graph import build_graph
 from travel_agent.prompts import load_prompt
-from travel_agent.schemas import SupervisorDecision, TripDelta
+from travel_agent.schemas import OfferCard, SupervisorDecision, TripDelta
 from test_agent_isolation import ToolModel, selection
 from test_travel_agent import FIXTURES, TRIP
 
@@ -105,6 +105,10 @@ class PipelineE2ETests(unittest.TestCase):
                 self.assertEqual(response.status_code, 200, response.text)
                 result = response.json()
                 revision = result['revision']
+                for card in result['cards']:
+                    parsed = OfferCard.model_validate(card)
+                    self.assertTrue(parsed.url.startswith('https://'))
+                    self.assertTrue(parsed.aggregator)
                 return result
 
             def complete(result):

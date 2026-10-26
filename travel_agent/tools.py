@@ -4,9 +4,10 @@ import json
 import logging
 import socket
 import time
+from hashlib import sha256
 from datetime import datetime, timedelta, timezone
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse
 
 import httpx
 from langchain_core.tools import tool
@@ -74,6 +75,8 @@ def normalize(
     )
     result = []
     if method == "search_hotels":
+        if data.get("hotels") == []:
+            return []
         stay = data.get("stay", {})
         if stay.get("check_in") != str(trip.stay_start) or stay.get("check_out") != str(
             trip.stay_end
@@ -83,8 +86,7 @@ def normalize(
             if row.get("checkout_ref", {}).get("adults") != trip.adults:
                 continue
             offer = row.get("best_offer") or {}
-            if not offer.get("price") or offer.get("price_basis") != "stay_total":
-                continue
+            priced = bool(offer.get("price") and offer.get("price_basis") == "stay_total")
             loc = row.get("location") or {}
             coordinates = (
                 Coordinates(lat=loc["lat"], lon=loc["lng"])
@@ -98,15 +100,17 @@ def normalize(
                     name=row["name"],
                     coordinates=coordinates,
                     area=area_of(coordinates),
-                    source=source,
+                    source=source if priced else source.model_copy(update={"evidence": "catalog"}),
                     start=trip.stay_start,
                     end=trip.stay_end,
                     adults=trip.adults,
-                    price=Money(**offer["price"], basis="room_stay"),
-                    url=offer.get("checkout_url"),
+                    price=Money(**offer["price"], basis="room_stay") if priced else None,
+                    url=offer.get("checkout_url") or row.get("url") or "https://hotel.tutu.ru/",
                 )
             )
     elif method == "search_avia":
+        if data.get("offers") == []:
+            return []
         if data.get("meta", {}).get("pricing", {}).get("basis") != "party_total":
             raise ValueError("Unverified price basis")
         if (
@@ -136,7 +140,7 @@ def normalize(
                 Candidate(
                     id="avia:" + row["offer_id"],
                     role="transport",
-                    name=" / ".join(row.get("carriers", [])),
+                    name=" / ".join(row.get("carriers", [])) or "Перелёт Туту",
                     source=source,
                     start=departure.date(),
                     end=returning.date(),
@@ -149,9 +153,27 @@ def normalize(
                     transfers=len(legs[0]["segments"]) - 1 if legs[0].get("segments") else None,
                     return_departure_at=returning,
                     price=Money(**row["price"], basis="party"),
-                    url=row.get("search_results_url"),
+                    url=row.get("search_results_url") or "https://www.tutu.ru/avia/",
+                    description="" if row.get("search_results_url") else "Поставщик не вернул ссылку на конкретный тариф; ссылка ведёт в общий поиск авиабилетов Туту.",
                 )
             )
+    elif provider == "travelpayouts":
+        source = source.model_copy(update={"provider": provider, "source_url": "https://www.aviasales.ru/", "evidence": "cached"})
+        for row in data.get("data", []):
+            if row.get("destination") != "AER" or not row.get("price") or not row.get("departure_at") or not row.get("return_at"):
+                continue
+            departure = datetime.fromisoformat(row["departure_at"])
+            returning = datetime.fromisoformat(row["return_at"])
+            link = row.get("link") or "https://www.aviasales.ru/"
+            if link.startswith("/search/"):
+                link = "https://www.aviasales.ru" + link
+            result.append(Candidate(
+                id="aviasales:" + sha256(json.dumps(row, sort_keys=True).encode()).hexdigest()[:24],
+                role="transport", name="Aviasales — " + row.get("airline", "перелёт"), source=source,
+                start=departure.date(), end=returning.date(), departure_at=departure, return_departure_at=returning,
+                origin=row.get("origin"), destination="AER", adults=1, transfers=row.get("transfers"),
+                duration_minutes=row.get("duration_to"), price=Money(amount=str(row["price"]), currency="RUB", basis="person"), url=link,
+                description="Цена из кэша поисков Aviasales за одного пассажира. Наличие для всей группы и точное время прилёта требуют проверки."))
     elif provider == "2gis" and method == "search_places":
         for row in data.get("items", []):
             point = (
@@ -167,6 +189,7 @@ def normalize(
                     source=source,
                     coordinates=point,
                     area=area_of(point),
+                    url=row.get("url") or "https://2gis.ru/sochi/search/" + quote(row["name"], safe=""),
                 )
             )
     elif provider == "geoapify":
@@ -265,7 +288,7 @@ def build_tools(
     owned: set[tuple[str, str]] = set()
     responses: dict[str, dict] = {}
 
-    async def execute(name: str, provider: str, operation, method: str = "") -> dict:
+    async def execute(name: str, provider: str, operation, method: str = "", query_trip: TripConstraints | None = None) -> dict:
         if name not in ALLOWED[role]:
             return {"status": "forbidden"}
         if counts["tools"] >= 8:
@@ -292,7 +315,7 @@ def build_tools(
                 warnings.append(provider + ":schema_error")
                 return {"status": "schema_error"}
             candidates = normalize(
-                provider, method, data, trip, datetime.now(timezone.utc)
+                provider, method, data, query_trip or trip, datetime.now(timezone.utc)
             )
             for candidate in candidates:
                 evidence[candidate.id] = candidate
@@ -317,6 +340,8 @@ def build_tools(
                                 "duration_minutes",
                                 "transfers",
                                 "return_departure_at",
+                                "url",
+                                "source",
                             },
                         )
                         for c in candidates
@@ -352,6 +377,12 @@ def build_tools(
                         )
                 if web_evidence is not None:
                     web_evidence.extend(WebEvidence(**row, retrieved_at=datetime.now(timezone.utc)) for row in results)
+                if role in ("transport", "stays") and not evidence:
+                    for row in results:
+                        ident = "web:" + sha256(row["url"].encode()).hexdigest()[:24]
+                        evidence[ident] = Candidate(id=ident, role=role, name=row["title"],
+                            source=Provenance(provider="tavily", source_url=row["url"], retrieved_at=datetime.now(timezone.utc), expires_at=datetime.now(timezone.utc) + timedelta(hours=1), evidence="catalog"),
+                            url=row["url"], description=row["text"][:1000])
                 return {
                     "status": "ok" if results else "empty",
                     "evidence": "catalog",
@@ -389,11 +420,15 @@ def build_tools(
         key = json.dumps([name, provider, method, args], sort_keys=True)
         if key in responses:
             return responses[key]
+        query_trip = None
+        if method == "search_avia":
+            query_trip = TripConstraints.model_validate({**trip.model_dump(), "start": args["departure_date"], "end": args["return_date"], "check_in": None, "check_out": None})
         result = await execute(
             name,
             provider,
             lambda: runtime_call(role, provider, method, args, env, frozenset(owned)),
             method,
+            query_trip,
         )
         responses[key] = result
         return result

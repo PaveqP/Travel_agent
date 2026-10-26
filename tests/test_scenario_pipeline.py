@@ -101,7 +101,7 @@ class StagedPlanningTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn("города", state["answer"])
         runner.assert_not_called()
 
-    async def test_night_flight_waits_for_agreement_before_hotel_search(self):
+    async def test_night_flight_choice_accepts_actual_hotel_dates(self):
         async def run(role, trip, revision, task, previous):
             rows = [c for c in candidates() if c.role == role]
             for row in rows:
@@ -118,10 +118,7 @@ class StagedPlanningTests(unittest.IsolatedAsyncioTestCase):
         state = await graph.ainvoke({"constraints": TRIP.model_dump(mode="json"), "messages": [HumanMessage(content="Поездка")], "calls": 0}, config)
         state = await graph.ainvoke({"requested_choice": "coast", "calls": 0}, config)
         state = await graph.ainvoke({"requested_choice": state["choices"][0]["id"], "calls": 0}, config)
-        self.assertTrue(state["pending_check_in"])
-        self.assertEqual([c.args[0] for c in runner.await_args_list], ["transport"])
-        self.assertIsNone(state["constraints"]["check_in"])
-        state = await graph.ainvoke({"messages": [HumanMessage(content="Да, заселение с прилёта")], "calls": 0}, config)
+        self.assertIsNone(state["pending_check_in"])
         self.assertEqual([c.args[0] for c in runner.await_args_list], ["transport", "stays"])
         self.assertEqual(state["constraints"]["check_in"], (TRIP.start + timedelta(days=1)).isoformat())
         self.assertEqual(state["constraints"]["start"], TRIP.start.isoformat())

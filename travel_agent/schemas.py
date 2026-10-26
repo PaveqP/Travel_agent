@@ -30,6 +30,10 @@ class TripConstraints(BaseModel):
     check_in: date | None = None
     check_out: date | None = None
     travel_month: str | None = Field(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$")
+    date_from: date | None = None
+    date_to: date | None = None
+    date_flexibility: int = Field(default=3, ge=0, le=14)
+    direct_only: bool = False
     duration_days: int | None = Field(default=None, ge=1, le=31)
     nights: int | None = Field(default=None, ge=1, le=30)
     adults: int | None = Field(default=None, ge=1, le=6)
@@ -41,6 +45,8 @@ class TripConstraints(BaseModel):
 
     @model_validator(mode="after")
     def dates(self):
+        if self.date_from and self.date_to and not 0 < (self.date_to - self.date_from).days <= 62:
+            raise ValueError("Search window must span 1–62 days")
         if self.start and self.end and not 0 < (self.end - self.start).days <= 30:
             raise ValueError("Trip must last 1–30 nights")
         if self.stay_start and self.stay_end and self.stay_start >= self.stay_end:
@@ -82,6 +88,10 @@ class TripDelta(BaseModel):
     check_in: date | None = None
     check_out: date | None = None
     travel_month: str | None = Field(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$")
+    date_from: date | None = None
+    date_to: date | None = None
+    date_flexibility: int | None = Field(default=None, ge=0, le=14)
+    direct_only: bool | None = None
     duration_days: int | None = Field(default=None, ge=1, le=31)
     nights: int | None = Field(default=None, ge=1, le=30)
     adults: int | None = Field(default=None, ge=1, le=6)
@@ -90,7 +100,7 @@ class TripDelta(BaseModel):
     purpose: str | None = Field(default=None, min_length=1, max_length=500)
     hotel: str | None = Field(default=None, max_length=200)
     interests: list[str] | None = Field(default=None, max_length=10)
-    clear: list[Literal["hotel", "budget", "purpose", "check_in", "check_out", "travel_month", "duration_days", "nights"]] = Field(default_factory=list, max_length=8)
+    clear: list[Literal["hotel", "budget", "purpose", "start", "end", "check_in", "check_out", "travel_month", "duration_days", "nights", "date_from", "date_to"]] = Field(default_factory=list, max_length=12)
 
     @model_validator(mode="after")
     def distinct_changes(self):
@@ -160,6 +170,7 @@ class Candidate(BaseModel):
     transfers: int | None = Field(default=None, ge=0)
     return_departure_at: datetime | None = None
     url: str | None = None
+    description: str = Field(default="", max_length=1000)
 
 
 class SpecialistSelection(BaseModel):
@@ -204,6 +215,37 @@ class PlanDiagnostics(BaseModel):
     eligible: dict[Role, int]
     reasons: list[str] = Field(default_factory=list)
     suggested_check_in: date | None = None
+    rejected: dict[str, int] = Field(default_factory=dict)
+
+
+class OfferDates(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    start: date | None = None
+    end: date | None = None
+    departure_at: datetime | None = None
+    arrival_at: datetime | None = None
+    return_departure_at: datetime | None = None
+
+
+class OfferCard(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    id: str
+    kind: Literal["transport", "stays", "experience"]
+    title: str
+    description: str
+    aggregator: str
+    provider: str
+    url: str
+    dates: OfferDates
+    price: Money | None = None
+    price_per_person: Money | None = None
+    adults: int | None = None
+    evidence: Literal["live", "cached", "catalog", "sandbox", "derived", "simulated"]
+    freshness: Literal["fresh", "expired", "unknown"]
+    retrieved_at: datetime
+    selectable: bool
+    action: Literal["select", "verify", "view"]
+    warnings: list[str] = Field(default_factory=list)
 
 
 class MessageRequest(BaseModel):

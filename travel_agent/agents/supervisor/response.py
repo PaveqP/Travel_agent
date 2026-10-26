@@ -10,6 +10,31 @@ from pydantic import ValidationError
 from travel_agent.schemas import UserResponse
 
 
+def render_card(card: dict, index: int | None = None) -> str:
+    prefix = f"{index}. " if index is not None else "• "
+    lines = [prefix + card['title'], card['description'], f"Агрегатор / источник: {card['aggregator']}", card['url']]
+    dates = card['dates']
+    if dates.get('start'):
+        lines.append(f"Даты: {dates['start']} — {dates.get('end') or 'не указано'}.")
+    for field, label in (('departure_at', 'Вылет'), ('arrival_at', 'Прилёт'), ('return_departure_at', 'Обратный вылет')):
+        if dates.get(field):
+            lines.append(label + ': ' + datetime.fromisoformat(dates[field]).strftime('%d.%m.%Y %H:%M') + '.')
+    price = card.get('price')
+    if price:
+        basis = 'на человека' if price['basis'] in ('person', 'ticket') else 'за всю группу и весь период'
+        lines.append(f"Цена: {Decimal(price['amount']):,.2f} {price['currency']} {basis}.".replace(',', ' '))
+        if card.get('price_per_person') and price['basis'] not in ('person', 'ticket'):
+            lines.append(f"На человека: {Decimal(card['price_per_person']['amount']):,.2f} {price['currency']}.".replace(',', ' '))
+    else:
+        lines.append('Цена: источник не указал.')
+    warnings = {'expired_quote': 'Сохранённая цена устарела; проверю перед выбором.', 'unverified_availability': 'Это кэш/справочная выдача, наличие не подтверждено.',
+                'alternate_dates': 'Альтернатива на соседние даты.', 'different_party': 'Цена рассчитана для другого состава; стоимость вашей группы требует проверки.',
+                'outside_search_window': 'Даты вне текущего диапазона, показано как сохранённый ориентир.', 'over_budget': 'Цена выше заданного бюджета.',
+                'different_area': 'Район отличается от исходного сценария.', 'different_hotel': 'Альтернативный отель: отличается от указанного названия.', 'direct_flight_unverified': 'Прямой перелёт не подтверждён.'}
+    lines.extend(warnings[w] for w in card.get('warnings', []) if w in warnings)
+    return '\n'.join(lines)
+
+
 def render_stage(state: dict) -> str:
     from travel_agent.schemas import TripConstraints
 
@@ -17,6 +42,12 @@ def render_stage(state: dict) -> str:
     trip = TripConstraints.model_validate(state.get("constraints", {}))
     titles = {"scenarios": "Выберем сценарий поездки", "transport": "Сначала согласуем транспорт", "stays": "Теперь выберем проживание", "itinerary": "Программа для выбранного проживания", "review": "Поездка собрана — проверьте корзину", "booked": "Имитированная покупка оформлена"}
     lines = [titles[stage] + "."]
+    if state.get('notice'):
+        lines.append(state['notice'])
+    if trip.origin or trip.adults:
+        lines.append(f"Из {trip.origin or 'города, который нужно указать'}; взрослых: {trip.adults or 'не указано'}.")
+    if trip.date_from and trip.date_to:
+        lines.append(f"Диапазон поиска: {trip.date_from:%d.%m.%Y} — {trip.date_to:%d.%m.%Y}.")
     if stage == "booked" and state.get("receipt"):
         lines.append(state["receipt"]["message"])
         lines.append("Номер имитированного заказа: " + state["receipt"]["id"])
@@ -33,6 +64,9 @@ def render_stage(state: dict) -> str:
                 remaining = trip.party_budget - Decimal(candidate["price"]["amount"])
                 lines.append(f"После билетов от предела группы остаётся {remaining:,.2f} ₽ на остальные расходы.".replace(",", " "))
     for index, choice in enumerate(state.get("choices", []), 1):
+        if choice.get('aggregator'):
+            lines.append('\n' + render_card(choice, index))
+            continue
         lines.append(f"\n{index}. {choice['title']}\n{choice['details']}")
         if choice.get("price"):
             amount = Decimal(choice["price"]["amount"])
@@ -47,13 +81,16 @@ def render_stage(state: dict) -> str:
             warnings = result.get("warnings", [])
             issues = {"timeout": "источник не ответил вовремя", "network_error": "ошибка соединения", "schema_error": "не удалось проверить формат ответа", "missing_key": "не настроен ключ источника", "forbidden": "доступ запрещён", "no_availability": "источник не подтвердил наличие", "llm_error": "не удалось завершить обработку моделью", "agent_limit": "достигнут лимит обработки"}
             causes = list(dict.fromkeys(issues[w.split(":")[-1]] for w in warnings if w.split(":")[-1] in issues))
-            lines.append(f"Получено кандидатов: {received}; подходящих свежих предложений для этого этапа нет.")
+            lines.append(f"Источник вернул {received} кандидатов; карточек с проверяемыми данными пока нет.")
             if causes:
                 lines.append("Причина: " + "; ".join(causes) + ".")
-            lines.append("Можно попросить обновить этот этап, изменить даты или требования. Предыдущие согласованные компоненты сохранены.")
+            lines.append("Ограниченный поиск пока не дал предложений. Сохранённые компоненты поездки остаются доступны.")
         else:
-            lines.append("Выберите номер предложения. Поисковая цена не подтверждает резерв; стоимость остальных компонентов ещё не включена.")
+            lines.append("Выберите номер предложения: согласую его фактические даты и продолжу подбор. Для сохранённых или справочных цен сначала выполню проверку. Поисковая цена не подтверждает резерв.")
     elif stage in ("itinerary", "review", "booked"):
+        if state.get('cards'):
+            lines.append('\nНайденные места и активности:' if stage == 'itinerary' else '\nКомпоненты поездки:')
+            lines.extend(render_card(card) for card in state['cards'])
         for option in state.get("options", []):
             amount = Decimal(option["budget"]["known_subtotal"])
             lines.append(f"\nБилеты и проживание: {amount:,.2f} ₽ за группу.".replace(",", " "))

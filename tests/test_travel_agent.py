@@ -167,7 +167,8 @@ class GraphTests(unittest.IsolatedAsyncioTestCase):
         runner.reset_mock()
         result=await graph.ainvoke({'messages':[HumanMessage(content='замени отель')],'calls':0},cfg)
         runner.assert_not_called()
-        self.assertTrue(all('Mirror' in c['title'] for c in result['choices']))
+        self.assertIn('Mirror', result['choices'][0]['title'])
+        self.assertEqual(len(result['choices']), 3)
         result=await graph.ainvoke({'requested_choice':result['choices'][0]['id'],'calls':0},cfg)
         self.assertEqual([c.args[0] for c in runner.await_args_list], ['experience'])
         self.assertEqual(result['stage'], 'itinerary')
@@ -177,7 +178,9 @@ class GraphTests(unittest.IsolatedAsyncioTestCase):
         runner.reset_mock()
         result=await graph.ainvoke({'messages':[HumanMessage(content='сдвиг')],'calls':0},cfg)
         self.assertEqual([c.args[0] for c in runner.await_args_list], ['transport'])
-        self.assertFalse(result['choices'])
+        self.assertTrue(result['choices'])
+        self.assertTrue(all('alternate_dates' in c['warnings'] for c in result['choices']))
+        self.assertEqual(result['constraints']['start'], '2026-11-13')
 
     async def test_loop_and_stale_results(self):
         planner=AsyncMock(return_value=SupervisorDecision(action='transport'))

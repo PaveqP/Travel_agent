@@ -27,5 +27,6 @@ async def run(
         env,
         prompt,
         primary="search_flights",
+        fallback="cached_flights",
         deadline=deadline,
     )
