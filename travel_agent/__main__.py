@@ -37,7 +37,7 @@ def terminal_input() -> Iterator[None]:
 async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
     print("Опишите поездку своими словами. Можно задавать вопросы и менять пожелания.")
     print(
-        "Команды: /show — варианты; /select НОМЕР — выбрать; /book confirm — имитация бронирования; /quit — выйти."
+        "Команды: /show — текущий этап; /select НОМЕР — выбрать; /profile интересы через запятую — запомнить; /book confirm — имитация покупки; /quit — выйти."
     )
     while True:
         try:
@@ -79,6 +79,11 @@ async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
                 )
                 response.raise_for_status()
                 print("\nАгент:", response.json().get("answer") or "Вариант выбран.")
+            elif text.startswith("/profile "):
+                interests = [value.strip() for value in text.split(maxsplit=1)[1].split(",") if value.strip()]
+                response = await client.put("/profile", json=interests)
+                response.raise_for_status()
+                print("Агент: Предпочтения сохранены для следующих поездок.")
             elif text.startswith("/book"):
                 if text != "/book confirm":
                     print(

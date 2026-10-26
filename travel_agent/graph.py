@@ -9,8 +9,8 @@ from langgraph.graph import END, START, StateGraph
 from openai import APIError
 from pydantic import ValidationError
 
-from travel_agent.engine import apply_delta, compose, diagnose, flight_fits, usable
-from travel_agent.schemas import Candidate, ResearchResult, SpecialistResult, SupervisorDecision, TripConstraints, TripDelta, TripScenario
+from travel_agent.engine import apply_delta, compose, diagnose, flight_fits, simulate_purchase, usable
+from travel_agent.schemas import BookingRequest, Candidate, ResearchResult, SpecialistResult, SupervisorDecision, TripConstraints, TripDelta, TripScenario
 from travel_agent.state import TripState
 
 
@@ -32,6 +32,10 @@ async def supervise(state: TripState, decide) -> dict:
         decision = SupervisorDecision(action='choose', choice_id=state['requested_choice']) if state.get('requested_choice') else SupervisorDecision.model_validate(await decide(state))
         if decision.action == 'chat':
             return {**stop(decision.reply or 'Привет! Я помогу спланировать поездку в Большой Сочи.'), 'status': state.get('status', 'needs_input')}
+        if decision.action == 'remember':
+            if decision.profile_interests is None:
+                return stop('Какие предпочтения сохранить для следующих поездок?')
+            return {**stop('Предпочтения сохранены для следующих поездок.'), 'profile_update': decision.profile_interests}
         current = TripConstraints.model_validate(state.get('constraints', {}))
         revised, affected = apply_delta(current, decision.patch) if not state.get('calls', 0) and decision.action not in ('answer', 'research') else (current, set())
     except (ValidationError, ValueError, OutputParserException, APIError, TimeoutError) as exc:
@@ -44,6 +48,10 @@ async def supervise(state: TripState, decide) -> dict:
         return update
     now = datetime.now(timezone.utc)
     affected.update(decision.refresh)
+    changed_fields = {name for name in TripConstraints.model_fields if getattr(current, name) != getattr(revised, name)}
+    if decision.action == 'experience' and state.get('selected_stay') and changed_fields <= {'interests'}:
+        affected.discard('stays')
+        affected.add('experience')
     stage = state.get('stage', 'review' if state.get('options') else 'scenarios')
     changed = current != revised
     work = {**state, 'constraints': revised.model_dump(mode='json'), 'stage': stage, 'requested_choice': None,
@@ -83,7 +91,8 @@ async def supervise(state: TripState, decide) -> dict:
         if len({s.id for s in proposals}) != len(proposals):
             return {**work, **stop('Не удалось разделить сценарии. Уточните желаемый формат отдыха.', 'error')}
         if not work.get('scenarios') or decision.action == 'scenarios':
-            work.update(stage='scenarios', scenarios=[s.model_dump(mode='json') for s in proposals], selected_scenario=None)
+            work.update(stage='scenarios', scenarios=[s.model_dump(mode='json') for s in proposals], selected_scenario=None,
+                        revision=work['revision'] + 1, options=[], selected=None)
     if decision.action == 'choose':
         choice = decision.choice_id
         stage = work['stage']
@@ -123,7 +132,7 @@ async def supervise(state: TripState, decide) -> dict:
         work['revision'] += 1
     if decision.action == 'approve' and decision.confirmed:
         if work.get('pending_check_in'):
-            revised, _ = apply_delta(revised, TripDelta(check_in=work['pending_check_in'], check_out=revised.end))
+            revised, _ = apply_delta(revised, TripDelta(check_in=work['pending_check_in'], check_out=revised.end, clear=['nights'] if revised.nights else []))
             work.update(constraints=revised.model_dump(mode='json'), pending_check_in=None)
             work['results'] = {k: v for k, v in work.get('results', {}).items() if k not in ('stays', 'experience')}
             work['revision'] += 1
@@ -138,6 +147,10 @@ async def supervise(state: TripState, decide) -> dict:
         return {**work, **stop(decision.question or questions[revised.missing()[0]])}
     if revised.start < date.today():
         return {**work, **stop('Укажите будущие даты поездки.')}
+    duration = (revised.end - revised.start).days
+    stay_nights = (revised.stay_end - revised.stay_start).days
+    if revised.duration_days and duration + 1 != revised.duration_days or revised.nights and stay_nights != revised.nights:
+        return {**work, **stop(f'На выбранные даты получается {stay_nights} ночей и {duration + 1} календарных дней. Сохраняем даты или ранее указанную длительность?')}
     if decision.action == 'clarify':
         return {**work, **stop(decision.question or 'Уточните пожелания к текущему этапу.')}
     for role in ('transport', 'stays'):
@@ -150,7 +163,15 @@ async def supervise(state: TripState, decide) -> dict:
             work['revision'] += 1
             break
     if work.get('pending_check_in'):
-        return {**work, **stop(f"Перелёт выбран. Прилёт {work['pending_check_in']}; прежняя дата проживания с ним не совпадает. Согласуем заселение с даты прилёта? Подтвердите или выберите другой перелёт.")}
+        nights = (revised.end - date.fromisoformat(work['pending_check_in'])).days
+        answer = f"Перелёт выбран. Прилёт {work['pending_check_in']}; прежняя дата проживания с ним не совпадает. Заселение с прилёта даст {nights} ночей проживания. Согласуем эти даты? Подтвердите или выберите другой перелёт."
+        return {**work, **stop(answer), 'plan_answer': answer}
+    if decision.action == 'checkout':
+        if work['stage'] == 'booked' and work.get('receipt'):
+            return {**work, **stop(work['receipt']['message'], 'booked')}
+        if not decision.confirmed or work['stage'] != 'review' or changed or affected:
+            return {**work, **stop('Сначала согласуйте все компоненты и программу, затем явно подтвердите имитацию покупки.')}
+        return {**work, 'decision': {'action': 'checkout'}}
     role = {'transport': 'transport', 'stays': 'stays', 'itinerary': 'experience'}.get(work['stage'])
     if role == 'stays' and not work.get('selected_transport'):
         work.update(stage='transport')
@@ -167,7 +188,7 @@ async def specialist(state: TripState, run, config: RunnableConfig) -> dict:
     logging.getLogger(__name__).info('thread=%s role=%s revision=%s', config.get('configurable', {}).get('thread_id'), role, state['revision'])
     hotel = selected_candidate(state, 'stays')
     scenario = next((s for s in state.get('scenarios', []) if s['id'] == state.get('selected_scenario')), {})
-    task = state['decision'].get('task', '') or f"Сценарий: {scenario.get('title', '')}. Цель: {state['constraints'].get('purpose', '')}. Приоритет: {scenario.get('priority', 'balance')}."
+    task = f"Сценарий: {scenario.get('title', '')}. Формат: {scenario.get('purpose', '')}. Цель пользователя: {state['constraints'].get('purpose', '')}. Приоритет: {scenario.get('priority', 'balance')}. Задача этапа: {state['decision'].get('task', '')}"
     result = SpecialistResult.model_validate(await run(TripConstraints.model_validate(state['constraints']), state['revision'], task, [hotel] if role == 'experience' and hotel else []))
     if result.revision != state['revision'] or result.role != role or any(c.role != role for c in result.candidates):
         result = SpecialistResult(role=role, revision=state['revision'], status='partial', warnings=['stale_or_invalid_result'])
@@ -199,6 +220,12 @@ def present_stage(state: TripState) -> dict:
         rows.sort(key=lambda c: (c.id not in preferred, c.price.amount))
         for row in rows[:5]:
             details = f"Прилёт {row.arrival_at:%d.%m.%Y %H:%M}, обратный вылет {row.return_departure_at:%d.%m.%Y %H:%M}." if stage == 'transport' else f"{row.area}; проживание {row.start:%d.%m.%Y} — {row.end:%d.%m.%Y}."
+            if row.departure_at:
+                details = f"Вылет {row.departure_at:%d.%m.%Y %H:%M}. " + details
+            if row.duration_minutes:
+                details += f" В пути туда {row.duration_minutes} мин."
+            if row.transfers is not None:
+                details += f" Пересадок туда: {row.transfers}."
             choices.append({'id': row.id, 'title': row.name, 'details': details, 'price': row.price.model_dump(mode='json')})
         update['diagnostics'] = diagnose(trip, all_candidates(state)).model_dump(mode='json')
     elif stage == 'itinerary':
@@ -208,7 +235,7 @@ def present_stage(state: TripState) -> dict:
         update.update(planning(state))
         choices = [{'id': o['id'], 'title': 'Корзина поездки', 'details': 'Билеты, проживание и предложенная программа.'} for o in update['options'] if o.get('transport') and o.get('stay')]
         update['selected'] = choices[0]['id'] if choices else None
-    status = 'ready' if stage == 'review' and choices else 'needs_choice' if choices else 'partial'
+    status = 'booked' if stage == 'booked' else 'ready' if stage == 'review' and choices else 'needs_choice' if choices else 'partial'
     work = {**state, **update, 'choices': choices, 'status': status}
     answer = render_stage(work)
     return {**update, 'choices': choices, 'status': status, 'answer': answer, 'plan_answer': answer}
@@ -216,6 +243,19 @@ def present_stage(state: TripState) -> dict:
 
 def finish(state: TripState) -> dict:
     return {'messages': [AIMessage(content=state.get('answer', ''))]}
+
+
+def checkout(state: TripState) -> dict:
+    request = BookingRequest(option_id=state.get('selected') or '', revision=state['revision'], confirm=True,
+                             idempotency_key=f"chat-{state['revision']}-{state.get('selected', '')}")
+    try:
+        booking = simulate_purchase(state, request)
+    except ValueError as exc:
+        messages = {'Known subtotal exceeds the party budget': 'Известная сумма превышает бюджет группы. Пересоберите корзину или измените бюджет.',
+                    'Quotes expired; refresh search': 'Котировки устарели. Обновите поиск перед оформлением.'}
+        return stop(messages.get(str(exc), 'Корзина ещё не готова. Согласуйте транспорт, проживание и программу.'), 'partial')
+    return {'bookings': {**state.get('bookings', {}), request.idempotency_key: booking}, 'receipt': booking,
+            'stage': 'booked', 'status': 'booked', 'choices': [], 'answer': booking['message'], 'plan_answer': booking['message']}
 
 
 def build_graph(decide, run, checkpointer, present=None, research=None):
@@ -228,6 +268,7 @@ def build_graph(decide, run, checkpointer, present=None, research=None):
         workflow.add_node(role, partial(specialist, run=run[role]))
         workflow.add_edge(role, 'present')
     workflow.add_node('present', present_stage)
+    workflow.add_node('checkout', checkout)
 
     async def explain(state):
         if present:
@@ -244,8 +285,9 @@ def build_graph(decide, run, checkpointer, present=None, research=None):
     workflow.add_node('research', investigate)
     workflow.add_node('finish', finish)
     workflow.add_edge(START, 'supervisor')
-    workflow.add_conditional_edges('supervisor', lambda s: s['decision']['action'], {'wait': 'finish', 'present': 'present', 'answer': 'explain', 'research': 'research', 'transport': 'transport', 'stays': 'stays', 'experience': 'experience'})
+    workflow.add_conditional_edges('supervisor', lambda s: s['decision']['action'], {'wait': 'finish', 'present': 'present', 'answer': 'explain', 'research': 'research', 'transport': 'transport', 'stays': 'stays', 'experience': 'experience', 'checkout': 'checkout'})
     workflow.add_edge('present', 'finish')
+    workflow.add_edge('checkout', 'finish')
     workflow.add_edge('research', 'explain')
     workflow.add_edge('explain', 'finish')
     workflow.add_edge('finish', END)

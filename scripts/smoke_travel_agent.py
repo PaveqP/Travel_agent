@@ -93,7 +93,7 @@ async def main() -> None:
         follow_redirects=False,
         event_hooks={"request": [guard], "response": [usage]},
     ) as client:
-        model = create_model(config, client)
+        model = create_model(config, client, max_tokens=4096)
         prompts = read_prompts()
         runners = {
             "transport": run_transport,
@@ -152,8 +152,8 @@ async def main() -> None:
             messages = [
                 "Хочу из Москвы в Сочи с 12 по 16 ноября 2026 года. Двое взрослых, бюджет 100000 рублей.",
                 "Цель — спокойный отдых, гулять у моря. Подбери разные варианты.",
-                "Сравни первый и второй варианты по известной стоимости, какой дешевле? Ничего не меняй.",
-                "Есть ли бассейн у отеля из первого варианта? Проверь в интернете, поездку не меняй.",
+                "Сколько стоят согласованные билеты и проживание на человека? Ничего не меняй.",
+                "Есть ли бассейн у согласованного отеля? Проверь в интернете, поездку не меняй.",
             ]
         if args.extended:
             messages += [
@@ -175,6 +175,10 @@ async def main() -> None:
                     },
                     cfg,
                 )
+                for _ in range(5):
+                    if result.get("stage") not in ("scenarios", "transport", "stays", "itinerary") or not result.get("choices") or result.get("pending_check_in"):
+                        break
+                    result = await graph.ainvoke({"requested_choice": result["choices"][0]["id"], "calls": 0}, cfg)
                 record = {
                     k: result.get(k)
                     for k in [
@@ -185,6 +189,10 @@ async def main() -> None:
                         "options",
                         "answer",
                         "status",
+                        "stage",
+                        "choices",
+                        "selected_transport",
+                        "selected_stay",
                     ]
                 }
                 record.update(
@@ -230,7 +238,7 @@ async def main() -> None:
                 {
                     "repetition": repetition,
                     "clarified_without_search": not turns[0]["delegated"]
-                    and turns[0]["decision"]["action"] == "clarify",
+                    and turns[0]["status"] == "needs_input",
                     "full_plan": bool(turns[1]["options"])
                     and all(o["stay"] and o["transport"] for o in turns[1]["options"]),
                 }
@@ -238,7 +246,7 @@ async def main() -> None:
             if args.dialogue:
                 checks[-1].update(
                     purpose_clarified=not turns[0]["constraints"].get("purpose"),
-                    natural_answer="Подойдёт:" in turns[1]["answer"]
+                    natural_answer="Билеты и проживание:" in turns[1]["answer"]
                     and "known_subtotal" not in turns[1]["answer"],
                     comparison_without_search=not turns[2]["delegated"]
                     and turns[2]["revision"] == turns[1]["revision"],
@@ -247,22 +255,24 @@ async def main() -> None:
                     and turns[3]["options"] == turns[1]["options"],
                 )
             if args.extended:
+                hotel_turn = turns[4 if args.dialogue else 2]
+                dates_turn = turns[5 if args.dialogue else 3]
                 checks[-1].update(
-                    hotel_preserves_transport="transport" not in turns[2]["delegated"]
+                    hotel_preserves_transport="transport" not in hotel_turn["delegated"]
                     and bool((turns[1]["results"] or {}).get("transport"))
                     and (turns[1]["results"] or {}).get("transport")
-                    == (turns[2]["results"] or {}).get("transport"),
-                    hotel_matches=bool(turns[2]["options"])
+                    == (hotel_turn["results"] or {}).get("transport"),
+                    hotel_matches=bool(hotel_turn["options"])
                     and all(
                         option["stay"] and "mirror" in option["stay"]["name"].casefold()
-                        for option in turns[2]["options"]
+                        for option in hotel_turn["options"]
                     ),
-                    dates_refresh=set(turns[3]["delegated"])
+                    dates_refresh=set(dates_turn["delegated"])
                     == {"transport", "stays", "experience"},
-                    dates_match=turns[3]["constraints"]["start"] == "2026-11-13"
-                    and turns[3]["constraints"]["end"] == "2026-11-17",
-                    changed_plan=bool(turns[3]["options"])
-                    and all(o["stay"] and o["transport"] for o in turns[3]["options"]),
+                    dates_match=dates_turn["constraints"]["start"] == "2026-11-13"
+                    and dates_turn["constraints"]["end"] == "2026-11-17",
+                    changed_plan=bool(dates_turn["options"])
+                    and all(o["stay"] and o["transport"] for o in dates_turn["options"]),
                 )
         report = json.loads(Path(args.output).read_text())
         report["checks"] = checks

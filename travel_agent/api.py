@@ -1,6 +1,9 @@
 import asyncio
 import hashlib
 import hmac
+import json
+
+import aiosqlite
 from contextlib import AsyncExitStack, asynccontextmanager
 from functools import partial
 from uuid import uuid4
@@ -23,13 +26,11 @@ from travel_agent.agents.stays.agent import run as run_stays
 from travel_agent.agents.experience.agent import run as run_experience
 from travel_agent.prompts import read_prompts
 from travel_agent.config import environment, settings
-from travel_agent.engine import usable
+from travel_agent.engine import simulate_purchase
 from travel_agent.graph import build_graph
 from travel_agent.schemas import (
     BookingRequest,
     MessageRequest,
-    TripConstraints,
-    TripOption,
 )
 from datetime import datetime, timezone
 
@@ -41,10 +42,12 @@ def create_app(
     local_database: str | None = None,
 ) -> FastAPI:
     locks: dict[str, asyncio.Lock] = {}
+    profile_lock = asyncio.Lock()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
         async with AsyncExitStack() as stack:
+            app.state.profile_db = None
             if graph is not None:
                 app.state.graph = graph
                 app.state.store = store or InMemoryStore()
@@ -65,6 +68,13 @@ def create_app(
                     )
                     await saver.setup()
                     app.state.store = InMemoryStore()
+                    db = await stack.enter_async_context(aiosqlite.connect(local_database))
+                    await db.execute('CREATE TABLE IF NOT EXISTS travel_profiles (user_id TEXT PRIMARY KEY, interests TEXT NOT NULL)')
+                    await db.commit()
+                    async with db.execute('SELECT user_id, interests FROM travel_profiles') as cursor:
+                        for user_id, interests in await cursor.fetchall():
+                            await app.state.store.aput(('profiles', user_id), 'preferences', {'interests': json.loads(interests)})
+                    app.state.profile_db = db
                     app.state.persistent = True
                 elif config.database_url:
                     dsn = config.database_url.get_secret_value()
@@ -101,7 +111,7 @@ def create_app(
                         ("experience", run_experience),
                     )
                 }
-                supervisor_model = create_model(config, client)
+                supervisor_model = create_model(config, client, max_tokens=4096)
                 app.state.graph = build_graph(
                     llm_decider(supervisor_model, prompts["supervisor"]),
                     runners,
@@ -163,6 +173,7 @@ def create_app(
                 ("selected_stay", None),
                 ("choices", []),
                 ("pending_check_in", None),
+                ("receipt", {}),
             )
         }
 
@@ -201,6 +212,7 @@ def create_app(
                 "calls": 0,
                 "attempts": [],
                 "requested_choice": None,
+                "profile_update": None,
             }
             if not snapshot.values:
                 profile = await app.state.store.aget(("profiles", user), "preferences")
@@ -215,6 +227,8 @@ def create_app(
                     504,
                     "Turn deadline exceeded; read current trip state before retrying",
                 ) from None
+            if result.get("profile_update") is not None:
+                await save_profile(user, result["profile_update"])
             return view(result)
 
     @app.post("/trips/{trip_id}/select/{option_id}")
@@ -250,63 +264,38 @@ def create_app(
         async with locks.setdefault(user + ":" + trip_id, asyncio.Lock()):
             snapshot = await app.state.graph.aget_state(config)
             state = snapshot.values
-            bookings = dict(state.get("bookings", {}))
-            previous = bookings.get(request.idempotency_key)
-            if previous:
-                if (previous["option_id"], previous["revision"]) != (
-                    request.option_id,
-                    request.revision,
-                ):
-                    raise HTTPException(409, "Idempotency key already used")
-                return previous
-            if not request.confirm:
-                raise HTTPException(
-                    400, "Explicit confirmation is required for simulation"
-                )
-            if (
-                request.revision != state.get("revision", 0)
-                or state.get("selected") != request.option_id
-            ):
-                raise HTTPException(409, "Select a current option first")
-            option = next(
-                (
-                    TripOption.model_validate(o)
-                    for o in state.get("options", [])
-                    if o["id"] == request.option_id
-                ),
-                None,
-            )
-            trip = TripConstraints.model_validate(state.get("constraints", {}))
-            if state.get("stage") and state["stage"] != "review":
-                raise HTTPException(409, "Approve the itinerary before checkout")
-            if option is None or not option.transport or not option.stay:
-                raise HTTPException(409, "Incomplete trip")
-            if not all(
-                usable(c, trip, datetime.now(timezone.utc))
-                for c in (option.transport, option.stay)
-            ):
-                raise HTTPException(409, "Quotes expired; refresh search")
-            booking = {
-                "id": str(uuid4()),
-                "option_id": request.option_id,
-                "revision": request.revision,
-                "simulated": True,
-                "status": "simulated",
-                "paid": False,
-                "reserved": False,
-                "message": "Имитация: реальные места не зарезервированы, оплата не выполнялась.",
-            }
-            bookings[request.idempotency_key] = booking
-            await app.state.graph.aupdate_state(config, {"bookings": bookings})
+            try:
+                booking = simulate_purchase(state, request)
+            except ValueError as exc:
+                raise HTTPException(400 if not request.confirm else 409, str(exc)) from None
+            if request.idempotency_key not in state.get("bookings", {}):
+                await app.state.graph.aupdate_state(config, {
+                    "bookings": {**state.get("bookings", {}), request.idempotency_key: booking},
+                    "receipt": booking, "stage": "booked", "status": "booked", "choices": [],
+                    "answer": booking["message"], "plan_answer": booking["message"],
+                })
             return booking
+
+    async def save_profile(user: str, interests: list[str]) -> None:
+        async with profile_lock:
+            if app.state.profile_db is not None:
+                await app.state.profile_db.execute(
+                    'INSERT INTO travel_profiles(user_id, interests) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET interests=excluded.interests',
+                    (user, json.dumps(interests, ensure_ascii=False)),
+                )
+                await app.state.profile_db.commit()
+            await app.state.store.aput(("profiles", user), "preferences", {"interests": interests})
+
+    @app.get("/profile")
+    async def read_profile(user: str = Depends(owner)):
+        saved = await app.state.store.aget(("profiles", user), "preferences")
+        return {"interests": saved.value["interests"] if saved else []}
 
     @app.put("/profile")
     async def profile(interests: list[str], user: str = Depends(owner)):
-        if len(interests) > 10 or any(len(i) > 100 for i in interests):
+        if len(interests) > 10 or any(not i.strip() or len(i) > 100 for i in interests):
             raise HTTPException(422, "At most ten interests, each up to 100 characters")
-        await app.state.store.aput(
-            ("profiles", user), "preferences", {"interests": interests}
-        )
+        await save_profile(user, interests)
         return {"interests": interests}
 
     return app

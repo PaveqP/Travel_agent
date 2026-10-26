@@ -1,6 +1,7 @@
 from typing import Annotated, TypedDict
 from langchain_core.messages import BaseMessage
 from langgraph.graph.message import add_messages
+from travel_agent.schemas import Stage
 
 
 class TripState(TypedDict, total=False):
@@ -20,7 +21,7 @@ class TripState(TypedDict, total=False):
     research: dict
     plan_answer: str
     diagnostics: dict
-    stage: str
+    stage: Stage
     scenarios: list[dict]
     selected_scenario: str | None
     selected_transport: str | None
@@ -28,3 +29,5 @@ class TripState(TypedDict, total=False):
     choices: list[dict]
     pending_check_in: str | None
     requested_choice: str | None
+    receipt: dict
+    profile_update: list[str] | None

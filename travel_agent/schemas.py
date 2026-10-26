@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from decimal import Decimal
-from typing import Literal
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from integrations.schemas.models import Budget, Coordinates, Money, Provenance
@@ -29,6 +29,9 @@ class TripConstraints(BaseModel):
     end: date | None = None
     check_in: date | None = None
     check_out: date | None = None
+    travel_month: str | None = Field(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$")
+    duration_days: int | None = Field(default=None, ge=1, le=31)
+    nights: int | None = Field(default=None, ge=1, le=30)
     adults: int | None = Field(default=None, ge=1, le=6)
     budget: Decimal | None = Field(default=None, gt=0)
     budget_basis: Literal["party", "person"] = "party"
@@ -58,9 +61,11 @@ class TripConstraints(BaseModel):
 
     @property
     def party_budget(self) -> Decimal | None:
-        if self.budget is None or self.budget_basis == "person" and self.adults is None:
+        if self.budget is None:
             return None
-        return self.budget * self.adults if self.budget_basis == "person" else self.budget
+        if self.budget_basis == "person":
+            return self.budget * self.adults if self.adults is not None else None
+        return self.budget
 
     def missing(self) -> list[str]:
         return [
@@ -76,13 +81,16 @@ class TripDelta(BaseModel):
     end: date | None = None
     check_in: date | None = None
     check_out: date | None = None
+    travel_month: str | None = Field(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$")
+    duration_days: int | None = Field(default=None, ge=1, le=31)
+    nights: int | None = Field(default=None, ge=1, le=30)
     adults: int | None = Field(default=None, ge=1, le=6)
     budget: Decimal | None = Field(default=None, gt=0)
     budget_basis: Literal["party", "person"] | None = None
     purpose: str | None = Field(default=None, min_length=1, max_length=500)
     hotel: str | None = Field(default=None, max_length=200)
     interests: list[str] | None = Field(default=None, max_length=10)
-    clear: list[Literal["hotel", "budget", "purpose", "check_in", "check_out"]] = Field(default_factory=list, max_length=5)
+    clear: list[Literal["hotel", "budget", "purpose", "check_in", "check_out", "travel_month", "duration_days", "nights"]] = Field(default_factory=list, max_length=8)
 
     @model_validator(mode="after")
     def distinct_changes(self):
@@ -107,6 +115,7 @@ class SupervisorDecision(BaseModel):
         "choose",
         "approve",
         "checkout",
+        "remember",
     ]
     reply: str = Field(default="", max_length=1200)
     research_role: Role = "experience"
@@ -119,6 +128,16 @@ class SupervisorDecision(BaseModel):
     scenarios: list[TripScenario] = Field(default_factory=list, max_length=4)
     choice_id: str | None = Field(default=None, max_length=150)
     confirmed: bool = False
+    profile_interests: list[Annotated[str, Field(min_length=1, max_length=100, pattern=r"\S")]] | None = Field(default=None, max_length=10)
+
+    @model_validator(mode="after")
+    def distinct_scenarios(self):
+        if len({s.id for s in self.scenarios}) != len(self.scenarios):
+            raise ValueError("Scenario IDs must be distinct")
+        signatures = {(s.destination, s.purpose.strip().casefold(), s.priority) for s in self.scenarios}
+        if len(signatures) != len(self.scenarios):
+            raise ValueError("Scenarios must offer different search directions")
+        return self
 
 
 class Candidate(BaseModel):
@@ -136,6 +155,9 @@ class Candidate(BaseModel):
     origin: str | None = None
     destination: str | None = None
     arrival_at: datetime | None = None
+    departure_at: datetime | None = None
+    duration_minutes: int | None = Field(default=None, ge=1)
+    transfers: int | None = Field(default=None, ge=0)
     return_departure_at: datetime | None = None
     url: str | None = None
 

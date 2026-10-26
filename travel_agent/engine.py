@@ -1,9 +1,10 @@
 from datetime import datetime, timedelta, timezone
 from hashlib import sha256
 from itertools import product
+from uuid import uuid4
 
 from integrations.schemas.models import BudgetLine, Coordinates, calculate_budget
-from travel_agent.schemas import Candidate, ItineraryDay, PlanDiagnostics, TripConstraints, TripDelta, TripOption
+from travel_agent.schemas import BookingRequest, Candidate, ItineraryDay, PlanDiagnostics, TripConstraints, TripDelta, TripOption
 
 CENTERS = {'Сочи': (43.585, 39.723), 'Адлер': (43.448, 39.907),
            'Сириус': (43.405, 39.96), 'Красная Поляна': (43.68, 40.2), 'Роза Хутор': (43.67, 40.29)}
@@ -158,3 +159,33 @@ def compose(trip: TripConstraints, candidates: list[Candidate], revision: int, n
         if len(diversified) == 5:
             break
     return diversified
+
+
+def simulate_purchase(state: dict, request: BookingRequest) -> dict:
+    previous = state.get('bookings', {}).get(request.idempotency_key)
+    if previous:
+        if (previous['option_id'], previous['revision']) != (request.option_id, request.revision):
+            raise ValueError('Idempotency key already used')
+        return previous
+    if not request.confirm:
+        raise ValueError('Explicit confirmation is required for simulation')
+    if state.get('stage') not in (None, 'review'):
+        raise ValueError('Approve the itinerary before checkout')
+    if request.revision != state.get('revision', 0) or state.get('selected') != request.option_id:
+        raise ValueError('Select a current option first')
+    option = next((TripOption.model_validate(o) for o in state.get('options', []) if o['id'] == request.option_id), None)
+    if option is None or not option.transport or not option.stay:
+        raise ValueError('Incomplete trip')
+    trip = TripConstraints.model_validate(state['constraints'])
+    if not all(usable(c, trip, datetime.now(timezone.utc)) for c in (option.transport, option.stay)):
+        raise ValueError('Quotes expired; refresh search')
+    if not flight_fits(option.transport, trip) or (option.transport.arrival_at.date(), option.transport.return_departure_at.date()) != (option.stay.start, option.stay.end):
+        raise ValueError('Transport and stay dates are incompatible')
+    if trip.party_budget and option.budget.known_subtotal > trip.party_budget:
+        raise ValueError('Known subtotal exceeds the party budget')
+    return {'id': str(uuid4()), 'option_id': request.option_id, 'revision': request.revision,
+            'simulated': True, 'status': 'simulated', 'paid': False, 'reserved': False,
+            'items': [{'kind': c.role, 'source_id': c.id, 'name': c.name, 'price': c.price.model_dump(mode='json'), 'details': c.model_dump(mode='json', exclude={'source', 'price', 'url'})} for c in (option.transport, option.stay)],
+            'payment': {'simulated': True, 'status': 'succeeded', 'currency': 'RUB', 'amount': str(option.budget.known_subtotal), 'scope': 'transport_and_stay'},
+            'missing_costs': option.budget.missing, 'itinerary': [d.model_dump(mode='json') for d in option.days],
+            'message': 'Имитация покупки оформлена: билеты, проживание и маршрут сохранены в заказе. Реальные места не зарезервированы, оплата не выполнялась. Питание, трансферы, активности и сборы не оплачены.'}

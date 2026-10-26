@@ -1,5 +1,7 @@
 # Проверка пользовательского диалога — 26.10.2026
 
+Исторический отчёт для прежней оркестрации. Актуальный поэтапный процесс и проверки описаны в [SCENARIO_PIPELINE.md](SCENARIO_PIPELINE.md).
+
 Запуск: `python chat.py`. Подробности и команды: [инструкция](TRAVEL_AGENT.md). Отчёт: [user_dialogue_validation.json](../reports/user_dialogue_validation.json).
 
 ## Изменения

@@ -17,6 +17,9 @@ def render_stage(state: dict) -> str:
     trip = TripConstraints.model_validate(state.get("constraints", {}))
     titles = {"scenarios": "Выберем сценарий поездки", "transport": "Сначала согласуем транспорт", "stays": "Теперь выберем проживание", "itinerary": "Программа для выбранного проживания", "review": "Поездка собрана — проверьте корзину", "booked": "Имитированная покупка оформлена"}
     lines = [titles[stage] + "."]
+    if stage == "booked" and state.get("receipt"):
+        lines.append(state["receipt"]["message"])
+        lines.append("Номер имитированного заказа: " + state["receipt"]["id"])
     if trip.budget:
         basis = "на человека" if trip.budget_basis == "person" else "на группу"
         total = f"; предел группы {trip.party_budget:,.0f} ₽" if trip.party_budget else ""
@@ -26,6 +29,9 @@ def render_stage(state: dict) -> str:
         candidate = next((c for r in state.get("results", {}).values() for c in r.get("candidates", []) if c["id"] == ident), None)
         if candidate:
             lines.append(f"{label}: {candidate['name']}.")
+            if role == "transport" and stage == "stays" and trip.party_budget:
+                remaining = trip.party_budget - Decimal(candidate["price"]["amount"])
+                lines.append(f"После билетов от предела группы остаётся {remaining:,.2f} ₽ на остальные расходы.".replace(",", " "))
     for index, choice in enumerate(state.get("choices", []), 1):
         lines.append(f"\n{index}. {choice['title']}\n{choice['details']}")
         if choice.get("price"):
@@ -47,7 +53,7 @@ def render_stage(state: dict) -> str:
             lines.append("Можно попросить обновить этот этап, изменить даты или требования. Предыдущие согласованные компоненты сохранены.")
         else:
             lines.append("Выберите номер предложения. Поисковая цена не подтверждает резерв; стоимость остальных компонентов ещё не включена.")
-    elif stage in ("itinerary", "review"):
+    elif stage in ("itinerary", "review", "booked"):
         for option in state.get("options", []):
             amount = Decimal(option["budget"]["known_subtotal"])
             lines.append(f"\nБилеты и проживание: {amount:,.2f} ₽ за группу.".replace(",", " "))
@@ -58,7 +64,8 @@ def render_stage(state: dict) -> str:
                 lines.append(f"{day['date']}: {places}.")
             lines.extend(option.get("warnings", []))
         lines.append("Питание, трансферы, входные билеты и сборы не подтверждены и не включены; часы работы и время переездов требуют проверки.")
-        lines.append("Согласуйте программу, чтобы перейти к корзине." if stage == "itinerary" else "Для имитации покупки введите /book confirm или явно попросите оформить имитированную покупку.")
+        if stage != "booked":
+            lines.append("Согласуйте программу, чтобы перейти к корзине." if stage == "itinerary" else "Для имитации покупки введите /book confirm или явно попросите оформить имитированную покупку.")
     return "\n".join(lines)
 
 
@@ -168,6 +175,9 @@ def llm_presenter(model, prompt: str):
             },
             "options": option_context(state),
             "selected": state.get("selected"),
+            "stage": state.get("stage"),
+            "choices": state.get("choices", []),
+            "receipt": state.get("receipt", {}),
             "research": research,
         }
         fallback = (
