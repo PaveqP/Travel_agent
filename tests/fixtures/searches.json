@@ -1,0 +1,501 @@
+{
+  "search_avia": {
+    "meta": {
+      "pricing": {
+        "basis": "party_total",
+        "passengers": {
+          "full": 2
+        },
+        "note": "Prices on this page already cover the WHOLE searched party — never multiply them by the passenger count."
+      }
+    },
+    "offers": [
+      {
+        "offer_id": "a04a671250bf5957059b93641b16b16a+937d82482a644f9bebf38abdd5e5bb05",
+        "price": {
+          "amount": 14018.0,
+          "currency": "RUB"
+        },
+        "carriers": [
+          "Победа",
+          "Utair"
+        ],
+        "search_results_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+        "departure_at": "2026-11-12T11:30:00+03:00",
+        "arrival_at": "2026-11-12T15:20:00+03:00",
+        "return_departure_at": "2026-11-16T15:10:00+03:00",
+        "is_round_trip": true,
+        "legs": [
+          {
+            "label": "outbound",
+            "from": "Москва — Шереметьево (SVO), терм. D",
+            "to": "Сочи, AER",
+            "departure_at": "2026-11-12T11:30:00+03:00",
+            "arrival_at": "2026-11-12T15:20:00+03:00",
+            "duration_min": 230,
+            "segments": [
+              {
+                "from": "Москва — Шереметьево (SVO), терм. D",
+                "to": "Сочи, AER",
+                "departure_at": "2026-11-12T11:30:00+03:00",
+                "arrival_at": "2026-11-12T15:20:00+03:00",
+                "duration_min": 230,
+                "carrier": "Победа",
+                "voyage_no": "DP-6941",
+                "from_geo_point_id": 2719726,
+                "to_geo_point_id": 2718761,
+                "review_summary": {
+                  "rating": 6.54,
+                  "review_count": 14397,
+                  "label": "⭐ 6.54/10 · 14 397 отзывов",
+                  "source": "offers-api.feedback",
+                  "scope": "carrier",
+                  "subject": "Победа",
+                  "scale": 10,
+                  "feedback_key": "2227"
+                }
+              }
+            ]
+          },
+          {
+            "label": "return",
+            "from": "Сочи, AER",
+            "to": "Москва — Внуково (VKO)",
+            "departure_at": "2026-11-16T15:10:00+03:00",
+            "arrival_at": "2026-11-16T19:00:00+03:00",
+            "duration_min": 230,
+            "segments": [
+              {
+                "from": "Сочи, AER",
+                "to": "Москва — Внуково (VKO)",
+                "departure_at": "2026-11-16T15:10:00+03:00",
+                "arrival_at": "2026-11-16T19:00:00+03:00",
+                "duration_min": 230,
+                "carrier": "Utair",
+                "voyage_no": "UT-268",
+                "from_geo_point_id": 2718761,
+                "to_geo_point_id": 2718687,
+                "review_summary": {
+                  "rating": 7.69,
+                  "review_count": 9879,
+                  "label": "⭐ 7.69/10 · 9 879 отзывов",
+                  "source": "offers-api.feedback",
+                  "scope": "carrier",
+                  "subject": "Utair",
+                  "scale": 10,
+                  "feedback_key": "1116"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "offer_id": "62795ef05b267a39680e441440f32571+937d82482a644f9bebf38abdd5e5bb05",
+        "price": {
+          "amount": 14018.0,
+          "currency": "RUB"
+        },
+        "carriers": [
+          "Победа",
+          "Utair"
+        ],
+        "search_results_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+        "departure_at": "2026-11-12T08:05:00+03:00",
+        "arrival_at": "2026-11-12T11:50:00+03:00",
+        "return_departure_at": "2026-11-16T15:10:00+03:00",
+        "is_round_trip": true,
+        "legs": [
+          {
+            "label": "outbound",
+            "from": "Москва — Внуково (VKO), терм. A",
+            "to": "Сочи, AER",
+            "departure_at": "2026-11-12T08:05:00+03:00",
+            "arrival_at": "2026-11-12T11:50:00+03:00",
+            "duration_min": 225,
+            "segments": [
+              {
+                "from": "Москва — Внуково (VKO), терм. A",
+                "to": "Сочи, AER",
+                "departure_at": "2026-11-12T08:05:00+03:00",
+                "arrival_at": "2026-11-12T11:50:00+03:00",
+                "duration_min": 225,
+                "carrier": "Победа",
+                "voyage_no": "DP-111",
+                "from_geo_point_id": 2718687,
+                "to_geo_point_id": 2718761,
+                "review_summary": {
+                  "rating": 6.54,
+                  "review_count": 14397,
+                  "label": "⭐ 6.54/10 · 14 397 отзывов",
+                  "source": "offers-api.feedback",
+                  "scope": "carrier",
+                  "subject": "Победа",
+                  "scale": 10,
+                  "feedback_key": "2227"
+                }
+              }
+            ]
+          },
+          {
+            "label": "return",
+            "from": "Сочи, AER",
+            "to": "Москва — Внуково (VKO)",
+            "departure_at": "2026-11-16T15:10:00+03:00",
+            "arrival_at": "2026-11-16T19:00:00+03:00",
+            "duration_min": 230,
+            "segments": [
+              {
+                "from": "Сочи, AER",
+                "to": "Москва — Внуково (VKO)",
+                "departure_at": "2026-11-16T15:10:00+03:00",
+                "arrival_at": "2026-11-16T19:00:00+03:00",
+                "duration_min": 230,
+                "carrier": "Utair",
+                "voyage_no": "UT-268",
+                "from_geo_point_id": 2718761,
+                "to_geo_point_id": 2718687,
+                "review_summary": {
+                  "rating": 7.69,
+                  "review_count": 9879,
+                  "label": "⭐ 7.69/10 · 9 879 отзывов",
+                  "source": "offers-api.feedback",
+                  "scope": "carrier",
+                  "subject": "Utair",
+                  "scale": 10,
+                  "feedback_key": "1116"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "offer_id": "a04a671250bf5957059b93641b16b16a+d35398e02f3d684de2b124705b11d2f2",
+        "price": {
+          "amount": 14368.0,
+          "currency": "RUB"
+        },
+        "carriers": [
+          "Победа"
+        ],
+        "search_results_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+        "departure_at": "2026-11-12T11:30:00+03:00",
+        "arrival_at": "2026-11-12T15:20:00+03:00",
+        "return_departure_at": "2026-11-16T08:40:00+03:00",
+        "is_round_trip": true,
+        "legs": [
+          {
+            "label": "outbound",
+            "from": "Москва — Шереметьево (SVO), терм. D",
+            "to": "Сочи, AER",
+            "departure_at": "2026-11-12T11:30:00+03:00",
+            "arrival_at": "2026-11-12T15:20:00+03:00",
+            "duration_min": 230,
+            "segments": [
+              {
+                "from": "Москва — Шереметьево (SVO), терм. D",
+                "to": "Сочи, AER",
+                "departure_at": "2026-11-12T11:30:00+03:00",
+                "arrival_at": "2026-11-12T15:20:00+03:00",
+                "duration_min": 230,
+                "carrier": "Победа",
+                "voyage_no": "DP-6941",
+                "from_geo_point_id": 2719726,
+                "to_geo_point_id": 2718761,
+                "review_summary": {
+                  "rating": 6.54,
+                  "review_count": 14397,
+                  "label": "⭐ 6.54/10 · 14 397 отзывов",
+                  "source": "offers-api.feedback",
+                  "scope": "carrier",
+                  "subject": "Победа",
+                  "scale": 10,
+                  "feedback_key": "2227"
+                }
+              }
+            ]
+          },
+          {
+            "label": "return",
+            "from": "Сочи, AER",
+            "to": "Москва — Внуково (VKO), терм. A",
+            "departure_at": "2026-11-16T08:40:00+03:00",
+            "arrival_at": "2026-11-16T12:15:00+03:00",
+            "duration_min": 215,
+            "segments": [
+              {
+                "from": "Сочи, AER",
+                "to": "Москва — Внуково (VKO), терм. A",
+                "departure_at": "2026-11-16T08:40:00+03:00",
+                "arrival_at": "2026-11-16T12:15:00+03:00",
+                "duration_min": 215,
+                "carrier": "Победа",
+                "voyage_no": "DP-112",
+                "from_geo_point_id": 2718761,
+                "to_geo_point_id": 2718687,
+                "review_summary": {
+                  "rating": 6.54,
+                  "review_count": 14397,
+                  "label": "⭐ 6.54/10 · 14 397 отзывов",
+                  "source": "offers-api.feedback",
+                  "scope": "carrier",
+                  "subject": "Победа",
+                  "scale": 10,
+                  "feedback_key": "2227"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "search_hotels": {
+    "stay": {
+      "check_in": "2026-11-12",
+      "check_out": "2026-11-16",
+      "nights": 4
+    },
+    "hotels": [
+      {
+        "hotel_id": "11446829",
+        "name": "COOCOOROOZA",
+        "location": {
+          "lat": 43.625015,
+          "lng": 39.696064,
+          "city": null,
+          "city_geo_id": null
+        },
+        "best_offer": {
+          "offerpack_hash": "6430677a-e4fd-46ac-9756-3a533f25a889",
+          "room_name": "Стандарт - 1 этаж",
+          "price": {
+            "amount": 8600.0,
+            "currency": "RUB"
+          },
+          "price_basis": "stay_total",
+          "checkout_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11446829&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+          "room_size_sqm": null,
+          "breakfast_included": true,
+          "meal_name": "Завтрак \"шведский стол\"",
+          "free_cancellation": true,
+          "pay_at_hotel": null,
+          "pay_online": null,
+          "highlights": [
+            {
+              "type": "meal",
+              "text": "Завтрак \"шведский стол\""
+            },
+            {
+              "type": "policies",
+              "text": "Бесплатная отмена"
+            },
+            {
+              "type": "payment",
+              "text": "Оплата позже"
+            }
+          ]
+        },
+        "checkout_ref": {
+          "transport": "hotels",
+          "hotel_geo_id": "11446829",
+          "check_in": "2026-11-12",
+          "check_out": "2026-11-16",
+          "adults": 2,
+          "hotel_alias": "kukuruza",
+          "search_id": "7b7b069b96d79e9fd9e25525e31d2836",
+          "fallback_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11446829&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836"
+        }
+      },
+      {
+        "hotel_id": "7653053",
+        "name": "Отель Сочи Галерея Парк",
+        "location": {
+          "lat": 43.587547,
+          "lng": 39.724262,
+          "city": null,
+          "city_geo_id": null
+        },
+        "best_offer": {
+          "offerpack_hash": "9878b600-4f50-42b9-9e20-88bf286f0bc3",
+          "room_name": "Двухместный без окна",
+          "price": {
+            "amount": 5572.0,
+            "currency": "RUB"
+          },
+          "price_basis": "stay_total",
+          "checkout_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=7653053&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+          "room_size_sqm": null,
+          "breakfast_included": null,
+          "meal_name": null,
+          "free_cancellation": true,
+          "pay_at_hotel": null,
+          "pay_online": null,
+          "highlights": [
+            {
+              "type": "policies",
+              "text": "Бесплатная отмена"
+            },
+            {
+              "type": "payment",
+              "text": "Оплата позже"
+            }
+          ]
+        },
+        "checkout_ref": {
+          "transport": "hotels",
+          "hotel_geo_id": "7653053",
+          "check_in": "2026-11-12",
+          "check_out": "2026-11-16",
+          "adults": 2,
+          "hotel_alias": "otel_sochi_galereya_park",
+          "search_id": "7b7b069b96d79e9fd9e25525e31d2836",
+          "fallback_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=7653053&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836"
+        }
+      },
+      {
+        "hotel_id": "9573823",
+        "name": "Mirror Residence",
+        "location": {
+          "lat": 43.58982,
+          "lng": 39.725143,
+          "city": null,
+          "city_geo_id": null
+        },
+        "best_offer": {
+          "offerpack_hash": "0c6f64fc-917e-4abd-846d-745cf1ca7610",
+          "room_name": "Студия",
+          "price": {
+            "amount": 11760.0,
+            "currency": "RUB"
+          },
+          "price_basis": "stay_total",
+          "checkout_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=9573823&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+          "room_size_sqm": null,
+          "breakfast_included": null,
+          "meal_name": null,
+          "free_cancellation": true,
+          "pay_at_hotel": null,
+          "pay_online": null,
+          "highlights": [
+            {
+              "type": "policies",
+              "text": "Бесплатная отмена"
+            },
+            {
+              "type": "payment",
+              "text": "Оплата позже"
+            }
+          ]
+        },
+        "checkout_ref": {
+          "transport": "hotels",
+          "hotel_geo_id": "9573823",
+          "check_in": "2026-11-12",
+          "check_out": "2026-11-16",
+          "adults": 2,
+          "hotel_alias": "south_mirror_residence",
+          "search_id": "7b7b069b96d79e9fd9e25525e31d2836",
+          "fallback_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=9573823&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836"
+        }
+      }
+    ]
+  },
+  "search_places": {
+    "items": [
+      {
+        "id": "4222652931637660",
+        "name": "Ривьера, парк культуры и отдыха",
+        "coordinates": {
+          "lat": 43.591485,
+          "lon": 39.717018
+        }
+      },
+      {
+        "id": "70000001061365387",
+        "name": "Сочинский национальный парк, Дендрарий",
+        "coordinates": {
+          "lat": 43.568318,
+          "lon": 39.742059
+        }
+      },
+      {
+        "id": "4222652931670726",
+        "name": "Зимний театр",
+        "coordinates": {
+          "lat": 43.572495,
+          "lon": 39.730383
+        }
+      },
+      {
+        "id": "4222652931638903",
+        "name": "Сочинский государственный цирк",
+        "coordinates": {
+          "lat": 43.568883,
+          "lon": 39.738421
+        }
+      }
+    ]
+  },
+  "timepad": {
+    "values": [
+      {
+        "id": 4233349,
+        "starts_at": "2026-11-13T10:05:00+0300",
+        "name": "ЛИДЕРЫ ИНДУСТРИИ УПАКОВКИ 2026",
+        "url": "https://investitsionnyy-komitet.timepad.ru/event/4233349/",
+        "location": {
+          "country": "Россия",
+          "city": "Сочи",
+          "address": "Ленинградская ул., 7А, п. г. т. Дагомыс"
+        }
+      },
+      {
+        "id": 4269733,
+        "starts_at": "2026-11-13T19:00:00+0300",
+        "name": "Стендап-экскурсия по Сочи",
+        "url": "https://ip-kopchenov-av.timepad.ru/event/4269733/",
+        "location": {
+          "country": "Россия",
+          "city": "Сочи",
+          "address": "Памятник «Якорь и пушка», Морской пер., 2",
+          "coordinates": [
+            "43.57567039314114",
+            "39.7246921666558"
+          ]
+        }
+      },
+      {
+        "id": 4269738,
+        "starts_at": "2026-11-14T18:00:00+0300",
+        "name": "Стендап-экскурсия по Сочи",
+        "url": "https://ip-kopchenov-av.timepad.ru/event/4269738/",
+        "location": {
+          "country": "Россия",
+          "city": "Сочи",
+          "address": "Памятник «Якорь и пушка», Морской пер., 2",
+          "coordinates": [
+            "43.57567039314114",
+            "39.7246921666558"
+          ]
+        }
+      },
+      {
+        "id": 4269743,
+        "starts_at": "2026-11-15T18:00:00+0300",
+        "name": "Стендап-экскурсия по Сочи",
+        "url": "https://ip-kopchenov-av.timepad.ru/event/4269743/",
+        "location": {
+          "country": "Россия",
+          "city": "Сочи",
+          "address": "Памятник «Якорь и пушка», Морской пер., 2",
+          "coordinates": [
+            "43.57567039314114",
+            "39.7246921666558"
+          ]
+        }
+      }
+    ]
+  }
+}

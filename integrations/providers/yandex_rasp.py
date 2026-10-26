@@ -1,5 +1,6 @@
-from integrations.core import ENV,START,record
+import httpx
 async def run(h):
+ from integrations.core import ENV,START,record
  base='https://api.rasp.yandex-net.ru/v3.0/'
  headers={'Authorization':ENV.get('YANDEX_RASP_API_KEY','')}
  stations={}
@@ -13,3 +14,8 @@ async def run(h):
   if src in stations and dst in stations:
    await h.get('yandex_rasp',case,base+'search/',params={'from':stations[src],'to':stations[dst],'date':str(START),'transport_types':'suburban','limit':20,'transfers':'true','result_timezone':'Europe/Moscow'},headers=headers,required_key='YANDEX_RASP_API_KEY',expected=lambda d:isinstance(d.get('segments'),list))
   else:record('yandex_rasp',case,'dependency_missing',reason='Station ID not resolved; no fabricated station codes')
+
+async def schedule(client: httpx.AsyncClient, key: str, origin: str, destination: str, day: str) -> httpx.Response:
+ return await client.get('https://api.rasp.yandex-net.ru/v3.0/search/', params={
+  'from':origin, 'to':destination, 'date':day, 'transport_types':'suburban',
+  'limit':20, 'transfers':'true', 'result_timezone':'Europe/Moscow'}, headers={'Authorization':key})

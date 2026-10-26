@@ -1,0 +1,482 @@
+{
+  "created_at": "2026-10-26T10:20:09.626457+00:00",
+  "live_full_plan": [
+    {
+      "revision": 1,
+      "constraints": {
+        "origin": "Москва",
+        "destination": "Сочи",
+        "start": null,
+        "end": null,
+        "adults": 2,
+        "budget": "100000",
+        "hotel": null,
+        "interests": [
+          "море",
+          "прогулки"
+        ]
+      },
+      "answer": "На какие даты планируете поездку в Сочи (дата заезда и дата выезда)?",
+      "results": {},
+      "options": []
+    },
+    {
+      "revision": 2,
+      "constraints": {
+        "origin": "Москва",
+        "destination": "Сочи",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "budget": "100000",
+        "hotel": null,
+        "interests": [
+          "море",
+          "прогулки"
+        ]
+      },
+      "answer": "Найдены варианты. Показана известная часть расходов; полная стоимость и бронирование не подтверждены.",
+      "results": {
+        "transport": {
+          "status": "ok",
+          "candidates": 3,
+          "tool_calls": 1,
+          "warnings": []
+        },
+        "stays": {
+          "status": "ok",
+          "candidates": 4,
+          "tool_calls": 1,
+          "warnings": []
+        },
+        "experience": {
+          "status": "partial",
+          "candidates": 16,
+          "tool_calls": 5,
+          "warnings": [
+            "weather_outside_forecast_horizon",
+            "timepad:schema_error",
+            "agent_limit"
+          ]
+        }
+      },
+      "options": [
+        {
+          "hotel": "Отель Сочи Галерея Парк",
+          "transport": "Победа / Utair",
+          "known_subtotal": "19058.0",
+          "confirmed_total": null,
+          "missing": [
+            "meals",
+            "local_transport",
+            "activities",
+            "extra_fees"
+          ],
+          "days": 5,
+          "activities": 6
+        },
+        {
+          "hotel": "Отель Сочи Галерея Парк",
+          "transport": "Победа / Utair",
+          "known_subtotal": "19058.0",
+          "confirmed_total": null,
+          "missing": [
+            "meals",
+            "local_transport",
+            "activities",
+            "extra_fees"
+          ],
+          "days": 5,
+          "activities": 6
+        },
+        {
+          "hotel": "Отель Сочи Галерея Парк",
+          "transport": "Победа",
+          "known_subtotal": "19408.0",
+          "confirmed_total": null,
+          "missing": [
+            "meals",
+            "local_transport",
+            "activities",
+            "extra_fees"
+          ],
+          "days": 5,
+          "activities": 6
+        }
+      ]
+    }
+  ],
+  "live_changes": [
+    {
+      "revision": 1,
+      "constraints": {
+        "origin": "Москва",
+        "destination": "Сочи",
+        "start": null,
+        "end": null,
+        "adults": 2,
+        "budget": "100000",
+        "hotel": null,
+        "interests": [
+          "море",
+          "прогулки"
+        ]
+      },
+      "answer": "На какие даты планируете поездку (заезд и выезд)?",
+      "results": {},
+      "options": []
+    },
+    {
+      "revision": 2,
+      "constraints": {
+        "origin": "Москва",
+        "destination": "Сочи",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "budget": "100000",
+        "hotel": null,
+        "interests": [
+          "море",
+          "прогулки"
+        ]
+      },
+      "answer": "Найдены варианты. Показана известная часть расходов; полная стоимость и бронирование не подтверждены.",
+      "results": {
+        "transport": {
+          "status": "ok",
+          "candidates": 4,
+          "tool_calls": 1,
+          "warnings": []
+        },
+        "stays": {
+          "status": "partial",
+          "candidates": 0,
+          "tool_calls": 1,
+          "warnings": [
+            "tavily:missing_key"
+          ]
+        },
+        "experience": {
+          "status": "partial",
+          "candidates": 2,
+          "tool_calls": 2,
+          "warnings": [
+            "weather_outside_forecast_horizon"
+          ]
+        }
+      },
+      "options": [
+        {
+          "hotel": null,
+          "transport": "Победа / Utair",
+          "known_subtotal": "14018.0",
+          "confirmed_total": null,
+          "missing": [
+            "stay",
+            "meals",
+            "local_transport",
+            "activities",
+            "extra_fees"
+          ],
+          "days": 5,
+          "activities": 2
+        },
+        {
+          "hotel": null,
+          "transport": "Победа / Utair",
+          "known_subtotal": "14018.0",
+          "confirmed_total": null,
+          "missing": [
+            "stay",
+            "meals",
+            "local_transport",
+            "activities",
+            "extra_fees"
+          ],
+          "days": 5,
+          "activities": 2
+        },
+        {
+          "hotel": null,
+          "transport": "Победа",
+          "known_subtotal": "14368.0",
+          "confirmed_total": null,
+          "missing": [
+            "stay",
+            "meals",
+            "local_transport",
+            "activities",
+            "extra_fees"
+          ],
+          "days": 5,
+          "activities": 2
+        }
+      ]
+    },
+    {
+      "revision": 3,
+      "constraints": {
+        "origin": "Москва",
+        "destination": "Сочи",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "budget": "100000",
+        "hotel": "Mirror Residence",
+        "interests": [
+          "море",
+          "прогулки"
+        ]
+      },
+      "answer": "Найдены варианты. Показана известная часть расходов; полная стоимость и бронирование не подтверждены.",
+      "results": {
+        "transport": {
+          "status": "ok",
+          "candidates": 4,
+          "tool_calls": 1,
+          "warnings": []
+        },
+        "stays": {
+          "status": "ok",
+          "candidates": 1,
+          "tool_calls": 1,
+          "warnings": []
+        },
+        "experience": {
+          "status": "partial",
+          "candidates": 5,
+          "tool_calls": 3,
+          "warnings": [
+            "weather_outside_forecast_horizon",
+            "timepad:schema_error"
+          ]
+        }
+      },
+      "options": [
+        {
+          "hotel": "Mirror Residence",
+          "transport": "Победа / Utair",
+          "known_subtotal": "25778.0",
+          "confirmed_total": null,
+          "missing": [
+            "meals",
+            "local_transport",
+            "activities",
+            "extra_fees"
+          ],
+          "days": 5,
+          "activities": 5
+        }
+      ]
+    },
+    {
+      "revision": 4,
+      "constraints": {
+        "origin": "Москва",
+        "destination": "Сочи",
+        "start": "2026-11-13",
+        "end": "2026-11-17",
+        "adults": 2,
+        "budget": "100000",
+        "hotel": "Mirror Residence",
+        "interests": [
+          "море",
+          "прогулки"
+        ]
+      },
+      "answer": "Найдены варианты. Показана известная часть расходов; полная стоимость и бронирование не подтверждены.",
+      "results": {
+        "transport": {
+          "status": "ok",
+          "candidates": 3,
+          "tool_calls": 1,
+          "warnings": []
+        },
+        "stays": {
+          "status": "ok",
+          "candidates": 6,
+          "tool_calls": 1,
+          "warnings": []
+        },
+        "experience": {
+          "status": "partial",
+          "candidates": 10,
+          "tool_calls": 6,
+          "warnings": [
+            "weather_outside_forecast_horizon",
+            "2gis:timeout",
+            "opentripmap:timeout",
+            "timepad:schema_error",
+            "agent_limit"
+          ]
+        }
+      },
+      "options": [
+        {
+          "hotel": "Mirror Residence",
+          "transport": "Победа",
+          "known_subtotal": "26128.0",
+          "confirmed_total": null,
+          "missing": [
+            "meals",
+            "local_transport",
+            "activities",
+            "extra_fees"
+          ],
+          "days": 5,
+          "activities": 6
+        }
+      ]
+    }
+  ],
+  "checks": {
+    "clarification_before_search": true,
+    "full_live_options": 3,
+    "hotel_change_reuses_transport": true,
+    "date_change_refreshes_transport": true,
+    "date_change_refreshes_stays": true
+  },
+  "source_checks": [
+    {
+      "role": "stays",
+      "tool": "search_hotels",
+      "destination": "Адлер",
+      "start": "2026-11-12",
+      "status": "ok",
+      "candidates": 10,
+      "warnings": []
+    },
+    {
+      "role": "stays",
+      "tool": "search_hotels",
+      "destination": "Красная Поляна",
+      "start": "2026-11-12",
+      "status": "ok",
+      "candidates": 10,
+      "warnings": []
+    },
+    {
+      "role": "transport",
+      "tool": "search_flights",
+      "destination": "Сочи",
+      "start": "2026-11-13",
+      "status": "ok",
+      "candidates": 10,
+      "warnings": []
+    },
+    {
+      "role": "transport",
+      "tool": "yandex_schedule",
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "status": "ok",
+      "candidates": 0,
+      "warnings": []
+    },
+    {
+      "role": "transport",
+      "tool": "cached_flights",
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "status": "ok",
+      "candidates": 0,
+      "warnings": []
+    },
+    {
+      "role": "experience",
+      "tool": "search_places",
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "status": "ok",
+      "candidates": 10,
+      "warnings": []
+    },
+    {
+      "role": "experience",
+      "tool": "geoapify_places",
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "status": "ok",
+      "candidates": 10,
+      "warnings": []
+    },
+    {
+      "role": "experience",
+      "tool": "weather",
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "status": "timeout",
+      "candidates": 0,
+      "warnings": [
+        "openmeteo:timeout"
+      ]
+    },
+    {
+      "role": "experience",
+      "tool": "events",
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "status": "schema_error",
+      "candidates": 0,
+      "warnings": [
+        "timepad:schema_error"
+      ]
+    },
+    {
+      "role": "experience",
+      "tool": "attractions",
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "status": "ok",
+      "candidates": 9,
+      "warnings": []
+    },
+    {
+      "role": "stays",
+      "tool": "tavily_search",
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "status": "missing_key",
+      "candidates": 0,
+      "warnings": [
+        "tavily:missing_key"
+      ]
+    }
+  ],
+  "timepad_retest": {
+    "status": "ok",
+    "candidates": 3,
+    "warnings": []
+  },
+  "cost": {
+    "authorized_usd": "1",
+    "first_failed_run_upper_reserve_usd": "0.65",
+    "second_failed_run_reported_usd": "0.0062579208",
+    "full_plan_reported_usd": "0.005599391",
+    "extended_reported_usd": "0.0128584190",
+    "combined_conservative_upper_usd": "0.6747157308",
+    "note": "First run stopped at cost guard before final telemetry; its entire cap is retained as reserve. Later values are endpoint usage.cost. Provider dollar charges are not reported by their APIs; no paid operations or purchases were enabled."
+  },
+  "fixes_after_live": [
+    "Empty structured output is validated; observed evidence retained as partial",
+    "Repeated MCP requests reuse delegation results",
+    "Timepad coordinate arrays normalized and retested live",
+    "Empty source selection retains observed candidates and reports empty_selection"
+  ],
+  "limitations": [
+    "No Tavily key: live Search/Extract not verified",
+    "Intermittent source timeout and agent deadlines",
+    "Activities are tentative, hours/transfers not confirmed",
+    "Partial first planning turn in extended run; subsequent named hotel replacement recovered"
+  ],
+  "api_postgres_check": {
+    "persistent": true,
+    "revision": 4,
+    "options_restored": 1,
+    "simulation_http": 200,
+    "idempotency_verified": true,
+    "booking_restored": true,
+    "mode": "Real API lifespans with PostgreSQL, seeded with unchanged current live graph results; no extra LLM calls"
+  }
+}

@@ -9,4 +9,22 @@ dependencies = [
   "pydantic>=2.11,<3",
   "mcp>=1.20,<2",
   "jsonschema>=4.26,<5",
+  "langgraph==1.2.17",
+  "langchain==1.4.7",
+  "langchain-core==1.7.0",
+  "langchain-openai==1.7.2",
+  "langgraph-checkpoint-postgres==3.2.0",
+  "psycopg[binary,pool]==3.3.6",
+  "fastapi==0.162.0",
+  "uvicorn==0.54.0",
 ]
+
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["travel_agent*", "integrations*"]
+
+[tool.setuptools.package-data]
+travel_agent = ["prompts/*.md"]
