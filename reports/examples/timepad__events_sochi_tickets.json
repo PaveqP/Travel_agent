@@ -1,0 +1,157 @@
+{
+  "total": 4,
+  "values": [
+    {
+      "id": 4233349,
+      "starts_at": "2026-11-13T10:05:00+0300",
+      "name": "ЛИДЕРЫ ИНДУСТРИИ УПАКОВКИ 2026",
+      "url": "https://investitsionnyy-komitet.timepad.ru/event/4233349/",
+      "poster_image": {
+        "default_url": "https://ucare.timepad.ru/336d2443-1849-48d5-b69a-e8b177e320a5/-/crop/1672x940/0,0/-/resize/1920x1080/-/preview/308x600/-/format/jpeg/poster_event_4233349.jpg",
+        "uploadcare_url": "//ucare.timepad.ru/336d2443-1849-48d5-b69a-e8b177e320a5/"
+      },
+      "location": {
+        "country": "Россия",
+        "city": "Сочи",
+        "address": "Ленинградская ул., 7А, п. г. т. Дагомыс"
+      },
+      "categories": [
+        {
+          "id": 217,
+          "name": "Бизнес"
+        }
+      ],
+      "ticket_types": [
+        {
+          "id": 8542482,
+          "name": "Входной билет",
+          "description": "",
+          "buy_amount_min": 1,
+          "buy_amount_max": 30,
+          "price": 0,
+          "is_promocode_locked": false,
+          "sale_ends_at": "2026-11-16T12:05:00+0300",
+          "is_active": true,
+          "ad_partner_profit": 0,
+          "send_personal_links": false,
+          "status": "ok"
+        }
+      ],
+      "moderation_status": "shown"
+    },
+    {
+      "id": 4269733,
+      "starts_at": "2026-11-13T19:00:00+0300",
+      "name": "Стендап-экскурсия по Сочи",
+      "url": "https://ip-kopchenov-av.timepad.ru/event/4269733/",
+      "location": {
+        "country": "Россия",
+        "city": "Сочи",
+        "address": "Памятник «Якорь и пушка», Морской пер., 2",
+        "coordinates": [
+          "43.57567039314114",
+          "39.7246921666558"
+        ]
+      },
+      "categories": [
+        {
+          "id": 461,
+          "name": "Экскурсии и путешествия"
+        }
+      ],
+      "ticket_types": [
+        {
+          "id": 8603916,
+          "name": "Входной билет",
+          "description": "",
+          "buy_amount_min": 1,
+          "buy_amount_max": 30,
+          "price": 1390,
+          "is_promocode_locked": false,
+          "sale_ends_at": "2026-11-13T20:30:00+0300",
+          "is_active": true,
+          "ad_partner_profit": 0,
+          "send_personal_links": false,
+          "status": "ok"
+        }
+      ],
+      "moderation_status": "featured"
+    },
+    {
+      "id": 4269738,
+      "starts_at": "2026-11-14T18:00:00+0300",
+      "name": "Стендап-экскурсия по Сочи",
+      "url": "https://ip-kopchenov-av.timepad.ru/event/4269738/",
+      "location": {
+        "country": "Россия",
+        "city": "Сочи",
+        "address": "Памятник «Якорь и пушка», Морской пер., 2",
+        "coordinates": [
+          "43.57567039314114",
+          "39.7246921666558"
+        ]
+      },
+      "categories": [
+        {
+          "id": 461,
+          "name": "Экскурсии и путешествия"
+        }
+      ],
+      "ticket_types": [
+        {
+          "id": 8603921,
+          "name": "Входной билет",
+          "description": "",
+          "buy_amount_min": 1,
+          "buy_amount_max": 30,
+          "price": 1390,
+          "is_promocode_locked": false,
+          "sale_ends_at": "2026-11-14T19:30:00+0300",
+          "is_active": true,
+          "ad_partner_profit": 0,
+          "send_personal_links": false,
+          "status": "ok"
+        }
+      ],
+      "moderation_status": "featured"
+    },
+    {
+      "id": 4269743,
+      "starts_at": "2026-11-15T18:00:00+0300",
+      "name": "Стендап-экскурсия по Сочи",
+      "url": "https://ip-kopchenov-av.timepad.ru/event/4269743/",
+      "location": {
+        "country": "Россия",
+        "city": "Сочи",
+        "address": "Памятник «Якорь и пушка», Морской пер., 2",
+        "coordinates": [
+          "43.57567039314114",
+          "39.7246921666558"
+        ]
+      },
+      "categories": [
+        {
+          "id": 461,
+          "name": "Экскурсии и путешествия"
+        }
+      ],
+      "ticket_types": [
+        {
+          "id": 8603926,
+          "name": "Входной билет",
+          "description": "",
+          "buy_amount_min": 1,
+          "buy_amount_max": 30,
+          "price": 1390,
+          "is_promocode_locked": false,
+          "sale_ends_at": "2026-11-15T19:30:00+0300",
+          "is_active": true,
+          "ad_partner_profit": 0,
+          "send_personal_links": false,
+          "status": "ok"
+        }
+      ],
+      "moderation_status": "featured"
+    }
+  ]
+}

@@ -1,0 +1,1404 @@
+{
+  "results": [
+    {
+      "experiment": "selection",
+      "status": "passed",
+      "assertions": {
+        "native_tool_calls": true,
+        "required_tools_called": true,
+        "no_claimed_hotel_availability": true,
+        "no_invented_total": true,
+        "forecast_not_projected_to_trip": true,
+        "final_json": true
+      },
+      "latency_ms": 30898,
+      "tool_calls": [
+        {
+          "name": "search_flights",
+          "arguments": "{}",
+          "result": {
+            "provider": "travelpayouts_data",
+            "items": [
+              {
+                "origin": "MOW",
+                "destination": "AER",
+                "departure_at": "2026-11-12T11:30:00+03:00",
+                "airline": "DP",
+                "flight_number": "6941",
+                "price": {
+                  "amount": "3194",
+                  "currency": "RUB",
+                  "basis": "person",
+                  "taxes_included": null
+                },
+                "source": {
+                  "provider": "travelpayouts_data",
+                  "source_url": "https://api.travelpayouts.com/aviasales/v3/prices_for_dates",
+                  "retrieved_at": "2026-10-25T14:11:40.367053Z",
+                  "evidence": "cached",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "transfers": 0,
+                "baggage": null,
+                "availability_verified": false,
+                "case": "outbound"
+              },
+              {
+                "origin": "AER",
+                "destination": "MOW",
+                "departure_at": "2026-11-16T15:10:00+03:00",
+                "airline": "UT",
+                "flight_number": "268",
+                "price": {
+                  "amount": "3600",
+                  "currency": "RUB",
+                  "basis": "person",
+                  "taxes_included": null
+                },
+                "source": {
+                  "provider": "travelpayouts_data",
+                  "source_url": "https://api.travelpayouts.com/aviasales/v3/prices_for_dates",
+                  "retrieved_at": "2026-10-25T14:11:40.545406Z",
+                  "evidence": "cached",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "transfers": 0,
+                "baggage": null,
+                "availability_verified": false,
+                "case": "inbound"
+              },
+              {
+                "origin": "MOW",
+                "destination": "AER",
+                "departure_at": "2026-11-13T08:05:00+03:00",
+                "airline": "DP",
+                "flight_number": "111",
+                "price": {
+                  "amount": "3194",
+                  "currency": "RUB",
+                  "basis": "person",
+                  "taxes_included": null
+                },
+                "source": {
+                  "provider": "travelpayouts_data",
+                  "source_url": "https://api.travelpayouts.com/aviasales/v3/prices_for_dates",
+                  "retrieved_at": "2026-10-25T14:11:40.725236Z",
+                  "evidence": "cached",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "transfers": 0,
+                "baggage": null,
+                "availability_verified": false,
+                "case": "changed_dates"
+              }
+            ],
+            "warning": "Cached per-adult estimate; availability and baggage unknown"
+          }
+        }
+      ],
+      "final": {
+        "answer": "Найдены кэшированные ориентиры за одного взрослого: Москва → Сочи, 12.11.2026, рейс DP 6941, 3194 ₽/чел.; Сочи → Москва, 16.11.2026, рейс UT 268, 3600 ₽/чел. Наличие мест и багаж не подтверждены; цена за двоих не подтверждена.",
+        "hotel_availability_confirmed": false,
+        "source_ids": [
+          "travelpayouts_data"
+        ],
+        "trip_total_rub": null,
+        "used_fallback": false,
+        "weather_covers_trip": false
+      },
+      "usage": [
+        {
+          "prompt_tokens": 753,
+          "completion_tokens": 163,
+          "total_tokens": 916,
+          "cost": 0.000175965
+        },
+        {
+          "prompt_tokens": 1056,
+          "completion_tokens": 460,
+          "total_tokens": 1516,
+          "cost": 0.0006516
+        }
+      ],
+      "errors": [],
+      "profile": "orchestrated",
+      "mode": "native tool calling over timestamped real API snapshots; no fabricated successful provider responses"
+    },
+    {
+      "experiment": "two_sources",
+      "status": "failed_or_partial",
+      "assertions": {
+        "native_tool_calls": true,
+        "required_tools_called": true,
+        "no_claimed_hotel_availability": true,
+        "no_invented_total": true,
+        "forecast_not_projected_to_trip": true,
+        "final_json": true,
+        "valid_hotel_join": false
+      },
+      "latency_ms": 2303,
+      "tool_calls": [
+        {
+          "name": "search_hotels",
+          "arguments": "{}",
+          "result": {
+            "provider": "liteapi",
+            "items": [
+              {
+                "id": "lp6deb0",
+                "name": "Sochi Marriott Krasnaya Polyana Hotel",
+                "coordinates": {
+                  "lat": 43.683487,
+                  "lon": 40.25606
+                },
+                "address": "1 Vremena Goda Embankment",
+                "category": "hotel",
+                "source": {
+                  "provider": "liteapi",
+                  "source_url": "https://api.liteapi.travel/v3.0/data/hotels",
+                  "retrieved_at": "2026-10-25T14:11:45.709820Z",
+                  "evidence": "catalog",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "rating": 9.0,
+                "rating_scale": 10.0,
+                "photos": [
+                  "https://static.cupid.travel/hotels/ex_21cc3d77_z.jpg"
+                ],
+                "availability": "unknown",
+                "price": null,
+                "cancellation_policy": null,
+                "facilities": [
+                  "491",
+                  "492",
+                  "497",
+                  "499",
+                  "506",
+                  "508",
+                  "513",
+                  "517",
+                  "519",
+                  "521",
+                  "526",
+                  "530",
+                  "533",
+                  "535",
+                  "536",
+                  "551",
+                  "557",
+                  "558",
+                  "561",
+                  "564",
+                  "566",
+                  "575",
+                  "577",
+                  "581",
+                  "584",
+                  "590",
+                  "626",
+                  "628",
+                  "652",
+                  "675",
+                  "691",
+                  "701",
+                  "705",
+                  "755",
+                  "827",
+                  "905",
+                  "915",
+                  "936",
+                  "940",
+                  "941",
+                  "942",
+                  "944",
+                  "946",
+                  "954",
+                  "1091",
+                  "1102",
+                  "1725",
+                  "1886",
+                  "2066",
+                  "107",
+                  "8",
+                  "15",
+                  "91",
+                  "10",
+                  "99",
+                  "30",
+                  "124",
+                  "185",
+                  "224"
+                ],
+                "area": "polyana",
+                "rate_search_status": "no_availability_in_sandbox"
+              },
+              {
+                "id": "lp8f6a7",
+                "name": "Polyana 1389 Hotel & Spa",
+                "coordinates": {
+                  "lat": 43.68473,
+                  "lon": 40.2808
+                },
+                "address": "Achipsinskaya str., 8/11",
+                "category": "hotel",
+                "source": {
+                  "provider": "liteapi",
+                  "source_url": "https://api.liteapi.travel/v3.0/data/hotels",
+                  "retrieved_at": "2026-10-25T14:11:45.709820Z",
+                  "evidence": "catalog",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "rating": 9.8,
+                "rating_scale": 10.0,
+                "photos": [
+                  "https://static.cupid.travel/hotels/ex_de2b5c74_z.jpg"
+                ],
+                "availability": "unknown",
+                "price": null,
+                "cancellation_policy": null,
+                "facilities": [
+                  "491",
+                  "497",
+                  "506",
+                  "507",
+                  "508",
+                  "517",
+                  "529",
+                  "535",
+                  "548",
+                  "557",
+                  "561",
+                  "564",
+                  "576",
+                  "581",
+                  "659",
+                  "675",
+                  "691",
+                  "712",
+                  "714",
+                  "730",
+                  "1054",
+                  "1091",
+                  "1102",
+                  "107",
+                  "8",
+                  "15",
+                  "91",
+                  "99",
+                  "124",
+                  "241"
+                ],
+                "area": "polyana",
+                "rate_search_status": "no_availability_in_sandbox"
+              },
+              {
+                "id": "lp6e2c5",
+                "name": "Courtyard by Marriott Sochi Krasnaya Polyana",
+                "coordinates": {
+                  "lat": 43.682859,
+                  "lon": 40.266768
+                },
+                "address": "Gornaya Karousel 6, Estosadok",
+                "category": "hotel",
+                "source": {
+                  "provider": "liteapi",
+                  "source_url": "https://api.liteapi.travel/v3.0/data/hotels",
+                  "retrieved_at": "2026-10-25T14:11:45.709820Z",
+                  "evidence": "catalog",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "rating": 9.0,
+                "rating_scale": 10.0,
+                "photos": [
+                  "https://static.cupid.travel/hotels/ex_ed6ba271_z.jpg"
+                ],
+                "availability": "unknown",
+                "price": null,
+                "cancellation_policy": null,
+                "facilities": [
+                  "491",
+                  "492",
+                  "497",
+                  "506",
+                  "508",
+                  "513",
+                  "517",
+                  "519",
+                  "521",
+                  "525",
+                  "535",
+                  "542",
+                  "543",
+                  "551",
+                  "558",
+                  "566",
+                  "568",
+                  "576",
+                  "581",
+                  "590",
+                  "630",
+                  "659",
+                  "675",
+                  "685",
+                  "691",
+                  "705",
+                  "900",
+                  "936",
+                  "944",
+                  "946",
+                  "1725",
+                  "1842",
+                  "1886",
+                  "107",
+                  "8",
+                  "91",
+                  "49",
+                  "10",
+                  "99",
+                  "110"
+                ],
+                "area": "polyana",
+                "rate_search_status": "no_availability_in_sandbox"
+              }
+            ],
+            "availability": "unknown",
+            "rate_search": "no_availability_in_sandbox"
+          }
+        },
+        {
+          "name": "search_restaurants",
+          "arguments": "{\"hotel_id\": \"lp8f6a7\"}",
+          "result": {
+            "error": "No measured nearby POI snapshot for that hotel",
+            "supported_hotel_id": "lp6deb0"
+          }
+        }
+      ],
+      "final": {
+        "answer": "Подобрал отель в Красной Поляне: Polyana 1389 Hotel & Spa (рейтинг 9.8/10, Ачипсинская ул., 8/11) — по каталогу, но доступность номеров на 12–16 ноября 2026 НЕ подтверждена (в песочнице ставок нет, цена неизвестна). Альтернативы: Sochi Marriott Krasnaya Polyana (9.0) и Courtyard by Marriott Sochi Krasnaya Polyana (9.0) — у обоих доступность также неизвестна. Ресторан поблизости подобрать не удалось: измеренного снимка ближайших POI для выбранного отеля нет, поэтому расстояние и пешую доступность утверждать не буду. Итоговую стоимость назвать нельзя — цен нет.",
+        "hotel_availability_confirmed": false,
+        "source_ids": [
+          "liteapi"
+        ],
+        "trip_total_rub": null,
+        "used_fallback": false,
+        "weather_covers_trip": false
+      },
+      "usage": [
+        {
+          "prompt_tokens": 789,
+          "completion_tokens": 34,
+          "total_tokens": 823,
+          "cost": 2.5874e-05
+        },
+        {
+          "prompt_tokens": 1955,
+          "completion_tokens": 73,
+          "total_tokens": 2028,
+          "cost": 0.000196954
+        },
+        {
+          "prompt_tokens": 1675,
+          "completion_tokens": 244,
+          "total_tokens": 1919,
+          "cost": 0.000308518
+        }
+      ],
+      "errors": [],
+      "profile": "orchestrated",
+      "mode": "native tool calling over timestamped real API snapshots; no fabricated successful provider responses"
+    },
+    {
+      "experiment": "weather",
+      "status": "passed",
+      "assertions": {
+        "native_tool_calls": true,
+        "required_tools_called": true,
+        "no_claimed_hotel_availability": true,
+        "no_invented_total": true,
+        "forecast_not_projected_to_trip": true,
+        "final_json": true
+      },
+      "latency_ms": 6569,
+      "tool_calls": [
+        {
+          "name": "get_weather",
+          "arguments": "{}",
+          "result": {
+            "provider": "openmeteo_forecast",
+            "source": {
+              "provider": "openmeteo_forecast",
+              "source_url": "https://api.open-meteo.com/v1/forecast",
+              "retrieved_at": "2026-10-25T14:11:39.506134Z",
+              "evidence": "live",
+              "source_updated_at": null,
+              "expires_at": null
+            },
+            "locations": [
+              {
+                "name": "Сочи, побережье",
+                "latitude": 43.628204,
+                "longitude": 39.69933,
+                "daily": {
+                  "time": [
+                    "2026-10-25",
+                    "2026-10-26",
+                    "2026-10-27",
+                    "2026-10-28",
+                    "2026-10-29",
+                    "2026-10-30",
+                    "2026-10-31"
+                  ],
+                  "temperature_2m_max": [
+                    21.2,
+                    23.1,
+                    23.7,
+                    25.2,
+                    23.1,
+                    19.5,
+                    19.0
+                  ],
+                  "temperature_2m_min": [
+                    13.4,
+                    13.9,
+                    15.5,
+                    17.6,
+                    17.2,
+                    16.7,
+                    13.3
+                  ],
+                  "precipitation_sum": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    3.65,
+                    3.4
+                  ],
+                  "wind_speed_10m_max": [
+                    7.6,
+                    8.4,
+                    8.4,
+                    8.9,
+                    7.0,
+                    5.9,
+                    6.2
+                  ]
+                },
+                "units": {
+                  "time": "iso8601",
+                  "temperature_2m_max": "°C",
+                  "temperature_2m_min": "°C",
+                  "precipitation_sum": "mm",
+                  "wind_speed_10m_max": "km/h"
+                }
+              },
+              {
+                "name": "Красная Поляна, горы",
+                "latitude": 43.64666,
+                "longitude": 40.12375,
+                "daily": {
+                  "time": [
+                    "2026-10-25",
+                    "2026-10-26",
+                    "2026-10-27",
+                    "2026-10-28",
+                    "2026-10-29",
+                    "2026-10-30",
+                    "2026-10-31"
+                  ],
+                  "temperature_2m_max": [
+                    18.8,
+                    21.4,
+                    24.9,
+                    22.6,
+                    21.5,
+                    17.3,
+                    16.6
+                  ],
+                  "temperature_2m_min": [
+                    10.1,
+                    11.0,
+                    13.8,
+                    15.2,
+                    13.9,
+                    14.0,
+                    13.7
+                  ],
+                  "precipitation_sum": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.2,
+                    0.4,
+                    3.0,
+                    1.2
+                  ],
+                  "wind_speed_10m_max": [
+                    7.6,
+                    8.9,
+                    9.7,
+                    9.2,
+                    7.1,
+                    6.0,
+                    6.5
+                  ]
+                },
+                "units": {
+                  "time": "iso8601",
+                  "temperature_2m_max": "°C",
+                  "temperature_2m_min": "°C",
+                  "precipitation_sum": "mm",
+                  "wind_speed_10m_max": "km/h"
+                }
+              }
+            ],
+            "trip_dates": {
+              "departure": "2026-11-12",
+              "return": "2026-11-16",
+              "adults": 2,
+              "nights": 4,
+              "currency": "RUB",
+              "origin": "MOW",
+              "destination": "AER"
+            },
+            "warning": "Forecast does not cover trip dates"
+          }
+        }
+      ],
+      "final": {
+        "answer": "Прогноз получен, но он покрывает только 25–31 октября 2026, а не ваши даты 12–16 ноября. Поэтому подтверждённой погоды на поездку пока нет: переносить эти значения на ноябрь нельзя. Сейчас можно учесть: в Сочи и Красной Поляне в эти октябрьские дни ожидается тёплая сухая погода (на побережье до +19…+25 °C, в горах до +17…+25 °C), но к середине ноября вероятно похолодание, особенно в горах, и больше осадков — это ориентир по сезону, а не прогноз. Планируйте слои одежды и непромокаемую обувь, закладывайте гибкость по горным активностям и проверьте прогноз ещё раз за 5–7 дней до выезда. Цены, наличие отелей и трансферы по этому запросу не подтверждены.",
+        "source_ids": [
+          "openmeteo_forecast"
+        ],
+        "hotel_availability_confirmed": false,
+        "trip_total_rub": null,
+        "weather_covers_trip": false,
+        "used_fallback": false
+      },
+      "usage": [
+        {
+          "prompt_tokens": 761,
+          "completion_tokens": 310,
+          "total_tokens": 1071,
+          "cost": 0.000250508
+        },
+        {
+          "prompt_tokens": 1257,
+          "completion_tokens": 442,
+          "total_tokens": 1699,
+          "cost": 0.00054174
+        }
+      ],
+      "errors": [],
+      "profile": "orchestrated",
+      "mode": "native tool calling over timestamped real API snapshots; no fabricated successful provider responses"
+    },
+    {
+      "experiment": "fallback",
+      "status": "passed",
+      "assertions": {
+        "native_tool_calls": true,
+        "required_tools_called": true,
+        "no_claimed_hotel_availability": true,
+        "no_invented_total": true,
+        "forecast_not_projected_to_trip": true,
+        "final_json": true,
+        "fallback_after_error": true
+      },
+      "latency_ms": 4421,
+      "tool_calls": [
+        {
+          "name": "primary_places",
+          "arguments": "{}",
+          "result": {
+            "provider": "2gis",
+            "status": "network_error",
+            "simulated": true,
+            "error": "simulated_timeout",
+            "items": []
+          }
+        },
+        {
+          "name": "fallback_places",
+          "arguments": "{}",
+          "result": {
+            "provider": "geoapify",
+            "items": [
+              {
+                "id": "511fa2d11dc4fb434059ef0c09cecfb34540f00103f901aaf094440100000092030cd0a0d0bed0bbd0bbd0b5d180",
+                "name": "Роллер",
+                "coordinates": {
+                  "lat": 43.4047792,
+                  "lon": 39.9669225
+                },
+                "address": "Роллер, Олимпийский проспект 21, Сочи, Краснодарский край, Россия, 354349",
+                "category": "restaurants_adler",
+                "source": {
+                  "provider": "geoapify",
+                  "source_url": "https://api.geoapify.com/v2/places",
+                  "retrieved_at": "2026-10-25T14:11:39.877967Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "rating": null,
+                "rating_scale": null,
+                "photos": []
+              },
+              {
+                "id": "51e90313c9a1fc434059f0c74851c2b24540f00103f9019a58535f01000000920319d0a4d0b0d0b1d180d0b8d0bad0b020d0b2d0bad183d181d0b0",
+                "name": "Фабрика вкуса",
+                "coordinates": {
+                  "lat": 43.3965551,
+                  "lon": 39.9736873
+                },
+                "address": "Фабрика вкуса, Нижнеимеретинская улица 171А, Сочи, Краснодарский край, Россия, 354349",
+                "category": "restaurants_adler",
+                "source": {
+                  "provider": "geoapify",
+                  "source_url": "https://api.geoapify.com/v2/places",
+                  "retrieved_at": "2026-10-25T14:11:39.877967Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "rating": null,
+                "rating_scale": null,
+                "photos": []
+              },
+              {
+                "id": "512c5b35199ff6434059002082058bb54540f00103f901fafacaad00000000920319d09fd0b8d0b2d0bdd0bed0b920d0b4d0b2d0bed180d0b8d0ba",
+                "name": "Пивной дворик",
+                "coordinates": {
+                  "lat": 43.4183051,
+                  "lon": 39.9267303
+                },
+                "address": "Пивной дворик, Набережная улица 2, Сириус, Краснодарский край, Россия, 354350",
+                "category": "restaurants_adler",
+                "source": {
+                  "provider": "geoapify",
+                  "source_url": "https://api.geoapify.com/v2/places",
+                  "retrieved_at": "2026-10-25T14:11:39.877967Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "rating": null,
+                "rating_scale": null,
+                "photos": []
+              },
+              {
+                "id": "51a8f7f99408f94340594b62ff2be1b34540f00103f90122f517df010000009203094669736820626f6e65",
+                "name": "Fish bone",
+                "coordinates": {
+                  "lat": 43.4053092,
+                  "lon": 39.9455744
+                },
+                "address": "Fish bone, Парусная улица 9, Сириус, Краснодарский край, Россия, 354354",
+                "category": "restaurants_adler",
+                "source": {
+                  "provider": "geoapify",
+                  "source_url": "https://api.geoapify.com/v2/places",
+                  "retrieved_at": "2026-10-25T14:11:39.877967Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "rating": null,
+                "rating_scale": null,
+                "photos": []
+              }
+            ]
+          }
+        }
+      ],
+      "final": {
+        "answer": "Основной источник (2ГИС) не ответил — таймаут сети, поэтому данные взяты из резервного источника Geoapify (OpenStreetMap). Это честный отказ основного канала: рейтинги и часы работы не подтверждены, выдача неполная. Найденные заведения в Адлере/Адлерском районе (Сочи, включая Сириус): 1) «Роллер» — Олимпийский проспект 21; 2) «Фабрика вкуса» — Нижнеимеретинская улица 171А; 3) «Пивной дворик» — Набережная улица 2, Сириус; 4) Fish bone — Парусная улица 9, Сириус. Категория у всех — restaurants_adler, но рейтингов, отзывов и фото в источнике нет, так что выбирать по ним не получится — стоит уточнить в другом сервисе.",
+        "source_ids": [
+          "geoapify"
+        ],
+        "hotel_availability_confirmed": false,
+        "trip_total_rub": null,
+        "weather_covers_trip": false,
+        "used_fallback": true
+      },
+      "usage": [
+        {
+          "prompt_tokens": 670,
+          "completion_tokens": 41,
+          "total_tokens": 711,
+          "cost": 7.55328e-05
+        },
+        {
+          "prompt_tokens": 736,
+          "completion_tokens": 32,
+          "total_tokens": 768,
+          "cost": 9.21228e-05
+        },
+        {
+          "prompt_tokens": 1594,
+          "completion_tokens": 365,
+          "total_tokens": 1959,
+          "cost": 0.0005923596
+        }
+      ],
+      "errors": [],
+      "profile": "orchestrated",
+      "mode": "native tool calling over timestamped real API snapshots; no fabricated successful provider responses"
+    },
+    {
+      "experiment": "complex",
+      "status": "passed",
+      "assertions": {
+        "native_tool_calls": true,
+        "required_tools_called": true,
+        "no_claimed_hotel_availability": true,
+        "no_invented_total": true,
+        "forecast_not_projected_to_trip": true,
+        "final_json": true
+      },
+      "latency_ms": 4189,
+      "tool_calls": [
+        {
+          "name": "get_trip_evidence",
+          "arguments": "{}",
+          "result": {
+            "providers": [
+              "travelpayouts_data",
+              "liteapi",
+              "geoapify",
+              "timepad",
+              "ors",
+              "2gis",
+              "openmeteo_forecast"
+            ],
+            "scenario": {
+              "departure": "2026-11-12",
+              "return": "2026-11-16",
+              "adults": 2,
+              "nights": 4,
+              "currency": "RUB",
+              "origin": "MOW",
+              "destination": "AER"
+            },
+            "flights": [
+              {
+                "origin": "MOW",
+                "destination": "AER",
+                "departure_at": "2026-11-12T11:30:00+03:00",
+                "airline": "DP",
+                "flight_number": "6941",
+                "price": {
+                  "amount": "3194",
+                  "currency": "RUB",
+                  "basis": "person",
+                  "taxes_included": null
+                },
+                "source": {
+                  "provider": "travelpayouts_data",
+                  "source_url": "https://api.travelpayouts.com/aviasales/v3/prices_for_dates",
+                  "retrieved_at": "2026-10-25T14:11:40.367053Z",
+                  "evidence": "cached",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "transfers": 0,
+                "baggage": null,
+                "availability_verified": false,
+                "case": "outbound"
+              },
+              {
+                "origin": "AER",
+                "destination": "MOW",
+                "departure_at": "2026-11-16T15:10:00+03:00",
+                "airline": "UT",
+                "flight_number": "268",
+                "price": {
+                  "amount": "3600",
+                  "currency": "RUB",
+                  "basis": "person",
+                  "taxes_included": null
+                },
+                "source": {
+                  "provider": "travelpayouts_data",
+                  "source_url": "https://api.travelpayouts.com/aviasales/v3/prices_for_dates",
+                  "retrieved_at": "2026-10-25T14:11:40.545406Z",
+                  "evidence": "cached",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "transfers": 0,
+                "baggage": null,
+                "availability_verified": false,
+                "case": "inbound"
+              }
+            ],
+            "hotel_catalog": [
+              {
+                "id": "lp552d8",
+                "name": "City Park Hotel Sochi",
+                "coordinates": {
+                  "lat": 43.576195,
+                  "lon": 39.725949
+                },
+                "address": "2 Morskoy Pereulok",
+                "category": "hotel",
+                "source": {
+                  "provider": "liteapi",
+                  "source_url": "https://api.liteapi.travel/v3.0/data/hotels",
+                  "retrieved_at": "2026-10-25T14:11:42.370803Z",
+                  "evidence": "catalog",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "rating": 7.6,
+                "rating_scale": 10.0,
+                "photos": [
+                  "https://static.cupid.travel/hotels/ex_57652dc7_z.jpg"
+                ],
+                "availability": "unknown",
+                "price": null,
+                "cancellation_policy": null,
+                "facilities": [
+                  "491",
+                  "492",
+                  "497",
+                  "499",
+                  "500",
+                  "502",
+                  "504",
+                  "513",
+                  "515",
+                  "516",
+                  "518",
+                  "519",
+                  "521",
+                  "525",
+                  "533",
+                  "535",
+                  "536",
+                  "542",
+                  "543",
+                  "545",
+                  "553",
+                  "564",
+                  "575",
+                  "581",
+                  "595",
+                  "623",
+                  "627",
+                  "636",
+                  "674",
+                  "678",
+                  "685",
+                  "691",
+                  "692",
+                  "693",
+                  "697",
+                  "708",
+                  "710",
+                  "713",
+                  "726",
+                  "782",
+                  "1389",
+                  "1725",
+                  "1842",
+                  "1855",
+                  "1869",
+                  "107",
+                  "8",
+                  "15",
+                  "91",
+                  "49",
+                  "10",
+                  "124"
+                ],
+                "area": "sochi",
+                "rate_search_status": "no_availability_in_sandbox"
+              },
+              {
+                "id": "lp6f35a",
+                "name": "Denart Hotel",
+                "coordinates": {
+                  "lat": 43.585412,
+                  "lon": 39.727769
+                },
+                "address": "Pereulok Gorkogo, 16",
+                "category": "hotel",
+                "source": {
+                  "provider": "liteapi",
+                  "source_url": "https://api.liteapi.travel/v3.0/data/hotels",
+                  "retrieved_at": "2026-10-25T14:11:42.370803Z",
+                  "evidence": "catalog",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "rating": 8.8,
+                "rating_scale": 10.0,
+                "photos": [
+                  "https://static.cupid.travel/hotels/ex_ba14b31c_z.jpg"
+                ],
+                "availability": "unknown",
+                "price": null,
+                "cancellation_policy": null,
+                "facilities": [
+                  "491",
+                  "497",
+                  "499",
+                  "502",
+                  "517",
+                  "519",
+                  "521",
+                  "533",
+                  "535",
+                  "536",
+                  "542",
+                  "581",
+                  "584",
+                  "586",
+                  "593",
+                  "619",
+                  "621",
+                  "628",
+                  "674",
+                  "691",
+                  "703",
+                  "705",
+                  "1886",
+                  "107",
+                  "8",
+                  "15",
+                  "91",
+                  "99",
+                  "110",
+                  "124"
+                ],
+                "area": "sochi",
+                "rate_search_status": "no_availability_in_sandbox"
+              }
+            ],
+            "restaurants": [
+              {
+                "id": "511fa2d11dc4fb434059ef0c09cecfb34540f00103f901aaf094440100000092030cd0a0d0bed0bbd0bbd0b5d180",
+                "name": "Роллер",
+                "coordinates": {
+                  "lat": 43.4047792,
+                  "lon": 39.9669225
+                },
+                "address": "Роллер, Олимпийский проспект 21, Сочи, Краснодарский край, Россия, 354349",
+                "category": "restaurants_adler",
+                "source": {
+                  "provider": "geoapify",
+                  "source_url": "https://api.geoapify.com/v2/places",
+                  "retrieved_at": "2026-10-25T14:11:39.877967Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "rating": null,
+                "rating_scale": null,
+                "photos": []
+              },
+              {
+                "id": "51e90313c9a1fc434059f0c74851c2b24540f00103f9019a58535f01000000920319d0a4d0b0d0b1d180d0b8d0bad0b020d0b2d0bad183d181d0b0",
+                "name": "Фабрика вкуса",
+                "coordinates": {
+                  "lat": 43.3965551,
+                  "lon": 39.9736873
+                },
+                "address": "Фабрика вкуса, Нижнеимеретинская улица 171А, Сочи, Краснодарский край, Россия, 354349",
+                "category": "restaurants_adler",
+                "source": {
+                  "provider": "geoapify",
+                  "source_url": "https://api.geoapify.com/v2/places",
+                  "retrieved_at": "2026-10-25T14:11:39.877967Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "rating": null,
+                "rating_scale": null,
+                "photos": []
+              },
+              {
+                "id": "512c5b35199ff6434059002082058bb54540f00103f901fafacaad00000000920319d09fd0b8d0b2d0bdd0bed0b920d0b4d0b2d0bed180d0b8d0ba",
+                "name": "Пивной дворик",
+                "coordinates": {
+                  "lat": 43.4183051,
+                  "lon": 39.9267303
+                },
+                "address": "Пивной дворик, Набережная улица 2, Сириус, Краснодарский край, Россия, 354350",
+                "category": "restaurants_adler",
+                "source": {
+                  "provider": "geoapify",
+                  "source_url": "https://api.geoapify.com/v2/places",
+                  "retrieved_at": "2026-10-25T14:11:39.877967Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                },
+                "rating": null,
+                "rating_scale": null,
+                "photos": []
+              }
+            ],
+            "activities": [
+              {
+                "id": "4233349",
+                "name": "ЛИДЕРЫ ИНДУСТРИИ УПАКОВКИ 2026",
+                "starts_at": "2026-11-13T10:05:00+03:00",
+                "price": {
+                  "amount": "0",
+                  "currency": "RUB",
+                  "basis": "ticket",
+                  "taxes_included": null
+                },
+                "purchase_url": "https://investitsionnyy-komitet.timepad.ru/event/4233349/",
+                "availability_verified": false,
+                "source": {
+                  "provider": "timepad",
+                  "source_url": "https://api.timepad.ru/v1/events",
+                  "retrieved_at": "2026-10-25T14:13:54.193859Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                }
+              },
+              {
+                "id": "4269733",
+                "name": "Стендап-экскурсия по Сочи",
+                "starts_at": "2026-11-13T19:00:00+03:00",
+                "price": {
+                  "amount": "1390",
+                  "currency": "RUB",
+                  "basis": "ticket",
+                  "taxes_included": null
+                },
+                "purchase_url": "https://ip-kopchenov-av.timepad.ru/event/4269733/",
+                "availability_verified": false,
+                "source": {
+                  "provider": "timepad",
+                  "source_url": "https://api.timepad.ru/v1/events",
+                  "retrieved_at": "2026-10-25T14:13:54.193859Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                }
+              },
+              {
+                "id": "4269738",
+                "name": "Стендап-экскурсия по Сочи",
+                "starts_at": "2026-11-14T18:00:00+03:00",
+                "price": {
+                  "amount": "1390",
+                  "currency": "RUB",
+                  "basis": "ticket",
+                  "taxes_included": null
+                },
+                "purchase_url": "https://ip-kopchenov-av.timepad.ru/event/4269738/",
+                "availability_verified": false,
+                "source": {
+                  "provider": "timepad",
+                  "source_url": "https://api.timepad.ru/v1/events",
+                  "retrieved_at": "2026-10-25T14:13:54.193859Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                }
+              },
+              {
+                "id": "4269743",
+                "name": "Стендап-экскурсия по Сочи",
+                "starts_at": "2026-11-15T18:00:00+03:00",
+                "price": {
+                  "amount": "1390",
+                  "currency": "RUB",
+                  "basis": "ticket",
+                  "taxes_included": null
+                },
+                "purchase_url": "https://ip-kopchenov-av.timepad.ru/event/4269743/",
+                "availability_verified": false,
+                "source": {
+                  "provider": "timepad",
+                  "source_url": "https://api.timepad.ru/v1/events",
+                  "retrieved_at": "2026-10-25T14:13:54.193859Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                }
+              }
+            ],
+            "routes": [
+              {
+                "origin": {
+                  "lat": 43.428,
+                  "lon": 39.923
+                },
+                "destination": {
+                  "lat": 43.68,
+                  "lon": 40.2
+                },
+                "distance_m": 44180.0,
+                "duration_s": 2233.569,
+                "mode": "driving",
+                "source": {
+                  "provider": "geoapify",
+                  "source_url": "https://api.geoapify.com/v1/routing",
+                  "retrieved_at": "2026-10-25T14:11:41.374806Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                }
+              },
+              {
+                "origin": {
+                  "lat": 43.428,
+                  "lon": 39.923
+                },
+                "destination": {
+                  "lat": 43.68,
+                  "lon": 40.2
+                },
+                "distance_m": 44321.7,
+                "duration_s": 2727.2,
+                "mode": "driving",
+                "source": {
+                  "provider": "ors",
+                  "source_url": "https://api.openrouteservice.org/v2/directions/driving-car",
+                  "retrieved_at": "2026-10-25T14:11:39.777626Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                }
+              },
+              {
+                "origin": {
+                  "lat": 43.428,
+                  "lon": 39.923
+                },
+                "destination": {
+                  "lat": 43.68,
+                  "lon": 40.2
+                },
+                "distance_m": 44500.0,
+                "duration_s": 2666.0,
+                "mode": "driving",
+                "source": {
+                  "provider": "2gis",
+                  "source_url": "https://mcp-2gis.api.2gis.com/mcp",
+                  "retrieved_at": "2026-10-25T14:12:11.067073Z",
+                  "evidence": "live",
+                  "source_updated_at": null,
+                  "expires_at": null
+                }
+              }
+            ],
+            "weather": {
+              "provider": "openmeteo_forecast",
+              "source": {
+                "provider": "openmeteo_forecast",
+                "source_url": "https://api.open-meteo.com/v1/forecast",
+                "retrieved_at": "2026-10-25T14:11:39.506134Z",
+                "evidence": "live",
+                "source_updated_at": null,
+                "expires_at": null
+              },
+              "locations": [
+                {
+                  "name": "Сочи, побережье",
+                  "latitude": 43.628204,
+                  "longitude": 39.69933,
+                  "daily": {
+                    "time": [
+                      "2026-10-25",
+                      "2026-10-26",
+                      "2026-10-27",
+                      "2026-10-28",
+                      "2026-10-29",
+                      "2026-10-30",
+                      "2026-10-31"
+                    ],
+                    "temperature_2m_max": [
+                      21.2,
+                      23.1,
+                      23.7,
+                      25.2,
+                      23.1,
+                      19.5,
+                      19.0
+                    ],
+                    "temperature_2m_min": [
+                      13.4,
+                      13.9,
+                      15.5,
+                      17.6,
+                      17.2,
+                      16.7,
+                      13.3
+                    ],
+                    "precipitation_sum": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      0.0,
+                      0.0,
+                      3.65,
+                      3.4
+                    ],
+                    "wind_speed_10m_max": [
+                      7.6,
+                      8.4,
+                      8.4,
+                      8.9,
+                      7.0,
+                      5.9,
+                      6.2
+                    ]
+                  },
+                  "units": {
+                    "time": "iso8601",
+                    "temperature_2m_max": "°C",
+                    "temperature_2m_min": "°C",
+                    "precipitation_sum": "mm",
+                    "wind_speed_10m_max": "km/h"
+                  }
+                },
+                {
+                  "name": "Красная Поляна, горы",
+                  "latitude": 43.64666,
+                  "longitude": 40.12375,
+                  "daily": {
+                    "time": [
+                      "2026-10-25",
+                      "2026-10-26",
+                      "2026-10-27",
+                      "2026-10-28",
+                      "2026-10-29",
+                      "2026-10-30",
+                      "2026-10-31"
+                    ],
+                    "temperature_2m_max": [
+                      18.8,
+                      21.4,
+                      24.9,
+                      22.6,
+                      21.5,
+                      17.3,
+                      16.6
+                    ],
+                    "temperature_2m_min": [
+                      10.1,
+                      11.0,
+                      13.8,
+                      15.2,
+                      13.9,
+                      14.0,
+                      13.7
+                    ],
+                    "precipitation_sum": [
+                      0.0,
+                      0.0,
+                      0.0,
+                      0.2,
+                      0.4,
+                      3.0,
+                      1.2
+                    ],
+                    "wind_speed_10m_max": [
+                      7.6,
+                      8.9,
+                      9.7,
+                      9.2,
+                      7.1,
+                      6.0,
+                      6.5
+                    ]
+                  },
+                  "units": {
+                    "time": "iso8601",
+                    "temperature_2m_max": "°C",
+                    "temperature_2m_min": "°C",
+                    "precipitation_sum": "mm",
+                    "wind_speed_10m_max": "km/h"
+                  }
+                }
+              ],
+              "trip_dates": {
+                "departure": "2026-11-12",
+                "return": "2026-11-16",
+                "adults": 2,
+                "nights": 4,
+                "currency": "RUB",
+                "origin": "MOW",
+                "destination": "AER"
+              },
+              "warning": "Forecast does not cover trip dates"
+            },
+            "budget": {
+              "currency": "RUB",
+              "known_subtotal": "16368",
+              "confirmed_total": null,
+              "complete": false,
+              "missing": [
+                "hotel_4_nights",
+                "restaurants",
+                "all_local_transport",
+                "mountain_lifts",
+                "baggage_and_extra_fees"
+              ],
+              "warnings": [
+                "flights_outbound: not a confirmed live quote",
+                "flights_inbound: not a confirmed live quote",
+                "one_excursion: not a confirmed live quote"
+              ]
+            }
+          }
+        }
+      ],
+      "final": {
+        "answer": "Маршрут: Москва → Сочи, 12–16 ноября 2026, 4 ночи, 2 взрослых. Что подтверждено фактами: перелёты в кэше — вылет 12.11 в 11:30 (DP 6941, 3 194 ₽/чел.) и обратно 16.11 в 15:10 (UT 268, 3 600 ₽/чел.); это кэшированные цены за одного взрослого, не подтверждённые живые котировки, багаж не указан. Ориентир по перелётам на двоих — 13 588 ₽. Из активностей в даты поездки есть «Стендап-экскурсия по Сочи» 13, 14 и 15 ноября по 1 390 ₽/билет (наличие не подтверждено) — на двоих 2 780 ₽. Итого известный, но НЕподтверждённый частичный ориентир — 16 368 ₽; это не подтверждённая стоимость поездки. Отель: в каталоге есть City Park Hotel Sochi (рейтинг 7,6/10) и Denart Hotel (8,8/10) в центре Сочи, но свободных номеров и цен нет (rate_search_status: no_availability_in_sandbox) — стоимость 4 ночей неизвестна, наличие не подтверждено. Рестораны: в выдаче только точки в Адлере/Сириусе («Роллер», «Фабрика вкуса», «Пивной дворик») без рейтингов и цен — это каталог, а не бронирование; они в другом районе от сочинских отелей, потребуется транспорт. Море и горы: измеренных пеших маршрутов до моря нет, поэтому о пешей доступности вывод не делаю; автомобильный маршрут Сочи → Красная Поляна ~44 км, 37–45 мин (geoapify/ors/2gis, причём ORS и Geoapify опираются на общий OSM — не независимые источники). Погода: прогноз покрывает только 25–31 октября 2026, а не даты поездки, поэтому погоду на ноябрь не переношу. Неизвестные расходы: отель 4 ночи, питание в ресторанах, весь местный транспорт, подъёмники/горные активности, багаж и доплаты. Бюджет 100 000 ₽ на двоих выглядит реалистичным по перелётам, но проверить его нельзя, пока нет цены отеля.",
+        "hotel_availability_confirmed": false,
+        "source_ids": [
+          "travelpayouts_data",
+          "liteapi",
+          "geoapify",
+          "ors",
+          "2gis",
+          "timepad",
+          "openmeteo_forecast"
+        ],
+        "trip_total_rub": null,
+        "used_fallback": false,
+        "weather_covers_trip": false
+      },
+      "usage": [
+        {
+          "prompt_tokens": 750,
+          "completion_tokens": 26,
+          "total_tokens": 776,
+          "cost": 3.242e-05
+        },
+        {
+          "prompt_tokens": 4504,
+          "completion_tokens": 859,
+          "total_tokens": 5363,
+          "cost": 0.000968172
+        }
+      ],
+      "errors": [],
+      "profile": "orchestrated",
+      "mode": "native tool calling over timestamped real API snapshots; no fabricated successful provider responses"
+    }
+  ],
+  "actual_cost_usd": "0.0039117662",
+  "reserved_upper_bound_usd": "0.165334",
+  "budget_usd": "1"
+}

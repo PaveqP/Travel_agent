@@ -1,0 +1,1495 @@
+{
+  "meta": {
+    "tool": "search_places",
+    "returned_items": 10
+  },
+  "content": [
+    {
+      "type": "text",
+      "text": "Найдено 10 из 644 результатов для: Достопримечательности.\n\nРезультаты:\n1. Ривьера, парк культуры и отдыха — branch; адрес: Сочи, улица Егорова, 1/15; координаты: 43.591485, 39.717018; id: 4222652931637660\n2. Сочинский национальный парк, Дендрарий — branch; адрес: Сочи, Курортный проспект, 74; координаты: 43.568318, 39.742059; id: 70000001061365387\n3. Зимний театр — branch; адрес: Сочи, Театральная улица, 2; координаты: 43.572495, 39.730383; id: 4222652931670726\n4. Сочинский государственный цирк — branch; адрес: Сочи, Депутатская улица, 8; координаты: 43.568883, 39.738421; id: 4222652931638903\n5. Большой Сочинский Дельфинарий — branch; адрес: Сочи, улица Егорова, 1/20; координаты: 43.590418, 39.715261; id: 4222652931840063\n6. Мацеста, бальнеологический курорт — branch; адрес: Сочи, аллея Челтенхэма, 14; координаты: 43.568217, 39.804415; id: 4222652931663998\n7. Металлург, санаторий — branch; адрес: Сочи, Курортный проспект, 92; координаты: 43.563675, 39.759655; id: 4222652931637291\n8. Искра, санаторий — branch; адрес: Сочи, Курортный проспект, 100; координаты: 43.555478, 39.776280; id: 4222652931637273\n9. Художественный музей им. Д. Д. Жилинского — branch; адрес: Сочи, Курортный проспект, 51; координаты: 43.576335, 39.728396; id: 4222652931637484\n10. Кафедральный собор святого равноапостольного великого князя Владимира — branch; адрес: Сочи, Виноградная улица, 18в; координаты: 43.603426, 39.717963; id: 4222652931826432",
+      "annotations": null,
+      "meta": null
+    }
+  ],
+  "structuredContent": {
+    "query": "Достопримечательности",
+    "total": 644,
+    "returned_count": 10,
+    "items": [
+      {
+        "id": "4222652931637660",
+        "name": "Ривьера, парк культуры и отдыха",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, улица Егорова, 1/15",
+        "address": {
+          "building_id": "4222760305905462",
+          "components": [
+            {
+              "number": "1/15",
+              "street": "улица Егорова",
+              "street_id": "4222863385042331",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354000"
+        },
+        "coordinates": {
+          "lat": 43.591485,
+          "lon": 39.717018
+        },
+        "extra_fields": {
+          "address_name": "улица Егорова, 1/15",
+          "building_name": "Парк Ривьера",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сочи, улица Егорова, 1/15",
+          "org": {
+            "branch_count": 2,
+            "extension": "парк культуры и отдыха",
+            "id": "4222661521572243",
+            "name": "Ривьера-Сочи, парк культуры и отдыха",
+            "primary": "Ривьера-Сочи"
+          },
+          "purpose_name": "Административное здание",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 2522,
+            "general_review_count_with_stars": 12191,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 3.7,
+                "recommendation_count": 8,
+                "review_count": 73,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.5,
+            "org_review_count": 2661,
+            "org_review_count_with_stars": 12364,
+            "rating": 3.7,
+            "recommendation_count": 8,
+            "review_count": 73
+          },
+          "rubrics": [
+            {
+              "alias": "parki",
+              "id": "168",
+              "kind": "primary",
+              "name": "Парки",
+              "parent_id": "2",
+              "short_id": 168
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "06:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "06:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "06:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "06:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "06:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "06:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "06:00",
+                  "to": "23:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001061365387",
+        "name": "Сочинский национальный парк, Дендрарий",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, Курортный проспект, 74",
+        "address": {
+          "building_id": "4222760305895685",
+          "building_name": "Дендрарий",
+          "components": [
+            {
+              "number": "74",
+              "street": "Курортный проспект",
+              "street_id": "4222863385035670",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Парк Дендрарий",
+          "postcode": "354002"
+        },
+        "coordinates": {
+          "lat": 43.568318,
+          "lon": 39.742059
+        },
+        "extra_fields": {
+          "address_name": "Курортный проспект, 74",
+          "building_name": "Дендрарий, Сочинский национальный парк",
+          "flags": {
+            "has_model": {},
+            "photos": true
+          },
+          "full_name": "Сочи, Дендрарий, Сочинский национальный парк",
+          "org": {
+            "branch_count": 1,
+            "extension": "Дендрарий",
+            "id": "4222661521572169",
+            "name": "Сочинский национальный парк, ФГБУ, Дендрарий, Сочинский национальный парк"
+          },
+          "purpose_name": "Культурно-развлекательный комплекс",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 3772,
+            "general_review_count_with_stars": 14225,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.6,
+            "org_review_count": 3771,
+            "org_review_count_with_stars": 14212
+          },
+          "rubrics": [
+            {
+              "alias": "botanicheskijj_sad",
+              "id": "24169",
+              "kind": "primary",
+              "name": "Ботанический сад",
+              "parent_id": "2",
+              "short_id": 24169
+            },
+            {
+              "alias": "parki",
+              "id": "168",
+              "kind": "geo",
+              "name": "Парки",
+              "parent_id": "2",
+              "short_id": 168
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "comment": "касса: пн-вс 9:00-18:00"
+          }
+        }
+      },
+      {
+        "id": "4222652931670726",
+        "name": "Зимний театр",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, Театральная улица, 2",
+        "address": {
+          "building_id": "4222760305890430",
+          "building_name": "Зимний театр",
+          "components": [
+            {
+              "number": "2",
+              "street": "Театральная улица",
+              "street_id": "4222863385037972",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Театральная площадь",
+          "postcode": "354000"
+        },
+        "coordinates": {
+          "lat": 43.572495,
+          "lon": 39.730383
+        },
+        "extra_fields": {
+          "address_name": "Театральная улица, 2",
+          "building_name": "Зимний театр",
+          "flags": {
+            "has_model": {},
+            "photos": true
+          },
+          "full_name": "Сочи, Зимний театр",
+          "org": {
+            "branch_count": 2,
+            "extension": "Зимний театр",
+            "id": "4222661521596928",
+            "name": "Зимний театр"
+          },
+          "purpose_name": "Культурное учреждение",
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 330,
+            "general_review_count_with_stars": 1631,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 3,
+                "review_count": 6,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 3.9,
+            "org_review_count": 350,
+            "org_review_count_with_stars": 1632,
+            "rating": 3,
+            "review_count": 6
+          },
+          "rubrics": [
+            {
+              "alias": "teatry",
+              "id": "199",
+              "kind": "primary",
+              "name": "Театры",
+              "parent_id": "4",
+              "short_id": 199
+            },
+            {
+              "alias": "interesnye_zdaniya",
+              "id": "112670",
+              "kind": "geo",
+              "name": "Интересные здания",
+              "parent_id": "112663",
+              "short_id": 112670
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "comment": "приём граждан по личным вопросам: пн 17:00-18:00"
+          }
+        }
+      },
+      {
+        "id": "4222652931638903",
+        "name": "Сочинский государственный цирк",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, Депутатская улица, 8",
+        "address": {
+          "building_id": "4222760305888938",
+          "building_name": "Цирк",
+          "components": [
+            {
+              "number": "8",
+              "street": "Депутатская улица",
+              "street_id": "4222863385035985",
+              "type": "street_number"
+            },
+            {
+              "number": "5",
+              "street": "проспект Пушкина",
+              "street_id": "4222863385035967",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354002"
+        },
+        "coordinates": {
+          "lat": 43.568883,
+          "lon": 39.738421
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "Депутатская улица, 8",
+          "building_name": "Сочинский Государственный Цирк",
+          "flags": {
+            "has_model": {},
+            "photos": true
+          },
+          "full_name": "Сочи, Сочинский Государственный Цирк",
+          "org": {
+            "branch_count": 1,
+            "id": "4222661521573438",
+            "name": "Сочинский государственный цирк, ФКП РосГосЦирк",
+            "primary": "Сочинский государственный цирк"
+          },
+          "purpose_name": "Культурно-развлекательный комплекс",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 253,
+            "general_review_count_with_stars": 888,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 3.5,
+                "recommendation_count": 2,
+                "review_count": 6,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.7,
+            "org_review_count": 266,
+            "org_review_count_with_stars": 888,
+            "rating": 3.5,
+            "recommendation_count": 2,
+            "review_count": 6
+          },
+          "rubrics": [
+            {
+              "alias": "cirk",
+              "id": "685",
+              "kind": "primary",
+              "name": "Цирк",
+              "parent_id": "2",
+              "short_id": 685
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "comment": "касса: пн-вс 10:00-19:00"
+          }
+        }
+      },
+      {
+        "id": "4222652931840063",
+        "name": "Большой Сочинский Дельфинарий",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, улица Егорова, 1/20",
+        "address": {
+          "building_id": "4222760305900975",
+          "building_name": "Сочинский дельфинарий",
+          "components": [
+            {
+              "number": "1/20",
+              "street": "улица Егорова",
+              "street_id": "4222863385042331",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354000"
+        },
+        "coordinates": {
+          "lat": 43.590418,
+          "lon": 39.715261
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "улица Егорова, 1/20",
+          "building_name": "Большой сочинский дельфинарий",
+          "flags": {
+            "badges": [
+              {
+                "collection_uid": "66cd5013-8f4d-458f-9f63-0562b4033796",
+                "text": "2 место",
+                "type": "award2017"
+              }
+            ],
+            "photos": true
+          },
+          "full_name": "Сочи, Большой сочинский дельфинарий",
+          "org": {
+            "branch_count": 1,
+            "id": "4222661521688244",
+            "name": "Большой Сочинский Дельфинарий",
+            "primary": "Большой Сочинский Дельфинарий"
+          },
+          "purpose_name": "Культурно-развлекательный комплекс",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 885,
+            "general_review_count_with_stars": 2233,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4.2,
+                "recommendation_count": 11,
+                "review_count": 31,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.7,
+            "org_review_count": 884,
+            "org_review_count_with_stars": 2232,
+            "rating": 4.2,
+            "recommendation_count": 11,
+            "review_count": 31
+          },
+          "rubrics": [
+            {
+              "alias": "delfinarijj",
+              "id": "9508",
+              "kind": "primary",
+              "name": "Дельфинарий",
+              "parent_id": "2",
+              "short_id": 9508
+            },
+            {
+              "alias": "pingvinarijj",
+              "id": "112592",
+              "kind": "additional",
+              "name": "Пингвинарий",
+              "parent_id": "2",
+              "short_id": 112592
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "20:00"
+                }
+              ]
+            },
+            "comment": "шоу дельфинов: вт-вс 13:00, 16:00; санитарный день: пн"
+          }
+        }
+      },
+      {
+        "id": "4222652931663998",
+        "name": "Мацеста, бальнеологический курорт",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, аллея Челтенхэма, 14",
+        "address": {
+          "building_id": "4222760305890626",
+          "components": [
+            {
+              "number": "14",
+              "street": "аллея Челтенхэма",
+              "street_id": "4222863385035549",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354024"
+        },
+        "coordinates": {
+          "lat": 43.568217,
+          "lon": 39.804415
+        },
+        "extra_fields": {
+          "address_name": "аллея Челтенхэма, 14",
+          "building_name": "Мацеста, санаторий",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сочи, Мацеста, санаторий",
+          "org": {
+            "branch_count": 4,
+            "extension": "бальнеологический курорт",
+            "id": "4222661521590895",
+            "name": "Мацеста, бальнеологический курорт",
+            "primary": "Мацеста"
+          },
+          "purpose_name": "Санаторий, профилакторий",
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 135,
+            "general_review_count_with_stars": 463,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.3,
+            "org_review_count": 160,
+            "org_review_count_with_stars": 561
+          },
+          "rubrics": [
+            {
+              "alias": "sanatorii",
+              "id": "214",
+              "kind": "primary",
+              "name": "Санатории",
+              "parent_id": "5",
+              "short_id": 214
+            },
+            {
+              "alias": "reabilitacionnye_centry",
+              "id": "15366",
+              "kind": "additional",
+              "name": "Реабилитационные центры",
+              "parent_id": "5",
+              "short_id": 15366
+            },
+            {
+              "alias": "ginekolog",
+              "id": "4517",
+              "kind": "additional",
+              "name": "Гинеколог",
+              "parent_id": "5",
+              "short_id": 4517
+            },
+            {
+              "alias": "somnolog",
+              "id": "109487",
+              "kind": "additional",
+              "name": "Сомнолог",
+              "parent_id": "5",
+              "short_id": 109487
+            },
+            {
+              "alias": "massazhist",
+              "id": "13726",
+              "kind": "additional",
+              "name": "Массажист",
+              "parent_id": "5",
+              "short_id": 13726
+            },
+            {
+              "alias": "goryachie_istochniki",
+              "id": "70190",
+              "kind": "additional",
+              "name": "Горячие источники",
+              "parent_id": "5",
+              "short_id": 70190
+            },
+            {
+              "alias": "fizioterapevt",
+              "id": "53460",
+              "kind": "additional",
+              "name": "Физиотерапевт",
+              "parent_id": "5",
+              "short_id": 53460
+            },
+            {
+              "alias": "medicinskie_analizy",
+              "id": "12211",
+              "kind": "additional",
+              "name": "Медицинские анализы",
+              "parent_id": "5",
+              "short_id": 12211
+            },
+            {
+              "alias": "medicinskaya_diagnostika",
+              "id": "661",
+              "kind": "additional",
+              "name": "Медицинская диагностика",
+              "parent_id": "5",
+              "short_id": 661
+            },
+            {
+              "alias": "interesnye_zdaniya",
+              "id": "112670",
+              "kind": "geo",
+              "name": "Интересные здания",
+              "parent_id": "112663",
+              "short_id": 112670
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "07:45",
+                  "to": "14:30"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "07:45",
+                  "to": "14:30"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "07:45",
+                  "to": "14:30"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "07:45",
+                  "to": "14:30"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "07:45",
+                  "to": "14:30"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "07:45",
+                  "to": "14:30"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "07:45",
+                  "to": "14:30"
+                }
+              ]
+            },
+            "comment": "по предварительной записи"
+          }
+        }
+      },
+      {
+        "id": "4222652931637291",
+        "name": "Металлург, санаторий",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, Курортный проспект, 92",
+        "address": {
+          "building_id": "4222760305889883",
+          "building_name": "Санаторий Металлург",
+          "components": [
+            {
+              "number": "92",
+              "street": "Курортный проспект",
+              "street_id": "4222863385035670",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Металлург",
+          "postcode": "354054"
+        },
+        "coordinates": {
+          "lat": 43.563675,
+          "lon": 39.759655
+        },
+        "extra_fields": {
+          "address_name": "Курортный проспект, 92",
+          "building_name": "Металлург, санаторий",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сочи, Металлург, санаторий",
+          "org": {
+            "branch_count": 1,
+            "extension": "санаторий",
+            "id": "4222661521571883",
+            "name": "Металлург, санаторий",
+            "primary": "Металлург"
+          },
+          "purpose_name": "Санаторий, профилакторий",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 242,
+            "general_review_count_with_stars": 579,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 5,
+                "recommendation_count": 1,
+                "review_count": 3,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.7,
+            "org_review_count": 242,
+            "org_review_count_with_stars": 579,
+            "rating": 5,
+            "recommendation_count": 1,
+            "review_count": 3
+          },
+          "rubrics": [
+            {
+              "alias": "sanatorii",
+              "id": "214",
+              "kind": "primary",
+              "name": "Санатории",
+              "parent_id": "5",
+              "short_id": 214
+            },
+            {
+              "alias": "bassejjny",
+              "id": "261",
+              "kind": "additional",
+              "name": "Бассейны",
+              "parent_id": "8",
+              "short_id": 261
+            },
+            {
+              "alias": "interesnye_zdaniya",
+              "id": "112670",
+              "kind": "geo",
+              "name": "Интересные здания",
+              "parent_id": "112663",
+              "short_id": 112670
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "comment": "бассейн: пн-вс 9:00-20:00",
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "4222652931637273",
+        "name": "Искра, санаторий",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, Курортный проспект, 100",
+        "address": {
+          "building_id": "4222760305888990",
+          "building_name": "Санаторий Искра",
+          "components": [
+            {
+              "number": "100",
+              "street": "Курортный проспект",
+              "street_id": "4222863385035670",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354054"
+        },
+        "coordinates": {
+          "lat": 43.555478,
+          "lon": 39.77628
+        },
+        "extra_fields": {
+          "address_name": "Курортный проспект, 100",
+          "building_name": "Искра, санаторий",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сочи, Искра, санаторий",
+          "org": {
+            "branch_count": 1,
+            "extension": "санаторий",
+            "id": "4222661521571865",
+            "name": "Искра, санаторий",
+            "primary": "Искра"
+          },
+          "purpose_name": "Санаторий, профилакторий",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 92,
+            "general_review_count_with_stars": 365,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 1,
+                "review_count": 1,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.7,
+            "org_review_count": 92,
+            "org_review_count_with_stars": 366,
+            "rating": 1,
+            "review_count": 1
+          },
+          "rubrics": [
+            {
+              "alias": "sanatorii",
+              "id": "214",
+              "kind": "primary",
+              "name": "Санатории",
+              "parent_id": "5",
+              "short_id": 214
+            },
+            {
+              "alias": "interesnye_zdaniya",
+              "id": "112670",
+              "kind": "geo",
+              "name": "Интересные здания",
+              "parent_id": "112663",
+              "short_id": 112670
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "08:00",
+                  "to": "12:00"
+                },
+                {
+                  "from": "13:00",
+                  "to": "17:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "08:00",
+                  "to": "12:00"
+                },
+                {
+                  "from": "13:00",
+                  "to": "17:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "08:00",
+                  "to": "12:00"
+                },
+                {
+                  "from": "13:00",
+                  "to": "17:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "08:00",
+                  "to": "12:00"
+                },
+                {
+                  "from": "13:00",
+                  "to": "17:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "08:00",
+                  "to": "12:00"
+                },
+                {
+                  "from": "13:00",
+                  "to": "17:00"
+                }
+              ]
+            },
+            "comment": "по предварительной записи"
+          }
+        }
+      },
+      {
+        "id": "4222652931637484",
+        "name": "Художественный музей им. Д. Д. Жилинского",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, Курортный проспект, 51",
+        "address": {
+          "building_id": "4222760305891380",
+          "components": [
+            {
+              "number": "51",
+              "street": "Курортный проспект",
+              "street_id": "4222863385035670",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354000"
+        },
+        "coordinates": {
+          "lat": 43.576335,
+          "lon": 39.728396
+        },
+        "extra_fields": {
+          "address_name": "Курортный проспект, 51",
+          "building_name": "Сочинский художественный музей имени Д.Д. Жилинского",
+          "flags": {
+            "has_model": {},
+            "photos": true
+          },
+          "full_name": "Сочи, Сочинский художественный музей имени Д.Д. Жилинского",
+          "org": {
+            "branch_count": 1,
+            "id": "4222661521572069",
+            "name": "Художественный музей им. Д. Д. Жилинского",
+            "primary": "Художественный музей им. Д. Д. Жилинского"
+          },
+          "purpose_name": "Музей",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 137,
+            "general_review_count_with_stars": 397,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 5,
+                "review_count": 1,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.6,
+            "org_review_count": 149,
+            "org_review_count_with_stars": 398,
+            "rating": 5,
+            "review_count": 1
+          },
+          "rubrics": [
+            {
+              "alias": "muzei",
+              "id": "193",
+              "kind": "primary",
+              "name": "Музеи",
+              "parent_id": "4",
+              "short_id": 193
+            },
+            {
+              "alias": "interesnye_zdaniya",
+              "id": "112670",
+              "kind": "geo",
+              "name": "Интересные здания",
+              "parent_id": "112663",
+              "short_id": 112670
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "18:00"
+                }
+              ]
+            },
+            "comment": "касса: вт-вс 10:00-17:30"
+          }
+        }
+      },
+      {
+        "id": "4222652931826432",
+        "name": "Кафедральный собор святого равноапостольного великого князя Владимира",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, Виноградная улица, 18в",
+        "address": {
+          "building_id": "4222760305891403",
+          "components": [
+            {
+              "number": "18в",
+              "street": "Виноградная улица",
+              "street_id": "4222863385035634",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354068"
+        },
+        "coordinates": {
+          "lat": 43.603426,
+          "lon": 39.717963
+        },
+        "extra_fields": {
+          "address_name": "Виноградная улица, 18в",
+          "building_name": "Храм Святого Равноапостольного князя Владимира",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сочи, Храм Святого Равноапостольного князя Владимира",
+          "org": {
+            "branch_count": 1,
+            "id": "4222661521681052",
+            "name": "Кафедральный собор святого равноапостольного великого князя Владимира",
+            "primary": "Кафедральный собор святого равноапостольного великого князя Владимира"
+          },
+          "purpose_name": "Религиозное сооружение",
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 100,
+            "general_review_count_with_stars": 355,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 5,
+                "review_count": 1,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.8,
+            "org_review_count": 100,
+            "org_review_count_with_stars": 355,
+            "rating": 5,
+            "review_count": 1
+          },
+          "rubrics": [
+            {
+              "alias": "khramy_sobory_cerkvi",
+              "id": "194",
+              "kind": "primary",
+              "name": "Храмы / Соборы / Церкви",
+              "parent_id": "4",
+              "short_id": 194
+            },
+            {
+              "alias": "interesnye_zdaniya",
+              "id": "112670",
+              "kind": "geo",
+              "name": "Интересные здания",
+              "parent_id": "112663",
+              "short_id": 112670
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "07:00",
+                  "to": "19:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "07:00",
+                  "to": "19:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "07:00",
+                  "to": "19:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "07:00",
+                  "to": "19:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "07:00",
+                  "to": "19:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "07:00",
+                  "to": "19:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "07:00",
+                  "to": "19:00"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "isError": false
+}

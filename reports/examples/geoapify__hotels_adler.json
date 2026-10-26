@@ -1,0 +1,581 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Иветтис",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354340",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "quarter": "Курортный Городок",
+        "street": "улица Ленина",
+        "housenumber": "219/5А",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.8971065,
+        "lat": 43.475483,
+        "formatted": "Иветтис, улица Ленина 219/5А, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "address_line1": "Иветтис",
+        "address_line2": "улица Ленина 219/5А, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "categories": [
+          "accommodation",
+          "accommodation.hotel"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.475483,
+            "lon": 39.8971065,
+            "city": "Сочи",
+            "name": "Иветтис",
+            "osm_id": 1599762384,
+            "street": "улица Ленина",
+            "tourism": "hotel",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": "219/5А"
+          }
+        },
+        "place_id": "51b743c362d4f2434059e8667fa0dcbc4540f00103f901d06f5a5f0000000092030ed098d0b2d0b5d182d182d0b8d181"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.8971065,
+          43.475483
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ковчег",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354340",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "quarter": "Курортный Городок",
+        "street": "улица Ленина",
+        "housenumber": "219В",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.8959328,
+        "lat": 43.4731745,
+        "formatted": "Ковчег, улица Ленина 219В, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "address_line1": "Ковчег",
+        "address_line2": "улица Ленина 219В, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "categories": [
+          "accommodation",
+          "accommodation.hotel"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.4731745,
+            "lon": 39.8959328,
+            "name": "Ковчег",
+            "osm_id": 1589593516,
+            "street": "улица Ленина",
+            "tourism": "hotel",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": "219В"
+          }
+        },
+        "place_id": "51f4b40dedadf24340598c6665fb90bc4540f00103f901ac45bf5e0000000092030cd09ad0bed0b2d187d0b5d0b3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.8959328,
+          43.4731745
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Zara",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354367",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "quarter": "Курортный Городок",
+        "street": "Прибрежная улица",
+        "housenumber": "4",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.8936425,
+        "lat": 43.474253,
+        "formatted": "Zara, Прибрежная улица 4, Адлер, Сочи, Краснодарский край, Россия, 354367",
+        "address_line1": "Zara",
+        "address_line2": "Прибрежная улица 4, Адлер, Сочи, Краснодарский край, Россия, 354367",
+        "categories": [
+          "accommodation",
+          "accommodation.hotel"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.474253,
+            "lon": 39.8936425,
+            "name": "Zara",
+            "osm_id": 8424805030,
+            "street": "Прибрежная улица",
+            "tourism": "hotel",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": 4
+          }
+        },
+        "place_id": "5168e89fe062f2434059d3838252b4bc4540f00103f901a65228f6010000009203045a617261"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.8936425,
+          43.474253
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Пальма",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354364",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "Аллейная улица",
+        "housenumber": "11",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.891536,
+        "lat": 43.4779829,
+        "formatted": "Пальма, Аллейная улица 11, Адлер, Сочи, Краснодарский край, Россия, 354364",
+        "address_line1": "Пальма",
+        "address_line2": "Аллейная улица 11, Адлер, Сочи, Краснодарский край, Россия, 354364",
+        "categories": [
+          "accommodation",
+          "accommodation.hotel",
+          "building",
+          "building.accommodation"
+        ],
+        "details": [
+          "details.building"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.47798285000001,
+            "lon": 39.891536,
+            "city": "Сочи",
+            "name": "Пальма",
+            "osm_id": 81148594,
+            "street": "Аллейная улица",
+            "tourism": "hotel",
+            "building": "yes",
+            "osm_type": "w",
+            "housenumber": 11,
+            "building:levels": 4
+          }
+        },
+        "building": {
+          "levels": 4
+        },
+        "place_id": "51749a05da1df24340594366c28a2ebd4540f00102f901b23ad6040000000092030cd09fd0b0d0bbd18cd0bcd0b0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.891536,
+          43.47798285000001
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "АК \"Cosmos Adler Hotel\"",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354340",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "улица Просвещения",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.9043815,
+        "lat": 43.444376,
+        "formatted": "АК \"Cosmos Adler Hotel\", улица Просвещения, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "address_line1": "АК \"Cosmos Adler Hotel\"",
+        "address_line2": "улица Просвещения, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "categories": [
+          "accommodation",
+          "accommodation.hotel"
+        ],
+        "details": [
+          "details"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.4447430095215,
+            "lon": 39.90427361965895,
+            "city": "Сочи",
+            "name": "АК \"Cosmos Adler Hotel\"",
+            "brand": "Cosmos",
+            "osm_id": 1030684742,
+            "name:ru": "АК \"Cosmos Adler Hotel\"",
+            "tourism": "hotel",
+            "osm_type": "w"
+          }
+        },
+        "brand": "Cosmos",
+        "name_international": {
+          "ru": "АК \"Cosmos Adler Hotel\""
+        },
+        "place_id": "510e89eb3cbff34340597e82c456edb84540f00102f90146006f3d00000000920319d090d09a2022436f736d6f732041646c657220486f74656c22"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.90427361965895,
+          43.4447430095215
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "ЭкоДом",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354364",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "улица Чкалова",
+        "housenumber": "31",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.8945745,
+        "lat": 43.4784163,
+        "formatted": "ЭкоДом, улица Чкалова 31, Адлер, Сочи, Краснодарский край, Россия, 354364",
+        "address_line1": "ЭкоДом",
+        "address_line2": "улица Чкалова 31, Адлер, Сочи, Краснодарский край, Россия, 354364",
+        "categories": [
+          "accommodation",
+          "accommodation.hotel"
+        ],
+        "details": [
+          "details",
+          "details.contact"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.4784163,
+            "lon": 39.8945745,
+            "city": "Сочи",
+            "name": "ЭкоДом",
+            "phone": "[REDACTED]",
+            "osm_id": 7164495092,
+            "street": "улица Чкалова",
+            "country": "RU",
+            "tourism": "hotel",
+            "website": "https://ekodom-hotels.ru/",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": 31
+          }
+        },
+        "website": "https://ekodom-hotels.ru/",
+        "contact": {
+          "phone": "[REDACTED]"
+        },
+        "place_id": "51f3aace6a81f2434059c92fcdbe3cbd4540f00103f901f48409ab0100000092030cd0add0bad0bed094d0bed0bc"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.8945745,
+          43.4784163
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Орион",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354382",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "quarter": "Голубые Дали",
+        "street": "Аэрофлотская улица",
+        "housenumber": "4",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.9017312,
+        "lat": 43.4608934,
+        "formatted": "Орион, Аэрофлотская улица 4, Адлер, Сочи, Краснодарский край, Россия, 354382",
+        "address_line1": "Орион",
+        "address_line2": "Аэрофлотская улица 4, Адлер, Сочи, Краснодарский край, Россия, 354382",
+        "categories": [
+          "accommodation",
+          "accommodation.hotel"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.4608934,
+            "lon": 39.9017312,
+            "name": "Орион",
+            "osm_id": 1589583324,
+            "street": "Аэрофлотская улица",
+            "tourism": "hotel",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": 4
+          }
+        },
+        "place_id": "5134e48eed6bf34340599cf80f8efeba4540f00103f901dc1dbf5e0000000092030ad09ed180d0b8d0bed0bd"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.9017312,
+          43.4608934
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Лидия",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354364",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "quarter": "Курортный Городок",
+        "street": "улица Просвещения",
+        "housenumber": "162А",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.8930332,
+        "lat": 43.4783951,
+        "formatted": "Лидия, улица Просвещения 162А, Адлер, Сочи, Краснодарский край, Россия, 354364",
+        "address_line1": "Лидия",
+        "address_line2": "улица Просвещения 162А, Адлер, Сочи, Краснодарский край, Россия, 354364",
+        "categories": [
+          "accommodation",
+          "accommodation.hotel"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.4783951,
+            "lon": 39.8930332,
+            "name": "Лидия",
+            "osm_id": 2857674222,
+            "street": "улица Просвещения",
+            "tourism": "hotel",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": "162А"
+          }
+        },
+        "place_id": "51011f72e94ef24340598888f60c3cbd4540f00103f901eea554aa0000000092030ad09bd0b8d0b4d0b8d18f"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.8930332,
+          43.4783951
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354350",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "улица Кирова",
+        "housenumber": "44",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.9240332,
+        "lat": 43.4247101,
+        "formatted": "улица Кирова 44, Адлер, Сочи, Краснодарский край, Россия, 354350",
+        "address_line1": "улица Кирова 44",
+        "address_line2": "Адлер, Сочи, Краснодарский край, Россия, 354350",
+        "categories": [
+          "accommodation",
+          "accommodation.hotel",
+          "building",
+          "building.accommodation"
+        ],
+        "details": [
+          "details.building"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.42471009694881,
+            "lon": 39.924033186098804,
+            "osm_id": 208416626,
+            "street": "улица Кирова",
+            "tourism": "hotel",
+            "building": "yes",
+            "osm_type": "w",
+            "housenumber": 44,
+            "building:levels": 5
+          }
+        },
+        "building": {
+          "levels": 5
+        },
+        "place_id": "51455b2db846f64340598b5684e65cb64540f00102f901722f6c0c00000000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.924033186098804,
+          43.42471009694881
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Center Plaza",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354350",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "Старонасыпная улица",
+        "housenumber": "1",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.9280934,
+        "lat": 43.4275197,
+        "formatted": "Center Plaza, Старонасыпная улица 1, Адлер, Сочи, Краснодарский край, Россия, 354350",
+        "address_line1": "Center Plaza",
+        "address_line2": "Старонасыпная улица 1, Адлер, Сочи, Краснодарский край, Россия, 354350",
+        "categories": [
+          "accommodation",
+          "accommodation.hotel"
+        ],
+        "details": [
+          "details",
+          "details.contact"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.4275197,
+            "lon": 39.9280934,
+            "city": "Сочи",
+            "name": "Center Plaza",
+            "phone": "[REDACTED]",
+            "osm_id": 7115162128,
+            "street": "Старонасыпная улица",
+            "tourism": "hotel",
+            "website": "https://centerplaza-sochi.ru/",
+            "osm_type": "n",
+            "housenumber": 1
+          }
+        },
+        "website": "https://centerplaza-sochi.ru/",
+        "contact": {
+          "phone": "[REDACTED]"
+        },
+        "place_id": "511551b8c3cbf6434059a7f22cf7b8b64540f00103f90110c218a80100000092030c43656e74657220506c617a61"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.9280934,
+          43.4275197
+        ]
+      }
+    }
+  ]
+}

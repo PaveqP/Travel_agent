@@ -1,0 +1,1403 @@
+{
+  "meta": {
+    "tool": "search_places",
+    "returned_items": 10
+  },
+  "content": [
+    {
+      "type": "text",
+      "text": "Найдено 10 из 1094 результатов для: Отели.\n\nРезультаты:\n1. Сочи Парк Отель, комплекс отдыха — branch; адрес: Сириус (Сириус городской округ), Континентальный проспект, 6/10; координаты: 43.404814, 39.975536; id: 70000001020109401\n2. Mantera Resort&Congress — branch; адрес: Сириус (Сириус городской округ), Голубая улица, 1а; координаты: 43.410643, 39.937345; id: 70000001083395184\n3. Богатырь, отель-замок — branch; адрес: Сириус (Сириус городской округ), Олимпийский проспект, 21; координаты: 43.403813, 39.963985; id: 70000001006918270\n4. Omega Sirius, отель — branch; адрес: Сириус (Сириус городской округ), Олимпийский проспект, 3; координаты: 43.411661, 39.950339; id: 70000001006192165\n5. Моне, отель — branch; адрес: Сочи, улица Ленина, 217а; координаты: 43.462400, 39.899437; id: 70000001062460082\n6. Bridge Resort 4*, гостиничный комплекс — branch; адрес: Сириус (Сириус городской округ), Фигурная улица, 45; координаты: 43.390286, 39.989619; id: 4222653932168157\n7. Екатерининский квартал, Город-отель — branch; адрес: Сириус (Сириус городской округ), бульвар Надежд, 42; координаты: 43.390529, 39.992536; id: 70000001006978553\n8. Legenda морской курорт, отель — branch; адрес: Сириус (Сириус городской округ), Морской бульвар, 1; координаты: 43.411407, 39.935825; id: 70000001113933375\n9. Грейс Глобал, СПА-отель — branch; адрес: Сочи, Демократическая улица, 6/9; координаты: 43.420498, 39.922076; id: 70000001035341211\n10. Грейс Арли, СПА-отель — branch; адрес: Сочи, улица Ленина, 219д; координаты: 43.472906, 39.896237; id: 4222652931639033",
+      "annotations": null,
+      "meta": null
+    }
+  ],
+  "structuredContent": {
+    "query": "Отели",
+    "total": 1094,
+    "returned_count": 10,
+    "items": [
+      {
+        "id": "70000001020109401",
+        "name": "Сочи Парк Отель, комплекс отдыха",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сириус (Сириус городской округ), Континентальный проспект, 6/10",
+        "address": {
+          "building_id": "4222760305904656",
+          "building_name": "Сочи Парк Отель",
+          "components": [
+            {
+              "number": "6/10",
+              "street": "Континентальный проспект",
+              "street_id": "4222863385036597",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Сочи Парк Отель",
+          "postcode": "354375"
+        },
+        "coordinates": {
+          "lat": 43.404814,
+          "lon": 39.975536
+        },
+        "extra_fields": {
+          "address_name": "Континентальный проспект, 6/10",
+          "building_name": "СОЧИ ПАРК ОТЕЛЬ, комплекс отдыха",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сириус, СОЧИ ПАРК ОТЕЛЬ, комплекс отдыха",
+          "org": {
+            "branch_count": 1,
+            "extension": "комплекс отдыха",
+            "id": "70000001020109400",
+            "name": "Сочи Парк Отель, комплекс отдыха",
+            "primary": "Сочи Парк Отель"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.8,
+            "general_review_count": 2917,
+            "general_review_count_with_stars": 7420,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 2.9,
+                "review_count": 98,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.2,
+            "org_review_count": 2909,
+            "org_review_count_with_stars": 7411,
+            "rating": 2.9,
+            "review_count": 98
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            },
+            {
+              "alias": "tennisnye_korty",
+              "id": "51241",
+              "kind": "additional",
+              "name": "Теннисные корты",
+              "parent_id": "8",
+              "short_id": 51241
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001083395184",
+        "name": "Mantera Resort&Congress",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сириус (Сириус городской округ), Голубая улица, 1а",
+        "address": {
+          "building_id": "4222760305901415",
+          "building_name": "Mantera Resort&Congress",
+          "components": [
+            {
+              "number": "1а",
+              "street": "Голубая улица",
+              "street_id": "4222863385036233",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354340"
+        },
+        "coordinates": {
+          "lat": 43.410643,
+          "lon": 39.937345
+        },
+        "extra_fields": {
+          "address_name": "Голубая улица, 1а",
+          "building_name": "Mantera Resort&Congress, гостиница",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сириус, Mantera Resort&Congress, гостиница",
+          "org": {
+            "branch_count": 1,
+            "id": "70000001083395183",
+            "name": "Mantera Resort&Congress",
+            "primary": "Mantera Resort&Congress"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 247,
+            "general_review_count_with_stars": 681,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.7,
+            "org_review_count": 247,
+            "org_review_count_with_stars": 681
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            },
+            {
+              "alias": "spa_procedury",
+              "id": "56759",
+              "kind": "additional",
+              "name": "SPA-процедуры",
+              "parent_id": "5",
+              "short_id": 56759
+            },
+            {
+              "alias": "bassejjny",
+              "id": "261",
+              "kind": "additional",
+              "name": "Бассейны",
+              "parent_id": "8",
+              "short_id": 261
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001006918270",
+        "name": "Богатырь, отель-замок",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сириус (Сириус городской округ), Олимпийский проспект, 21",
+        "address": {
+          "building_id": "4222760305906017",
+          "building_name": "Богатырь",
+          "components": [
+            {
+              "number": "21",
+              "street": "Олимпийский проспект",
+              "street_id": "4222863385036599",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Сочи Парк",
+          "postcode": "354375"
+        },
+        "coordinates": {
+          "lat": 43.403813,
+          "lon": 39.963985
+        },
+        "extra_fields": {
+          "address_name": "Олимпийский проспект, 21",
+          "building_name": "Богатырь, отель",
+          "flags": {
+            "has_model": {},
+            "photos": true
+          },
+          "full_name": "Сириус, Богатырь, отель",
+          "org": {
+            "branch_count": 1,
+            "extension": "отель-замок",
+            "id": "70000001006918271",
+            "name": "Богатырь, отель-замок",
+            "primary": "Богатырь"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 1253,
+            "general_review_count_with_stars": 2597,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4.5,
+                "recommendation_count": 2,
+                "review_count": 34,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.8,
+            "org_review_count": 1306,
+            "org_review_count_with_stars": 2597,
+            "rating": 4.5,
+            "recommendation_count": 2,
+            "review_count": 34
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001006192165",
+        "name": "Omega Sirius, отель",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сириус (Сириус городской округ), Олимпийский проспект, 3",
+        "address": {
+          "building_id": "4222760305899845",
+          "components": [
+            {
+              "number": "3",
+              "street": "Олимпийский проспект",
+              "street_id": "4222863385036599",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354340"
+        },
+        "coordinates": {
+          "lat": 43.411661,
+          "lon": 39.950339
+        },
+        "extra_fields": {
+          "address_name": "Олимпийский проспект, 3",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сириус, Олимпийский проспект, 3",
+          "org": {
+            "branch_count": 1,
+            "extension": "отель",
+            "id": "70000001043509746",
+            "name": "Omega Sirius, отель",
+            "primary": "Omega Sirius"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 1262,
+            "general_review_count_with_stars": 2822,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 3.7,
+                "review_count": 6,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.8,
+            "org_review_count": 1256,
+            "org_review_count_with_stars": 2811,
+            "rating": 3.7,
+            "review_count": 6
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            },
+            {
+              "alias": "konferenc_zaly",
+              "id": "17379",
+              "kind": "additional",
+              "name": "Конференц-залы",
+              "parent_id": "9",
+              "short_id": 17379
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001062460082",
+        "name": "Моне, отель",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, улица Ленина, 217а",
+        "address": {
+          "building_id": "4222760305868678",
+          "components": [
+            {
+              "number": "217а",
+              "street": "улица Ленина",
+              "street_id": "4222863385035443",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354364"
+        },
+        "coordinates": {
+          "lat": 43.4624,
+          "lon": 39.899437
+        },
+        "extra_fields": {
+          "address_name": "улица Ленина, 217а",
+          "flags": {
+            "photos": true
+          },
+          "org": {
+            "branch_count": 1,
+            "extension": "отель",
+            "id": "70000001062460081",
+            "name": "Моне, отель",
+            "primary": "Моне"
+          },
+          "reviews": {
+            "general_rating": 4.8,
+            "general_review_count": 570,
+            "general_review_count_with_stars": 994,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 3,
+                "review_count": 3,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.7,
+            "org_review_count": 570,
+            "org_review_count_with_stars": 994,
+            "rating": 3,
+            "review_count": 3
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "4222653932168157",
+        "name": "Bridge Resort 4*, гостиничный комплекс",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сириус (Сириус городской округ), Фигурная улица, 45",
+        "address": {
+          "building_id": "4222760305903711",
+          "building_name": "Bridge Resort",
+          "components": [
+            {
+              "number": "45",
+              "street": "Фигурная улица",
+              "street_id": "4222863385043873",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Bridge resort",
+          "postcode": "354349"
+        },
+        "coordinates": {
+          "lat": 43.390286,
+          "lon": 39.989619
+        },
+        "extra_fields": {
+          "address_name": "Фигурная улица, 45",
+          "building_name": "Bridge Resort, санаторно-курортный комплекс",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сириус, Bridge Resort, санаторно-курортный комплекс",
+          "org": {
+            "branch_count": 2,
+            "extension": "гостиничный комплекс",
+            "id": "4222662621907782",
+            "name": "Bridge Resort 4*, гостиничный комплекс",
+            "primary": "Bridge Resort 4*"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 613,
+            "general_review_count_with_stars": 1369,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4.3,
+                "review_count": 20,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.7,
+            "org_review_count": 630,
+            "org_review_count_with_stars": 1434,
+            "rating": 4.3,
+            "review_count": 20
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001006978553",
+        "name": "Екатерининский квартал, Город-отель",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сириус (Сириус городской округ), бульвар Надежд, 42",
+        "address": {
+          "building_id": "4222760305904599",
+          "components": [
+            {
+              "number": "42",
+              "street": "бульвар Надежд",
+              "street_id": "4222863385044482",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Екатерининский квартал",
+          "postcode": "354349"
+        },
+        "coordinates": {
+          "lat": 43.390529,
+          "lon": 39.992536
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "бульвар Надежд, 42",
+          "building_name": "Бархатные Сезоны, город-отель",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сириус, Бархатные Сезоны, город-отель",
+          "org": {
+            "branch_count": 3,
+            "extension": "Город-отель",
+            "id": "70000001006978663",
+            "name": "Город-отель"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 849,
+            "general_review_count_with_stars": 2219,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 3.1,
+                "recommendation_count": 2,
+                "review_count": 14,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.4,
+            "org_review_count": 3659,
+            "org_review_count_with_stars": 8304,
+            "rating": 3.1,
+            "recommendation_count": 2,
+            "review_count": 14
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            },
+            {
+              "alias": "konferenc_zaly",
+              "id": "17379",
+              "kind": "additional",
+              "name": "Конференц-залы",
+              "parent_id": "9",
+              "short_id": 17379
+            },
+            {
+              "alias": "trenazhjornye_zaly",
+              "id": "267",
+              "kind": "additional",
+              "name": "Тренажёрные залы",
+              "parent_id": "8",
+              "short_id": 267
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "comment": "тренажерный зал: пн-вс 9:00-20:30, перерыв: 14:30-15:30; конференц-зал: пн-вс 8:00-20:00",
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001113933375",
+        "name": "Legenda морской курорт, отель",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сириус (Сириус городской округ), Морской бульвар, 1",
+        "address": {
+          "building_id": "4222760305901069",
+          "components": [
+            {
+              "number": "1",
+              "street": "Морской бульвар",
+              "street_id": "4222863385044665",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354340"
+        },
+        "coordinates": {
+          "lat": 43.411407,
+          "lon": 39.935825
+        },
+        "extra_fields": {
+          "address_name": "Морской бульвар, 1",
+          "building_name": "Морской курорт Legenda",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сириус, Морской бульвар, 1",
+          "org": {
+            "branch_count": 1,
+            "extension": "отель",
+            "id": "70000001113933374",
+            "name": "Legenda морской курорт, отель",
+            "primary": "Legenda морской курорт"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 24,
+            "general_review_count_with_stars": 99,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 24,
+            "org_review_count_with_stars": 99
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001035341211",
+        "name": "Грейс Глобал, СПА-отель",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, Демократическая улица, 6/9",
+        "address": {
+          "building_id": "70030076173326137",
+          "components": [
+            {
+              "number": "6/9",
+              "street": "Демократическая улица",
+              "street_id": "4222863385035535",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354340"
+        },
+        "coordinates": {
+          "lat": 43.420498,
+          "lon": 39.922076
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "Демократическая улица, 6/9",
+          "building_name": "Грейс Глобал, СПА-отель",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сочи, Грейс Глобал, СПА-отель",
+          "org": {
+            "branch_count": 1,
+            "extension": "СПА-отель",
+            "id": "70000001035341210",
+            "name": "Грейс Глобал, СПА-отель",
+            "primary": "Грейс Глобал"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.6,
+            "general_review_count": 739,
+            "general_review_count_with_stars": 1162,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 3,
+                "review_count": 1,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.7,
+            "org_review_count": 739,
+            "org_review_count_with_stars": 1162,
+            "rating": 3,
+            "review_count": 1
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            },
+            {
+              "alias": "bani_i_sauny",
+              "id": "946",
+              "kind": "additional",
+              "name": "Бани и сауны",
+              "parent_id": "2",
+              "short_id": 946
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "4222652931639033",
+        "name": "Грейс Арли, СПА-отель",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, улица Ленина, 219д",
+        "address": {
+          "building_id": "4222760305869424",
+          "building_name": "Грейс Арли",
+          "components": [
+            {
+              "number": "219д",
+              "street": "улица Ленина",
+              "street_id": "4222863385035443",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354364"
+        },
+        "coordinates": {
+          "lat": 43.472906,
+          "lon": 39.896237
+        },
+        "extra_fields": {
+          "address_name": "улица Ленина, 219д",
+          "building_name": "Грейс Арли, СПА-отель",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Сочи, Грейс Арли, СПА-отель",
+          "org": {
+            "branch_count": 1,
+            "extension": "СПА-отель",
+            "id": "4222661521573553",
+            "name": "Грейс Арли, СПА-отель",
+            "primary": "Грейс Арли"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.7,
+            "general_review_count": 875,
+            "general_review_count_with_stars": 1375,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4.4,
+                "recommendation_count": 1,
+                "review_count": 12,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.6,
+            "org_review_count": 875,
+            "org_review_count_with_stars": 1375,
+            "rating": 4.4,
+            "recommendation_count": 1,
+            "review_count": 12
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      }
+    ]
+  },
+  "isError": false
+}

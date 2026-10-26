@@ -1,0 +1,37 @@
+[
+  {
+    "provider": "geoapify",
+    "case": "mcp_discovery",
+    "status": "ok",
+    "retrieved_at": "2026-10-25T14:10:07.934017+00:00",
+    "latency_ms": 1335,
+    "tool_count": 12,
+    "tools": [
+      "geocode_address",
+      "geocode_structured_address",
+      "reverse_geocode_coordinates",
+      "get_timezone",
+      "search_places",
+      "list_place_categories",
+      "calculate_route",
+      "calculate_route_matrix",
+      "combine_geometries",
+      "evaluate_spatial_relation",
+      "measure_geometry",
+      "transform_geometry"
+    ]
+  },
+  {
+    "provider": "openweather_mcp",
+    "case": "mcp_discovery",
+    "status": "connection_error",
+    "retrieved_at": "2026-10-25T14:11:23.207975+00:00",
+    "latency_ms": 76580,
+    "exception_type": "ExceptionGroup",
+    "causes": [
+      {
+        "exception_type": "ConnectTimeout"
+      }
+    ]
+  }
+]

@@ -1,0 +1,122 @@
+[
+  {
+    "xid": "N2493948467",
+    "name": "Учительница",
+    "dist": 40.06174947,
+    "rate": 1,
+    "osm": "node/2493948467",
+    "kinds": "cultural,urban_environment,interesting_places,installation",
+    "point": {
+      "lon": 39.72251892089844,
+      "lat": 43.58509063720703
+    }
+  },
+  {
+    "xid": "N2493949632",
+    "name": "Скамейка \"Крыло удачи\"",
+    "dist": 49.30517871,
+    "rate": 1,
+    "osm": "node/2493949632",
+    "kinds": "cultural,urban_environment,interesting_places,installation",
+    "point": {
+      "lon": 39.72246551513672,
+      "lat": 43.58521270751953
+    }
+  },
+  {
+    "xid": "W254987991",
+    "name": "",
+    "dist": 60.71972699,
+    "rate": 0,
+    "osm": "way/254987991",
+    "kinds": "fountains,cultural,urban_environment,interesting_places",
+    "point": {
+      "lon": 39.72282028198242,
+      "lat": 43.58552932739258
+    }
+  },
+  {
+    "xid": "N3771836366",
+    "name": "Олимпийские кольца",
+    "dist": 81.71667565,
+    "rate": 1,
+    "osm": "node/3771836366",
+    "kinds": "cultural,urban_environment,interesting_places,installation",
+    "point": {
+      "lon": 39.72221755981445,
+      "lat": 43.58546829223633
+    }
+  },
+  {
+    "xid": "U4043",
+    "name": "Музей спортивной славы",
+    "dist": 115.61867519,
+    "rate": 2,
+    "kinds": "museums,cultural,interesting_places,other_museums",
+    "point": {
+      "lon": 39.723243713378906,
+      "lat": 43.58602523803711
+    }
+  },
+  {
+    "xid": "W51149786",
+    "name": "Музей Олимпийской славы Сочи",
+    "dist": 130.68476716,
+    "rate": 1,
+    "osm": "way/51149786",
+    "kinds": "cultural,museums,interesting_places,other_museums",
+    "point": {
+      "lon": 39.722938537597656,
+      "lat": 43.58617401123047
+    }
+  },
+  {
+    "xid": "N7342982235",
+    "name": "Олененок",
+    "dist": 173.1675425,
+    "rate": 1,
+    "osm": "node/7342982235",
+    "kinds": "cultural,urban_environment,interesting_places,installation",
+    "point": {
+      "lon": 39.72109603881836,
+      "lat": 43.58428192138672
+    }
+  },
+  {
+    "xid": "N3771836368",
+    "name": "Олени",
+    "dist": 192.90208141,
+    "rate": 1,
+    "osm": "node/3771836368",
+    "kinds": "cultural,urban_environment,interesting_places,sculptures",
+    "point": {
+      "lon": 39.72126388549805,
+      "lat": 43.58380889892578
+    }
+  },
+  {
+    "xid": "W84013443",
+    "name": "Поющией фонтан",
+    "dist": 229.78728708,
+    "rate": 3,
+    "osm": "way/84013443",
+    "wikidata": "Q4375694",
+    "kinds": "fountains,historic,monuments_and_memorials,urban_environment,cultural,interesting_places,sculptures,monuments",
+    "point": {
+      "lon": 39.720462799072266,
+      "lat": 43.58406066894531
+    }
+  },
+  {
+    "xid": "N3771836367",
+    "name": "Олимпийские талисманы",
+    "dist": 230.35864069,
+    "rate": 1,
+    "osm": "node/3771836367",
+    "kinds": "cultural,urban_environment,interesting_places,installation",
+    "point": {
+      "lon": 39.72065734863281,
+      "lat": 43.58381652832031
+    }
+  }
+]

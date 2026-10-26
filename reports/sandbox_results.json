@@ -1,0 +1,25 @@
+[
+  {
+    "provider": "liteapi",
+    "case": "sandbox_rates_boston",
+    "status": "provider_error",
+    "retrieved_at": "2026-10-25T15:06:52.630397+00:00",
+    "http_status": 200,
+    "latency_ms": 18598,
+    "sandbox": true,
+    "data": {
+      "error": {
+        "code": 2001,
+        "message": "no availability found"
+      }
+    },
+    "source": "https://api.liteapi.travel/v3.0/hotels/rates"
+  },
+  {
+    "provider": "liteapi",
+    "case": "sandbox_prebook_boston",
+    "status": "dependency_missing",
+    "retrieved_at": "2026-10-25T15:06:52.631553+00:00",
+    "reason": "No sandbox offer"
+  }
+]

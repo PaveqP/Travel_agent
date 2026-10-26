@@ -1,0 +1,123 @@
+[
+  {
+    "xid": "W55684190",
+    "name": "Церковь Евангельских Христиан",
+    "dist": 116.82103973,
+    "rate": 1,
+    "osm": "way/55684190",
+    "kinds": "religion,churches,interesting_places,other_churches",
+    "point": {
+      "lon": 40.20143508911133,
+      "lat": 43.68013381958008
+    }
+  },
+  {
+    "xid": "N7780749240",
+    "name": "Пушка",
+    "dist": 260.63172232,
+    "rate": 1,
+    "osm": "node/7780749240",
+    "kinds": "historic,monuments_and_memorials,interesting_places,monuments",
+    "point": {
+      "lon": 40.201560974121094,
+      "lat": 43.677947998046875
+    }
+  },
+  {
+    "xid": "N1371295040",
+    "name": "",
+    "dist": 263.15425225,
+    "rate": 0,
+    "osm": "node/1371295040",
+    "kinds": "historic,monuments_and_memorials,interesting_places,monuments",
+    "point": {
+      "lon": 40.20158386230469,
+      "lat": 43.67792892456055
+    }
+  },
+  {
+    "xid": "N7780749239",
+    "name": "БТР",
+    "dist": 285.50846821,
+    "rate": 1,
+    "osm": "node/7780749239",
+    "kinds": "historic,monuments_and_memorials,interesting_places,monuments",
+    "point": {
+      "lon": 40.20179748535156,
+      "lat": 43.67778778076172
+    }
+  },
+  {
+    "xid": "N5094533809",
+    "name": "Олимпийские кольца",
+    "dist": 285.87220505,
+    "rate": 1,
+    "osm": "node/5094533809",
+    "kinds": "cultural,urban_environment,interesting_places,sculptures",
+    "point": {
+      "lon": 40.20206832885742,
+      "lat": 43.67790985107422
+    }
+  },
+  {
+    "xid": "W137134244",
+    "name": "Церковь Святого Харалампия",
+    "dist": 312.98665775,
+    "rate": 2,
+    "osm": "way/137134244",
+    "wikidata": "Q25394125",
+    "kinds": "religion,churches,interesting_places,other_churches",
+    "point": {
+      "lon": 40.20381164550781,
+      "lat": 43.680538177490234
+    }
+  },
+  {
+    "xid": "N5077829650",
+    "name": "",
+    "dist": 399.16922793,
+    "rate": 0,
+    "osm": "node/5077829650",
+    "kinds": "architecture,towers,interesting_places,observation_towers",
+    "point": {
+      "lon": 40.20003890991211,
+      "lat": 43.68359375
+    }
+  },
+  {
+    "xid": "W798322329",
+    "name": "Турчинский Адам Петрович",
+    "dist": 446.14601247,
+    "rate": 1,
+    "osm": "way/798322329",
+    "kinds": "historic,monuments_and_memorials,interesting_places,monuments",
+    "point": {
+      "lon": 40.20535659790039,
+      "lat": 43.67899703979492
+    }
+  },
+  {
+    "xid": "Q4218396",
+    "name": "Кбаадэ",
+    "dist": 452.69681233,
+    "rate": 2,
+    "wikidata": "Q4218396",
+    "kinds": "battlefields,historic,historical_places,interesting_places",
+    "point": {
+      "lon": 40.20527648925781,
+      "lat": 43.678611755371094
+    }
+  },
+  {
+    "xid": "N5076701254",
+    "name": "",
+    "dist": 467.92028032,
+    "rate": 0,
+    "osm": "node/5076701254",
+    "kinds": "historic,monuments_and_memorials,interesting_places,monuments",
+    "point": {
+      "lon": 40.20527648925781,
+      "lat": 43.67824935913086
+    }
+  }
+]

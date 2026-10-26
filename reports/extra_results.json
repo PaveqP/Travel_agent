@@ -1,0 +1,108 @@
+[
+  {
+    "provider": "tutu",
+    "case": "mcp_discovery",
+    "status": "ok",
+    "retrieved_at": "2026-10-25T14:21:39.089993+00:00",
+    "latency_ms": 16754,
+    "tool_count": 17,
+    "tools": [
+      "search_hotels",
+      "search_avia",
+      "search_rail",
+      "search_bus",
+      "search_etrain",
+      "search_multitransport",
+      "get_offer_details",
+      "get_rail_seatmap",
+      "get_avia_instructions",
+      "get_rail_instructions",
+      "get_bus_instructions",
+      "get_etrain_instructions",
+      "get_hotels_instructions",
+      "get_multitransport_instructions",
+      "create_checkout_link",
+      "register_checkout_passengers",
+      "fetch_resource"
+    ]
+  },
+  {
+    "provider": "overpass",
+    "case": "restaurants_adler_vk",
+    "status": "network_error",
+    "retrieved_at": "2026-10-25T14:21:59.042982+00:00",
+    "latency_ms": 36689,
+    "attempts": 2,
+    "exception_type": "ReadTimeout"
+  },
+  {
+    "provider": "osrm",
+    "case": "route_adler_polyana_retry",
+    "status": "ok",
+    "retrieved_at": "2026-10-25T14:21:59.554586+00:00",
+    "http_status": 200,
+    "latency_ms": 511,
+    "attempts": 1,
+    "source": "https://router.project-osrm.org/route/v1/driving/39.923,43.428;40.2,43.68",
+    "request": {
+      "params": {
+        "overview": "false",
+        "steps": "false"
+      },
+      "body": null
+    },
+    "data": {
+      "code": "Ok",
+      "routes": [
+        {
+          "legs": [
+            {
+              "steps": [],
+              "weight": 2663.3,
+              "summary": "",
+              "duration": 2661.6,
+              "distance": 41761.2
+            }
+          ],
+          "weight_name": "routability",
+          "weight": 2663.3,
+          "duration": 2661.6,
+          "distance": 41761.2
+        }
+      ],
+      "waypoints": [
+        {
+          "hint": "jnEUhqnF84wjAAAAAAAAAAAAAAAAAAAANDDqQAAAAAAAAAAAAAAAABIAAAAAAAAAAAAAAAAAAAC7KQEAsiphAjaplgI4LWECoKiWAgAAXwgAAAAA",
+          "location": [
+            39.922354,
+            43.42815
+          ],
+          "name": "",
+          "distance": 54.90140114
+        },
+        {
+          "hint": "VW6pg70zKooEAAAAGQAAAAAAAACwAAAAn4y1P4sI2EAAAAAAg5xDQgQAAAAZAAAAAAAAALAAAAC7KQEAWWllAnGAmgJAZ2UCAIGaAgAAjwwAAAAA",
+          "location": [
+            40.200537,
+            43.679857
+          ],
+          "name": "",
+          "distance": 46.12773438
+        }
+      ]
+    },
+    "example": "examples/osrm__route_adler_polyana_retry.json"
+  },
+  {
+    "provider": "yandex_go",
+    "case": "deeplink",
+    "status": "local_only",
+    "retrieved_at": "2026-10-25T14:21:59.555903+00:00",
+    "data": {
+      "url": "https://3.redirect.appmetrica.yandex.com/route?start-lat=43.428&start-lon=39.923&end-lat=43.68&end-lon=40.2&appmetrica_tracking_id=25395763362139037&lang=ru&ref=flinters",
+      "price": null,
+      "availability": null
+    },
+    "reason": "Constructed from documented template; no order or purchase, application handoff not tested"
+  }
+]

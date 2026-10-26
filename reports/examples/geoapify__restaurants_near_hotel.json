@@ -1,0 +1,622 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Green&Grill",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Эстосадок",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Курорт Красная Поляна",
+        "street": "улица Горная Карусель",
+        "housenumber": "6",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.265825,
+        "lat": 43.683169,
+        "formatted": "Green&Grill, улица Горная Карусель 6, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "address_line1": "Green&Grill",
+        "address_line2": "улица Горная Карусель 6, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "categories": [
+          "catering",
+          "catering.restaurant"
+        ],
+        "details": [
+          "details",
+          "details.contact"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.683169,
+            "lon": 40.265825,
+            "name": "Green&Grill",
+            "osm_id": 12836338646,
+            "street": "улица Горная Карусель",
+            "amenity": "restaurant",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": 6,
+            "contact:phone": "+7 862 2455440",
+            "opening_hours": "Mo-Su 07:00-11:30,13:00-23:00",
+            "contact:website": "https://krasnayapolyanaresort.ru/greenandgrill"
+          }
+        },
+        "website": "https://krasnayapolyanaresort.ru/greenandgrill",
+        "opening_hours": "Mo-Su 07:00-11:30,13:00-23:00",
+        "contact": {
+          "phone": "[REDACTED]"
+        },
+        "place_id": "51c7bab88d06224440590d52f01472d74540f00103f901d6fb1afd0200000092030b477265656e264772696c6c"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.265825,
+          43.683169
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Узбечка",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Эстосадок",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Курорт Красная Поляна",
+        "street": "улица Горная Карусель",
+        "housenumber": "6",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.264262,
+        "lat": 43.6832799,
+        "formatted": "Узбечка, улица Горная Карусель 6, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "address_line1": "Узбечка",
+        "address_line2": "улица Горная Карусель 6, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "categories": [
+          "catering",
+          "catering.restaurant",
+          "catering.restaurant.asian"
+        ],
+        "details": [
+          "details",
+          "details.catering",
+          "details.contact"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6832799,
+            "lon": 40.264262,
+            "name": "Узбечка",
+            "phone": "[REDACTED]",
+            "osm_id": 5069656330,
+            "street": "улица Горная Карусель",
+            "amenity": "restaurant",
+            "cuisine": "asian",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": 6,
+            "opening_hours": "11:00-01:00"
+          }
+        },
+        "opening_hours": "11:00-01:00",
+        "contact": {
+          "phone": "[REDACTED]"
+        },
+        "catering": {
+          "cuisine": "asian"
+        },
+        "place_id": "51acc95356d321444059d0413cb775d74540f00103f9010ad12c2e0100000092030ed0a3d0b7d0b1d0b5d187d0bad0b0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.264262,
+          43.6832799
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Гостидзе",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Эстосадок",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Курорт Красная Поляна",
+        "street": "улица Горная Карусель",
+        "housenumber": "4",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.2638042,
+        "lat": 43.6833008,
+        "formatted": "Гостидзе, улица Горная Карусель 4, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "address_line1": "Гостидзе",
+        "address_line2": "улица Горная Карусель 4, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "categories": [
+          "catering",
+          "catering.restaurant"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6833008,
+            "lon": 40.2638042,
+            "name": "Гостидзе",
+            "osm_id": 5331278728,
+            "street": "улица Горная Карусель",
+            "amenity": "restaurant",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": 4
+          }
+        },
+        "place_id": "5113c60556c42144405952aa8e6676d74540f00103f90188dbc43d01000000920310d093d0bed181d182d0b8d0b4d0b7d0b5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2638042,
+          43.6833008
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Баффет",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Эстосадок",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Курорт Красная Поляна",
+        "street": "Эстонская улица",
+        "housenumber": "51",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.2550975,
+        "lat": 43.6842907,
+        "formatted": "Баффет, Эстонская улица 51, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "address_line1": "Баффет",
+        "address_line2": "Эстонская улица 51, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "categories": [
+          "catering",
+          "catering.restaurant",
+          "catering.restaurant.international"
+        ],
+        "details": [
+          "details.catering"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6842907,
+            "lon": 40.2550975,
+            "name": "Баффет",
+            "osm_id": 5334575912,
+            "street": "Эстонская улица",
+            "amenity": "restaurant",
+            "cuisine": "international",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": 51
+          }
+        },
+        "catering": {
+          "cuisine": "international"
+        },
+        "place_id": "514be5ed08a7204440597dba70d696d74540f00103f901282bf73d0100000092030cd091d0b0d184d184d0b5d182"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2550975,
+          43.6842907
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Четыре Вершины",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Эстосадок",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "street": "Лунный переулок",
+        "housenumber": "1",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.2471228,
+        "lat": 43.6880515,
+        "formatted": "Четыре Вершины, Лунный переулок 1, Эстосадок, Краснодарский край, Россия, 354392",
+        "address_line1": "Четыре Вершины",
+        "address_line2": "Лунный переулок 1, Эстосадок, Краснодарский край, Россия, 354392",
+        "categories": [
+          "catering",
+          "catering.restaurant"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6880515,
+            "lon": 40.2471228,
+            "name": "Четыре Вершины",
+            "osm_id": 4081028340,
+            "street": "Лунный переулок",
+            "amenity": "restaurant",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": 1
+          }
+        },
+        "place_id": "51480c4cb8a11f4440595c3b511212d84540f00103f901f48c3ff30000000092031bd0a7d0b5d182d18bd180d0b520d092d0b5d180d188d0b8d0bdd18b"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2471228,
+          43.6880515
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Карефана",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Эстосадок",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "street": "Эстонская улица",
+        "housenumber": "27",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.2515914,
+        "lat": 43.686717,
+        "formatted": "Карефана, Эстонская улица 27, Эстосадок, Краснодарский край, Россия, 354392",
+        "address_line1": "Карефана",
+        "address_line2": "Эстонская улица 27, Эстосадок, Краснодарский край, Россия, 354392",
+        "categories": [
+          "catering",
+          "catering.restaurant",
+          "catering.restaurant.chinese"
+        ],
+        "details": [
+          "details",
+          "details.catering",
+          "details.facilities"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.686717,
+            "lon": 40.2515914,
+            "name": "Карефана",
+            "osm_id": 4079659976,
+            "street": "Эстонская улица",
+            "amenity": "restaurant",
+            "cuisine": "chinese",
+            "delivery": "yes",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": 27,
+            "contact:website": "https://karefanasochi.ru/"
+          }
+        },
+        "website": "https://karefanasochi.ru/",
+        "facilities": {
+          "delivery": true
+        },
+        "catering": {
+          "cuisine": "chinese"
+        },
+        "place_id": "51397aa1253420444059ba4db857e6d74540f00103f901c8ab2af300000000920310d09ad0b0d180d0b5d184d0b0d0bdd0b0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2515914,
+          43.686717
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Мушмула",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Эстосадок",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "street": "Переселенческая улица",
+        "housenumber": "2А",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.2570525,
+        "lat": 43.684424,
+        "formatted": "Мушмула, Переселенческая улица 2А, Эстосадок, Краснодарский край, Россия, 354392",
+        "address_line1": "Мушмула",
+        "address_line2": "Переселенческая улица 2А, Эстосадок, Краснодарский край, Россия, 354392",
+        "categories": [
+          "catering",
+          "catering.restaurant"
+        ],
+        "details": [
+          "details",
+          "details.contact"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.684424,
+            "lon": 40.2570525,
+            "city": "Эстосадок",
+            "name": "Мушмула",
+            "osm_id": 8511179904,
+            "street": "Переселенческая улица",
+            "amenity": "restaurant",
+            "osm_type": "n",
+            "postcode": 354392,
+            "_inherited": "",
+            "housenumber": "2А",
+            "contact:phone": "+7 938 4388888",
+            "opening_hours": "Mo-Su 11:00-24:00",
+            "contact:website": "http://myshmyla.ru/"
+          }
+        },
+        "website": "http://myshmyla.ru/",
+        "opening_hours": "Mo-Su 11:00-24:00",
+        "contact": {
+          "phone": "[REDACTED]"
+        },
+        "place_id": "51726da818e7204440597b4ca4349bd74540f00103f901804c4efb0100000092030ed09cd183d188d0bcd183d0bbd0b0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2570525,
+          43.684424
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Айва, не груша",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Эстосадок",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Курорт Красная Поляна",
+        "street": "Эстонская улица",
+        "housenumber": "29",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.2520743,
+        "lat": 43.6865236,
+        "formatted": "Айва, не груша, Эстонская улица 29, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "address_line1": "Айва, не груша",
+        "address_line2": "Эстонская улица 29, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "categories": [
+          "catering",
+          "catering.restaurant"
+        ],
+        "details": [
+          "details",
+          "details.contact"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6865236,
+            "lon": 40.2520743,
+            "name": "Айва, не груша",
+            "osm_id": 8511179905,
+            "street": "Эстонская улица",
+            "amenity": "restaurant",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": 29,
+            "contact:phone": "+7 918 9188010",
+            "opening_hours": "Mo-Su 12:00-23:00",
+            "contact:instagram": "https://www.instagram.com/aivanegrusha/"
+          }
+        },
+        "opening_hours": "Mo-Su 12:00-23:00",
+        "contact": {
+          "phone": "[REDACTED]"
+        },
+        "place_id": "51bf547df8432044405952f75c01e0d74540f00103f901814c4efb01000000920319d090d0b9d0b2d0b02c20d0bdd0b520d0b3d180d183d188d0b0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2520743,
+          43.6865236
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Бумбараш",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Эстосадок",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Курорт Красная Поляна",
+        "street": "улица Горная Карусель",
+        "housenumber": "7",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.2651206,
+        "lat": 43.683612,
+        "formatted": "Бумбараш, улица Горная Карусель 7, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "address_line1": "Бумбараш",
+        "address_line2": "улица Горная Карусель 7, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "categories": [
+          "catering",
+          "catering.restaurant"
+        ],
+        "details": [
+          "details",
+          "details.contact"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.683612,
+            "lon": 40.2651206,
+            "name": "Бумбараш",
+            "osm_id": 10942614905,
+            "amenity": "restaurant",
+            "osm_type": "n",
+            "housenumber": 7,
+            "contact:phone": "+7 938 8718871",
+            "opening_hours": "Mo-Su 12:00-24:00",
+            "contact:website": "http://mandarinfamily.ru/rest/bumbarash-g-sochi"
+          }
+        },
+        "website": "http://mandarinfamily.ru/rest/bumbarash-g-sochi",
+        "opening_hours": "Mo-Su 12:00-24:00",
+        "contact": {
+          "phone": "[REDACTED]"
+        },
+        "place_id": "517a3fc978ef214440599a93179980d74540f00103f901790d3b8c02000000920310d091d183d0bcd0b1d0b0d180d0b0d188"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2651206,
+          43.683612
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Джорджио Сулугуни",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Эстосадок",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "street": "Эстонская улица",
+        "housenumber": "7",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.2476911,
+        "lat": 43.6877996,
+        "formatted": "Джорджио Сулугуни, Эстонская улица 7, Эстосадок, Краснодарский край, Россия, 354392",
+        "address_line1": "Джорджио Сулугуни",
+        "address_line2": "Эстонская улица 7, Эстосадок, Краснодарский край, Россия, 354392",
+        "categories": [
+          "catering",
+          "catering.restaurant"
+        ],
+        "details": [
+          "details",
+          "details.contact"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6877996,
+            "lon": 40.2476911,
+            "name": "Джорджио Сулугуни",
+            "osm_id": 12043484440,
+            "street": "Эстонская улица",
+            "amenity": "restaurant",
+            "osm_type": "n",
+            "_inherited": "",
+            "housenumber": 7,
+            "contact:phone": "+7 938 8773377",
+            "opening_hours": "24/7",
+            "contact:website": "https://giorgiosuluguni.ru/"
+          }
+        },
+        "website": "https://giorgiosuluguni.ru/",
+        "opening_hours": "24/7",
+        "contact": {
+          "phone": "[REDACTED]"
+        },
+        "place_id": "5150018b57b41f444059d7193ad109d84540f00103f90118fdd8cd02000000920321d094d0b6d0bed180d0b4d0b6d0b8d0be20d0a1d183d0bbd183d0b3d183d0bdd0b8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2476911,
+          43.6877996
+        ]
+      }
+    }
+  ]
+}

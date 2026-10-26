@@ -1,0 +1,4036 @@
+{
+  "stays": [
+    {
+      "id": "11446829",
+      "name": "COOCOOROOZA",
+      "coordinates": {
+        "lat": 43.625015,
+        "lon": 39.696064
+      },
+      "address": "2.6 км от центра, 78 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:01.275022Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 9.218334,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/a248e7fa-12dd-4acc-a3d0-c231ef5bad61/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/d798ecb50b20b01ba691d8efdc77c610.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "8600.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sochi",
+      "resolved_geo": {
+        "geo_id": "2656918",
+        "name": "Сочи",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 29900,
+        "also_geo": [
+          {
+            "geo_id": "10657506",
+            "name": "Горный Сочи",
+            "geo_type": "region",
+            "hotels_count": 2725
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": true,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11446829&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "7653053",
+      "name": "Отель Сочи Галерея Парк",
+      "coordinates": {
+        "lat": 43.587547,
+        "lon": 39.724262
+      },
+      "address": "2.7 км от центра, 911 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:01.275022Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.537966,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/593aadae-7547-4c77-833c-694ecf1bc4dc/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/7872f0d9f3e9ab24b3a66a87edf7dcb4.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "5572.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sochi",
+      "resolved_geo": {
+        "geo_id": "2656918",
+        "name": "Сочи",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 29900,
+        "also_geo": [
+          {
+            "geo_id": "10657506",
+            "name": "Горный Сочи",
+            "geo_type": "region",
+            "hotels_count": 2725
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=7653053&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "9573823",
+      "name": "Mirror Residence",
+      "coordinates": {
+        "lat": 43.58982,
+        "lon": 39.725143
+      },
+      "address": "2.4 км от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:01.275022Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.5605,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/7904226d-77a0-4f67-a7a3-2e5cf5239a28/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/caa05f458ace6cd909200ac8103b986a.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "11760.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sochi",
+      "resolved_geo": {
+        "geo_id": "2656918",
+        "name": "Сочи",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 29900,
+        "also_geo": [
+          {
+            "geo_id": "10657506",
+            "name": "Горный Сочи",
+            "geo_type": "region",
+            "hotels_count": 2725
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=9573823&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "11001079",
+      "name": "Mountain apartments «Сo-Co Village»",
+      "coordinates": {
+        "lat": 43.677654,
+        "lon": 40.206917
+      },
+      "address": "329 м от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:01.275022Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 9.244,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn4.tu-tu.ru/static/hotels-photo/hotels-photo/8407d3bfa14553b84db670fa96ac8998e30c0ef4.480bf541380f9e5f9b027841121bb6178fd5fcc5.jpeg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "20200.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sochi",
+      "resolved_geo": {
+        "geo_id": "2656918",
+        "name": "Сочи",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 29900,
+        "also_geo": [
+          {
+            "geo_id": "10657506",
+            "name": "Горный Сочи",
+            "geo_type": "region",
+            "hotels_count": 2725
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11001079&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "9487941",
+      "name": "Ranovsky Park",
+      "coordinates": {
+        "lat": 43.574383,
+        "lon": 39.73936
+      },
+      "address": "4.4 км от центра, 853 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:01.275022Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.2082205,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/c8683bee-d518-4279-a75a-acd66e538e5e/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/b791a7c623769d8831e4611540258f60.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "9000.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sochi",
+      "resolved_geo": {
+        "geo_id": "2656918",
+        "name": "Сочи",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 29900,
+        "also_geo": [
+          {
+            "geo_id": "10657506",
+            "name": "Горный Сочи",
+            "geo_type": "region",
+            "hotels_count": 2725
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=9487941&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "7653230",
+      "name": "Атлант Скай",
+      "coordinates": {
+        "lat": 43.68709,
+        "lon": 40.2501
+      },
+      "address": "43.3 км от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:01.275022Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.956735,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/df301500-5f37-4b2d-9bb3-be78b76e1f27/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/beba4942c003b52a828a13db108ea246.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "14135.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sochi",
+      "resolved_geo": {
+        "geo_id": "2656918",
+        "name": "Сочи",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 29900,
+        "also_geo": [
+          {
+            "geo_id": "10657506",
+            "name": "Горный Сочи",
+            "geo_type": "region",
+            "hotels_count": 2725
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": true,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=7653230&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "10463158",
+      "name": "МореСолнцеАпарт",
+      "coordinates": {
+        "lat": 43.46248,
+        "lon": 39.899635
+      },
+      "address": "21.9 км от центра, 292 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:01.275022Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 9.0,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/7294d1a4-40ac-40ea-829d-0a38a55adba8/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/72b56bed26fc9ff2db450251213a153a.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "45400.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sochi",
+      "resolved_geo": {
+        "geo_id": "2656918",
+        "name": "Сочи",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 29900,
+        "also_geo": [
+          {
+            "geo_id": "10657506",
+            "name": "Горный Сочи",
+            "geo_type": "region",
+            "hotels_count": 2725
+          }
+        ]
+      },
+      "free_cancellation": null,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=10463158&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "13566218",
+      "name": "2-х комнатная квартира на улице: микрорайон Бытха, Ясногорская улица, 16/2 к12",
+      "coordinates": {
+        "lat": 43.568054,
+        "lon": 39.769863
+      },
+      "address": "6.2 км от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:01.275022Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 0.0,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn4.tu-tu.ru/static/hotels-photo/hotels-photo/17bc0768b68b3015e77ea9800af36c87a866e74c.caf2864fdecfe017adfff3c142cfcdb3720a3bd8.jpeg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "20040.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sochi",
+      "resolved_geo": {
+        "geo_id": "2656918",
+        "name": "Сочи",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 29900,
+        "also_geo": [
+          {
+            "geo_id": "10657506",
+            "name": "Горный Сочи",
+            "geo_type": "region",
+            "hotels_count": 2725
+          }
+        ]
+      },
+      "free_cancellation": null,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=13566218&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "7645929",
+      "name": "Атлант",
+      "coordinates": {
+        "lat": 43.42478,
+        "lon": 39.91832
+      },
+      "address": "497 м от центра, 294 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:01.275022Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.918054,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/263aaabf-7c59-48a3-a9dd-d80d10437c17/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/a79f4b353c447c25fcaf5bdf1d0113d9.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "15880.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sochi",
+      "resolved_geo": {
+        "geo_id": "2656918",
+        "name": "Сочи",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 29900,
+        "also_geo": [
+          {
+            "geo_id": "10657506",
+            "name": "Горный Сочи",
+            "geo_type": "region",
+            "hotels_count": 2725
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=7645929&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "9216993",
+      "name": "Локалита",
+      "coordinates": {
+        "lat": 43.411346,
+        "lon": 39.957165
+      },
+      "address": "694 м от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:01.275022Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.34,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/acc582ef-9dd6-45f6-b07f-8e035e0552c8/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/170e9ccd617da68ebb5cd23d23e7e2e1.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "7100.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sochi",
+      "resolved_geo": {
+        "geo_id": "2656918",
+        "name": "Сочи",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 29900,
+        "also_geo": [
+          {
+            "geo_id": "10657506",
+            "name": "Горный Сочи",
+            "geo_type": "region",
+            "hotels_count": 2725
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=9216993&geo_name=%D0%A1%D0%BE%D1%87%D0%B8&room%5B0%5D=2&search_id=7b7b069b96d79e9fd9e25525e31d2836",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "11850323",
+      "name": "Пальма Сириус",
+      "coordinates": {
+        "lat": 43.412037,
+        "lon": 39.96221
+      },
+      "address": "771 м от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:04.488511Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.74,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/f0cd348d-d85a-4b1d-ab83-9491746b4afb/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/dee1a0165bdef218cdb9718ee557522a.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "9000.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_adler",
+      "resolved_geo": {
+        "geo_id": "2665770",
+        "name": "Адлер",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 5147
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11850323&geo_name=%D0%90%D0%B4%D0%BB%D0%B5%D1%80&room%5B0%5D=2&search_id=50963ca40cb54479083e2b3e3ed3e207",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "13477034",
+      "name": "Сочи Парк Отель",
+      "coordinates": {
+        "lat": 43.40482,
+        "lon": 39.975822
+      },
+      "address": "1.3 км от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:04.488511Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.36,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/833613dc-696f-4da5-b638-381bece27fde/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/84040a86ed43a86d7f9a8773c5b09263.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "24200.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_adler",
+      "resolved_geo": {
+        "geo_id": "2665770",
+        "name": "Адлер",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 5147
+      },
+      "free_cancellation": true,
+      "breakfast_included": true,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=13477034&geo_name=%D0%90%D0%B4%D0%BB%D0%B5%D1%80&room%5B0%5D=2&search_id=50963ca40cb54479083e2b3e3ed3e207",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "7645929",
+      "name": "Атлант",
+      "coordinates": {
+        "lat": 43.42478,
+        "lon": 39.91832
+      },
+      "address": "497 м от центра, 294 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:04.488511Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.918054,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/263aaabf-7c59-48a3-a9dd-d80d10437c17/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/a79f4b353c447c25fcaf5bdf1d0113d9.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "15880.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_adler",
+      "resolved_geo": {
+        "geo_id": "2665770",
+        "name": "Адлер",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 5147
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=7645929&geo_name=%D0%90%D0%B4%D0%BB%D0%B5%D1%80&room%5B0%5D=2&search_id=50963ca40cb54479083e2b3e3ed3e207",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "11476016",
+      "name": "Богатырь",
+      "coordinates": {
+        "lat": 43.403496,
+        "lon": 39.963688
+      },
+      "address": "388 м от центра, 583 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:04.488511Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 9.176288,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/d8702b26-ee5f-4b2e-9042-1e6a5ce4507c/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/c3c7bf2f680e7105f7951879240248e3.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "53700.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_adler",
+      "resolved_geo": {
+        "geo_id": "2665770",
+        "name": "Адлер",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 5147
+      },
+      "free_cancellation": true,
+      "breakfast_included": true,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11476016&geo_name=%D0%90%D0%B4%D0%BB%D0%B5%D1%80&room%5B0%5D=2&search_id=50963ca40cb54479083e2b3e3ed3e207",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "13505185",
+      "name": "Аквамарин Парк",
+      "coordinates": {
+        "lat": 43.415203,
+        "lon": 39.928955
+      },
+      "address": "2.7 км от центра, 318 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:04.488511Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 0.0,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn4.tu-tu.ru/static/hotels-photo/hotels-photo/360426077f0f70b48076c0729417325eef806b6d.047ebdf7083750781d21294250a7ebcfc68bf061.jpeg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "5040.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_adler",
+      "resolved_geo": {
+        "geo_id": "2665770",
+        "name": "Адлер",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 5147
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=13505185&geo_name=%D0%90%D0%B4%D0%BB%D0%B5%D1%80&room%5B0%5D=2&search_id=50963ca40cb54479083e2b3e3ed3e207",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "9814449",
+      "name": "\"Семейный квартал\"",
+      "coordinates": {
+        "lat": 43.393524,
+        "lon": 39.993824
+      },
+      "address": "3.1 км от центра, 909 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:04.488511Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 7.0,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/71f3312e-ae8b-4cd6-807e-0800dad6606e/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/b4502af3bb9be3e863689fbcd756fa65.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "10200.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_adler",
+      "resolved_geo": {
+        "geo_id": "2665770",
+        "name": "Адлер",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 5147
+      },
+      "free_cancellation": null,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=9814449&geo_name=%D0%90%D0%B4%D0%BB%D0%B5%D1%80&room%5B0%5D=2&search_id=50963ca40cb54479083e2b3e3ed3e207",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "12208362",
+      "name": "Однокомнатная квартира на улице: Кирова 95",
+      "coordinates": {
+        "lat": 43.4286,
+        "lon": 39.925873
+      },
+      "address": "309 м от центра, 996 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:04.488511Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 0.0,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn4.tu-tu.ru/static/hotels-photo/hotels-photo/169cf790d7ae07b4c2a6e527bae84497daad7c8b.4d15fbc499cc178bacdaaff2f9feef482030ad4d.jpeg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "13800.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_adler",
+      "resolved_geo": {
+        "geo_id": "2665770",
+        "name": "Адлер",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 5147
+      },
+      "free_cancellation": null,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=12208362&geo_name=%D0%90%D0%B4%D0%BB%D0%B5%D1%80&room%5B0%5D=2&search_id=50963ca40cb54479083e2b3e3ed3e207",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "7644655",
+      "name": "Малекон",
+      "coordinates": {
+        "lat": 43.428963,
+        "lon": 39.915897
+      },
+      "address": "742 м от центра, 295 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:04.488511Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 9.27856,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/6c0de51e-8318-4d7a-9297-9a7cfacd79bb/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/02273998b913d7445b0974a4c788e01d.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "4928.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_adler",
+      "resolved_geo": {
+        "geo_id": "2665770",
+        "name": "Адлер",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 5147
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=7644655&geo_name=%D0%90%D0%B4%D0%BB%D0%B5%D1%80&room%5B0%5D=2&search_id=50963ca40cb54479083e2b3e3ed3e207",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "11402705",
+      "name": "Liberty Fly",
+      "coordinates": {
+        "lat": 43.42312,
+        "lon": 39.921356
+      },
+      "address": "403 м от центра, 354 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:04.488511Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 9.280256,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/acf212a6-31ea-4f54-ad80-a6232e707725/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/e51423f28b98eb8d606aec386383f270.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "7000.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_adler",
+      "resolved_geo": {
+        "geo_id": "2665770",
+        "name": "Адлер",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 5147
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11402705&geo_name=%D0%90%D0%B4%D0%BB%D0%B5%D1%80&room%5B0%5D=2&search_id=50963ca40cb54479083e2b3e3ed3e207",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "12466682",
+      "name": "Апартаменты LEGENDA 4*",
+      "coordinates": {
+        "lat": 43.413242,
+        "lon": 39.93245
+      },
+      "address": "2.4 км от центра, 604 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:04.488511Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 7.59,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://storage.hotelstar.ru/hotelstar/5/8/a/b7429050-9167-4ffb-ae65-0d64dd728dec.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "19800.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_adler",
+      "resolved_geo": {
+        "geo_id": "2665770",
+        "name": "Адлер",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 5147
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=12466682&geo_name=%D0%90%D0%B4%D0%BB%D0%B5%D1%80&room%5B0%5D=2&search_id=50963ca40cb54479083e2b3e3ed3e207",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "11850323",
+      "name": "Пальма Сириус",
+      "coordinates": {
+        "lat": 43.412037,
+        "lon": 39.96221
+      },
+      "address": "771 м от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:06.189424Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.74,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/f0cd348d-d85a-4b1d-ab83-9491746b4afb/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/dee1a0165bdef218cdb9718ee557522a.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "9000.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sirius",
+      "resolved_geo": {
+        "geo_id": "6477876",
+        "name": "Сириус",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 4062
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11850323&geo_name=%D0%A1%D0%B8%D1%80%D0%B8%D1%83%D1%81&room%5B0%5D=2&search_id=651ed4e39b4251bf8ec13e097620d1af",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "13505185",
+      "name": "Аквамарин Парк",
+      "coordinates": {
+        "lat": 43.415203,
+        "lon": 39.928955
+      },
+      "address": "2.7 км от центра, 318 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:06.189424Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 0.0,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn4.tu-tu.ru/static/hotels-photo/hotels-photo/360426077f0f70b48076c0729417325eef806b6d.047ebdf7083750781d21294250a7ebcfc68bf061.jpeg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "5040.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sirius",
+      "resolved_geo": {
+        "geo_id": "6477876",
+        "name": "Сириус",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 4062
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=13505185&geo_name=%D0%A1%D0%B8%D1%80%D0%B8%D1%83%D1%81&room%5B0%5D=2&search_id=651ed4e39b4251bf8ec13e097620d1af",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "13477034",
+      "name": "Сочи Парк Отель",
+      "coordinates": {
+        "lat": 43.40482,
+        "lon": 39.975822
+      },
+      "address": "1.3 км от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:06.189424Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.36,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/833613dc-696f-4da5-b638-381bece27fde/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/84040a86ed43a86d7f9a8773c5b09263.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "24200.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sirius",
+      "resolved_geo": {
+        "geo_id": "6477876",
+        "name": "Сириус",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 4062
+      },
+      "free_cancellation": true,
+      "breakfast_included": true,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=13477034&geo_name=%D0%A1%D0%B8%D1%80%D0%B8%D1%83%D1%81&room%5B0%5D=2&search_id=651ed4e39b4251bf8ec13e097620d1af",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "11476016",
+      "name": "Богатырь",
+      "coordinates": {
+        "lat": 43.403496,
+        "lon": 39.963688
+      },
+      "address": "388 м от центра, 583 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:06.189424Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 9.17,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/d8702b26-ee5f-4b2e-9042-1e6a5ce4507c/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/c3c7bf2f680e7105f7951879240248e3.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "53700.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sirius",
+      "resolved_geo": {
+        "geo_id": "6477876",
+        "name": "Сириус",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 4062
+      },
+      "free_cancellation": true,
+      "breakfast_included": true,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11476016&geo_name=%D0%A1%D0%B8%D1%80%D0%B8%D1%83%D1%81&room%5B0%5D=2&search_id=651ed4e39b4251bf8ec13e097620d1af",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "11896595",
+      "name": "Отель LEGENDA 4*",
+      "coordinates": {
+        "lat": 43.411427,
+        "lon": 39.935555
+      },
+      "address": "2.1 км от центра, 904 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:06.189424Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.21,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn4.tu-tu.ru/static/hotels-photo/hotels-photo/3484e5a1476fdf25f28c747086530a9d645089da.4fdce622c3f2bd30e33491e3f29aba7382439876.jpeg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "46500.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sirius",
+      "resolved_geo": {
+        "geo_id": "6477876",
+        "name": "Сириус",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 4062
+      },
+      "free_cancellation": true,
+      "breakfast_included": true,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11896595&geo_name=%D0%A1%D0%B8%D1%80%D0%B8%D1%83%D1%81&room%5B0%5D=2&search_id=651ed4e39b4251bf8ec13e097620d1af",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "9216993",
+      "name": "Локалита",
+      "coordinates": {
+        "lat": 43.411346,
+        "lon": 39.957165
+      },
+      "address": "694 м от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:06.189424Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.34,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/acc582ef-9dd6-45f6-b07f-8e035e0552c8/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/170e9ccd617da68ebb5cd23d23e7e2e1.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "6157.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sirius",
+      "resolved_geo": {
+        "geo_id": "6477876",
+        "name": "Сириус",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 4062
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=9216993&geo_name=%D0%A1%D0%B8%D1%80%D0%B8%D1%83%D1%81&room%5B0%5D=2&search_id=651ed4e39b4251bf8ec13e097620d1af",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "11845468",
+      "name": "Однокомнатная квартира на улице: Нижнеимеретинская, 143 (Бель), 29м²",
+      "coordinates": {
+        "lat": 43.397625,
+        "lon": 39.969826
+      },
+      "address": "1.2 км от центра, 129 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:06.189424Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 0.0,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn4.tu-tu.ru/static/hotels-photo/hotels-photo/3f5bfaa5e70eede1f05f8a372819ed23fe429c2d.6415825e1733217b2817d246f3877528258c9af4.jpeg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "17884.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sirius",
+      "resolved_geo": {
+        "geo_id": "6477876",
+        "name": "Сириус",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 4062
+      },
+      "free_cancellation": null,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11845468&geo_name=%D0%A1%D0%B8%D1%80%D0%B8%D1%83%D1%81&room%5B0%5D=2&search_id=651ed4e39b4251bf8ec13e097620d1af",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "7646397",
+      "name": "Омега Сириус",
+      "coordinates": {
+        "lat": 43.411602,
+        "lon": 39.950443
+      },
+      "address": "1 км от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:06.189424Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.77,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/c15f9c1a-5929-4e0e-acac-26cecb55ffbe/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/61a87546bafe02623c0cf23b532fd1c7.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "28320.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sirius",
+      "resolved_geo": {
+        "geo_id": "6477876",
+        "name": "Сириус",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 4062
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=7646397&geo_name=%D0%A1%D0%B8%D1%80%D0%B8%D1%83%D1%81&room%5B0%5D=2&search_id=651ed4e39b4251bf8ec13e097620d1af",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "9814449",
+      "name": "\"Семейный квартал\"",
+      "coordinates": {
+        "lat": 43.393524,
+        "lon": 39.993824
+      },
+      "address": "3.1 км от центра, 909 м до пляжа",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:06.189424Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 7.0,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/71f3312e-ae8b-4cd6-807e-0800dad6606e/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/b4502af3bb9be3e863689fbcd756fa65.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "10200.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sirius",
+      "resolved_geo": {
+        "geo_id": "6477876",
+        "name": "Сириус",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 4062
+      },
+      "free_cancellation": null,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=9814449&geo_name=%D0%A1%D0%B8%D1%80%D0%B8%D1%83%D1%81&room%5B0%5D=2&search_id=651ed4e39b4251bf8ec13e097620d1af",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "10627027",
+      "name": "Гостевой дом Бастион",
+      "coordinates": {
+        "lat": 43.404484,
+        "lon": 39.98311
+      },
+      "address": "1.9 км от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:06.189424Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.86,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn.ostrovok.ru/t/x500/extranet/50/b9/50b9b974034110ee6f8ab7e18612c5d4707c1aea.JPEG"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "5917.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_sirius",
+      "resolved_geo": {
+        "geo_id": "6477876",
+        "name": "Сириус",
+        "country": "Россия",
+        "region": "Краснодарский край",
+        "geo_type": "locality",
+        "hotels_count": 4062
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=10627027&geo_name=%D0%A1%D0%B8%D1%80%D0%B8%D1%83%D1%81&room%5B0%5D=2&search_id=651ed4e39b4251bf8ec13e097620d1af",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "7646252",
+      "name": "Сочи Марриотт Красная Поляна",
+      "coordinates": {
+        "lat": 43.68381,
+        "lon": 40.256523
+      },
+      "address": "281 м от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:07.748345Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 9.07,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/892c50d8-eb72-402e-9928-bb6e8e11679f/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/48a56a9f485f5ef4898d251c7364a6ea.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "53610.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_polyana",
+      "resolved_geo": {
+        "geo_id": "10359942",
+        "name": "Горнолыжный курорт \"Красная Поляна\"",
+        "country": null,
+        "region": null,
+        "geo_type": "region",
+        "hotels_count": 1306,
+        "also_geo": [
+          {
+            "geo_id": "2683662",
+            "name": "Красная Поляна",
+            "geo_type": "locality",
+            "hotels_count": 1290
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": true,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=7646252&geo_name=%D0%93%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B9%20%D0%BA%D1%83%D1%80%D0%BE%D1%80%D1%82%20%22%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%B0%22&room%5B0%5D=2&search_id=8252c2663856a92e7f900f006803f173",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "10693563",
+      "name": "Калипсо",
+      "coordinates": {
+        "lat": 43.687153,
+        "lon": 40.258377
+      },
+      "address": "121 м от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:07.748345Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 9.38,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn4.tu-tu.ru/static/hotels-photo/hotels-photo/6303c823564ebeec82375f359f4a57ae5a66dc6c.e60b6724e3e4d04e279ce5c796ee83ae3ba701e2.jpeg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "8560.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_polyana",
+      "resolved_geo": {
+        "geo_id": "10359942",
+        "name": "Горнолыжный курорт \"Красная Поляна\"",
+        "country": null,
+        "region": null,
+        "geo_type": "region",
+        "hotels_count": 1306,
+        "also_geo": [
+          {
+            "geo_id": "2683662",
+            "name": "Красная Поляна",
+            "geo_type": "locality",
+            "hotels_count": 1290
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=10693563&geo_name=%D0%93%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B9%20%D0%BA%D1%83%D1%80%D0%BE%D1%80%D1%82%20%22%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%B0%22&room%5B0%5D=2&search_id=8252c2663856a92e7f900f006803f173",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "7905922",
+      "name": "Апартаменты Море Апартаментов на Эстонской 37-4-021",
+      "coordinates": {
+        "lat": 43.686817,
+        "lon": 40.25542
+      },
+      "address": "227 м от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:07.748345Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.7,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn.bronevik.com/static/photo/g/500x500/d3b1f070b231d11971897da2c7a5cd47"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "13659.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_polyana",
+      "resolved_geo": {
+        "geo_id": "10359942",
+        "name": "Горнолыжный курорт \"Красная Поляна\"",
+        "country": null,
+        "region": null,
+        "geo_type": "region",
+        "hotels_count": 1306,
+        "also_geo": [
+          {
+            "geo_id": "2683662",
+            "name": "Красная Поляна",
+            "geo_type": "locality",
+            "hotels_count": 1290
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=7905922&geo_name=%D0%93%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B9%20%D0%BA%D1%83%D1%80%D0%BE%D1%80%D1%82%20%22%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%B0%22&room%5B0%5D=2&search_id=8252c2663856a92e7f900f006803f173",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "7653230",
+      "name": "Атлант Скай",
+      "coordinates": {
+        "lat": 43.68709,
+        "lon": 40.2501
+      },
+      "address": "650 м от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:07.748345Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.956735,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/df301500-5f37-4b2d-9bb3-be78b76e1f27/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/beba4942c003b52a828a13db108ea246.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "14135.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_polyana",
+      "resolved_geo": {
+        "geo_id": "10359942",
+        "name": "Горнолыжный курорт \"Красная Поляна\"",
+        "country": null,
+        "region": null,
+        "geo_type": "region",
+        "hotels_count": 1306,
+        "also_geo": [
+          {
+            "geo_id": "2683662",
+            "name": "Красная Поляна",
+            "geo_type": "locality",
+            "hotels_count": 1290
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": true,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=7653230&geo_name=%D0%93%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B9%20%D0%BA%D1%83%D1%80%D0%BE%D1%80%D1%82%20%22%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%B0%22&room%5B0%5D=2&search_id=8252c2663856a92e7f900f006803f173",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "9699281",
+      "name": "Ред Вуд 3* by Provence",
+      "coordinates": {
+        "lat": 43.684265,
+        "lon": 40.261684
+      },
+      "address": "355 м от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:07.748345Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.81,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn4.tu-tu.ru/static/hotels-photo/hotels-photo/8e7b259c6d15d78728c2c83e16beb7592668a0b5.4f7c94c50c7efacf189b4e50c46848a5cb9e1620.jpeg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "7800.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_polyana",
+      "resolved_geo": {
+        "geo_id": "10359942",
+        "name": "Горнолыжный курорт \"Красная Поляна\"",
+        "country": null,
+        "region": null,
+        "geo_type": "region",
+        "hotels_count": 1306,
+        "also_geo": [
+          {
+            "geo_id": "2683662",
+            "name": "Красная Поляна",
+            "geo_type": "locality",
+            "hotels_count": 1290
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=9699281&geo_name=%D0%93%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B9%20%D0%BA%D1%83%D1%80%D0%BE%D1%80%D1%82%20%22%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%B0%22&room%5B0%5D=2&search_id=8252c2663856a92e7f900f006803f173",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "10992289",
+      "name": "Гостевой дом Ассара",
+      "coordinates": {
+        "lat": 43.6873,
+        "lon": 40.24917
+      },
+      "address": "43.2 км от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:07.748345Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 0.0,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn.bronevik.com/static/photo/g/500x500/1a649a31d8b9a04a11a47305b5a477ab"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "9739.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_polyana",
+      "resolved_geo": {
+        "geo_id": "10359942",
+        "name": "Горнолыжный курорт \"Красная Поляна\"",
+        "country": null,
+        "region": null,
+        "geo_type": "region",
+        "hotels_count": 1306,
+        "also_geo": [
+          {
+            "geo_id": "2683662",
+            "name": "Красная Поляна",
+            "geo_type": "locality",
+            "hotels_count": 1290
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=10992289&geo_name=%D0%93%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B9%20%D0%BA%D1%83%D1%80%D0%BE%D1%80%D1%82%20%22%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%B0%22&room%5B0%5D=2&search_id=8252c2663856a92e7f900f006803f173",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "7799715",
+      "name": "Stellar Collection Chalet, Krasnaya Polyana",
+      "coordinates": {
+        "lat": 43.682247,
+        "lon": 40.27382
+      },
+      "address": "5.5 км от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:07.748345Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.57,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn2.tu-tu.ru/imghub/view/e290d698-2dbc-43c6-ae81-9e8eee2cbb15/resize_500_500/4271b6c12b3a41b87b17f2bfcd92ed9a/af1616f143269a6b3e254a30f88f519d.jpg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "19360.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_polyana",
+      "resolved_geo": {
+        "geo_id": "10359942",
+        "name": "Горнолыжный курорт \"Красная Поляна\"",
+        "country": null,
+        "region": null,
+        "geo_type": "region",
+        "hotels_count": 1306,
+        "also_geo": [
+          {
+            "geo_id": "2683662",
+            "name": "Красная Поляна",
+            "geo_type": "locality",
+            "hotels_count": 1290
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=7799715&geo_name=%D0%93%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B9%20%D0%BA%D1%83%D1%80%D0%BE%D1%80%D1%82%20%22%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%B0%22&room%5B0%5D=2&search_id=8252c2663856a92e7f900f006803f173",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "11858339",
+      "name": "Комплекс Апартаментов Курорта Красная Поляна (бывш. апарт-отель Горки Город) +540 +960",
+      "coordinates": {
+        "lat": 43.683437,
+        "lon": 40.26224
+      },
+      "address": "447 м от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:07.748345Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 1.0,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn4.tu-tu.ru/static/hotels-photo/hotels-photo/c65d9b5deda225c1864621d424862408e624684d.c66a04a1f1f25b91af416b31a51086193f7bbac8.jpeg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "8900.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_polyana",
+      "resolved_geo": {
+        "geo_id": "10359942",
+        "name": "Горнолыжный курорт \"Красная Поляна\"",
+        "country": null,
+        "region": null,
+        "geo_type": "region",
+        "hotels_count": 1306,
+        "also_geo": [
+          {
+            "geo_id": "2683662",
+            "name": "Красная Поляна",
+            "geo_type": "locality",
+            "hotels_count": 1290
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11858339&geo_name=%D0%93%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B9%20%D0%BA%D1%83%D1%80%D0%BE%D1%80%D1%82%20%22%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%B0%22&room%5B0%5D=2&search_id=8252c2663856a92e7f900f006803f173",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "8681595",
+      "name": "Гостевой дом Тройка",
+      "coordinates": {
+        "lat": 43.683582,
+        "lon": 40.271973
+      },
+      "address": "1.2 км от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:07.748345Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 8.845968,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn.ostrovok.ru/t/x500/extranet/ca/cd/cacdc4e1014c394eff46c626648d507a87a36506.JPEG"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "9768.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_polyana",
+      "resolved_geo": {
+        "geo_id": "10359942",
+        "name": "Горнолыжный курорт \"Красная Поляна\"",
+        "country": null,
+        "region": null,
+        "geo_type": "region",
+        "hotels_count": 1306,
+        "also_geo": [
+          {
+            "geo_id": "2683662",
+            "name": "Красная Поляна",
+            "geo_type": "locality",
+            "hotels_count": 1290
+          }
+        ]
+      },
+      "free_cancellation": true,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=8681595&geo_name=%D0%93%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B9%20%D0%BA%D1%83%D1%80%D0%BE%D1%80%D1%82%20%22%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%B0%22&room%5B0%5D=2&search_id=8252c2663856a92e7f900f006803f173",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    },
+    {
+      "id": "11845391",
+      "name": "3-х комнатная квартира на улице: Эстонская 88/11 (Бренден), 55м²",
+      "coordinates": {
+        "lat": 43.685818,
+        "lon": 40.26444
+      },
+      "address": "514 м от центра",
+      "category": "hotel",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:26:07.748345Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "rating": 0.0,
+      "rating_scale": 10.0,
+      "photos": [
+        "https://cdn4.tu-tu.ru/static/hotels-photo/hotels-photo/4e509d0c3118b6bf3f9b48c8e037a251f5c1bc79.8623313001b6eaf17d0b0c136a799162ba6d45c9.jpeg"
+      ],
+      "availability": "available",
+      "price": {
+        "amount": "17884.0",
+        "currency": "RUB",
+        "basis": "room_stay",
+        "taxes_included": null
+      },
+      "cancellation_policy": null,
+      "facilities": [],
+      "query_area": "hotels_polyana",
+      "resolved_geo": {
+        "geo_id": "10359942",
+        "name": "Горнолыжный курорт \"Красная Поляна\"",
+        "country": null,
+        "region": null,
+        "geo_type": "region",
+        "hotels_count": 1306,
+        "also_geo": [
+          {
+            "geo_id": "2683662",
+            "name": "Красная Поляна",
+            "geo_type": "locality",
+            "hotels_count": 1290
+          }
+        ]
+      },
+      "free_cancellation": null,
+      "breakfast_included": null,
+      "purchase_url": "https://hotel.tutu.ru/offers/details?business=0&check_in=2026-11-12&check_out=2026-11-16&geo_id=11845391&geo_name=%D0%93%D0%BE%D1%80%D0%BD%D0%BE%D0%BB%D1%8B%D0%B6%D0%BD%D1%8B%D0%B9%20%D0%BA%D1%83%D1%80%D0%BE%D1%80%D1%82%20%22%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%B0%22&room%5B0%5D=2&search_id=8252c2663856a92e7f900f006803f173",
+      "availability_scope": "search_quote_not_prebook",
+      "stay": {
+        "check_in": "2026-11-12",
+        "check_out": "2026-11-16",
+        "nights": 4
+      }
+    }
+  ],
+  "flights": [
+    {
+      "price": {
+        "amount": "14018.0",
+        "currency": "RUB",
+        "basis": "party",
+        "taxes_included": null
+      },
+      "legs": [
+        {
+          "label": "outbound",
+          "from": "Москва — Шереметьево (SVO), терм. D",
+          "to": "Сочи, AER",
+          "departure_at": "2026-11-12T11:30:00+03:00",
+          "arrival_at": "2026-11-12T15:20:00+03:00",
+          "duration_min": 230,
+          "segments": [
+            {
+              "from": "Москва — Шереметьево (SVO), терм. D",
+              "to": "Сочи, AER",
+              "departure_at": "2026-11-12T11:30:00+03:00",
+              "arrival_at": "2026-11-12T15:20:00+03:00",
+              "duration_min": 230,
+              "carrier": "Победа",
+              "voyage_no": "DP-6941",
+              "from_geo_point_id": 2719726,
+              "to_geo_point_id": 2718761,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        },
+        {
+          "label": "return",
+          "from": "Сочи, AER",
+          "to": "Москва — Внуково (VKO)",
+          "departure_at": "2026-11-16T15:10:00+03:00",
+          "arrival_at": "2026-11-16T19:00:00+03:00",
+          "duration_min": 230,
+          "segments": [
+            {
+              "from": "Сочи, AER",
+              "to": "Москва — Внуково (VKO)",
+              "departure_at": "2026-11-16T15:10:00+03:00",
+              "arrival_at": "2026-11-16T19:00:00+03:00",
+              "duration_min": 230,
+              "carrier": "Utair",
+              "voyage_no": "UT-268",
+              "from_geo_point_id": 2718761,
+              "to_geo_point_id": 2718687,
+              "review_summary": {
+                "rating": 7.69,
+                "review_count": 9879,
+                "label": "⭐ 7.69/10 · 9 879 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Utair",
+                "scale": 10,
+                "feedback_key": "1116"
+              }
+            }
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+e20addd79382c17fd7ac3b62b4f37c7a:671018c27b97d70aa92a2c65120e84ac",
+          "offer_hash": "{\"Price\": 14018, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"9907c28c2ffdd9e0fadec236e511bab1\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:f4b7bd50b88d2aef62aa0ef78689dd61\\\", \\\"pricingVariantHash\\\": \\\"906200afbdd1641d6d5c5d17ed333a28\\\"}, {\\\"offerVariantHash\\\": \\\"2f1839369c5c885900620699a639b64f\\\", \\\"variantConditionsHash\\\": \\\"937d82482a644f9bebf38abdd5e5bb05:96111129a102791865771c33f9d8b92a\\\", \\\"pricingVariantHash\\\": \\\"e417a753585a66d3a4f513e8335f4750\\\"}]\"}",
+          "price": {
+            "amount": 14018.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Базовый",
+            "baggage": {
+              "kg": 0,
+              "pieces": 0
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": false
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+e20addd79382c17fd7ac3b62b4f37c7a:06dd44ad3a22ddcce66412f835719a8b",
+          "offer_hash": "{\"Price\": 19228, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"d646c5563efa7a92a91223664d9d5a15\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:7bdef7201719c823a5aaf6841db6231e\\\", \\\"pricingVariantHash\\\": \\\"27130c44552e8e063bf5cdf687b91a35\\\"}, {\\\"offerVariantHash\\\": \\\"2f1839369c5c885900620699a639b64f\\\", \\\"variantConditionsHash\\\": \\\"937d82482a644f9bebf38abdd5e5bb05:96111129a102791865771c33f9d8b92a\\\", \\\"pricingVariantHash\\\": \\\"e417a753585a66d3a4f513e8335f4750\\\"}]\"}",
+          "price": {
+            "amount": 19228.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Выгодный",
+            "baggage": {
+              "kg": 10,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+e20addd79382c17fd7ac3b62b4f37c7a:6216f4b2c5b065a73a13b6ce8448635a",
+          "offer_hash": "{\"Price\": 23536, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"d646c5563efa7a92a91223664d9d5a15\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:7bdef7201719c823a5aaf6841db6231e\\\", \\\"pricingVariantHash\\\": \\\"27130c44552e8e063bf5cdf687b91a35\\\"}, {\\\"offerVariantHash\\\": \\\"6ef4796ef2f4f410ecf53df9cfd9037e\\\", \\\"variantConditionsHash\\\": \\\"937d82482a644f9bebf38abdd5e5bb05:b4792624bdef59d8dba5c5fc58048271\\\", \\\"pricingVariantHash\\\": \\\"f8be2428e0d7534080b27f38ab737d23\\\"}]\"}",
+          "price": {
+            "amount": 23536.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Выгодный",
+            "baggage": {
+              "kg": 10,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+e20addd79382c17fd7ac3b62b4f37c7a:2809e752043148e9ec623e6ee43c62a1",
+          "offer_hash": "{\"Price\": 30146, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c8539ee3bd6f77c87b0440ef43ab3bb1\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"d5de5b1afca9b3f16011227b55d2b8c8\\\"}, {\\\"offerVariantHash\\\": \\\"6ef4796ef2f4f410ecf53df9cfd9037e\\\", \\\"variantConditionsHash\\\": \\\"937d82482a644f9bebf38abdd5e5bb05:b4792624bdef59d8dba5c5fc58048271\\\", \\\"pricingVariantHash\\\": \\\"f8be2428e0d7534080b27f38ab737d23\\\"}]\"}",
+          "price": {
+            "amount": 30146.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Максимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": true,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+e20addd79382c17fd7ac3b62b4f37c7a:66fcf35c9562f0614bb9617bbea50c84",
+          "offer_hash": "{\"Price\": 36586, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c8539ee3bd6f77c87b0440ef43ab3bb1\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"d5de5b1afca9b3f16011227b55d2b8c8\\\"}, {\\\"offerVariantHash\\\": \\\"58cb7cd1f313d9c1037cd5c0efa4fb8c\\\", \\\"variantConditionsHash\\\": \\\"937d82482a644f9bebf38abdd5e5bb05:1c6a1b85a26340299b97129df9d9547b\\\", \\\"pricingVariantHash\\\": \\\"3aa6b24b2be540d2e8a027f40849b92d\\\"}]\"}",
+          "price": {
+            "amount": 36586.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Максимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": true,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        }
+      ],
+      "purchase_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:25:57.714674Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "adults": 2,
+      "round_trip": true,
+      "availability_scope": "search_quote_not_ticketed"
+    },
+    {
+      "price": {
+        "amount": "14018.0",
+        "currency": "RUB",
+        "basis": "party",
+        "taxes_included": null
+      },
+      "legs": [
+        {
+          "label": "outbound",
+          "from": "Москва — Внуково (VKO), терм. A",
+          "to": "Сочи, AER",
+          "departure_at": "2026-11-12T08:05:00+03:00",
+          "arrival_at": "2026-11-12T11:50:00+03:00",
+          "duration_min": 225,
+          "segments": [
+            {
+              "from": "Москва — Внуково (VKO), терм. A",
+              "to": "Сочи, AER",
+              "departure_at": "2026-11-12T08:05:00+03:00",
+              "arrival_at": "2026-11-12T11:50:00+03:00",
+              "duration_min": 225,
+              "carrier": "Победа",
+              "voyage_no": "DP-111",
+              "from_geo_point_id": 2718687,
+              "to_geo_point_id": 2718761,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        },
+        {
+          "label": "return",
+          "from": "Сочи, AER",
+          "to": "Москва — Внуково (VKO)",
+          "departure_at": "2026-11-16T15:10:00+03:00",
+          "arrival_at": "2026-11-16T19:00:00+03:00",
+          "duration_min": 230,
+          "segments": [
+            {
+              "from": "Сочи, AER",
+              "to": "Москва — Внуково (VKO)",
+              "departure_at": "2026-11-16T15:10:00+03:00",
+              "arrival_at": "2026-11-16T19:00:00+03:00",
+              "duration_min": 230,
+              "carrier": "Utair",
+              "voyage_no": "UT-268",
+              "from_geo_point_id": 2718761,
+              "to_geo_point_id": 2718687,
+              "review_summary": {
+                "rating": 7.69,
+                "review_count": 9879,
+                "label": "⭐ 7.69/10 · 9 879 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Utair",
+                "scale": 10,
+                "feedback_key": "1116"
+              }
+            }
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+e20addd79382c17fd7ac3b62b4f37c7a:671018c27b97d70aa92a2c65120e84ac",
+          "offer_hash": "{\"Price\": 14018, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"4803306b7f2bec907c1ff0b47e9344c3\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:f4b7bd50b88d2aef62aa0ef78689dd61\\\", \\\"pricingVariantHash\\\": \\\"212df1cc902efe5530c10274cded42b6\\\"}, {\\\"offerVariantHash\\\": \\\"2f1839369c5c885900620699a639b64f\\\", \\\"variantConditionsHash\\\": \\\"937d82482a644f9bebf38abdd5e5bb05:96111129a102791865771c33f9d8b92a\\\", \\\"pricingVariantHash\\\": \\\"e417a753585a66d3a4f513e8335f4750\\\"}]\"}",
+          "price": {
+            "amount": 14018.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Минимум",
+            "baggage": {
+              "kg": 0,
+              "pieces": 0
+            },
+            "cabin_baggage": {
+              "kg": 5,
+              "pieces": 1,
+              "dimensions": "40 × 30 × 20"
+            },
+            "refundable": false,
+            "changeable": true
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+e20addd79382c17fd7ac3b62b4f37c7a:06dd44ad3a22ddcce66412f835719a8b",
+          "offer_hash": "{\"Price\": 19228, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"05739fc120e5828dc374270f553be09b\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:7bdef7201719c823a5aaf6841db6231e\\\", \\\"pricingVariantHash\\\": \\\"586e6111acbed0c0da01e58c998353d6\\\"}, {\\\"offerVariantHash\\\": \\\"2f1839369c5c885900620699a639b64f\\\", \\\"variantConditionsHash\\\": \\\"937d82482a644f9bebf38abdd5e5bb05:96111129a102791865771c33f9d8b92a\\\", \\\"pricingVariantHash\\\": \\\"e417a753585a66d3a4f513e8335f4750\\\"}]\"}",
+          "price": {
+            "amount": 19228.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Минимум",
+            "baggage": {
+              "kg": 0,
+              "pieces": 0
+            },
+            "cabin_baggage": {
+              "kg": 5,
+              "pieces": 1,
+              "dimensions": "40 × 30 × 20"
+            },
+            "refundable": false,
+            "changeable": true
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+e20addd79382c17fd7ac3b62b4f37c7a:6216f4b2c5b065a73a13b6ce8448635a",
+          "offer_hash": "{\"Price\": 23536, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"05739fc120e5828dc374270f553be09b\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:7bdef7201719c823a5aaf6841db6231e\\\", \\\"pricingVariantHash\\\": \\\"586e6111acbed0c0da01e58c998353d6\\\"}, {\\\"offerVariantHash\\\": \\\"6ef4796ef2f4f410ecf53df9cfd9037e\\\", \\\"variantConditionsHash\\\": \\\"937d82482a644f9bebf38abdd5e5bb05:b4792624bdef59d8dba5c5fc58048271\\\", \\\"pricingVariantHash\\\": \\\"f8be2428e0d7534080b27f38ab737d23\\\"}]\"}",
+          "price": {
+            "amount": 23536.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Выгодный",
+            "baggage": {
+              "kg": 10,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+e20addd79382c17fd7ac3b62b4f37c7a:2809e752043148e9ec623e6ee43c62a1",
+          "offer_hash": "{\"Price\": 30146, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c0f079492ff60a4d9a83b70178d7a256\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"032cb6be345bd03836123b9ad735236f\\\"}, {\\\"offerVariantHash\\\": \\\"6ef4796ef2f4f410ecf53df9cfd9037e\\\", \\\"variantConditionsHash\\\": \\\"937d82482a644f9bebf38abdd5e5bb05:b4792624bdef59d8dba5c5fc58048271\\\", \\\"pricingVariantHash\\\": \\\"f8be2428e0d7534080b27f38ab737d23\\\"}]\"}",
+          "price": {
+            "amount": 30146.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Оптимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": 5,
+              "pieces": 1,
+              "dimensions": "40 × 30 × 20"
+            },
+            "refundable": false,
+            "changeable": true
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+e20addd79382c17fd7ac3b62b4f37c7a:66fcf35c9562f0614bb9617bbea50c84",
+          "offer_hash": "{\"Price\": 36586, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c0f079492ff60a4d9a83b70178d7a256\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"032cb6be345bd03836123b9ad735236f\\\"}, {\\\"offerVariantHash\\\": \\\"58cb7cd1f313d9c1037cd5c0efa4fb8c\\\", \\\"variantConditionsHash\\\": \\\"937d82482a644f9bebf38abdd5e5bb05:1c6a1b85a26340299b97129df9d9547b\\\", \\\"pricingVariantHash\\\": \\\"3aa6b24b2be540d2e8a027f40849b92d\\\"}]\"}",
+          "price": {
+            "amount": 36586.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Максимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": true,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        }
+      ],
+      "purchase_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:25:57.714674Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "adults": 2,
+      "round_trip": true,
+      "availability_scope": "search_quote_not_ticketed"
+    },
+    {
+      "price": {
+        "amount": "14368.0",
+        "currency": "RUB",
+        "basis": "party",
+        "taxes_included": null
+      },
+      "legs": [
+        {
+          "label": "outbound",
+          "from": "Москва — Шереметьево (SVO), терм. D",
+          "to": "Сочи, AER",
+          "departure_at": "2026-11-12T11:30:00+03:00",
+          "arrival_at": "2026-11-12T15:20:00+03:00",
+          "duration_min": 230,
+          "segments": [
+            {
+              "from": "Москва — Шереметьево (SVO), терм. D",
+              "to": "Сочи, AER",
+              "departure_at": "2026-11-12T11:30:00+03:00",
+              "arrival_at": "2026-11-12T15:20:00+03:00",
+              "duration_min": 230,
+              "carrier": "Победа",
+              "voyage_no": "DP-6941",
+              "from_geo_point_id": 2719726,
+              "to_geo_point_id": 2718761,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        },
+        {
+          "label": "return",
+          "from": "Сочи, AER",
+          "to": "Москва — Внуково (VKO), терм. A",
+          "departure_at": "2026-11-16T08:40:00+03:00",
+          "arrival_at": "2026-11-16T12:15:00+03:00",
+          "duration_min": 215,
+          "segments": [
+            {
+              "from": "Сочи, AER",
+              "to": "Москва — Внуково (VKO), терм. A",
+              "departure_at": "2026-11-16T08:40:00+03:00",
+              "arrival_at": "2026-11-16T12:15:00+03:00",
+              "duration_min": 215,
+              "carrier": "Победа",
+              "voyage_no": "DP-112",
+              "from_geo_point_id": 2718761,
+              "to_geo_point_id": 2718687,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+34dc544e149914ccfc9cc349edf0468c:671018c27b97d70aa92a2c65120e84ac",
+          "offer_hash": "{\"Price\": 14368, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"9907c28c2ffdd9e0fadec236e511bab1+0ff4c26c273610c68e51edaf55dec578\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:f4b7bd50b88d2aef62aa0ef78689dd61+d35398e02f3d684de2b124705b11d2f2:f4b7bd50b88d2aef62aa0ef78689dd61\\\", \\\"pricingVariantHash\\\": \\\"7e3f96ab4882b6ab93aa38d7cd444405\\\"}]\"}",
+          "price": {
+            "amount": 14368.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Базовый",
+            "baggage": {
+              "kg": 0,
+              "pieces": 0
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": false
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+34dc544e149914ccfc9cc349edf0468c:6216f4b2c5b065a73a13b6ce8448635a",
+          "offer_hash": "{\"Price\": 24714, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"d646c5563efa7a92a91223664d9d5a15+962c7414d1a7394632e5799d0b45715e\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:7bdef7201719c823a5aaf6841db6231e+d35398e02f3d684de2b124705b11d2f2:7bdef7201719c823a5aaf6841db6231e\\\", \\\"pricingVariantHash\\\": \\\"62ca622a850dc1b71f713f61f3e26756\\\"}]\"}",
+          "price": {
+            "amount": 24714.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Выгодный",
+            "baggage": {
+              "kg": 10,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+34dc544e149914ccfc9cc349edf0468c:66fcf35c9562f0614bb9617bbea50c84",
+          "offer_hash": "{\"Price\": 38154, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c8539ee3bd6f77c87b0440ef43ab3bb1+5ffb96f39c82f23026ae29dc96b1cd64\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:81e223a99b8ce32d2cd1059cbdcab4ab+d35398e02f3d684de2b124705b11d2f2:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"1f75191a6aa4bb1ec4bc36a8559317a7\\\"}]\"}",
+          "price": {
+            "amount": 38154.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Максимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": true,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        }
+      ],
+      "purchase_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:25:57.714674Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "adults": 2,
+      "round_trip": true,
+      "availability_scope": "search_quote_not_ticketed"
+    },
+    {
+      "price": {
+        "amount": "14368.0",
+        "currency": "RUB",
+        "basis": "party",
+        "taxes_included": null
+      },
+      "legs": [
+        {
+          "label": "outbound",
+          "from": "Москва — Внуково (VKO), терм. A",
+          "to": "Сочи, AER",
+          "departure_at": "2026-11-12T08:05:00+03:00",
+          "arrival_at": "2026-11-12T11:50:00+03:00",
+          "duration_min": 225,
+          "segments": [
+            {
+              "from": "Москва — Внуково (VKO), терм. A",
+              "to": "Сочи, AER",
+              "departure_at": "2026-11-12T08:05:00+03:00",
+              "arrival_at": "2026-11-12T11:50:00+03:00",
+              "duration_min": 225,
+              "carrier": "Победа",
+              "voyage_no": "DP-111",
+              "from_geo_point_id": 2718687,
+              "to_geo_point_id": 2718761,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        },
+        {
+          "label": "return",
+          "from": "Сочи, AER",
+          "to": "Москва — Внуково (VKO), терм. A",
+          "departure_at": "2026-11-16T08:40:00+03:00",
+          "arrival_at": "2026-11-16T12:15:00+03:00",
+          "duration_min": 215,
+          "segments": [
+            {
+              "from": "Сочи, AER",
+              "to": "Москва — Внуково (VKO), терм. A",
+              "departure_at": "2026-11-16T08:40:00+03:00",
+              "arrival_at": "2026-11-16T12:15:00+03:00",
+              "duration_min": 215,
+              "carrier": "Победа",
+              "voyage_no": "DP-112",
+              "from_geo_point_id": 2718761,
+              "to_geo_point_id": 2718687,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+34dc544e149914ccfc9cc349edf0468c:671018c27b97d70aa92a2c65120e84ac",
+          "offer_hash": "{\"Price\": 14368, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"4803306b7f2bec907c1ff0b47e9344c3+0ff4c26c273610c68e51edaf55dec578\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:f4b7bd50b88d2aef62aa0ef78689dd61+d35398e02f3d684de2b124705b11d2f2:f4b7bd50b88d2aef62aa0ef78689dd61\\\", \\\"pricingVariantHash\\\": \\\"f05560f1c14139e0c1dbc5276dcad806\\\"}]\"}",
+          "price": {
+            "amount": 14368.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Базовый",
+            "baggage": {
+              "kg": 0,
+              "pieces": 0
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": false
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+34dc544e149914ccfc9cc349edf0468c:6216f4b2c5b065a73a13b6ce8448635a",
+          "offer_hash": "{\"Price\": 24714, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"05739fc120e5828dc374270f553be09b+962c7414d1a7394632e5799d0b45715e\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:7bdef7201719c823a5aaf6841db6231e+d35398e02f3d684de2b124705b11d2f2:7bdef7201719c823a5aaf6841db6231e\\\", \\\"pricingVariantHash\\\": \\\"0cc848d4c97d1dc400bfd796c32a5edb\\\"}]\"}",
+          "price": {
+            "amount": 24714.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Выгодный",
+            "baggage": {
+              "kg": 10,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+34dc544e149914ccfc9cc349edf0468c:66fcf35c9562f0614bb9617bbea50c84",
+          "offer_hash": "{\"Price\": 38154, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c0f079492ff60a4d9a83b70178d7a256+5ffb96f39c82f23026ae29dc96b1cd64\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:81e223a99b8ce32d2cd1059cbdcab4ab+d35398e02f3d684de2b124705b11d2f2:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"87004f58d805ebaf60d15d24f3a5c4ed\\\"}]\"}",
+          "price": {
+            "amount": 38154.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Максимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": true,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        }
+      ],
+      "purchase_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:25:57.714674Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "adults": 2,
+      "round_trip": true,
+      "availability_scope": "search_quote_not_ticketed"
+    },
+    {
+      "price": {
+        "amount": "15500.0",
+        "currency": "RUB",
+        "basis": "party",
+        "taxes_included": null
+      },
+      "legs": [
+        {
+          "label": "outbound",
+          "from": "Москва — Шереметьево (SVO), терм. D",
+          "to": "Сочи, AER",
+          "departure_at": "2026-11-12T11:30:00+03:00",
+          "arrival_at": "2026-11-12T15:20:00+03:00",
+          "duration_min": 230,
+          "segments": [
+            {
+              "from": "Москва — Шереметьево (SVO), терм. D",
+              "to": "Сочи, AER",
+              "departure_at": "2026-11-12T11:30:00+03:00",
+              "arrival_at": "2026-11-12T15:20:00+03:00",
+              "duration_min": 230,
+              "carrier": "Победа",
+              "voyage_no": "DP-6941",
+              "from_geo_point_id": 2719726,
+              "to_geo_point_id": 2718761,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        },
+        {
+          "label": "return",
+          "from": "Сочи, AER",
+          "to": "Москва — Внуково (VKO)",
+          "departure_at": "2026-11-16T15:10:00+03:00",
+          "arrival_at": "2026-11-16T19:00:00+03:00",
+          "duration_min": 230,
+          "segments": [
+            {
+              "from": "Сочи, AER",
+              "to": "Москва — Внуково (VKO)",
+              "departure_at": "2026-11-16T15:10:00+03:00",
+              "arrival_at": "2026-11-16T19:00:00+03:00",
+              "duration_min": 230,
+              "carrier": "Руслайн",
+              "voyage_no": "7R-4268",
+              "from_geo_point_id": 2718761,
+              "to_geo_point_id": 2718687,
+              "review_summary": {
+                "rating": 8.22,
+                "review_count": 1250,
+                "label": "⭐ 8.22/10 · 1 250 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Руслайн",
+                "scale": 10,
+                "feedback_key": "1098"
+              }
+            }
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+5897c83bf8801fa02b0b9573d4ba0af9:671018c27b97d70aa92a2c65120e84ac",
+          "offer_hash": "{\"Price\": 15500, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"9907c28c2ffdd9e0fadec236e511bab1\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:f4b7bd50b88d2aef62aa0ef78689dd61\\\", \\\"pricingVariantHash\\\": \\\"906200afbdd1641d6d5c5d17ed333a28\\\"}, {\\\"offerVariantHash\\\": \\\"1b77238f900ebbeaa6848a3c6520eb0c\\\", \\\"variantConditionsHash\\\": \\\"4e44c2b0dc6ea3b0b8da0111889cd0f2:7cc947514e8ccdfeb3f094b8792fd87f\\\", \\\"pricingVariantHash\\\": \\\"35255d8545e5545a7a077818f5907804\\\"}]\"}",
+          "price": {
+            "amount": 15500.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Базовый",
+            "baggage": {
+              "kg": 0,
+              "pieces": 0
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": false
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+5897c83bf8801fa02b0b9573d4ba0af9:6216f4b2c5b065a73a13b6ce8448635a",
+          "offer_hash": "{\"Price\": 25442, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"d646c5563efa7a92a91223664d9d5a15\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:7bdef7201719c823a5aaf6841db6231e\\\", \\\"pricingVariantHash\\\": \\\"27130c44552e8e063bf5cdf687b91a35\\\"}, {\\\"offerVariantHash\\\": \\\"c04ec2c75581efc4fa5fa2977aab6220\\\", \\\"variantConditionsHash\\\": \\\"4e44c2b0dc6ea3b0b8da0111889cd0f2:37315fa63031ec5f222604c2ff3468bc\\\", \\\"pricingVariantHash\\\": \\\"7079abc34c7d156c0fe35a02ba90b2a6\\\"}]\"}",
+          "price": {
+            "amount": 25442.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Классик",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": 5,
+              "pieces": 1,
+              "dimensions": "40 × 30 × 20"
+            },
+            "refundable": false,
+            "changeable": true
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+5897c83bf8801fa02b0b9573d4ba0af9:2809e752043148e9ec623e6ee43c62a1",
+          "offer_hash": "{\"Price\": 32052, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c8539ee3bd6f77c87b0440ef43ab3bb1\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"d5de5b1afca9b3f16011227b55d2b8c8\\\"}, {\\\"offerVariantHash\\\": \\\"c04ec2c75581efc4fa5fa2977aab6220\\\", \\\"variantConditionsHash\\\": \\\"4e44c2b0dc6ea3b0b8da0111889cd0f2:37315fa63031ec5f222604c2ff3468bc\\\", \\\"pricingVariantHash\\\": \\\"7079abc34c7d156c0fe35a02ba90b2a6\\\"}]\"}",
+          "price": {
+            "amount": 32052.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Максимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": true,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+5897c83bf8801fa02b0b9573d4ba0af9:66fcf35c9562f0614bb9617bbea50c84",
+          "offer_hash": "{\"Price\": 35088, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c8539ee3bd6f77c87b0440ef43ab3bb1\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"d5de5b1afca9b3f16011227b55d2b8c8\\\"}, {\\\"offerVariantHash\\\": \\\"35f21fd9c413867a2cffad0dc132861e\\\", \\\"variantConditionsHash\\\": \\\"4e44c2b0dc6ea3b0b8da0111889cd0f2:b4792624bdef59d8dba5c5fc58048271\\\", \\\"pricingVariantHash\\\": \\\"78d75c88a6cd3240ece31d6e67df7839\\\"}]\"}",
+          "price": {
+            "amount": 35088.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Оптимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": 5,
+              "pieces": 1,
+              "dimensions": "40 × 30 × 20"
+            },
+            "refundable": true,
+            "changeable": true
+          },
+          "service_class": "ECONOMIC"
+        }
+      ],
+      "purchase_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:25:57.714674Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "adults": 2,
+      "round_trip": true,
+      "availability_scope": "search_quote_not_ticketed"
+    },
+    {
+      "price": {
+        "amount": "15500.0",
+        "currency": "RUB",
+        "basis": "party",
+        "taxes_included": null
+      },
+      "legs": [
+        {
+          "label": "outbound",
+          "from": "Москва — Внуково (VKO), терм. A",
+          "to": "Сочи, AER",
+          "departure_at": "2026-11-12T08:05:00+03:00",
+          "arrival_at": "2026-11-12T11:50:00+03:00",
+          "duration_min": 225,
+          "segments": [
+            {
+              "from": "Москва — Внуково (VKO), терм. A",
+              "to": "Сочи, AER",
+              "departure_at": "2026-11-12T08:05:00+03:00",
+              "arrival_at": "2026-11-12T11:50:00+03:00",
+              "duration_min": 225,
+              "carrier": "Победа",
+              "voyage_no": "DP-111",
+              "from_geo_point_id": 2718687,
+              "to_geo_point_id": 2718761,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        },
+        {
+          "label": "return",
+          "from": "Сочи, AER",
+          "to": "Москва — Внуково (VKO)",
+          "departure_at": "2026-11-16T15:10:00+03:00",
+          "arrival_at": "2026-11-16T19:00:00+03:00",
+          "duration_min": 230,
+          "segments": [
+            {
+              "from": "Сочи, AER",
+              "to": "Москва — Внуково (VKO)",
+              "departure_at": "2026-11-16T15:10:00+03:00",
+              "arrival_at": "2026-11-16T19:00:00+03:00",
+              "duration_min": 230,
+              "carrier": "Руслайн",
+              "voyage_no": "7R-4268",
+              "from_geo_point_id": 2718761,
+              "to_geo_point_id": 2718687,
+              "review_summary": {
+                "rating": 8.22,
+                "review_count": 1250,
+                "label": "⭐ 8.22/10 · 1 250 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Руслайн",
+                "scale": 10,
+                "feedback_key": "1098"
+              }
+            }
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+5897c83bf8801fa02b0b9573d4ba0af9:671018c27b97d70aa92a2c65120e84ac",
+          "offer_hash": "{\"Price\": 15500, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"4803306b7f2bec907c1ff0b47e9344c3\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:f4b7bd50b88d2aef62aa0ef78689dd61\\\", \\\"pricingVariantHash\\\": \\\"212df1cc902efe5530c10274cded42b6\\\"}, {\\\"offerVariantHash\\\": \\\"1b77238f900ebbeaa6848a3c6520eb0c\\\", \\\"variantConditionsHash\\\": \\\"4e44c2b0dc6ea3b0b8da0111889cd0f2:7cc947514e8ccdfeb3f094b8792fd87f\\\", \\\"pricingVariantHash\\\": \\\"35255d8545e5545a7a077818f5907804\\\"}]\"}",
+          "price": {
+            "amount": 15500.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Базовый",
+            "baggage": {
+              "kg": 0,
+              "pieces": 0
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": false
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+5897c83bf8801fa02b0b9573d4ba0af9:6216f4b2c5b065a73a13b6ce8448635a",
+          "offer_hash": "{\"Price\": 25442, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"05739fc120e5828dc374270f553be09b\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:7bdef7201719c823a5aaf6841db6231e\\\", \\\"pricingVariantHash\\\": \\\"586e6111acbed0c0da01e58c998353d6\\\"}, {\\\"offerVariantHash\\\": \\\"c04ec2c75581efc4fa5fa2977aab6220\\\", \\\"variantConditionsHash\\\": \\\"4e44c2b0dc6ea3b0b8da0111889cd0f2:37315fa63031ec5f222604c2ff3468bc\\\", \\\"pricingVariantHash\\\": \\\"7079abc34c7d156c0fe35a02ba90b2a6\\\"}]\"}",
+          "price": {
+            "amount": 25442.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Выгодный",
+            "baggage": {
+              "kg": 10,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+5897c83bf8801fa02b0b9573d4ba0af9:2809e752043148e9ec623e6ee43c62a1",
+          "offer_hash": "{\"Price\": 32052, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c0f079492ff60a4d9a83b70178d7a256\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"032cb6be345bd03836123b9ad735236f\\\"}, {\\\"offerVariantHash\\\": \\\"c04ec2c75581efc4fa5fa2977aab6220\\\", \\\"variantConditionsHash\\\": \\\"4e44c2b0dc6ea3b0b8da0111889cd0f2:37315fa63031ec5f222604c2ff3468bc\\\", \\\"pricingVariantHash\\\": \\\"7079abc34c7d156c0fe35a02ba90b2a6\\\"}]\"}",
+          "price": {
+            "amount": 32052.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Максимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": true,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+5897c83bf8801fa02b0b9573d4ba0af9:66fcf35c9562f0614bb9617bbea50c84",
+          "offer_hash": "{\"Price\": 35088, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c0f079492ff60a4d9a83b70178d7a256\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"032cb6be345bd03836123b9ad735236f\\\"}, {\\\"offerVariantHash\\\": \\\"35f21fd9c413867a2cffad0dc132861e\\\", \\\"variantConditionsHash\\\": \\\"4e44c2b0dc6ea3b0b8da0111889cd0f2:b4792624bdef59d8dba5c5fc58048271\\\", \\\"pricingVariantHash\\\": \\\"78d75c88a6cd3240ece31d6e67df7839\\\"}]\"}",
+          "price": {
+            "amount": 35088.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Оптимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": 5,
+              "pieces": 1,
+              "dimensions": "40 × 30 × 20"
+            },
+            "refundable": true,
+            "changeable": true
+          },
+          "service_class": "ECONOMIC"
+        }
+      ],
+      "purchase_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:25:57.714674Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "adults": 2,
+      "round_trip": true,
+      "availability_scope": "search_quote_not_ticketed"
+    },
+    {
+      "price": {
+        "amount": "15574.0",
+        "currency": "RUB",
+        "basis": "party",
+        "taxes_included": null
+      },
+      "legs": [
+        {
+          "label": "outbound",
+          "from": "Москва — Шереметьево (SVO), терм. D",
+          "to": "Сочи, AER",
+          "departure_at": "2026-11-12T11:30:00+03:00",
+          "arrival_at": "2026-11-12T15:20:00+03:00",
+          "duration_min": 230,
+          "segments": [
+            {
+              "from": "Москва — Шереметьево (SVO), терм. D",
+              "to": "Сочи, AER",
+              "departure_at": "2026-11-12T11:30:00+03:00",
+              "arrival_at": "2026-11-12T15:20:00+03:00",
+              "duration_min": 230,
+              "carrier": "Победа",
+              "voyage_no": "DP-6941",
+              "from_geo_point_id": 2719726,
+              "to_geo_point_id": 2718761,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        },
+        {
+          "label": "return",
+          "from": "Сочи, AER",
+          "to": "Москва — Шереметьево (SVO), терм. D",
+          "departure_at": "2026-11-16T18:25:00+03:00",
+          "arrival_at": "2026-11-16T22:05:00+03:00",
+          "duration_min": 220,
+          "segments": [
+            {
+              "from": "Сочи, AER",
+              "to": "Москва — Шереметьево (SVO), терм. D",
+              "departure_at": "2026-11-16T18:25:00+03:00",
+              "arrival_at": "2026-11-16T22:05:00+03:00",
+              "duration_min": 220,
+              "carrier": "Победа",
+              "voyage_no": "DP-6946",
+              "from_geo_point_id": 2718761,
+              "to_geo_point_id": 2719726,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+8b265911e011e3c079a7cd55a35a84ed:671018c27b97d70aa92a2c65120e84ac",
+          "offer_hash": "{\"Price\": 15574, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"9907c28c2ffdd9e0fadec236e511bab1+fcbfaf3f89da6032430cdb1230b51f22\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:f4b7bd50b88d2aef62aa0ef78689dd61+71ba9611452ba3b2b895e57b9d86afd1:f4b7bd50b88d2aef62aa0ef78689dd61\\\", \\\"pricingVariantHash\\\": \\\"b53af7f5a265c7b900e8c786ef438112\\\"}]\"}",
+          "price": {
+            "amount": 15574.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Базовый",
+            "baggage": {
+              "kg": 0,
+              "pieces": 0
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": false
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+8b265911e011e3c079a7cd55a35a84ed:6216f4b2c5b065a73a13b6ce8448635a",
+          "offer_hash": "{\"Price\": 25940, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"d646c5563efa7a92a91223664d9d5a15+720d1d0d1c280a865ee16c96eb35d00f\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:7bdef7201719c823a5aaf6841db6231e+71ba9611452ba3b2b895e57b9d86afd1:7bdef7201719c823a5aaf6841db6231e\\\", \\\"pricingVariantHash\\\": \\\"d4fb3b0bee407f8f8470464fb8b8a5cf\\\"}]\"}",
+          "price": {
+            "amount": 25940.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Выгодный",
+            "baggage": {
+              "kg": 10,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+8b265911e011e3c079a7cd55a35a84ed:66fcf35c9562f0614bb9617bbea50c84",
+          "offer_hash": "{\"Price\": 39364, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c8539ee3bd6f77c87b0440ef43ab3bb1+42cdbb6032943b02477844ac5c689c89\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:81e223a99b8ce32d2cd1059cbdcab4ab+71ba9611452ba3b2b895e57b9d86afd1:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"3f5a9c6655379c8e9eac1f83e83c220a\\\"}]\"}",
+          "price": {
+            "amount": 39364.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Максимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": true,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        }
+      ],
+      "purchase_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:25:57.714674Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "adults": 2,
+      "round_trip": true,
+      "availability_scope": "search_quote_not_ticketed"
+    },
+    {
+      "price": {
+        "amount": "15574.0",
+        "currency": "RUB",
+        "basis": "party",
+        "taxes_included": null
+      },
+      "legs": [
+        {
+          "label": "outbound",
+          "from": "Москва — Внуково (VKO), терм. A",
+          "to": "Сочи, AER",
+          "departure_at": "2026-11-12T08:05:00+03:00",
+          "arrival_at": "2026-11-12T11:50:00+03:00",
+          "duration_min": 225,
+          "segments": [
+            {
+              "from": "Москва — Внуково (VKO), терм. A",
+              "to": "Сочи, AER",
+              "departure_at": "2026-11-12T08:05:00+03:00",
+              "arrival_at": "2026-11-12T11:50:00+03:00",
+              "duration_min": 225,
+              "carrier": "Победа",
+              "voyage_no": "DP-111",
+              "from_geo_point_id": 2718687,
+              "to_geo_point_id": 2718761,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        },
+        {
+          "label": "return",
+          "from": "Сочи, AER",
+          "to": "Москва — Шереметьево (SVO), терм. D",
+          "departure_at": "2026-11-16T18:25:00+03:00",
+          "arrival_at": "2026-11-16T22:05:00+03:00",
+          "duration_min": 220,
+          "segments": [
+            {
+              "from": "Сочи, AER",
+              "to": "Москва — Шереметьево (SVO), терм. D",
+              "departure_at": "2026-11-16T18:25:00+03:00",
+              "arrival_at": "2026-11-16T22:05:00+03:00",
+              "duration_min": 220,
+              "carrier": "Победа",
+              "voyage_no": "DP-6946",
+              "from_geo_point_id": 2718761,
+              "to_geo_point_id": 2719726,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+8b265911e011e3c079a7cd55a35a84ed:671018c27b97d70aa92a2c65120e84ac",
+          "offer_hash": "{\"Price\": 15574, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"4803306b7f2bec907c1ff0b47e9344c3+fcbfaf3f89da6032430cdb1230b51f22\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:f4b7bd50b88d2aef62aa0ef78689dd61+71ba9611452ba3b2b895e57b9d86afd1:f4b7bd50b88d2aef62aa0ef78689dd61\\\", \\\"pricingVariantHash\\\": \\\"c7ad90d432a97e83b9d0f090189150f9\\\"}]\"}",
+          "price": {
+            "amount": 15574.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Базовый",
+            "baggage": {
+              "kg": 0,
+              "pieces": 0
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": false
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+8b265911e011e3c079a7cd55a35a84ed:6216f4b2c5b065a73a13b6ce8448635a",
+          "offer_hash": "{\"Price\": 25940, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"05739fc120e5828dc374270f553be09b+720d1d0d1c280a865ee16c96eb35d00f\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:7bdef7201719c823a5aaf6841db6231e+71ba9611452ba3b2b895e57b9d86afd1:7bdef7201719c823a5aaf6841db6231e\\\", \\\"pricingVariantHash\\\": \\\"bf5b133b5b7419da67ce6626f6cd8c43\\\"}]\"}",
+          "price": {
+            "amount": 25940.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Выгодный",
+            "baggage": {
+              "kg": 10,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+8b265911e011e3c079a7cd55a35a84ed:66fcf35c9562f0614bb9617bbea50c84",
+          "offer_hash": "{\"Price\": 39364, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c0f079492ff60a4d9a83b70178d7a256+42cdbb6032943b02477844ac5c689c89\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:81e223a99b8ce32d2cd1059cbdcab4ab+71ba9611452ba3b2b895e57b9d86afd1:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"4e600ce9269677c9b64f8435d327d3f5\\\"}]\"}",
+          "price": {
+            "amount": 39364.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Максимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": true,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        }
+      ],
+      "purchase_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:25:57.714674Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "adults": 2,
+      "round_trip": true,
+      "availability_scope": "search_quote_not_ticketed"
+    },
+    {
+      "price": {
+        "amount": "15574.0",
+        "currency": "RUB",
+        "basis": "party",
+        "taxes_included": null
+      },
+      "legs": [
+        {
+          "label": "outbound",
+          "from": "Москва — Шереметьево (SVO), терм. D",
+          "to": "Сочи, AER",
+          "departure_at": "2026-11-12T11:30:00+03:00",
+          "arrival_at": "2026-11-12T15:20:00+03:00",
+          "duration_min": 230,
+          "segments": [
+            {
+              "from": "Москва — Шереметьево (SVO), терм. D",
+              "to": "Сочи, AER",
+              "departure_at": "2026-11-12T11:30:00+03:00",
+              "arrival_at": "2026-11-12T15:20:00+03:00",
+              "duration_min": 230,
+              "carrier": "Победа",
+              "voyage_no": "DP-6941",
+              "from_geo_point_id": 2719726,
+              "to_geo_point_id": 2718761,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        },
+        {
+          "label": "return",
+          "from": "Сочи, AER",
+          "to": "Москва — Шереметьево (SVO), терм. D",
+          "departure_at": "2026-11-16T15:50:00+03:00",
+          "arrival_at": "2026-11-16T19:30:00+03:00",
+          "duration_min": 220,
+          "segments": [
+            {
+              "from": "Сочи, AER",
+              "to": "Москва — Шереметьево (SVO), терм. D",
+              "departure_at": "2026-11-16T15:50:00+03:00",
+              "arrival_at": "2026-11-16T19:30:00+03:00",
+              "duration_min": 220,
+              "carrier": "Победа",
+              "voyage_no": "DP-6942",
+              "from_geo_point_id": 2718761,
+              "to_geo_point_id": 2719726,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+cc3b96b081af98aa9814048b47b58322:671018c27b97d70aa92a2c65120e84ac",
+          "offer_hash": "{\"Price\": 15574, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"9907c28c2ffdd9e0fadec236e511bab1+6e360b2ac609ee754efbd34c6e1a019a\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:f4b7bd50b88d2aef62aa0ef78689dd61+7758c7cc65374a21d343143550a032aa:f4b7bd50b88d2aef62aa0ef78689dd61\\\", \\\"pricingVariantHash\\\": \\\"7f15dbf087685e683fa193a9594f0c30\\\"}]\"}",
+          "price": {
+            "amount": 15574.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Базовый",
+            "baggage": {
+              "kg": 0,
+              "pieces": 0
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": false
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+cc3b96b081af98aa9814048b47b58322:6216f4b2c5b065a73a13b6ce8448635a",
+          "offer_hash": "{\"Price\": 25940, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"d646c5563efa7a92a91223664d9d5a15+24925de24c79c5b874309468ee05a67a\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:7bdef7201719c823a5aaf6841db6231e+7758c7cc65374a21d343143550a032aa:7bdef7201719c823a5aaf6841db6231e\\\", \\\"pricingVariantHash\\\": \\\"02f6b59041d21e961adaa1d1b0075ba6\\\"}]\"}",
+          "price": {
+            "amount": 25940.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Выгодный",
+            "baggage": {
+              "kg": 10,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "c20b421289be402de1ac3fd6b840c55a+cc3b96b081af98aa9814048b47b58322:66fcf35c9562f0614bb9617bbea50c84",
+          "offer_hash": "{\"Price\": 39364, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c8539ee3bd6f77c87b0440ef43ab3bb1+af109fbe10a2b2aef0446566d71c8e87\\\", \\\"variantConditionsHash\\\": \\\"a04a671250bf5957059b93641b16b16a:81e223a99b8ce32d2cd1059cbdcab4ab+7758c7cc65374a21d343143550a032aa:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"064c58268d50cca59aa274074ae9bd51\\\"}]\"}",
+          "price": {
+            "amount": 39364.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Максимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": true,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        }
+      ],
+      "purchase_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:25:57.714674Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "adults": 2,
+      "round_trip": true,
+      "availability_scope": "search_quote_not_ticketed"
+    },
+    {
+      "price": {
+        "amount": "15574.0",
+        "currency": "RUB",
+        "basis": "party",
+        "taxes_included": null
+      },
+      "legs": [
+        {
+          "label": "outbound",
+          "from": "Москва — Внуково (VKO), терм. A",
+          "to": "Сочи, AER",
+          "departure_at": "2026-11-12T08:05:00+03:00",
+          "arrival_at": "2026-11-12T11:50:00+03:00",
+          "duration_min": 225,
+          "segments": [
+            {
+              "from": "Москва — Внуково (VKO), терм. A",
+              "to": "Сочи, AER",
+              "departure_at": "2026-11-12T08:05:00+03:00",
+              "arrival_at": "2026-11-12T11:50:00+03:00",
+              "duration_min": 225,
+              "carrier": "Победа",
+              "voyage_no": "DP-111",
+              "from_geo_point_id": 2718687,
+              "to_geo_point_id": 2718761,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        },
+        {
+          "label": "return",
+          "from": "Сочи, AER",
+          "to": "Москва — Шереметьево (SVO), терм. D",
+          "departure_at": "2026-11-16T15:50:00+03:00",
+          "arrival_at": "2026-11-16T19:30:00+03:00",
+          "duration_min": 220,
+          "segments": [
+            {
+              "from": "Сочи, AER",
+              "to": "Москва — Шереметьево (SVO), терм. D",
+              "departure_at": "2026-11-16T15:50:00+03:00",
+              "arrival_at": "2026-11-16T19:30:00+03:00",
+              "duration_min": 220,
+              "carrier": "Победа",
+              "voyage_no": "DP-6942",
+              "from_geo_point_id": 2718761,
+              "to_geo_point_id": 2719726,
+              "review_summary": {
+                "rating": 6.54,
+                "review_count": 14397,
+                "label": "⭐ 6.54/10 · 14 397 отзывов",
+                "source": "offers-api.feedback",
+                "scope": "carrier",
+                "subject": "Победа",
+                "scale": 10,
+                "feedback_key": "2227"
+              }
+            }
+          ]
+        }
+      ],
+      "variants": [
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+cc3b96b081af98aa9814048b47b58322:671018c27b97d70aa92a2c65120e84ac",
+          "offer_hash": "{\"Price\": 15574, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"4803306b7f2bec907c1ff0b47e9344c3+6e360b2ac609ee754efbd34c6e1a019a\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:f4b7bd50b88d2aef62aa0ef78689dd61+7758c7cc65374a21d343143550a032aa:f4b7bd50b88d2aef62aa0ef78689dd61\\\", \\\"pricingVariantHash\\\": \\\"e3a144b96e9b9c1d4fa1ceca22f5b4b4\\\"}]\"}",
+          "price": {
+            "amount": 15574.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Базовый",
+            "baggage": {
+              "kg": 0,
+              "pieces": 0
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": false
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+cc3b96b081af98aa9814048b47b58322:6216f4b2c5b065a73a13b6ce8448635a",
+          "offer_hash": "{\"Price\": 25940, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"05739fc120e5828dc374270f553be09b+24925de24c79c5b874309468ee05a67a\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:7bdef7201719c823a5aaf6841db6231e+7758c7cc65374a21d343143550a032aa:7bdef7201719c823a5aaf6841db6231e\\\", \\\"pricingVariantHash\\\": \\\"df65b6f5420db8721aaa68989a8fc31b\\\"}]\"}",
+          "price": {
+            "amount": 25940.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Выгодный",
+            "baggage": {
+              "kg": 10,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": false,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        },
+        {
+          "variant_id": "6ed5fe6843bf1607782a437b2680cb9d+cc3b96b081af98aa9814048b47b58322:66fcf35c9562f0614bb9617bbea50c84",
+          "offer_hash": "{\"Price\": 39364, \"OriginalHash\": \"[{\\\"offerVariantHash\\\": \\\"c0f079492ff60a4d9a83b70178d7a256+af109fbe10a2b2aef0446566d71c8e87\\\", \\\"variantConditionsHash\\\": \\\"62795ef05b267a39680e441440f32571:81e223a99b8ce32d2cd1059cbdcab4ab+7758c7cc65374a21d343143550a032aa:81e223a99b8ce32d2cd1059cbdcab4ab\\\", \\\"pricingVariantHash\\\": \\\"715c8d799af8ccb2d445bf1e23ab6fdf\\\"}]\"}",
+          "price": {
+            "amount": 39364.0,
+            "currency": "RUB"
+          },
+          "conditions": {
+            "fare_family": "Максимум",
+            "baggage": {
+              "kg": 20,
+              "pieces": 1
+            },
+            "cabin_baggage": {
+              "kg": null,
+              "pieces": 1,
+              "dimensions": "36 × 30 × 27"
+            },
+            "refundable": true,
+            "changeable": true,
+            "exchange": {
+              "available": true,
+              "deadline_hours": 48
+            }
+          },
+          "service_class": "ECONOMIC"
+        }
+      ],
+      "purchase_url": "https://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491",
+      "source": {
+        "provider": "tutu",
+        "source_url": "https://mcp.tutu.ru/mcp",
+        "retrieved_at": "2026-10-25T14:25:57.714674Z",
+        "evidence": "live",
+        "source_updated_at": null,
+        "expires_at": null
+      },
+      "adults": 2,
+      "round_trip": true,
+      "availability_scope": "search_quote_not_ticketed"
+    }
+  ],
+  "counts": {
+    "hotels_sochi": 10,
+    "hotels_adler": 10,
+    "hotels_sirius": 10,
+    "hotels_polyana": 10
+  },
+  "unique_hotels": 32,
+  "alternatives": [
+    {
+      "query_area": "hotels_sochi",
+      "hotel_name": "Отель Сочи Галерея Парк",
+      "hotel_id": "7653053",
+      "budget": {
+        "currency": "RUB",
+        "known_subtotal": "19590.0",
+        "confirmed_total": null,
+        "complete": false,
+        "missing": [
+          "restaurants",
+          "local_transport",
+          "activities",
+          "lifts",
+          "extra_fees"
+        ],
+        "warnings": [
+          "roundtrip_two_adults: not a confirmed live quote",
+          "hotel_four_nights: not a confirmed live quote"
+        ]
+      }
+    },
+    {
+      "query_area": "hotels_adler",
+      "hotel_name": "Малекон",
+      "hotel_id": "7644655",
+      "budget": {
+        "currency": "RUB",
+        "known_subtotal": "18946.0",
+        "confirmed_total": null,
+        "complete": false,
+        "missing": [
+          "restaurants",
+          "local_transport",
+          "activities",
+          "lifts",
+          "extra_fees"
+        ],
+        "warnings": [
+          "roundtrip_two_adults: not a confirmed live quote",
+          "hotel_four_nights: not a confirmed live quote"
+        ]
+      }
+    },
+    {
+      "query_area": "hotels_sirius",
+      "hotel_name": "Аквамарин Парк",
+      "hotel_id": "13505185",
+      "budget": {
+        "currency": "RUB",
+        "known_subtotal": "19058.0",
+        "confirmed_total": null,
+        "complete": false,
+        "missing": [
+          "restaurants",
+          "local_transport",
+          "activities",
+          "lifts",
+          "extra_fees"
+        ],
+        "warnings": [
+          "roundtrip_two_adults: not a confirmed live quote",
+          "hotel_four_nights: not a confirmed live quote"
+        ]
+      }
+    },
+    {
+      "query_area": "hotels_polyana",
+      "hotel_name": "Ред Вуд 3* by Provence",
+      "hotel_id": "9699281",
+      "budget": {
+        "currency": "RUB",
+        "known_subtotal": "21818.0",
+        "confirmed_total": null,
+        "complete": false,
+        "missing": [
+          "restaurants",
+          "local_transport",
+          "activities",
+          "lifts",
+          "extra_fees"
+        ],
+        "warnings": [
+          "roundtrip_two_adults: not a confirmed live quote",
+          "hotel_four_nights: not a confirmed live quote"
+        ]
+      }
+    }
+  ],
+  "warning": "Search quotes only, not prebooked. Totals cover requested party/stay already. Region names may expand beyond locality; validate coordinates. Extra fees and meals not fully priced."
+}

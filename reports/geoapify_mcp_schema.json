@@ -1,0 +1,3897 @@
+{
+  "initialize": {
+    "meta": null,
+    "protocolVersion": "2025-06-18",
+    "capabilities": {
+      "experimental": null,
+      "logging": null,
+      "prompts": null,
+      "resources": null,
+      "tools": {
+        "listChanged": null
+      },
+      "completions": null,
+      "tasks": null
+    },
+    "serverInfo": {
+      "name": "geoapify-api-gateway-mcp",
+      "title": null,
+      "version": "0.1.0",
+      "websiteUrl": null,
+      "icons": null
+    },
+    "instructions": null
+  },
+  "tools": [
+    {
+      "name": "geocode_address",
+      "title": "Geocoding: Geocode Address",
+      "description": "Use this tool when the input is one free-text address, landmark, city, or place query and coordinates are needed. Use geocode_structured_address when address components are already separated, or reverse_geocode_coordinates when the input is coordinates.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "query"
+        ],
+        "properties": {
+          "query": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Street address or free-text location query to geocode."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 5,
+            "description": "Maximum number of results to return."
+          },
+          "lang": {
+            "type": "string",
+            "default": "en",
+            "description": "Result language as a supported two-letter language code."
+          },
+          "country_codes": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional ISO 3166-1 alpha-2 country code filters, for example \"de\" or \"us\". Values are case-insensitive and normalized to lowercase."
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Compact geocoding result for a free-text query.",
+        "additionalProperties": false,
+        "required": [
+          "query",
+          "count",
+          "results"
+        ],
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Normalized query supplied to the tool."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of results returned."
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "Compact MCP projection of a public Geoapify geocoding result.",
+              "properties": {
+                "formatted": {
+                  "type": "string",
+                  "description": "Complete formatted address."
+                },
+                "address_line1": {
+                  "type": "string",
+                  "description": "Primary address line."
+                },
+                "address_line2": {
+                  "type": "string",
+                  "description": "Secondary address line."
+                },
+                "lon": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180,
+                  "description": "Longitude in decimal degrees."
+                },
+                "lat": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90,
+                  "description": "Latitude in decimal degrees."
+                },
+                "place_id": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 2048,
+                  "description": "Stable Geoapify place identifier."
+                },
+                "result_type": {
+                  "type": "string",
+                  "enum": [
+                    "unknown",
+                    "amenity_name",
+                    "amenity",
+                    "building",
+                    "street",
+                    "postcode",
+                    "suburb",
+                    "district",
+                    "city",
+                    "county",
+                    "state",
+                    "country"
+                  ],
+                  "description": "Granularity of the matched result."
+                },
+                "rank": {
+                  "type": "object",
+                  "description": "Match quality, confidence, importance, and popularity metadata.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "confidence": {
+                      "type": "number"
+                    },
+                    "confidence_city_level": {
+                      "type": "number"
+                    },
+                    "confidence_street_level": {
+                      "type": "number"
+                    },
+                    "confidence_building_level": {
+                      "type": "number"
+                    },
+                    "match_type": {
+                      "type": "string",
+                      "enum": [
+                        "full_match",
+                        "inner_part",
+                        "match_by_building",
+                        "match_by_street",
+                        "match_by_postcode",
+                        "match_by_city_or_disrict",
+                        "match_by_country_or_state"
+                      ]
+                    },
+                    "importance": {
+                      "type": "number"
+                    },
+                    "popularity": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "confidence": {
+                  "type": "number",
+                  "description": "Confidence score copied from rank.confidence."
+                },
+                "housenumber": {
+                  "type": "string"
+                },
+                "street": {
+                  "type": "string"
+                },
+                "postcode": {
+                  "type": "string"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "county": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "country": {
+                  "type": "string"
+                },
+                "country_code": {
+                  "type": "string"
+                },
+                "timezone": {
+                  "type": "object",
+                  "description": "Timezone information for the result location.",
+                  "additionalProperties": false,
+                  "required": [
+                    "name",
+                    "offset_STD",
+                    "offset_DST",
+                    "offset_STD_seconds",
+                    "offset_DST_seconds"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "name_alt": {
+                      "type": "string"
+                    },
+                    "country_codes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "offset_STD": {
+                      "type": "string"
+                    },
+                    "offset_DST": {
+                      "type": "string"
+                    },
+                    "offset_STD_seconds": {
+                      "type": "number"
+                    },
+                    "offset_DST_seconds": {
+                      "type": "number"
+                    },
+                    "abbreviation_STD": {
+                      "type": "string"
+                    },
+                    "abbreviation_DST": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "bbox": {
+                  "type": "object",
+                  "description": "Result bounding box in WGS84 longitude/latitude coordinates.",
+                  "additionalProperties": false,
+                  "required": [
+                    "lon1",
+                    "lat1",
+                    "lon2",
+                    "lat2"
+                  ],
+                  "properties": {
+                    "lon1": {
+                      "type": "number",
+                      "minimum": -180,
+                      "maximum": 180
+                    },
+                    "lat1": {
+                      "type": "number",
+                      "minimum": -90,
+                      "maximum": 90
+                    },
+                    "lon2": {
+                      "type": "number",
+                      "minimum": -180,
+                      "maximum": 180
+                    },
+                    "lat2": {
+                      "type": "number",
+                      "minimum": -90,
+                      "maximum": 90
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Geocoding results ordered by relevance."
+          }
+        }
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": {
+        "geoapify/category": "Geocoding"
+      },
+      "execution": null
+    },
+    {
+      "name": "geocode_structured_address",
+      "title": "Geocoding: Geocode Structured Address",
+      "description": "Use this tool when address components such as street, city, postcode, and country are already separated. Use geocode_address for one free-text query; when housenumber is supplied, include street.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Place or venue name, for example \"Central Station\"."
+          },
+          "housenumber": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "House or building number. Use together with street."
+          },
+          "street": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Street name without city, state, or country."
+          },
+          "postcode": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Postal or ZIP code."
+          },
+          "city": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "City, town, village, or locality."
+          },
+          "state": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "State, region, province, or administrative area."
+          },
+          "country": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "Country name."
+          },
+          "country_codes": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional ISO 3166-1 alpha-2 country code filters, for example \"de\" or \"us\". Values are case-insensitive and normalized to lowercase."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 5,
+            "description": "Maximum number of results to return."
+          },
+          "lang": {
+            "type": "string",
+            "default": "en",
+            "description": "Result language as a supported two-letter language code."
+          }
+        },
+        "anyOf": [
+          {
+            "required": [
+              "name"
+            ]
+          },
+          {
+            "required": [
+              "street"
+            ]
+          },
+          {
+            "required": [
+              "postcode"
+            ]
+          },
+          {
+            "required": [
+              "city"
+            ]
+          },
+          {
+            "required": [
+              "state"
+            ]
+          },
+          {
+            "required": [
+              "country"
+            ]
+          }
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Compact geocoding result for structured address components.",
+        "additionalProperties": false,
+        "required": [
+          "address",
+          "count",
+          "results"
+        ],
+        "properties": {
+          "address": {
+            "type": "object",
+            "description": "Normalized structured address submitted to the tool.",
+            "additionalProperties": false,
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "housenumber": {
+                "type": "string"
+              },
+              "street": {
+                "type": "string"
+              },
+              "postcode": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string"
+              },
+              "country_codes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of results returned."
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "Compact MCP projection of a public Geoapify geocoding result.",
+              "properties": {
+                "formatted": {
+                  "type": "string",
+                  "description": "Complete formatted address."
+                },
+                "address_line1": {
+                  "type": "string",
+                  "description": "Primary address line."
+                },
+                "address_line2": {
+                  "type": "string",
+                  "description": "Secondary address line."
+                },
+                "lon": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180,
+                  "description": "Longitude in decimal degrees."
+                },
+                "lat": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90,
+                  "description": "Latitude in decimal degrees."
+                },
+                "place_id": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 2048,
+                  "description": "Stable Geoapify place identifier."
+                },
+                "result_type": {
+                  "type": "string",
+                  "enum": [
+                    "unknown",
+                    "amenity_name",
+                    "amenity",
+                    "building",
+                    "street",
+                    "postcode",
+                    "suburb",
+                    "district",
+                    "city",
+                    "county",
+                    "state",
+                    "country"
+                  ],
+                  "description": "Granularity of the matched result."
+                },
+                "rank": {
+                  "type": "object",
+                  "description": "Match quality, confidence, importance, and popularity metadata.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "confidence": {
+                      "type": "number"
+                    },
+                    "confidence_city_level": {
+                      "type": "number"
+                    },
+                    "confidence_street_level": {
+                      "type": "number"
+                    },
+                    "confidence_building_level": {
+                      "type": "number"
+                    },
+                    "match_type": {
+                      "type": "string",
+                      "enum": [
+                        "full_match",
+                        "inner_part",
+                        "match_by_building",
+                        "match_by_street",
+                        "match_by_postcode",
+                        "match_by_city_or_disrict",
+                        "match_by_country_or_state"
+                      ]
+                    },
+                    "importance": {
+                      "type": "number"
+                    },
+                    "popularity": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "confidence": {
+                  "type": "number",
+                  "description": "Confidence score copied from rank.confidence."
+                },
+                "housenumber": {
+                  "type": "string"
+                },
+                "street": {
+                  "type": "string"
+                },
+                "postcode": {
+                  "type": "string"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "county": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "country": {
+                  "type": "string"
+                },
+                "country_code": {
+                  "type": "string"
+                },
+                "timezone": {
+                  "type": "object",
+                  "description": "Timezone information for the result location.",
+                  "additionalProperties": false,
+                  "required": [
+                    "name",
+                    "offset_STD",
+                    "offset_DST",
+                    "offset_STD_seconds",
+                    "offset_DST_seconds"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "name_alt": {
+                      "type": "string"
+                    },
+                    "country_codes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "offset_STD": {
+                      "type": "string"
+                    },
+                    "offset_DST": {
+                      "type": "string"
+                    },
+                    "offset_STD_seconds": {
+                      "type": "number"
+                    },
+                    "offset_DST_seconds": {
+                      "type": "number"
+                    },
+                    "abbreviation_STD": {
+                      "type": "string"
+                    },
+                    "abbreviation_DST": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "bbox": {
+                  "type": "object",
+                  "description": "Result bounding box in WGS84 longitude/latitude coordinates.",
+                  "additionalProperties": false,
+                  "required": [
+                    "lon1",
+                    "lat1",
+                    "lon2",
+                    "lat2"
+                  ],
+                  "properties": {
+                    "lon1": {
+                      "type": "number",
+                      "minimum": -180,
+                      "maximum": 180
+                    },
+                    "lat1": {
+                      "type": "number",
+                      "minimum": -90,
+                      "maximum": 90
+                    },
+                    "lon2": {
+                      "type": "number",
+                      "minimum": -180,
+                      "maximum": 180
+                    },
+                    "lat2": {
+                      "type": "number",
+                      "minimum": -90,
+                      "maximum": 90
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Geocoding results ordered by relevance."
+          }
+        }
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": {
+        "geoapify/category": "Geocoding"
+      },
+      "execution": null
+    },
+    {
+      "name": "reverse_geocode_coordinates",
+      "title": "Geocoding: Reverse Geocode Coordinates",
+      "description": "Use this tool when latitude and longitude are known and a nearby address or place is needed. Use geocode_address or geocode_structured_address when the input is address text.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lat",
+          "lon"
+        ],
+        "properties": {
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90,
+            "description": "Latitude of the coordinate to reverse geocode."
+          },
+          "lon": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180,
+            "description": "Longitude of the coordinate to reverse geocode."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 1,
+            "description": "Maximum number of nearby address or place results to return."
+          },
+          "lang": {
+            "type": "string",
+            "default": "en",
+            "description": "Result language as a supported two-letter language code."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "country",
+              "state",
+              "city",
+              "postcode",
+              "street",
+              "amenity",
+              "locality",
+              "building"
+            ],
+            "description": "Optional result granularity, for example building for address-level results, city for city-level results, or postcode for postal-code results."
+          },
+          "country_codes": {
+            "type": "array",
+            "maxItems": 10,
+            "items": {
+              "type": "string"
+            },
+            "description": "Optional ISO 3166-1 alpha-2 country code filters, for example \"de\" or \"us\". Values are case-insensitive and normalized to lowercase."
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Compact reverse-geocoding result for one coordinate.",
+        "additionalProperties": false,
+        "required": [
+          "coordinates",
+          "count",
+          "results"
+        ],
+        "properties": {
+          "coordinates": {
+            "type": "object",
+            "description": "Input coordinate in latitude/longitude form.",
+            "additionalProperties": false,
+            "required": [
+              "lat",
+              "lon"
+            ],
+            "properties": {
+              "lat": {
+                "type": "number"
+              },
+              "lon": {
+                "type": "number"
+              }
+            }
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "country",
+              "state",
+              "city",
+              "postcode",
+              "street",
+              "amenity",
+              "locality",
+              "building"
+            ],
+            "description": "Requested result granularity when supplied."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of results returned."
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "Compact MCP projection of a public Geoapify geocoding result.",
+              "properties": {
+                "formatted": {
+                  "type": "string",
+                  "description": "Complete formatted address."
+                },
+                "address_line1": {
+                  "type": "string",
+                  "description": "Primary address line."
+                },
+                "address_line2": {
+                  "type": "string",
+                  "description": "Secondary address line."
+                },
+                "lon": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180,
+                  "description": "Longitude in decimal degrees."
+                },
+                "lat": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90,
+                  "description": "Latitude in decimal degrees."
+                },
+                "place_id": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 2048,
+                  "description": "Stable Geoapify place identifier."
+                },
+                "result_type": {
+                  "type": "string",
+                  "enum": [
+                    "unknown",
+                    "amenity_name",
+                    "amenity",
+                    "building",
+                    "street",
+                    "postcode",
+                    "suburb",
+                    "district",
+                    "city",
+                    "county",
+                    "state",
+                    "country"
+                  ],
+                  "description": "Granularity of the matched result."
+                },
+                "rank": {
+                  "type": "object",
+                  "description": "Match quality, confidence, importance, and popularity metadata.",
+                  "additionalProperties": false,
+                  "properties": {
+                    "confidence": {
+                      "type": "number"
+                    },
+                    "confidence_city_level": {
+                      "type": "number"
+                    },
+                    "confidence_street_level": {
+                      "type": "number"
+                    },
+                    "confidence_building_level": {
+                      "type": "number"
+                    },
+                    "match_type": {
+                      "type": "string",
+                      "enum": [
+                        "full_match",
+                        "inner_part",
+                        "match_by_building",
+                        "match_by_street",
+                        "match_by_postcode",
+                        "match_by_city_or_disrict",
+                        "match_by_country_or_state"
+                      ]
+                    },
+                    "importance": {
+                      "type": "number"
+                    },
+                    "popularity": {
+                      "type": "number"
+                    }
+                  }
+                },
+                "confidence": {
+                  "type": "number",
+                  "description": "Confidence score copied from rank.confidence."
+                },
+                "housenumber": {
+                  "type": "string"
+                },
+                "street": {
+                  "type": "string"
+                },
+                "postcode": {
+                  "type": "string"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "county": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "country": {
+                  "type": "string"
+                },
+                "country_code": {
+                  "type": "string"
+                },
+                "timezone": {
+                  "type": "object",
+                  "description": "Timezone information for the result location.",
+                  "additionalProperties": false,
+                  "required": [
+                    "name",
+                    "offset_STD",
+                    "offset_DST",
+                    "offset_STD_seconds",
+                    "offset_DST_seconds"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "name_alt": {
+                      "type": "string"
+                    },
+                    "country_codes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "offset_STD": {
+                      "type": "string"
+                    },
+                    "offset_DST": {
+                      "type": "string"
+                    },
+                    "offset_STD_seconds": {
+                      "type": "number"
+                    },
+                    "offset_DST_seconds": {
+                      "type": "number"
+                    },
+                    "abbreviation_STD": {
+                      "type": "string"
+                    },
+                    "abbreviation_DST": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "bbox": {
+                  "type": "object",
+                  "description": "Result bounding box in WGS84 longitude/latitude coordinates.",
+                  "additionalProperties": false,
+                  "required": [
+                    "lon1",
+                    "lat1",
+                    "lon2",
+                    "lat2"
+                  ],
+                  "properties": {
+                    "lon1": {
+                      "type": "number",
+                      "minimum": -180,
+                      "maximum": 180
+                    },
+                    "lat1": {
+                      "type": "number",
+                      "minimum": -90,
+                      "maximum": 90
+                    },
+                    "lon2": {
+                      "type": "number",
+                      "minimum": -180,
+                      "maximum": 180
+                    },
+                    "lat2": {
+                      "type": "number",
+                      "minimum": -90,
+                      "maximum": 90
+                    }
+                  }
+                }
+              }
+            },
+            "description": "Nearby results ordered by relevance."
+          }
+        }
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": {
+        "geoapify/category": "Geocoding"
+      },
+      "execution": null
+    },
+    {
+      "name": "get_timezone",
+      "title": "Geocoding: Get Timezone",
+      "description": "Use this tool when coordinates are known and the exact UTC offset or local time at an instant is needed. It also returns the next known transition. Use reverse_geocode_coordinates when a nearby address or place is needed.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lat",
+          "lon"
+        ],
+        "properties": {
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90,
+            "description": "Latitude of the location."
+          },
+          "lon": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180,
+            "description": "Longitude of the location."
+          },
+          "at_unix_seconds": {
+            "type": "integer",
+            "minimum": 1735689600,
+            "maximum": 1956527999,
+            "description": "Optional Unix time in whole seconds. Defaults to the current instant. Supported dates are 2025-01-01 through 2031-12-31 UTC."
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "description": "Timezone and exact UTC offset at the requested coordinate and instant.",
+        "required": [
+          "lat",
+          "lon",
+          "at",
+          "tzdb_version",
+          "timezones"
+        ],
+        "properties": {
+          "lat": {
+            "type": "number"
+          },
+          "lon": {
+            "type": "number"
+          },
+          "at": {
+            "type": "string",
+            "description": "Resolved UTC instant."
+          },
+          "tzdb_version": {
+            "type": "string"
+          },
+          "timezones": {
+            "type": "array",
+            "description": "Timezone matches; a boundary can return more than one.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "type",
+                "utc_offset",
+                "offset_seconds",
+                "abbreviation",
+                "local_time",
+                "next_transition"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "standard",
+                    "daylightSaving",
+                    "other"
+                  ]
+                },
+                "utc_offset": {
+                  "type": "string"
+                },
+                "offset_seconds": {
+                  "type": "integer"
+                },
+                "abbreviation": {
+                  "type": "string"
+                },
+                "local_time": {
+                  "type": "string",
+                  "description": "Local date and time with its UTC offset."
+                },
+                "next_transition": {
+                  "description": "Next known offset transition, or null within the bundled data range.",
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "at",
+                        "before",
+                        "after",
+                        "offset_change_seconds",
+                        "kind"
+                      ],
+                      "properties": {
+                        "at": {
+                          "type": "string",
+                          "description": "UTC instant when the transition occurs."
+                        },
+                        "before": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "utc_offset",
+                            "offset_seconds",
+                            "abbreviation"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "standard",
+                                "daylightSaving",
+                                "other"
+                              ]
+                            },
+                            "utc_offset": {
+                              "type": "string"
+                            },
+                            "offset_seconds": {
+                              "type": "integer"
+                            },
+                            "abbreviation": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "after": {
+                          "type": "object",
+                          "additionalProperties": false,
+                          "required": [
+                            "type",
+                            "utc_offset",
+                            "offset_seconds",
+                            "abbreviation"
+                          ],
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": [
+                                "standard",
+                                "daylightSaving",
+                                "other"
+                              ]
+                            },
+                            "utc_offset": {
+                              "type": "string"
+                            },
+                            "offset_seconds": {
+                              "type": "integer"
+                            },
+                            "abbreviation": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "offset_change_seconds": {
+                          "type": "integer"
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "daylight-start",
+                            "daylight-end",
+                            "offset-change",
+                            "designation-change"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": {
+        "geoapify/category": "Geocoding"
+      },
+      "execution": null
+    },
+    {
+      "name": "search_places",
+      "title": "Places: Search Places",
+      "description": "Use this tool to find places of one exact supported category around known coordinates. Call list_place_categories first when the category is unknown, and geocode an address first when the search center is not yet coordinates.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "category",
+          "lat",
+          "lon"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9_-]+(?:\\.[a-z0-9_-]+)*$",
+            "description": "Place category to find. Call list_place_categories first to get the supported category values."
+          },
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90,
+            "description": "Latitude of the search center."
+          },
+          "lon": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180,
+            "description": "Longitude of the search center."
+          },
+          "radius_meters": {
+            "type": "number",
+            "minimum": 1,
+            "description": "Optional search radius in meters. When omitted, returns the nearest matching places without a hard distance limit."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20,
+            "description": "Maximum number of places to return."
+          },
+          "lang": {
+            "type": "string",
+            "default": "en",
+            "description": "Result language as a supported two-letter language code."
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Places matching one category around a coordinate.",
+        "additionalProperties": false,
+        "required": [
+          "category",
+          "coordinates",
+          "count",
+          "results"
+        ],
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "The supported place category used for this search."
+          },
+          "coordinates": {
+            "type": "object",
+            "description": "Search center in latitude/longitude form.",
+            "additionalProperties": false,
+            "required": [
+              "lat",
+              "lon"
+            ],
+            "properties": {
+              "lat": {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90
+              },
+              "lon": {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180
+              }
+            }
+          },
+          "radius_meters": {
+            "type": "number",
+            "description": "Applied search radius in meters when supplied."
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of places returned."
+          },
+          "results": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "description": "Public place properties after the MCP compact-output filters are applied.",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "continent": {
+                  "type": "string"
+                },
+                "country": {
+                  "type": "string"
+                },
+                "country_code": {
+                  "type": "string"
+                },
+                "region": {
+                  "type": "string"
+                },
+                "state": {
+                  "type": "string"
+                },
+                "state_code": {
+                  "type": "string"
+                },
+                "state_COG": {
+                  "type": "string"
+                },
+                "department_COG": {
+                  "type": "string"
+                },
+                "state_district": {
+                  "type": "string"
+                },
+                "province": {
+                  "type": "string"
+                },
+                "department": {
+                  "type": "string"
+                },
+                "arrondissement": {
+                  "type": "string"
+                },
+                "county": {
+                  "type": "string"
+                },
+                "county_code": {
+                  "type": "string"
+                },
+                "county_district": {
+                  "type": "string"
+                },
+                "city": {
+                  "type": "string"
+                },
+                "city_district": {
+                  "type": "string"
+                },
+                "postcode": {
+                  "type": "string"
+                },
+                "postal_code": {
+                  "type": "string"
+                },
+                "openGeoDB:postal_codes": {
+                  "type": "string"
+                },
+                "district": {
+                  "type": "string"
+                },
+                "suburb": {
+                  "type": "string"
+                },
+                "municipality": {
+                  "type": "string"
+                },
+                "commune": {
+                  "type": "string"
+                },
+                "subdistrict": {
+                  "type": "string"
+                },
+                "city_block": {
+                  "type": "string"
+                },
+                "neighbourhood": {
+                  "type": "string"
+                },
+                "quarter": {
+                  "type": "string"
+                },
+                "section": {
+                  "type": "string"
+                },
+                "sector": {
+                  "type": "string"
+                },
+                "subdivision": {
+                  "type": "string"
+                },
+                "croft": {
+                  "type": "string"
+                },
+                "allotments": {
+                  "type": "string"
+                },
+                "residental": {
+                  "type": "string"
+                },
+                "farm": {
+                  "type": "string"
+                },
+                "farmyard": {
+                  "type": "string"
+                },
+                "industrial": {
+                  "type": "string"
+                },
+                "retail": {
+                  "type": "string"
+                },
+                "borough": {
+                  "type": "string"
+                },
+                "town": {
+                  "type": "string"
+                },
+                "township": {
+                  "type": "string"
+                },
+                "village": {
+                  "type": "string"
+                },
+                "hamlet": {
+                  "type": "string"
+                },
+                "locality": {
+                  "type": "string"
+                },
+                "isolated_dwelling": {
+                  "type": "string"
+                },
+                "street": {
+                  "type": "string"
+                },
+                "road": {
+                  "type": "string"
+                },
+                "footway": {
+                  "type": "string"
+                },
+                "pedestrian": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "housenumber": {
+                  "type": "string"
+                },
+                "house_number": {
+                  "type": "string"
+                },
+                "house_name": {
+                  "type": "string"
+                },
+                "old_name": {
+                  "type": "string"
+                },
+                "other": {
+                  "type": "string"
+                },
+                "formatted": {
+                  "type": "string"
+                },
+                "unlocode": {
+                  "type": "string"
+                },
+                "iso3166_sublevel": {
+                  "type": "string"
+                },
+                "plus_code": {
+                  "type": "string"
+                },
+                "plus_code_short": {
+                  "type": "string"
+                },
+                "website": {
+                  "type": "string"
+                },
+                "opening_hours": {
+                  "type": "string"
+                },
+                "opening_hours_covid19": {
+                  "type": "string"
+                },
+                "brand": {
+                  "type": "string"
+                },
+                "operator": {
+                  "type": "string"
+                },
+                "branch": {
+                  "type": "string"
+                },
+                "network": {
+                  "type": "string"
+                },
+                "owner": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "craft": {
+                  "type": "string"
+                },
+                "ref": {
+                  "type": "string"
+                },
+                "int_ref": {
+                  "type": "string"
+                },
+                "ele": {
+                  "type": "string"
+                },
+                "color": {
+                  "type": "string"
+                },
+                "water_source": {
+                  "type": "string"
+                },
+                "postcodes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "other_names": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "population": {
+                  "oneOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "actual",
+                        "by_years"
+                      ],
+                      "properties": {
+                        "actual": {
+                          "type": "string"
+                        },
+                        "by_years": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                },
+                "lon": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180
+                },
+                "lat": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90
+                },
+                "parent_as_place_id": {
+                  "type": "boolean"
+                },
+                "timezone": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "name",
+                    "offset_STD",
+                    "offset_DST",
+                    "offset_STD_seconds",
+                    "offset_DST_seconds"
+                  ],
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "name_alt": {
+                      "type": "string"
+                    },
+                    "country_codes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "offset_STD": {
+                      "type": "string"
+                    },
+                    "offset_DST": {
+                      "type": "string"
+                    },
+                    "offset_STD_seconds": {
+                      "type": "number"
+                    },
+                    "offset_DST_seconds": {
+                      "type": "number"
+                    },
+                    "abbreviation_STD": {
+                      "type": "string"
+                    },
+                    "abbreviation_DST": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "website_other": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "website_international": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "description_international": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "name_international": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "cuisine_international": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "ref_other": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "disused": {
+                  "type": "boolean"
+                },
+                "commercial": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  ]
+                },
+                "payment_options": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "boolean"
+                  }
+                },
+                "recycling_options": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "boolean"
+                  }
+                },
+                "fuel_options": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "boolean"
+                  }
+                },
+                "targeted_for": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "boolean"
+                  }
+                },
+                "socket_options": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "additionalProperties": true
+                  }
+                },
+                "distance": {
+                  "type": "number"
+                },
+                "categories": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "datasource": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "sourcename": {
+                      "type": "string"
+                    },
+                    "attribution": {
+                      "type": "string"
+                    },
+                    "license": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string",
+                      "format": "uri"
+                    }
+                  }
+                },
+                "mappedTo": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                    "lon": {
+                      "type": "number",
+                      "minimum": -180,
+                      "maximum": 180
+                    },
+                    "lat": {
+                      "type": "number",
+                      "minimum": -90,
+                      "maximum": 90
+                    }
+                  }
+                },
+                "place_id": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 2048
+                },
+                "brand_details": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "operator_details": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "network_details": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "owner_details": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "name_other": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "contact": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "facilities": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "wiki_and_media": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "historic": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "heritage": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "artwork": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "accommodation": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "catering": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "parking": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "airport": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "power": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "way": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "building": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "place_of_worship": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "fire_hydrant": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "defibrilator": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "restrictions": {
+                  "type": "object",
+                  "additionalProperties": true
+                },
+                "production": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              }
+            },
+            "description": "Matching places ordered by proximity and relevance."
+          }
+        }
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": {
+        "geoapify/category": "Places"
+      },
+      "execution": null
+    },
+    {
+      "name": "list_place_categories",
+      "title": "Places: List Place Categories",
+      "description": "Use this zero-credit tool to discover the exact category value required by search_places. It accepts no arguments and returns category names only; use search_places afterward to find actual places.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Supported category catalog for search_places.",
+        "additionalProperties": false,
+        "required": [
+          "count",
+          "categories"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Number of category values returned."
+          },
+          "categories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Exact category strings accepted by search_places."
+          }
+        }
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": {
+        "geoapify/category": "Places"
+      },
+      "execution": null
+    },
+    {
+      "name": "calculate_route",
+      "title": "Routing: Calculate Route",
+      "description": "Use this tool for one ordered route with total and per-leg travel cost plus optional geometry or turn instructions. Use calculate_route_matrix instead to compare travel times and distances across many source-target pairs.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "waypoints"
+        ],
+        "properties": {
+          "waypoints": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "properties": {
+                "lat": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90,
+                  "description": "Waypoint latitude."
+                },
+                "lon": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180,
+                  "description": "Waypoint longitude."
+                }
+              }
+            },
+            "description": "Ordered route waypoints. Provide at least an origin and destination."
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "drive",
+              "light_truck",
+              "medium_truck",
+              "truck",
+              "heavy_truck",
+              "truck_dangerous_goods",
+              "long_truck",
+              "bus",
+              "scooter",
+              "motorcycle",
+              "bicycle",
+              "mountain_bike",
+              "road_bike",
+              "walk",
+              "hike",
+              "transit",
+              "approximated_transit"
+            ],
+            "default": "drive",
+            "description": "Travel or vehicle mode used to calculate the route."
+          },
+          "waypoint_mode": {
+            "type": "string",
+            "enum": [
+              "stopover",
+              "through_stop",
+              "pass_through"
+            ],
+            "default": "stopover",
+            "description": "How intermediate waypoints are treated."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "balanced",
+              "short",
+              "less_maneuvers"
+            ],
+            "default": "balanced",
+            "description": "Route optimization preference."
+          },
+          "avoid": {
+            "type": "array",
+            "maxItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "tolls",
+                "ferries",
+                "highways"
+              ]
+            },
+            "description": "Route features to avoid. Supported values are \"tolls\", \"ferries\", and \"highways\"."
+          },
+          "geometry_scope": {
+            "type": "string",
+            "enum": [
+              "none",
+              "route",
+              "legs",
+              "steps"
+            ],
+            "default": "route",
+            "description": "Geometry detail to return: none, route only, route and legs, or route, legs, and instruction steps."
+          },
+          "geometry_format": {
+            "type": "string",
+            "enum": [
+              "geojson",
+              "polyline"
+            ],
+            "default": "geojson",
+            "description": "Return geometry as a GeoJSON geometry object or an encoded precision-5 polyline."
+          },
+          "include_instructions": {
+            "type": "boolean",
+            "default": false,
+            "description": "Include detailed turn-by-turn instruction steps."
+          },
+          "optimize_stops": {
+            "type": "boolean",
+            "default": false,
+            "description": "Optimize the order of intermediate stops while preserving the first and last waypoint."
+          },
+          "units": {
+            "type": "string",
+            "enum": [
+              "metric",
+              "imperial"
+            ],
+            "default": "metric",
+            "description": "Distance and speed units."
+          },
+          "lang": {
+            "type": "string",
+            "enum": [
+              "bg",
+              "ca",
+              "cs",
+              "da",
+              "de",
+              "el",
+              "en-GB",
+              "en",
+              "es",
+              "et",
+              "fi",
+              "fr",
+              "hi",
+              "hu",
+              "it",
+              "ja",
+              "nb-NO",
+              "nl",
+              "pl",
+              "pt-BR",
+              "pt",
+              "ro",
+              "ru",
+              "sk",
+              "sl",
+              "sv",
+              "tr",
+              "uk"
+            ],
+            "default": "en",
+            "description": "Language used for turn-by-turn instructions."
+          },
+          "traffic": {
+            "type": "string",
+            "enum": [
+              "free_flow",
+              "approximated"
+            ],
+            "default": "free_flow",
+            "description": "Traffic model used for motorized routing."
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Route totals, resolved waypoints, legs, and optional geometry.",
+        "additionalProperties": false,
+        "required": [
+          "distance",
+          "units",
+          "distance_units",
+          "time",
+          "time_units",
+          "waypoints",
+          "legs"
+        ],
+        "properties": {
+          "distance": {
+            "type": "number",
+            "description": "Total route distance in distance_units."
+          },
+          "units": {
+            "type": "string",
+            "enum": [
+              "metric",
+              "imperial"
+            ],
+            "description": "Requested unit system."
+          },
+          "distance_units": {
+            "type": "string",
+            "enum": [
+              "meters",
+              "miles"
+            ],
+            "description": "Unit used by distance fields."
+          },
+          "time": {
+            "type": "number",
+            "description": "Estimated total travel time in seconds."
+          },
+          "time_units": {
+            "type": "string",
+            "enum": [
+              "seconds"
+            ],
+            "description": "Unit used by time fields."
+          },
+          "waypoints": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "A resolved location in latitude/longitude form.",
+              "additionalProperties": false,
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "properties": {
+                "lat": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90
+                },
+                "lon": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180
+                }
+              }
+            },
+            "description": "Resolved route waypoints in request order, or optimized order when enabled."
+          },
+          "legs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "time",
+                "distance"
+              ],
+              "properties": {
+                "time": {
+                  "type": "number"
+                },
+                "distance": {
+                  "type": "number"
+                },
+                "steps": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "time",
+                      "distance"
+                    ],
+                    "properties": {
+                      "time": {
+                        "type": "number"
+                      },
+                      "distance": {
+                        "type": "number"
+                      },
+                      "instruction": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": [
+                          "text"
+                        ],
+                        "properties": {
+                          "text": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "transition_instruction": {
+                            "type": "string"
+                          },
+                          "pre_transition_instruction": {
+                            "type": "string"
+                          },
+                          "post_transition_instruction": {
+                            "type": "string"
+                          },
+                          "contains_next_instruction": {
+                            "type": "boolean"
+                          },
+                          "streets": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "exit_number": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "exit_road_name": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "exit_towards": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "roundabout_exit": {
+                            "type": "number"
+                          }
+                        }
+                      },
+                      "toll": {
+                        "type": "boolean"
+                      },
+                      "ferry": {
+                        "type": "boolean"
+                      },
+                      "bridge": {
+                        "type": "boolean"
+                      },
+                      "tunnel": {
+                        "type": "boolean"
+                      },
+                      "elevation": {
+                        "type": "number"
+                      },
+                      "elevation_gain": {
+                        "type": "number"
+                      },
+                      "max_elevation": {
+                        "type": "number"
+                      },
+                      "min_elevation": {
+                        "type": "number"
+                      },
+                      "admin_area": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      },
+                      "speed": {
+                        "type": "number"
+                      },
+                      "speed_limit": {
+                        "type": "number"
+                      },
+                      "truck_limit": {
+                        "type": "number"
+                      },
+                      "surface": {
+                        "type": "string"
+                      },
+                      "lane_count": {
+                        "type": "number"
+                      },
+                      "road_class": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "roundabout": {
+                        "type": "boolean"
+                      },
+                      "rightside": {
+                        "type": "boolean"
+                      },
+                      "traversability": {
+                        "type": "string"
+                      },
+                      "from_stop_id": {
+                        "type": "string"
+                      },
+                      "from_stop_name": {
+                        "type": "string"
+                      },
+                      "to_stop_id": {
+                        "type": "string"
+                      },
+                      "to_stop_name": {
+                        "type": "string"
+                      },
+                      "geometry": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                              "type",
+                              "coordinates"
+                            ],
+                            "properties": {
+                              "type": {
+                                "const": "LineString"
+                              },
+                              "coordinates": {
+                                "type": "array",
+                                "minItems": 2,
+                                "items": {
+                                  "type": "array",
+                                  "minItems": 2,
+                                  "maxItems": 2,
+                                  "items": {
+                                    "type": "number",
+                                    "minimum": -180,
+                                    "maximum": 180
+                                  },
+                                  "description": "A [longitude, latitude] pair; longitude is -180 to 180 and latitude is -90 to 90."
+                                }
+                              }
+                            }
+                          },
+                          {
+                            "type": "string",
+                            "description": "Precision-5 encoded polyline."
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "country_code": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "elevation": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                },
+                "elevation_range": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "number"
+                    },
+                    "description": "An [elevation, distance] pair."
+                  }
+                },
+                "agency_name": {
+                  "type": "string"
+                },
+                "agency_id": {
+                  "type": "string"
+                },
+                "agency_url": {
+                  "type": "string"
+                },
+                "route_id": {
+                  "type": "string"
+                },
+                "route_short_name": {
+                  "type": "string"
+                },
+                "route_long_name": {
+                  "type": "string"
+                },
+                "trip_id": {
+                  "type": "string"
+                },
+                "geometry": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "required": [
+                        "type",
+                        "coordinates"
+                      ],
+                      "properties": {
+                        "type": {
+                          "const": "LineString"
+                        },
+                        "coordinates": {
+                          "type": "array",
+                          "minItems": 2,
+                          "items": {
+                            "type": "array",
+                            "minItems": 2,
+                            "maxItems": 2,
+                            "items": {
+                              "type": "number",
+                              "minimum": -180,
+                              "maximum": 180
+                            },
+                            "description": "A [longitude, latitude] pair; longitude is -180 to 180 and latitude is -90 to 90."
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "type": "string",
+                      "description": "Precision-5 encoded polyline."
+                    }
+                  ]
+                }
+              }
+            },
+            "description": "Route segment between each consecutive waypoint pair."
+          },
+          "geometry": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "coordinates"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "LineString"
+                  },
+                  "coordinates": {
+                    "type": "array",
+                    "minItems": 2,
+                    "items": {
+                      "type": "array",
+                      "minItems": 2,
+                      "maxItems": 2,
+                      "items": {
+                        "type": "number",
+                        "minimum": -180,
+                        "maximum": 180
+                      },
+                      "description": "A [longitude, latitude] pair; longitude is -180 to 180 and latitude is -90 to 90."
+                    }
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "type",
+                  "coordinates"
+                ],
+                "properties": {
+                  "type": {
+                    "const": "MultiLineString"
+                  },
+                  "coordinates": {
+                    "type": "array",
+                    "items": {
+                      "type": "array",
+                      "minItems": 2,
+                      "items": {
+                        "type": "array",
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "items": {
+                          "type": "number",
+                          "minimum": -180,
+                          "maximum": 180
+                        },
+                        "description": "A [longitude, latitude] pair; longitude is -180 to 180 and latitude is -90 to 90."
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "type": "string",
+                "description": "Precision-5 encoded polyline."
+              }
+            ],
+            "description": "Optional route geometry in the requested geometry format."
+          }
+        }
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": {
+        "geoapify/category": "Routing"
+      },
+      "execution": null
+    },
+    {
+      "name": "calculate_route_matrix",
+      "title": "Routing: Calculate Route Matrix",
+      "description": "Use this tool to compare pairwise travel times and distances between multiple sources and targets. It does not return route geometry or instructions; use calculate_route for one detailed ordered route.",
+      "inputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "sources"
+        ],
+        "properties": {
+          "sources": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1000,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "properties": {
+                "lat": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90,
+                  "description": "Location latitude."
+                },
+                "lon": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180,
+                  "description": "Location longitude."
+                }
+              }
+            },
+            "description": "Matrix source locations. sources.length multiplied by targets.length must not exceed 1000."
+          },
+          "targets": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1000,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "properties": {
+                "lat": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90,
+                  "description": "Location latitude."
+                },
+                "lon": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180,
+                  "description": "Location longitude."
+                }
+              }
+            },
+            "description": "Matrix target locations. Defaults to the source locations when omitted. sources.length multiplied by targets.length must not exceed 1000."
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "drive",
+              "truck",
+              "light_truck",
+              "medium_truck",
+              "bus",
+              "motorcycle",
+              "scooter",
+              "bicycle",
+              "walk",
+              "hike"
+            ],
+            "default": "drive",
+            "description": "Travel or vehicle mode used to calculate the matrix."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "balanced",
+              "short",
+              "less_maneuvers"
+            ],
+            "default": "balanced",
+            "description": "Route optimization preference."
+          },
+          "traffic": {
+            "type": "string",
+            "enum": [
+              "free_flow",
+              "approximated"
+            ],
+            "default": "free_flow",
+            "description": "Traffic model used for motorized routing."
+          },
+          "avoid": {
+            "type": "array",
+            "maxItems": 3,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "tolls",
+                "highways",
+                "ferries"
+              ]
+            },
+            "description": "Route features to avoid. Supported values are \"tolls\", \"highways\", and \"ferries\"."
+          },
+          "units": {
+            "type": "string",
+            "enum": [
+              "metric",
+              "imperial"
+            ],
+            "default": "metric",
+            "description": "Distance and speed units."
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Resolved matrix locations and source-to-target travel costs.",
+        "additionalProperties": false,
+        "required": [
+          "sources",
+          "targets",
+          "sources_to_targets",
+          "units",
+          "distance_units",
+          "time_units"
+        ],
+        "properties": {
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "A resolved location in latitude/longitude form.",
+              "additionalProperties": false,
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "properties": {
+                "lat": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90
+                },
+                "lon": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180
+                }
+              }
+            },
+            "description": "Resolved source locations."
+          },
+          "targets": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "A resolved location in latitude/longitude form.",
+              "additionalProperties": false,
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "properties": {
+                "lat": {
+                  "type": "number",
+                  "minimum": -90,
+                  "maximum": 90
+                },
+                "lon": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180
+                }
+              }
+            },
+            "description": "Resolved target locations."
+          },
+          "sources_to_targets": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "distance",
+                  "time",
+                  "source_index",
+                  "target_index"
+                ],
+                "properties": {
+                  "distance": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "time": {
+                    "type": [
+                      "number",
+                      "null"
+                    ]
+                  },
+                  "source_index": {
+                    "type": "integer"
+                  },
+                  "target_index": {
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "description": "Rows correspond to sources and columns correspond to targets."
+          },
+          "units": {
+            "type": "string",
+            "enum": [
+              "metric",
+              "imperial"
+            ],
+            "description": "Requested unit system."
+          },
+          "distance_units": {
+            "type": "string",
+            "enum": [
+              "meters",
+              "miles"
+            ],
+            "description": "Unit used by matrix distance values."
+          },
+          "time_units": {
+            "type": "string",
+            "enum": [
+              "seconds"
+            ],
+            "description": "Unit used by matrix time values."
+          }
+        }
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": {
+        "geoapify/category": "Routing"
+      },
+      "execution": null
+    },
+    {
+      "name": "combine_geometries",
+      "title": "Utilities: Combine Geometries",
+      "description": "Use this tool to create a new geometry by intersecting, subtracting, unioning, or enveloping GeoJSON inputs. Use evaluate_spatial_relation for a boolean relationship, measure_geometry for numeric measurements, or transform_geometry to modify one geometry.",
+      "inputSchema": {
+        "type": "object",
+        "description": "Choose one combination operation. Each branch lists the exact accepted geometry types and limits.",
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "intersection",
+            "description": "Return the area shared by all input polygons.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometries"
+            ],
+            "properties": {
+              "operation": {
+                "const": "intersection",
+                "description": "Return the area shared by all input polygons."
+              },
+              "geometries": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 100,
+                "items": {
+                  "type": "object",
+                  "description": "GeoJSON Geometry (Polygon, or MultiPolygon); not a Feature or FeatureCollection."
+                },
+                "description": "GeoJSON geometries to combine."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "difference",
+            "description": "Subtract every later polygon from the first polygon.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometries"
+            ],
+            "properties": {
+              "operation": {
+                "const": "difference",
+                "description": "Subtract every later polygon from the first polygon."
+              },
+              "geometries": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 100,
+                "items": {
+                  "type": "object",
+                  "description": "GeoJSON Geometry (Polygon, or MultiPolygon); not a Feature or FeatureCollection."
+                },
+                "description": "Ordered polygons. Every geometry after the first is subtracted from the first."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "union",
+            "description": "Merge two or more polygons into their geometric union.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometries"
+            ],
+            "properties": {
+              "operation": {
+                "const": "union",
+                "description": "Merge two or more polygons into their geometric union."
+              },
+              "geometries": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 100,
+                "items": {
+                  "type": "object",
+                  "description": "GeoJSON Geometry (Polygon, or MultiPolygon); not a Feature or FeatureCollection."
+                },
+                "description": "GeoJSON geometries to combine."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "envelope",
+            "description": "Return a rectangular envelope containing all input geometries.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometries"
+            ],
+            "properties": {
+              "operation": {
+                "const": "envelope",
+                "description": "Return a rectangular envelope containing all input geometries."
+              },
+              "geometries": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 100,
+                "items": {
+                  "type": "object",
+                  "description": "GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+                },
+                "description": "GeoJSON geometries to combine."
+              }
+            }
+          }
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Typed geometry-operation result. The type value determines the data schema.",
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "GeoJSON result",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "data"
+            ],
+            "properties": {
+              "type": {
+                "const": "geojson",
+                "description": "The result contains GeoJSON data."
+              },
+              "data": {
+                "type": "object",
+                "description": "GeoJSON Geometry, Feature, or FeatureCollection object."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "Empty result",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "data"
+            ],
+            "properties": {
+              "type": {
+                "const": "empty",
+                "description": "The operation completed but produced no geometry."
+              },
+              "data": {
+                "type": "null",
+                "description": "No result was produced."
+              }
+            }
+          }
+        ]
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": {
+        "geoapify/category": "Utilities"
+      },
+      "execution": null
+    },
+    {
+      "name": "evaluate_spatial_relation",
+      "title": "Utilities: Evaluate Spatial Relation",
+      "description": "Use this tool when the answer should be true or false: containment, crossing, disjointness, intersection, validity, inclusion, or whether a point lies on a line. It does not modify geometries or calculate distances.",
+      "inputSchema": {
+        "type": "object",
+        "description": "Choose one spatial predicate. The selected branch defines the required operands and geometry types.",
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "contains",
+            "description": "Return true when geometry contains other_geometry.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "other_geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "contains",
+                "description": "Return true when geometry contains other_geometry."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "Subject operand; GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection. Operand order is significant."
+              },
+              "other_geometry": {
+                "type": "object",
+                "description": "Comparison operand; GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "crosses",
+            "description": "Return true when the geometries cross one another.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "other_geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "crosses",
+                "description": "Return true when the geometries cross one another."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "Subject operand; GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection. Operand order is significant."
+              },
+              "other_geometry": {
+                "type": "object",
+                "description": "Comparison operand; GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "disjoint",
+            "description": "Return true when the geometries share no point.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "other_geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "disjoint",
+                "description": "Return true when the geometries share no point."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "Subject operand; GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection. Operand order is significant."
+              },
+              "other_geometry": {
+                "type": "object",
+                "description": "Comparison operand; GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "intersects",
+            "description": "Return true when the geometries share at least one point.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "other_geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "intersects",
+                "description": "Return true when the geometries share at least one point."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "Subject operand; GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection. Operand order is significant."
+              },
+              "other_geometry": {
+                "type": "object",
+                "description": "Comparison operand; GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "within",
+            "description": "Return true when geometry is completely within other_geometry.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "other_geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "within",
+                "description": "Return true when geometry is completely within other_geometry."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "Subject operand; GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection. Operand order is significant."
+              },
+              "other_geometry": {
+                "type": "object",
+                "description": "Comparison operand; GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "valid",
+            "description": "Check whether one GeoJSON geometry is valid.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "valid",
+                "description": "Return true when geometry is a valid GeoJSON geometry."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "point_on_line",
+            "description": "Check whether a point lies on a line.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "other_geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "point_on_line",
+                "description": "Return true when the Point lies on the LineString."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "Point to test; GeoJSON Geometry (Point); not a Feature or FeatureCollection."
+              },
+              "other_geometry": {
+                "type": "object",
+                "description": "Line to test against; GeoJSON Geometry (LineString); not a Feature or FeatureCollection."
+              }
+            }
+          }
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Typed geometry-operation result. The type value determines the data schema.",
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "Boolean result",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "data"
+            ],
+            "properties": {
+              "type": {
+                "const": "boolean",
+                "description": "The result contains a spatial predicate outcome."
+              },
+              "data": {
+                "type": "boolean",
+                "description": "The result of the requested spatial predicate."
+              }
+            }
+          }
+        ]
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": {
+        "geoapify/category": "Utilities"
+      },
+      "execution": null
+    },
+    {
+      "name": "measure_geometry",
+      "title": "Utilities: Measure Geometry",
+      "description": "Use this tool for numeric area, length, or distance calculations and for bounding-box, along-line, or nearest-point results. Use evaluate_spatial_relation for true/false predicates and transform_geometry to modify a geometry.",
+      "inputSchema": {
+        "type": "object",
+        "description": "Choose one measurement or point-location operation. Each branch lists only the arguments and GeoJSON types accepted by that operation.",
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "area",
+            "description": "Calculate Polygon or MultiPolygon area in square meters.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "area",
+                "description": "Calculate Polygon or MultiPolygon area in square meters."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (Polygon, or MultiPolygon); not a Feature or FeatureCollection."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "distance",
+            "description": "Calculate the distance between two points.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "other_geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "distance",
+                "description": "Calculate the distance between two points."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "First point; GeoJSON Geometry (Point); not a Feature or FeatureCollection."
+              },
+              "other_geometry": {
+                "type": "object",
+                "description": "Second point; GeoJSON Geometry (Point); not a Feature or FeatureCollection."
+              },
+              "units": {
+                "type": "string",
+                "enum": [
+                  "meters",
+                  "metres",
+                  "millimeters",
+                  "millimetres",
+                  "centimeters",
+                  "centimetres",
+                  "kilometers",
+                  "kilometres",
+                  "miles",
+                  "nauticalmiles",
+                  "inches",
+                  "yards",
+                  "feet",
+                  "radians",
+                  "degrees"
+                ],
+                "default": "kilometers",
+                "description": "Units for the distance or length. Defaults to kilometers."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "length",
+            "description": "Calculate LineString or MultiLineString length.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "length",
+                "description": "Calculate LineString or MultiLineString length."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (LineString, or MultiLineString); not a Feature or FeatureCollection."
+              },
+              "units": {
+                "type": "string",
+                "enum": [
+                  "meters",
+                  "metres",
+                  "millimeters",
+                  "millimetres",
+                  "centimeters",
+                  "centimetres",
+                  "kilometers",
+                  "kilometres",
+                  "miles",
+                  "nauticalmiles",
+                  "inches",
+                  "yards",
+                  "feet",
+                  "radians",
+                  "degrees"
+                ],
+                "default": "kilometers",
+                "description": "Units for the distance or length. Defaults to kilometers."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "bbox",
+            "description": "Calculate a rectangular bounding-box Feature.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "bbox",
+                "description": "Calculate a rectangular bounding-box Feature."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              },
+              "recompute": {
+                "type": "boolean",
+                "default": false,
+                "description": "Ignore a pre-existing bbox and recompute bounds from coordinates."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "point_to_line_distance",
+            "description": "Calculate the shortest distance from a point to a line.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "other_geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "point_to_line_distance",
+                "description": "Calculate the shortest distance from a point to a line."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "Point to measure from; GeoJSON Geometry (Point); not a Feature or FeatureCollection."
+              },
+              "other_geometry": {
+                "type": "object",
+                "description": "Target line; GeoJSON Geometry (LineString); not a Feature or FeatureCollection."
+              },
+              "units": {
+                "type": "string",
+                "enum": [
+                  "meters",
+                  "metres",
+                  "millimeters",
+                  "millimetres",
+                  "centimeters",
+                  "centimetres",
+                  "kilometers",
+                  "kilometres",
+                  "miles",
+                  "nauticalmiles",
+                  "inches",
+                  "yards",
+                  "feet",
+                  "radians",
+                  "degrees"
+                ],
+                "default": "kilometers",
+                "description": "Units for the distance or length. Defaults to kilometers."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "point_to_polygon_distance",
+            "description": "Calculate the shortest distance from a point to a polygon boundary.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "other_geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "point_to_polygon_distance",
+                "description": "Calculate the shortest distance from a point to a polygon boundary."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "Point to measure from; GeoJSON Geometry (Point); not a Feature or FeatureCollection."
+              },
+              "other_geometry": {
+                "type": "object",
+                "description": "Target polygon; GeoJSON Geometry (Polygon, or MultiPolygon); not a Feature or FeatureCollection."
+              },
+              "units": {
+                "type": "string",
+                "enum": [
+                  "meters",
+                  "metres",
+                  "millimeters",
+                  "millimetres",
+                  "centimeters",
+                  "centimetres",
+                  "kilometers",
+                  "kilometres",
+                  "miles",
+                  "nauticalmiles",
+                  "inches",
+                  "yards",
+                  "feet",
+                  "radians",
+                  "degrees"
+                ],
+                "default": "kilometers",
+                "description": "Units for the distance or length. Defaults to kilometers."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "nearest_point_on_line",
+            "description": "Return the nearest point on a line to the supplied point.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "other_geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "nearest_point_on_line",
+                "description": "Return the nearest point on a line to the supplied point."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "Point from which to search; GeoJSON Geometry (Point); not a Feature or FeatureCollection."
+              },
+              "other_geometry": {
+                "type": "object",
+                "description": "Target line; GeoJSON Geometry (LineString, or MultiLineString); not a Feature or FeatureCollection."
+              },
+              "units": {
+                "type": "string",
+                "enum": [
+                  "meters",
+                  "metres",
+                  "millimeters",
+                  "millimetres",
+                  "centimeters",
+                  "centimetres",
+                  "kilometers",
+                  "kilometres",
+                  "miles",
+                  "nauticalmiles",
+                  "inches",
+                  "yards",
+                  "feet",
+                  "radians",
+                  "degrees"
+                ],
+                "default": "kilometers",
+                "description": "Units for the distance or length. Defaults to kilometers."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "along",
+            "description": "Return the point at a distance from the start of a LineString.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "distance"
+            ],
+            "properties": {
+              "operation": {
+                "const": "along",
+                "description": "Return the point at a distance from the start of a LineString."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (LineString); not a Feature or FeatureCollection."
+              },
+              "distance": {
+                "type": "number",
+                "description": "Distance from the start of the LineString in the selected units."
+              },
+              "units": {
+                "type": "string",
+                "enum": [
+                  "meters",
+                  "metres",
+                  "millimeters",
+                  "millimetres",
+                  "centimeters",
+                  "centimetres",
+                  "kilometers",
+                  "kilometres",
+                  "miles",
+                  "nauticalmiles",
+                  "inches",
+                  "yards",
+                  "feet",
+                  "radians",
+                  "degrees"
+                ],
+                "default": "kilometers",
+                "description": "Units for the distance or length. Defaults to kilometers."
+              }
+            }
+          }
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Typed geometry-operation result. The type value determines the data schema.",
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "GeoJSON result",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "data"
+            ],
+            "properties": {
+              "type": {
+                "const": "geojson",
+                "description": "The result contains GeoJSON data."
+              },
+              "data": {
+                "type": "object",
+                "description": "GeoJSON Geometry, Feature, or FeatureCollection object."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "Numeric result",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "data"
+            ],
+            "properties": {
+              "type": {
+                "const": "number",
+                "description": "The result contains a numeric measurement."
+              },
+              "data": {
+                "type": "number",
+                "description": "The calculated numeric value in the units defined by the selected operation."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "Empty result",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "data"
+            ],
+            "properties": {
+              "type": {
+                "const": "empty",
+                "description": "The operation completed but produced no geometry."
+              },
+              "data": {
+                "type": "null",
+                "description": "No result was produced."
+              }
+            }
+          }
+        ]
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": {
+        "geoapify/category": "Utilities"
+      },
+      "execution": null
+    },
+    {
+      "name": "transform_geometry",
+      "title": "Utilities: Transform Geometry",
+      "description": "Use this tool to create a modified geometry by buffering, simplifying, rotating, scaling, or translating, or to calculate a center point. Use measure_geometry for numeric measurements and evaluate_spatial_relation for true/false predicates.",
+      "inputSchema": {
+        "type": "object",
+        "description": "Choose one transformation or center calculation. Each branch lists only the arguments accepted by that operation.",
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "buffer",
+            "description": "Create a polygon around the geometry at the requested radius.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "distance"
+            ],
+            "properties": {
+              "operation": {
+                "const": "buffer",
+                "description": "Create a polygon around the geometry at the requested radius."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              },
+              "distance": {
+                "type": "number",
+                "description": "Buffer radius in the selected units."
+              },
+              "units": {
+                "type": "string",
+                "enum": [
+                  "meters",
+                  "metres",
+                  "millimeters",
+                  "millimetres",
+                  "centimeters",
+                  "centimetres",
+                  "kilometers",
+                  "kilometres",
+                  "miles",
+                  "nauticalmiles",
+                  "inches",
+                  "yards",
+                  "feet",
+                  "radians",
+                  "degrees"
+                ],
+                "default": "kilometers",
+                "description": "Distance units. Defaults to kilometers."
+              },
+              "steps": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 128,
+                "default": 8,
+                "description": "Circular arc segments per quadrant."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "simplify",
+            "description": "Reduce geometry complexity while preserving its general shape.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "simplify",
+                "description": "Reduce geometry complexity while preserving its general shape."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              },
+              "tolerance": {
+                "type": "number",
+                "minimum": 0,
+                "default": 1,
+                "description": "Simplification tolerance."
+              },
+              "high_quality": {
+                "type": "boolean",
+                "default": false,
+                "description": "Use the slower, higher-quality simplification algorithm."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "rotate",
+            "description": "Rotate the geometry clockwise by an angle in degrees.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "angle"
+            ],
+            "properties": {
+              "operation": {
+                "const": "rotate",
+                "description": "Rotate the geometry clockwise by an angle in degrees."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              },
+              "angle": {
+                "type": "number",
+                "description": "Clockwise rotation angle in degrees."
+              },
+              "pivot": {
+                "type": "array",
+                "minItems": 2,
+                "maxItems": 2,
+                "items": {
+                  "type": "number",
+                  "minimum": -180,
+                  "maximum": 180
+                },
+                "description": "Optional [longitude, latitude] pivot. Defaults to the geometry centroid."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "scale",
+            "description": "Scale the geometry by a positive multiplier.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "factor"
+            ],
+            "properties": {
+              "operation": {
+                "const": "scale",
+                "description": "Scale the geometry by a positive multiplier."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              },
+              "factor": {
+                "type": "number",
+                "exclusiveMinimum": 0,
+                "description": "Scale multiplier."
+              },
+              "origin": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "center",
+                      "centroid",
+                      "sw",
+                      "se",
+                      "nw",
+                      "ne"
+                    ]
+                  },
+                  {
+                    "type": "array",
+                    "minItems": 2,
+                    "maxItems": 2,
+                    "items": {
+                      "type": "number",
+                      "minimum": -180,
+                      "maximum": 180
+                    },
+                    "description": "A [longitude, latitude] pair; longitude is -180 to 180 and latitude is -90 to 90."
+                  }
+                ],
+                "description": "Scale origin keyword or [longitude, latitude] position."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "translate",
+            "description": "Move the geometry by a distance and compass direction.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry",
+              "distance",
+              "direction"
+            ],
+            "properties": {
+              "operation": {
+                "const": "translate",
+                "description": "Move the geometry by a distance and compass direction."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              },
+              "distance": {
+                "type": "number",
+                "description": "Translation distance in the selected units."
+              },
+              "direction": {
+                "type": "number",
+                "description": "Direction in decimal degrees, where 0 is north and 90 is east."
+              },
+              "units": {
+                "type": "string",
+                "enum": [
+                  "meters",
+                  "metres",
+                  "millimeters",
+                  "millimetres",
+                  "centimeters",
+                  "centimetres",
+                  "kilometers",
+                  "kilometres",
+                  "miles",
+                  "nauticalmiles",
+                  "inches",
+                  "yards",
+                  "feet",
+                  "radians",
+                  "degrees"
+                ],
+                "default": "kilometers",
+                "description": "Distance units. Defaults to kilometers."
+              },
+              "z_translation": {
+                "type": "number",
+                "description": "Optional translation applied to a third coordinate."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "center",
+            "description": "Return the center of the geometry bounding box.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "center",
+                "description": "Return the center of the geometry bounding box."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "center_mean",
+            "description": "Return the arithmetic mean of all geometry vertices.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "center_mean",
+                "description": "Return the arithmetic mean of all geometry vertices."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "center_median",
+            "description": "Return the median center that minimizes total distance to the input vertices.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "center_median",
+                "description": "Return the median center that minimizes total distance to the input vertices."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "center_of_mass",
+            "description": "Return the centroid weighted by the geometry shape.",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "geometry"
+            ],
+            "properties": {
+              "operation": {
+                "const": "center_of_mass",
+                "description": "Return the centroid weighted by the geometry shape."
+              },
+              "geometry": {
+                "type": "object",
+                "description": "GeoJSON Geometry (Point, LineString, Polygon, MultiPoint, MultiLineString, or MultiPolygon); not a Feature or FeatureCollection."
+              }
+            }
+          }
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Typed geometry-operation result. The type value determines the data schema.",
+        "oneOf": [
+          {
+            "type": "object",
+            "title": "GeoJSON result",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "data"
+            ],
+            "properties": {
+              "type": {
+                "const": "geojson",
+                "description": "The result contains GeoJSON data."
+              },
+              "data": {
+                "type": "object",
+                "description": "GeoJSON Geometry, Feature, or FeatureCollection object."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "title": "Empty result",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "data"
+            ],
+            "properties": {
+              "type": {
+                "const": "empty",
+                "description": "The operation completed but produced no geometry."
+              },
+              "data": {
+                "type": "null",
+                "description": "No result was produced."
+              }
+            }
+          }
+        ]
+      },
+      "icons": null,
+      "annotations": null,
+      "meta": {
+        "geoapify/category": "Utilities"
+      },
+      "execution": null
+    }
+  ]
+}

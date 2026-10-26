@@ -1,0 +1,23 @@
+[
+  {
+    "place_id": 207037779,
+    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+    "osm_type": "relation",
+    "osm_id": 1440683,
+    "lat": "43.6779574",
+    "lon": "40.2069574",
+    "category": "place",
+    "type": "town",
+    "place_rank": 18,
+    "importance": 0.5002927455520956,
+    "addresstype": "town",
+    "name": "Красная Поляна",
+    "display_name": "Красная Поляна, Адлерский внутригородской район, городской округ Сочи, Краснодарский край, Южный федеральный округ, 354392, Россия",
+    "boundingbox": [
+      "43.6504850",
+      "43.7002020",
+      "40.1514244",
+      "40.2422547"
+    ]
+  }
+]

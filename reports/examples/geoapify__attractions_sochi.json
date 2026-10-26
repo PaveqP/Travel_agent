@@ -1,0 +1,571 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Камень памяти жертвам политических репрессий",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354000",
+        "district": "Главпочтамт",
+        "suburb": "Гагаринский",
+        "street": "улица Конституции СССР",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.7183038,
+        "lat": 43.5898598,
+        "formatted": "Камень памяти жертвам политических репрессий, улица Конституции СССР, Гагаринский, Сочи, Краснодарский край, Россия, 354000",
+        "address_line1": "Камень памяти жертвам политических репрессий",
+        "address_line2": "улица Конституции СССР, Гагаринский, Сочи, Краснодарский край, Россия, 354000",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial"
+        ],
+        "details": [
+          "details.historic"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.5898598,
+            "lon": 39.7183038,
+            "name": "Камень памяти жертвам политических репрессий",
+            "osm_id": 11494145186,
+            "historic": "memorial",
+            "material": "stone",
+            "memorial": "stone",
+            "osm_type": "n",
+            "start_date": "2007-05",
+            "memorial:conflict": "Stalinist_repressions"
+          }
+        },
+        "historic": {
+          "type": "memorial",
+          "start_date": "2007-05",
+          "memorial": "stone"
+        },
+        "place_id": "51d8cb0061f1db434059d01ca38680cb4540f00103f901a2bc1aad02000000920354d09ad0b0d0bcd0b5d0bdd18c20d0bfd0b0d0bcd18fd182d0b820d0b6d0b5d180d182d0b2d0b0d0bc20d0bfd0bed0bbd0b8d182d0b8d187d0b5d181d0bad0b8d18520d180d0b5d0bfd180d0b5d181d181d0b8d0b9"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.7183038,
+          43.5898598
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Петр и Феврония",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354000",
+        "district": "Навагинское укрепление",
+        "suburb": "Театральная",
+        "street": "улица Войкова",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.7218195,
+        "lat": 43.5808404,
+        "formatted": "Петр и Феврония, улица Войкова, Театральная, Сочи, Краснодарский край, Россия, 354000",
+        "address_line1": "Петр и Феврония",
+        "address_line2": "улица Войкова, Театральная, Сочи, Краснодарский край, Россия, 354000",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.5808404,
+            "lon": 39.7218195,
+            "name": "Петр и Феврония",
+            "osm_id": 2493935958,
+            "historic": "memorial",
+            "osm_type": "n"
+          }
+        },
+        "historic": {
+          "type": "memorial"
+        },
+        "place_id": "51bb0ed59464dc43405908196dfa58ca4540f00103f9015671a6940000000092031cd09fd0b5d182d18020d0b820d0a4d0b5d0b2d180d0bed0bdd0b8d18f"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.7218195,
+          43.5808404
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Развалины сталинки",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354024",
+        "district": "Хостинский внутригородской район",
+        "neighbourhood": "Мацестинская Долина",
+        "suburb": "Верхняя Мацеста",
+        "street": "Видовая улица",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.8001616,
+        "lat": 43.5588697,
+        "formatted": "Развалины сталинки, Видовая улица, Верхняя Мацеста, Сочи, Краснодарский край, Россия, 354024",
+        "address_line1": "Развалины сталинки",
+        "address_line2": "Видовая улица, Верхняя Мацеста, Сочи, Краснодарский край, Россия, 354024",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.ruines"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.55888107542396,
+            "lon": 39.800153190410754,
+            "name": "Развалины сталинки",
+            "osm_id": 1239883166,
+            "landuse": "brownfield",
+            "historic": "ruins",
+            "osm_type": "w"
+          }
+        },
+        "historic": {
+          "type": "ruins"
+        },
+        "place_id": "51584d746b6be64340594da6426a89c74540f00102f9019e1de74900000000920323d0a0d0b0d0b7d0b2d0b0d0bbd0b8d0bdd18b20d181d182d0b0d0bbd0b8d0bdd0bad0b8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.800153190410754,
+          43.55888107542396
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Маршал Жуков",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354030",
+        "district": "ТЗБ",
+        "suburb": "Ареда",
+        "street": "Пластунская улица",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.7328985,
+        "lat": 43.5964818,
+        "formatted": "Маршал Жуков, Пластунская улица, Ареда, Сочи, Краснодарский край, Россия, 354030",
+        "address_line1": "Маршал Жуков",
+        "address_line2": "Пластунская улица, Ареда, Сочи, Краснодарский край, Россия, 354030",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial"
+        ],
+        "details": [
+          "details.historic"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.5964818,
+            "lon": 39.7328985,
+            "name": "Маршал Жуков",
+            "osm_id": 10984502030,
+            "historic": "memorial",
+            "memorial": "war_memorial",
+            "osm_type": "n"
+          }
+        },
+        "historic": {
+          "type": "memorial",
+          "memorial": "war_memorial"
+        },
+        "place_id": "51cb64389ecfdd43405961d4ff8359cc4540f00103f9010e33ba8e02000000920317d09cd0b0d180d188d0b0d0bb20d096d183d0bad0bed0b2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.7328985,
+          43.5964818
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Журавли",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354002",
+        "district": "Хостинский внутригородской район",
+        "suburb": "Театральная",
+        "street": "Приморская улица",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.7343604,
+        "lat": 43.56792,
+        "formatted": "Журавли, Приморская улица, Театральная, Сочи, Краснодарский край, Россия, 354002",
+        "address_line1": "Журавли",
+        "address_line2": "Приморская улица, Театральная, Сочи, Краснодарский край, Россия, 354002",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.56792,
+            "lon": 39.7343604,
+            "name": "Журавли",
+            "osm_id": 9176372048,
+            "historic": "memorial",
+            "osm_type": "n"
+          }
+        },
+        "historic": {
+          "type": "memorial"
+        },
+        "place_id": "511ebd8685ffdd434059465f419ab1c84540f00103f9015053f4220200000092030ed096d183d180d0b0d0b2d0bbd0b8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.7343604,
+          43.56792
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Павлов Иван Петрович",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354008",
+        "suburb": "Новый Сочи",
+        "street": "улица Пирогова",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.7088952,
+        "lat": 43.6048783,
+        "formatted": "Павлов Иван Петрович, улица Пирогова, Новый Сочи, Сочи, Краснодарский край, Россия, 354008",
+        "address_line1": "Павлов Иван Петрович",
+        "address_line2": "улица Пирогова, Новый Сочи, Сочи, Краснодарский край, Россия, 354008",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6048783,
+            "lon": 39.7088952,
+            "name": "Павлов Иван Петрович",
+            "osm_id": 6312186390,
+            "historic": "memorial",
+            "osm_type": "n"
+          }
+        },
+        "historic": {
+          "type": "memorial"
+        },
+        "place_id": "514c25f213bdda434059b147f2a66ccd4540f00103f90116523c7801000000920326d09fd0b0d0b2d0bbd0bed0b220d098d0b2d0b0d0bd20d09fd0b5d182d180d0bed0b2d0b8d187"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.7088952,
+          43.6048783
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Пушкин А.С.",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354009",
+        "district": "Гостиница Сочи",
+        "suburb": "Театральная",
+        "street": "Морской переулок",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.7250564,
+        "lat": 43.5756857,
+        "formatted": "Пушкин А.С., Морской переулок, Театральная, Сочи, Краснодарский край, Россия, 354009",
+        "address_line1": "Пушкин А.С.",
+        "address_line2": "Морской переулок, Театральная, Сочи, Краснодарский край, Россия, 354009",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial"
+        ],
+        "details": [
+          "details",
+          "details.historic"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.5756857,
+            "lon": 39.7250564,
+            "name": "Пушкин А.С.",
+            "osm_id": 2617743574,
+            "name:nl": "Aleksandr Poesjkin",
+            "name:ru": "Пушкин А.С.",
+            "historic": "memorial",
+            "memorial": "statue",
+            "osm_type": "n",
+            "memorial:subject": "Александр Сергеевич Пушкин"
+          }
+        },
+        "name_international": {
+          "nl": "Aleksandr Poesjkin",
+          "ru": "Пушкин А.С."
+        },
+        "historic": {
+          "type": "memorial",
+          "memorial": "statue"
+        },
+        "place_id": "51b4e0eaa5cedc4340592f23ab11b0c94540f00103f901d698079c00000000920313d09fd183d188d0bad0b8d0bd20d0902ed0a12e"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.7250564,
+          43.5756857
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Шевченко",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354009",
+        "district": "Главпочтамт",
+        "suburb": "Гагаринский",
+        "street": "улица Егорова",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.7157499,
+        "lat": 43.591964,
+        "formatted": "Шевченко, улица Егорова, Гагаринский, Сочи, Краснодарский край, Россия, 354009",
+        "address_line1": "Шевченко",
+        "address_line2": "улица Егорова, Гагаринский, Сочи, Краснодарский край, Россия, 354009",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial"
+        ],
+        "details": [
+          "details.historic"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.591964,
+            "lon": 39.7157499,
+            "name": "Шевченко",
+            "osm_id": 8916136818,
+            "historic": "memorial",
+            "memorial": "bust",
+            "osm_type": "n",
+            "memorial:subject": "Тарас Григорьевич Шевченко"
+          }
+        },
+        "historic": {
+          "type": "memorial",
+          "memorial": "bust"
+        },
+        "place_id": "51c14e56b19ddb4340596534f279c5cb4540f00103f9017273711302000000920310d0a8d0b5d0b2d187d0b5d0bdd0bad0be"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.7157499,
+          43.591964
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Хлудов В. А.",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354009",
+        "district": "Главпочтамт",
+        "suburb": "Гагаринский",
+        "street": "Курортный проспект",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.7150713,
+        "lat": 43.588819,
+        "formatted": "Хлудов В. А., Курортный проспект, Гагаринский, Сочи, Краснодарский край, Россия, 354009",
+        "address_line1": "Хлудов В. А.",
+        "address_line2": "Курортный проспект, Гагаринский, Сочи, Краснодарский край, Россия, 354009",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial"
+        ],
+        "details": [
+          "details.historic"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.588819,
+            "lon": 39.7150713,
+            "name": "Хлудов В. А.",
+            "osm_id": 2493605535,
+            "historic": "memorial",
+            "memorial": "bust",
+            "osm_type": "n",
+            "memorial:subject": "Василий Алексеевич Хлудов"
+          }
+        },
+        "historic": {
+          "type": "memorial",
+          "memorial": "bust"
+        },
+        "place_id": "5173e7d37487db434059b821c66b5ecb4540f00103f9019f66a19400000000920314d0a5d0bbd183d0b4d0bed0b220d0922e20d0902e"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.7150713,
+          43.588819
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Основание Мацесты",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354051",
+        "district": "Хостинский внутригородской район",
+        "suburb": "Старая Мацеста",
+        "street": "Лечебный переулок",
+        "iso3166_2": "RU-KDA",
+        "lon": 39.803618,
+        "lat": 43.5676315,
+        "formatted": "Основание Мацесты, Лечебный переулок, Старая Мацеста, Сочи, Краснодарский край, Россия, 354051",
+        "address_line1": "Основание Мацесты",
+        "address_line2": "Лечебный переулок, Старая Мацеста, Сочи, Краснодарский край, Россия, 354051",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial",
+          "tourism.sights.memorial.monument"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.5676315,
+            "lon": 39.803618,
+            "name": "Основание Мацесты",
+            "osm_id": 4453293048,
+            "historic": "monument",
+            "osm_type": "n"
+          }
+        },
+        "historic": {
+          "type": "monument"
+        },
+        "place_id": "510c3d62f4dce6434059f7562426a8c84540f00103f901f8db6f0901000000920321d09ed181d0bdd0bed0b2d0b0d0bdd0b8d0b520d09cd0b0d186d0b5d181d182d18b"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          39.803618,
+          43.5676315
+        ]
+      }
+    }
+  ]
+}

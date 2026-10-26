@@ -1,0 +1,44 @@
+[
+  {
+    "place_id": 206545291,
+    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+    "osm_type": "relation",
+    "osm_id": 10728021,
+    "lat": "43.4439715",
+    "lon": "39.9400928",
+    "category": "aeroway",
+    "type": "aerodrome",
+    "place_rank": 30,
+    "importance": 0.517368364402414,
+    "addresstype": "aeroway",
+    "name": "Сочи",
+    "display_name": "Сочи, Аэровокзальная улица, Адлер, Адлерский внутригородской район, Сочи, городской округ Сочи, Краснодарский край, Южный федеральный округ, 354355, Россия",
+    "boundingbox": [
+      "43.4310672",
+      "43.4568374",
+      "39.9207611",
+      "39.9641472"
+    ]
+  },
+  {
+    "place_id": 206482282,
+    "licence": "Data © OpenStreetMap contributors, ODbL 1.0. http://osm.org/copyright",
+    "osm_type": "relation",
+    "osm_id": 13278761,
+    "lat": "43.4253834",
+    "lon": "39.9237036",
+    "category": "place",
+    "type": "suburb",
+    "place_rank": 19,
+    "importance": 0.4682004470627894,
+    "addresstype": "suburb",
+    "name": "Адлер",
+    "display_name": "Адлер, Адлерский внутригородской район, Сочи, городской округ Сочи, Краснодарский край, Южный федеральный округ, Россия",
+    "boundingbox": [
+      "43.3949798",
+      "43.4980208",
+      "39.8834570",
+      "40.0105333"
+    ]
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "data": [
+    {
+      "flight_number": "268",
+      "link": "/search/AER1611MOW1?t=UT17948418001794855600000230AERVKO_6e0cce89846a4b0cbbfcbfd70d9e0b10_3600&search_date=25102026&expected_price_uuid=01a1733f-1c26-8030-2205-0cc1ef4407ff&static_fare_key=[REDACTED]&itinerary_key=[REDACTED]&expected_price_source=share&expected_price_currency=rub&expected_price=3600",
+      "origin_airport": "AER",
+      "destination_airport": "VKO",
+      "departure_at": "2026-11-16T15:10:00+03:00",
+      "airline": "UT",
+      "destination": "MOW",
+      "origin": "AER",
+      "price": 3600,
+      "gate": "OneTwoTrip",
+      "return_transfers": 0,
+      "duration": 230,
+      "duration_to": 230,
+      "duration_back": 0,
+      "transfers": 0
+    }
+  ],
+  "currency": "rub",
+  "success": true
+}

@@ -1,0 +1,366 @@
+{
+  "meta": null,
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"category\": \"catering.restaurant\", \"coordinates\": {\"lat\": 43.428, \"lon\": 39.923}, \"radius_meters\": 5000, \"count\": 10, \"results\": [{\"name\": \"Суши Плаза\", \"country\": \"Россия\", \"country_code\": \"ru\", \"region\": \"Южный федеральный округ\", \"state\": \"Краснодарский край\", \"county\": \"городской округ Сочи\", \"city\": \"Сочи\", \"postcode\": \"354340\", \"district\": \"Адлерский внутригородской район\", \"suburb\": \"Адлер\", \"street\": \"улица Кирова\", \"housenumber\": \"58\", \"lon\": 39.9269848, \"lat\": 43.427951, \"formatted\": \"Суши Плаза, улица Кирова 58, Адлер, Сочи, Краснодарский край, Россия, 354340\", \"categories\": [\"catering\", \"catering.restaurant\"], \"datasource\": {\"sourcename\": \"openstreetmap\", \"attribution\": \"© OpenStreetMap contributors\", \"license\": \"Open Database License\", \"url\": \"https://www.openstreetmap.org/copyright\"}, \"distance\": 323, \"place_id\": \"51cef11b70a7f64340592fa52e19c7b64540f00103f9014edf6d9b00000000920313d0a1d183d188d0b820d09fd0bbd0b0d0b7d0b0\"}, {\"name\": \"Хинкали Танцевали\", \"country\": \"Россия\", \"country_code\": \"ru\", \"region\": \"Южный федеральный округ\", \"state\": \"Краснодарский край\", \"county\": \"городской округ Сочи\", \"city\": \"Сочи\", \"postcode\": \"354350\", \"district\": \"Адлерский внутригородской район\", \"suburb\": \"Адлер\", \"street\": \"улица Кирова\", \"housenumber\": \"44\", \"lon\": 39.9237285, \"lat\": 43.4248869, \"formatted\": \"Хинкали Танцевали, улица Кирова 44, Адлер, Сочи, Краснодарский край, Россия, 354350\", \"categories\": [\"catering\", \"catering.restaurant\", \"catering.restaurant.georgian\"], \"datasource\": {\"sourcename\": \"openstreetmap\", \"attribution\": \"© OpenStreetMap contributors\", \"license\": \"Open Database License\", \"url\": \"https://www.openstreetmap.org/copyright\"}, \"website\": \"https://hinkali-tancevali.ru\", \"opening_hours\": \"Mo-Su 07:30-23:30\", \"contact\": {\"phone\": \"[REDACTED]\", \"email\": \"[REDACTED]\"}, \"facilities\": {\"internet_access\": true}, \"catering\": {\"cuisine\": \"georgian\"}, \"distance\": 351, \"place_id\": \"510bf148bc3cf6434059d9ffa5b162b64540f00103f90145e6f6e001000000920321d0a5d0b8d0bdd0bad0b0d0bbd0b820d0a2d0b0d0bdd186d0b5d0b2d0b0d0bbd0b8\"}, {\"name\": \"Гастропорт\", \"country\": \"Россия\", \"country_code\": \"ru\", \"region\": \"Южный федеральный округ\", \"state\": \"Краснодарский край\", \"county\": \"городской округ Сочи\", \"city\": \"Сочи\", \"postcode\": \"354340\", \"district\": \"Адлерский внутригородской район\", \"suburb\": \"Адлер\", \"street\": \"Демократическая улица\", \"lon\": 39.9274159, \"lat\": 43.4266519, \"formatted\": \"Гастропорт, Демократическая улица, Адлер, Сочи, Краснодарский край, Россия, 354340\", \"categories\": [\"building\", \"building.catering\", \"catering\", \"catering.restaurant\"], \"datasource\": {\"sourcename\": \"openstreetmap\", \"attribution\": \"© OpenStreetMap contributors\", \"license\": \"Open Database License\", \"url\": \"https://www.openstreetmap.org/copyright\"}, \"distance\": 379, \"place_id\": \"51fdc82164b2f64340599fdd80b89db64540f00102f901c3e2dd5700000000920314d093d0b0d181d182d180d0bed0bfd0bed180d182\"}, {\"name\": \"патиссон\", \"country\": \"Россия\", \"country_code\": \"ru\", \"region\": \"Южный федеральный округ\", \"state\": \"Краснодарский край\", \"county\": \"городской округ Сочи\", \"city\": \"Сочи\", \"postcode\": \"354340\", \"district\": \"Адлерский внутригородской район\", \"suburb\": \"Адлер\", \"street\": \"Демократическая улица\", \"housenumber\": \"58/1\", \"lon\": 39.9278556, \"lat\": 43.4280068, \"formatted\": \"Патиссон, Демократическая улица 58/1, Адлер, Сочи, Краснодарский край, Россия, 354340\", \"categories\": [\"catering\", \"catering.restaurant\"], \"datasource\": {\"sourcename\": \"openstreetmap\", \"attribution\": \"© OpenStreetMap contributors\", \"license\": \"Open Database License\", \"url\": \"https://www.openstreetmap.org/copyright\"}, \"name_international\": {\"en\": \"Patisson\", \"ru\": \"Патиссон\"}, \"distance\": 393, \"place_id\": \"518ab4e8f8c3f6434059993b44edc8b64540f00103f901acbf6da901000000920310d0bfd0b0d182d0b8d181d181d0bed0bd\"}, {\"name\": \"Хмели сунели\", \"country\": \"Россия\", \"country_code\": \"ru\", \"region\": \"Южный федеральный округ\", \"state\": \"Краснодарский край\", \"county\": \"городской округ Сочи\", \"city\": \"Сочи\", \"postcode\": \"354350\", \"district\": \"Адлерский внутригородской район\", \"suburb\": \"Адлер\", \"street\": \"Авиационная улица\", \"lon\": 39.9276724, \"lat\": 43.4262537, \"formatted\": \"Хмели сунели, Авиационная улица, Адлер, Сочи, Краснодарский край, Россия, 354350\", \"categories\": [\"catering\", \"catering.restaurant\"], \"datasource\": {\"sourcename\": \"openstreetmap\", \"attribution\": \"© OpenStreetMap contributors\", \"license\": \"Open Database License\", \"url\": \"https://www.openstreetmap.org/copyright\"}, \"opening_hours\": \"Mo-Su 10:00-00:00\", \"name_international\": {\"en\": \"Khmeli&suneli\", \"ru\": \"Хмели сунели\"}, \"facilities\": {\"internet_access\": true}, \"distance\": 425, \"place_id\": \"516fb31df8bdf643405945a6327b8fb64540f00103f9019a36297901000000920317d0a5d0bcd0b5d0bbd0b820d181d183d0bdd0b5d0bbd0b8\"}, {\"name\": \"Мальдивы\", \"country\": \"Россия\", \"country_code\": \"ru\", \"region\": \"Южный федеральный округ\", \"state\": \"Краснодарский край\", \"county\": \"городской округ Сочи\", \"city\": \"Сочи\", \"postcode\": \"354340\", \"district\": \"Адлерский внутригородской район\", \"suburb\": \"Адлер\", \"street\": \"улица Кирова\", \"housenumber\": \"35\", \"lon\": 39.9218992, \"lat\": 43.4235286, \"formatted\": \"Мальдивы, улица Кирова 35, Адлер, Сочи, Краснодарский край, Россия, 354340\", \"categories\": [\"catering\", \"catering.restaurant\"], \"datasource\": {\"sourcename\": \"openstreetmap\", \"attribution\": \"© OpenStreetMap contributors\", \"license\": \"Open Database License\", \"url\": \"https://www.openstreetmap.org/copyright\"}, \"distance\": 505, \"place_id\": \"51b21a01cb00f6434059d8f5662f36b64540f00103f90161d005c402000000920310d09cd0b0d0bbd18cd0b4d0b8d0b2d18b\"}, {\"name\": \"Самсун\", \"country\": \"Россия\", \"country_code\": \"ru\", \"region\": \"Южный федеральный округ\", \"state\": \"Краснодарский край\", \"county\": \"городской округ Сочи\", \"city\": \"Сочи\", \"postcode\": \"354340\", \"district\": \"Адлерский внутригородской район\", \"suburb\": \"Адлер\", \"street\": \"улица Свердлова\", \"housenumber\": \"13\", \"lon\": 39.9165388, \"lat\": 43.4267334, \"formatted\": \"Самсун, улица Свердлова 13, Адлер, Сочи, Краснодарский край, Россия, 354340\", \"categories\": [\"catering\", \"catering.restaurant\", \"catering.restaurant.turkish\"], \"datasource\": {\"sourcename\": \"openstreetmap\", \"attribution\": \"© OpenStreetMap contributors\", \"license\": \"Open Database License\", \"url\": \"https://www.openstreetmap.org/copyright\"}, \"catering\": {\"cuisine\": \"turkish\"}, \"distance\": 542, \"place_id\": \"51eec1b52451f5434059328e36339fb64540f00103f90134f24f340000000092030cd0a1d0b0d0bcd181d183d0bd\"}, {\"name\": \"Nippon House\", \"country\": \"Россия\", \"country_code\": \"ru\", \"region\": \"Южный федеральный округ\", \"state\": \"Краснодарский край\", \"county\": \"городской округ Сочи\", \"city\": \"Сочи\", \"postcode\": \"354340\", \"district\": \"Адлерский внутригородской район\", \"suburb\": \"Адлер\", \"street\": \"Демократическая улица\", \"housenumber\": \"32\", \"lon\": 39.9239076, \"lat\": 43.4231096, \"formatted\": \"Nippon House, Демократическая улица 32, Адлер, Сочи, Краснодарский край, Россия, 354340\", \"categories\": [\"catering\", \"catering.restaurant\", \"catering.restaurant.sushi\"], \"datasource\": {\"sourcename\": \"openstreetmap\", \"attribution\": \"© OpenStreetMap contributors\", \"license\": \"Open Database License\", \"url\": \"https://www.openstreetmap.org/copyright\"}, \"catering\": {\"cuisine\": \"sushi\"}, \"distance\": 548, \"place_id\": \"514f43af9a42f6434059d34f937428b64540f00103f901ebc6b8370000000092030c4e6970706f6e20486f757365\"}, {\"name\": \"Ассорти\", \"country\": \"Россия\", \"country_code\": \"ru\", \"region\": \"Южный федеральный округ\", \"state\": \"Краснодарский край\", \"county\": \"городской округ Сочи\", \"city\": \"Сочи\", \"postcode\": \"354340\", \"district\": \"Адлерский внутригородской район\", \"suburb\": \"Адлер\", \"street\": \"улица Ленина\", \"housenumber\": \"52\", \"lon\": 39.9171273, \"lat\": 43.4316943, \"formatted\": \"Ассорти, улица Ленина 52, Адлер, Сочи, Краснодарский край, Россия, 354340\", \"categories\": [\"catering\", \"catering.restaurant\"], \"datasource\": {\"sourcename\": \"openstreetmap\", \"attribution\": \"© OpenStreetMap contributors\", \"license\": \"Open Database License\", \"url\": \"https://www.openstreetmap.org/copyright\"}, \"opening_hours\": \"Mo-Su 17:00-02:00\", \"facilities\": {\"internet_access\": true}, \"catering\": {\"cuisine\": \"italian_pizza;japanese;international\"}, \"distance\": 628, \"place_id\": \"5167e2676d64f54340594f2f42c241b74540f00103f9014522ccf80000000092030ed090d181d181d0bed180d182d0b8\"}, {\"name\": \"Дадиани\", \"country\": \"Россия\", \"country_code\": \"ru\", \"region\": \"Южный федеральный округ\", \"state\": \"Краснодарский край\", \"county\": \"городской округ Сочи\", \"city\": \"Сочи\", \"postcode\": \"354340\", \"district\": \"Адлерский внутригородской район\", \"suburb\": \"Адлер\", \"street\": \"улица Просвещения\", \"housenumber\": \"46\", \"lon\": 39.916953, \"lat\": 43.4240983, \"formatted\": \"Дадиани, улица Просвещения 46, Адлер, Сочи, Краснодарский край, Россия, 354340\", \"categories\": [\"catering\", \"catering.restaurant\", \"catering.restaurant.georgian\"], \"datasource\": {\"sourcename\": \"openstreetmap\", \"attribution\": \"© OpenStreetMap contributors\", \"license\": \"Open Database License\", \"url\": \"https://www.openstreetmap.org/copyright\"}, \"website\": \"https://dadiani.clients.site\", \"opening_hours\": \"Mo-Su 11:00-23:00\", \"contact\": {\"phone\": \"[REDACTED]\", \"email\": \"[REDACTED]\"}, \"facilities\": {\"toilets\": true}, \"catering\": {\"cuisine\": \"georgian\"}, \"distance\": 654, \"place_id\": \"510b7c45b75ef5434059046564da48b64540f00103f90137fbe6e50100000092030ed094d0b0d0b4d0b8d0b0d0bdd0b8\"}]}",
+      "annotations": null,
+      "meta": null
+    }
+  ],
+  "structuredContent": {
+    "category": "catering.restaurant",
+    "coordinates": {
+      "lat": 43.428,
+      "lon": 39.923
+    },
+    "radius_meters": 5000,
+    "count": 10,
+    "results": [
+      {
+        "name": "Суши Плаза",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354340",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "улица Кирова",
+        "housenumber": "58",
+        "lon": 39.9269848,
+        "lat": 43.427951,
+        "formatted": "Суши Плаза, улица Кирова 58, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "categories": [
+          "catering",
+          "catering.restaurant"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "distance": 323,
+        "place_id": "51cef11b70a7f64340592fa52e19c7b64540f00103f9014edf6d9b00000000920313d0a1d183d188d0b820d09fd0bbd0b0d0b7d0b0"
+      },
+      {
+        "name": "Хинкали Танцевали",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354350",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "улица Кирова",
+        "housenumber": "44",
+        "lon": 39.9237285,
+        "lat": 43.4248869,
+        "formatted": "Хинкали Танцевали, улица Кирова 44, Адлер, Сочи, Краснодарский край, Россия, 354350",
+        "categories": [
+          "catering",
+          "catering.restaurant",
+          "catering.restaurant.georgian"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "website": "https://hinkali-tancevali.ru",
+        "opening_hours": "Mo-Su 07:30-23:30",
+        "contact": {
+          "phone": "[REDACTED]",
+          "email": "[REDACTED]"
+        },
+        "facilities": {
+          "internet_access": true
+        },
+        "catering": {
+          "cuisine": "georgian"
+        },
+        "distance": 351,
+        "place_id": "510bf148bc3cf6434059d9ffa5b162b64540f00103f90145e6f6e001000000920321d0a5d0b8d0bdd0bad0b0d0bbd0b820d0a2d0b0d0bdd186d0b5d0b2d0b0d0bbd0b8"
+      },
+      {
+        "name": "Гастропорт",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354340",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "Демократическая улица",
+        "lon": 39.9274159,
+        "lat": 43.4266519,
+        "formatted": "Гастропорт, Демократическая улица, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "categories": [
+          "building",
+          "building.catering",
+          "catering",
+          "catering.restaurant"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "distance": 379,
+        "place_id": "51fdc82164b2f64340599fdd80b89db64540f00102f901c3e2dd5700000000920314d093d0b0d181d182d180d0bed0bfd0bed180d182"
+      },
+      {
+        "name": "патиссон",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354340",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "Демократическая улица",
+        "housenumber": "58/1",
+        "lon": 39.9278556,
+        "lat": 43.4280068,
+        "formatted": "Патиссон, Демократическая улица 58/1, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "categories": [
+          "catering",
+          "catering.restaurant"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "name_international": {
+          "en": "Patisson",
+          "ru": "Патиссон"
+        },
+        "distance": 393,
+        "place_id": "518ab4e8f8c3f6434059993b44edc8b64540f00103f901acbf6da901000000920310d0bfd0b0d182d0b8d181d181d0bed0bd"
+      },
+      {
+        "name": "Хмели сунели",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354350",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "Авиационная улица",
+        "lon": 39.9276724,
+        "lat": 43.4262537,
+        "formatted": "Хмели сунели, Авиационная улица, Адлер, Сочи, Краснодарский край, Россия, 354350",
+        "categories": [
+          "catering",
+          "catering.restaurant"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "opening_hours": "Mo-Su 10:00-00:00",
+        "name_international": {
+          "en": "Khmeli&suneli",
+          "ru": "Хмели сунели"
+        },
+        "facilities": {
+          "internet_access": true
+        },
+        "distance": 425,
+        "place_id": "516fb31df8bdf643405945a6327b8fb64540f00103f9019a36297901000000920317d0a5d0bcd0b5d0bbd0b820d181d183d0bdd0b5d0bbd0b8"
+      },
+      {
+        "name": "Мальдивы",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354340",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "улица Кирова",
+        "housenumber": "35",
+        "lon": 39.9218992,
+        "lat": 43.4235286,
+        "formatted": "Мальдивы, улица Кирова 35, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "categories": [
+          "catering",
+          "catering.restaurant"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "distance": 505,
+        "place_id": "51b21a01cb00f6434059d8f5662f36b64540f00103f90161d005c402000000920310d09cd0b0d0bbd18cd0b4d0b8d0b2d18b"
+      },
+      {
+        "name": "Самсун",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354340",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "улица Свердлова",
+        "housenumber": "13",
+        "lon": 39.9165388,
+        "lat": 43.4267334,
+        "formatted": "Самсун, улица Свердлова 13, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "categories": [
+          "catering",
+          "catering.restaurant",
+          "catering.restaurant.turkish"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "catering": {
+          "cuisine": "turkish"
+        },
+        "distance": 542,
+        "place_id": "51eec1b52451f5434059328e36339fb64540f00103f90134f24f340000000092030cd0a1d0b0d0bcd181d183d0bd"
+      },
+      {
+        "name": "Nippon House",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354340",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "Демократическая улица",
+        "housenumber": "32",
+        "lon": 39.9239076,
+        "lat": 43.4231096,
+        "formatted": "Nippon House, Демократическая улица 32, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "categories": [
+          "catering",
+          "catering.restaurant",
+          "catering.restaurant.sushi"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "catering": {
+          "cuisine": "sushi"
+        },
+        "distance": 548,
+        "place_id": "514f43af9a42f6434059d34f937428b64540f00103f901ebc6b8370000000092030c4e6970706f6e20486f757365"
+      },
+      {
+        "name": "Ассорти",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354340",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "улица Ленина",
+        "housenumber": "52",
+        "lon": 39.9171273,
+        "lat": 43.4316943,
+        "formatted": "Ассорти, улица Ленина 52, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "categories": [
+          "catering",
+          "catering.restaurant"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "opening_hours": "Mo-Su 17:00-02:00",
+        "facilities": {
+          "internet_access": true
+        },
+        "catering": {
+          "cuisine": "italian_pizza;japanese;international"
+        },
+        "distance": 628,
+        "place_id": "5167e2676d64f54340594f2f42c241b74540f00103f9014522ccf80000000092030ed090d181d181d0bed180d182d0b8"
+      },
+      {
+        "name": "Дадиани",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Сочи",
+        "postcode": "354340",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Адлер",
+        "street": "улица Просвещения",
+        "housenumber": "46",
+        "lon": 39.916953,
+        "lat": 43.4240983,
+        "formatted": "Дадиани, улица Просвещения 46, Адлер, Сочи, Краснодарский край, Россия, 354340",
+        "categories": [
+          "catering",
+          "catering.restaurant",
+          "catering.restaurant.georgian"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright"
+        },
+        "website": "https://dadiani.clients.site",
+        "opening_hours": "Mo-Su 11:00-23:00",
+        "contact": {
+          "phone": "[REDACTED]",
+          "email": "[REDACTED]"
+        },
+        "facilities": {
+          "toilets": true
+        },
+        "catering": {
+          "cuisine": "georgian"
+        },
+        "distance": 654,
+        "place_id": "510b7c45b75ef5434059046564da48b64540f00103f90137fbe6e50100000092030ed094d0b0d0b4d0b8d0b0d0bdd0b8"
+      }
+    ]
+  },
+  "isError": false
+}

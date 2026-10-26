@@ -1,0 +1,570 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Скала Халва",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "postcode": "345392",
+        "district": "Адлерский внутригородской район",
+        "street": "Черничная тропа",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.1890686,
+        "lat": 43.6533203,
+        "formatted": "Скала Халва, Черничная тропа, Краснодарский край, Россия, 345392",
+        "address_line1": "Скала Халва",
+        "address_line2": "Черничная тропа, Краснодарский край, Россия, 345392",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial",
+          "tourism.sights.memorial.monument"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6533203,
+            "lon": 40.1890686,
+            "name": "Скала Халва",
+            "osm_id": 6984268088,
+            "historic": "monument",
+            "osm_type": "n"
+          }
+        },
+        "historic": {
+          "type": "monument"
+        },
+        "place_id": "51aad95e6633184440590d28e5ff9fd34540f00103f90138794ba001000000920315d0a1d0bad0b0d0bbd0b020d0a5d0b0d0bbd0b2d0b0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.1890686,
+          43.6533203
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Пушка",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Красная Поляна",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "street": "улица Аишхо",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.2015625,
+        "lat": 43.6779466,
+        "formatted": "Пушка, улица Аишхо, Красная Поляна, Краснодарский край, Россия, 354392",
+        "address_line1": "Пушка",
+        "address_line2": "улица Аишхо, Красная Поляна, Краснодарский край, Россия, 354392",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6779466,
+            "lon": 40.2015625,
+            "name": "Пушка",
+            "osm_id": 7780749240,
+            "historic": "memorial",
+            "osm_type": "n"
+          }
+        },
+        "historic": {
+          "type": "memorial"
+        },
+        "place_id": "51cdcccccccc194440599ab745f4c6d64540f00103f901b8cfc4cf0100000092030ad09fd183d188d0bad0b0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2015625,
+          43.6779466
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Мемориал",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Красная Поляна",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "street": "Деревянный",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.1666273,
+        "lat": 43.6785142,
+        "formatted": "Мемориал, Деревянный, Красная Поляна, Краснодарский край, Россия, 354392",
+        "address_line1": "Мемориал",
+        "address_line2": "Деревянный, Красная Поляна, Краснодарский край, Россия, 354392",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial",
+          "tourism.sights.memorial.wayside_cross"
+        ],
+        "details": [
+          "details.historic"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6785142,
+            "lon": 40.1666273,
+            "name": "Мемориал",
+            "osm_id": 7780366296,
+            "historic": "wayside_cross",
+            "material": "wood",
+            "osm_type": "n",
+            "inscription": "Здесь покоятся монахи пустынники I-я половина ХХ века"
+          }
+        },
+        "historic": {
+          "type": "wayside_cross",
+          "inscription": "Здесь покоятся монахи пустынники I-я половина ХХ века"
+        },
+        "place_id": "51760f1a0b5415444059916fa58dd9d64540f00103f901d8f7becf01000000920310d09cd0b5d0bcd0bed180d0b8d0b0d0bb"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.1666273,
+          43.6785142
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Дольмен",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "postcode": "345392",
+        "district": "Адлерский внутригородской район",
+        "street": "№ 13 «К Ачипсинским водопадам»",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.1844665,
+        "lat": 43.6982857,
+        "formatted": "Дольмен, № 13 «К Ачипсинским водопадам», Краснодарский край, Россия, 345392",
+        "address_line1": "Дольмен",
+        "address_line2": "№ 13 «К Ачипсинским водопадам», Краснодарский край, Россия, 345392",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.archaeological_site"
+        ],
+        "details": [
+          "details",
+          "details.historic"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6982857,
+            "lon": 40.1844665,
+            "name": "Дольмен",
+            "osm_id": 4102745390,
+            "name:pl": "Dolmen",
+            "name:ru": "Дольмен",
+            "historic": "archaeological_site",
+            "osm_type": "n",
+            "megalith_type": "dolmen",
+            "archaeological_site": "megalith"
+          }
+        },
+        "name_international": {
+          "pl": "Dolmen",
+          "ru": "Дольмен"
+        },
+        "historic": {
+          "type": "archaeological_site",
+          "megalith_type": "dolmen"
+        },
+        "place_id": "51925a28999c17444059da61026d61d94540f00103f9012eed8af40000000092030ed094d0bed0bbd18cd0bcd0b5d0bd"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.1844665,
+          43.6982857
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "А. А. Гречко",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Красная Поляна",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "street": "Волоколамская улица",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.2125996,
+        "lat": 43.6825919,
+        "formatted": "А. А. Гречко, Волоколамская улица, Красная Поляна, Краснодарский край, Россия, 354392",
+        "address_line1": "А. А. Гречко",
+        "address_line2": "Волоколамская улица, Красная Поляна, Краснодарский край, Россия, 354392",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial"
+        ],
+        "details": [
+          "details.historic"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6825919,
+            "lon": 40.2125996,
+            "name": "А. А. Гречко",
+            "osm_id": 6457457898,
+            "historic": "memorial",
+            "memorial": "bust",
+            "osm_type": "n",
+            "memorial:subject": "Андрей Антонович Гречко"
+          }
+        },
+        "historic": {
+          "type": "memorial",
+          "memorial": "bust"
+        },
+        "place_id": "514392b476361b444059db81df2b5fd74540f00103f901eafce48001000000920314d0902e20d0902e20d093d180d0b5d187d0bad0be"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2125996,
+          43.6825919
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "100 лет со дня рождения Ефремова Ю. К.",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Красная Поляна",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "street": "А-149",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.1827681,
+        "lat": 43.6733026,
+        "formatted": "100 лет со дня рождения Ефремова Ю. К., А-149, Красная Поляна, Краснодарский край, Россия, 354392",
+        "address_line1": "100 лет со дня рождения Ефремова Ю. К.",
+        "address_line2": "А-149, Красная Поляна, Краснодарский край, Россия, 354392",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.memorial"
+        ],
+        "details": [
+          "details.historic"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6733026,
+            "lon": 40.1827681,
+            "name": "100 лет со дня рождения Ефремова Ю. К.",
+            "osm_id": 4018320908,
+            "historic": "memorial",
+            "material": "stone",
+            "memorial": "stele",
+            "osm_type": "n"
+          }
+        },
+        "historic": {
+          "type": "memorial",
+          "memorial": "stele"
+        },
+        "place_id": "514320f2f16417444059e8a793c72ed64540f00103f9010cb682ef0000000092034031303020d0bbd0b5d18220d181d0be20d0b4d0bdd18f20d180d0bed0b6d0b4d0b5d0bdd0b8d18f20d095d184d180d0b5d0bcd0bed0b2d0b020d0ae2e20d09a2e"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.1827681,
+          43.6733026
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Снегомер 1968 г.",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Курорт Красная Поляна 960",
+        "street": "тупик, ходить не нужно",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.2765597,
+        "lat": 43.6677177,
+        "formatted": "Снегомер 1968 г., тупик, ходить не нужно, Курорт Красная Поляна 960, Краснодарский край, Россия, 354392",
+        "address_line1": "Снегомер 1968 г.",
+        "address_line2": "тупик, ходить не нужно, Курорт Красная Поляна 960, Краснодарский край, Россия, 354392",
+        "categories": [
+          "man_made",
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.ruines"
+        ],
+        "details": [
+          "details.historic"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6677177,
+            "lon": 40.2765597,
+            "name": "Снегомер 1968 г.",
+            "osm_id": 8176233495,
+            "historic": "ruins",
+            "man_made": "monitoring_station",
+            "osm_type": "n",
+            "monitoring:snow": "yes"
+          }
+        },
+        "historic": {
+          "type": "ruins",
+          "object_type": "monitoring_station"
+        },
+        "place_id": "511f72e94e6623444059ec3a0ac677d54540f00103f901176c57e701000000920319d0a1d0bdd0b5d0b3d0bed0bcd0b5d180203139363820d0b32e"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2765597,
+          43.6677177
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Дольмен",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "postcode": "345392",
+        "district": "Адлерский внутригородской район",
+        "street": "№ 13 «К Ачипсинским водопадам»",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.1850124,
+        "lat": 43.6982149,
+        "formatted": "Дольмен, № 13 «К Ачипсинским водопадам», Краснодарский край, Россия, 345392",
+        "address_line1": "Дольмен",
+        "address_line2": "№ 13 «К Ачипсинским водопадам», Краснодарский край, Россия, 345392",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.archaeological_site"
+        ],
+        "details": [
+          "details",
+          "details.historic"
+        ],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6982149,
+            "lon": 40.1850124,
+            "name": "Дольмен",
+            "osm_id": 6425171485,
+            "name:pl": "Dolmen",
+            "name:ru": "Дольмен",
+            "historic": "archaeological_site",
+            "osm_type": "n",
+            "megalith_type": "dolmen",
+            "archaeological_site": "megalith"
+          }
+        },
+        "name_international": {
+          "pl": "Dolmen",
+          "ru": "Дольмен"
+        },
+        "historic": {
+          "type": "archaeological_site",
+          "megalith_type": "dolmen"
+        },
+        "place_id": "515fad7f7cae174440593b8a181b5fd94540f00103f9011d56f87e0100000092030ed094d0bed0bbd18cd0bcd0b5d0bd"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.1850124,
+          43.6982149
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Ачипсинская крепость",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Эстосадок",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "suburb": "Курорт Красная Поляна",
+        "street": "Берёзовая улица",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.2756024,
+        "lat": 43.6838044,
+        "formatted": "Ачипсинская крепость, Берёзовая улица, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "address_line1": "Ачипсинская крепость",
+        "address_line2": "Берёзовая улица, Курорт Красная Поляна, Эстосадок, Краснодарский край, Россия, 354392",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.castle"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6838044,
+            "lon": 40.2756024,
+            "name": "Ачипсинская крепость",
+            "osm_id": 9921761017,
+            "historic": "castle",
+            "osm_type": "n"
+          }
+        },
+        "historic": {
+          "type": "castle"
+        },
+        "place_id": "517c597ff04623444059326e0fe786d74540f00103f901f90e624f02000000920327d090d187d0b8d0bfd181d0b8d0bdd181d0bad0b0d18f20d0bad180d0b5d0bfd0bed181d182d18c"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.2756024,
+          43.6838044
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Куницинская крепость",
+        "country": "Россия",
+        "country_code": "ru",
+        "region": "Южный федеральный округ",
+        "state": "Краснодарский край",
+        "county": "городской округ Сочи",
+        "city": "Красная Поляна",
+        "postcode": "354392",
+        "district": "Адлерский внутригородской район",
+        "street": "А-149",
+        "iso3166_2": "RU-KDA",
+        "lon": 40.1826562,
+        "lat": 43.6733276,
+        "formatted": "Куницинская крепость, А-149, Красная Поляна, Краснодарский край, Россия, 354392",
+        "address_line1": "Куницинская крепость",
+        "address_line2": "А-149, Красная Поляна, Краснодарский край, Россия, 354392",
+        "categories": [
+          "tourism",
+          "tourism.sights",
+          "tourism.sights.archaeological_site"
+        ],
+        "details": [],
+        "datasource": {
+          "sourcename": "openstreetmap",
+          "attribution": "© OpenStreetMap contributors",
+          "license": "Open Database License",
+          "url": "https://www.openstreetmap.org/copyright",
+          "raw": {
+            "lat": 43.6733276,
+            "lon": 40.1826562,
+            "name": "Куницинская крепость",
+            "osm_id": 4198267789,
+            "historic": "archaeological_site",
+            "osm_type": "n"
+          }
+        },
+        "historic": {
+          "type": "archaeological_site"
+        },
+        "place_id": "51b0b44247611744405941bf4a992fd64540f00103f9018d7b3cfa00000000920327d09ad183d0bdd0b8d186d0b8d0bdd181d0bad0b0d18f20d0bad180d0b5d0bfd0bed181d182d18c"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          40.1826562,
+          43.6733276
+        ]
+      }
+    }
+  ]
+}

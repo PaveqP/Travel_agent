@@ -1,0 +1,2392 @@
+{
+  "initialize": {
+    "meta": null,
+    "protocolVersion": "2025-11-25",
+    "capabilities": {
+      "experimental": {},
+      "logging": {},
+      "prompts": {
+        "listChanged": true
+      },
+      "resources": {
+        "subscribe": false,
+        "listChanged": true
+      },
+      "tools": {
+        "listChanged": true
+      },
+      "completions": null,
+      "tasks": null,
+      "extensions": {
+        "io.modelcontextprotocol/ui": {}
+      }
+    },
+    "serverInfo": {
+      "name": "mcp-2gis",
+      "title": null,
+      "version": "0.1.0",
+      "websiteUrl": null,
+      "icons": null
+    },
+    "instructions": "2GIS MCP server exposes controlled access to 2GIS APIs for partner LLM clients. Use tools for allowed API operations and follow key-based authorization rules."
+  },
+  "tools": [
+    {
+      "name": "auth_probe",
+      "title": "Auth probe",
+      "description": "Проверяет, что API key принят Key Auth Gate. По запросу проверяет доступ к API разрешённых GIS-инструментов; внешние запросы по умолчанию не выполняются. Требует API key.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "check_api_access": {
+            "default": false,
+            "description": "Проверить доступ к API разрешённых GIS-инструментов реальными запросами.",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "outputSchema": null,
+      "icons": null,
+      "annotations": {
+        "title": "Auth probe",
+        "readOnlyHint": true,
+        "destructiveHint": null,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "meta": {
+        "fastmcp": {
+          "tags": [
+            "auth",
+            "meta"
+          ]
+        }
+      },
+      "execution": null
+    },
+    {
+      "name": "build_route",
+      "title": "Build route",
+      "description": "Строит подробный маршрут по явным WGS84-точкам через 2GIS Routing API. Возвращает варианты с расстоянием, временем, WKT-геометрией, waypoints и пошаговыми манёврами. Поддерживает driving, walking, taxi, bicycle, scooter, motorcycle, truck и emergency; общественный транспорт, адреса и независимые пары маршрутов не поддерживаются.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "points": {
+            "description": "От 2 до 10 явных точек WGS84; первая — начало, последняя — назначение.",
+            "items": {
+              "additionalProperties": false,
+              "description": "Explicit WGS84 point accepted by Routing API.",
+              "properties": {
+                "lat": {
+                  "description": "Широта WGS84.",
+                  "maximum": 90,
+                  "minimum": -90,
+                  "type": "number"
+                },
+                "lon": {
+                  "description": "Долгота WGS84.",
+                  "maximum": 180,
+                  "minimum": -180,
+                  "type": "number"
+                },
+                "type": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "stop",
+                        "walking",
+                        "pref"
+                      ],
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "API-тип точки; по умолчанию walking для пешего маршрута и stop для остальных."
+                },
+                "object_id": {
+                  "anyOf": [
+                    {
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "ID здания или организации."
+                },
+                "floor_id": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "ID этажа для indoor-маршрута."
+                },
+                "azimuth": {
+                  "anyOf": [
+                    {
+                      "maximum": 359,
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "Направление движения в градусах."
+                },
+                "zlevel": {
+                  "anyOf": [
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "Уровень транспортной развязки."
+                },
+                "distance_direction": {
+                  "anyOf": [
+                    {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "Расстояние в метрах, на котором нужно сохранять направление движения."
+                }
+              },
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "type": "object"
+            },
+            "maxItems": 10,
+            "minItems": 2,
+            "type": "array"
+          },
+          "transport": {
+            "default": "driving",
+            "description": "Способ передвижения без public transport.",
+            "enum": [
+              "driving",
+              "walking",
+              "taxi",
+              "bicycle",
+              "scooter",
+              "emergency",
+              "truck",
+              "motorcycle"
+            ],
+            "type": "string"
+          },
+          "route_mode": {
+            "default": "fastest",
+            "description": "Кратчайший маршрут по времени или расстоянию.",
+            "enum": [
+              "fastest",
+              "shortest"
+            ],
+            "type": "string"
+          },
+          "traffic_mode": {
+            "anyOf": [
+              {
+                "enum": [
+                  "jam",
+                  "statistics"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Текущие или статистические пробки."
+          },
+          "utc": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Unix-время расчёта маршрута."
+          },
+          "filters": {
+            "description": "Типы дорог, которых следует избегать.",
+            "items": {
+              "enum": [
+                "dirt_road",
+                "toll_road",
+                "ferry",
+                "highway",
+                "ban_car_road",
+                "ban_stairway"
+              ],
+              "type": "string"
+            },
+            "maxItems": 6,
+            "type": "array"
+          },
+          "allow_locked_roads": {
+            "default": false,
+            "description": "Разрешить маршрут по закрытым дорогам.",
+            "type": "boolean"
+          },
+          "exclude": {
+            "description": "Области, которых следует избегать.",
+            "items": {
+              "additionalProperties": false,
+              "description": "One point, polyline, or polygon to avoid.",
+              "properties": {
+                "type": {
+                  "description": "Форма исключаемой области.",
+                  "enum": [
+                    "point",
+                    "polyline",
+                    "polygon"
+                  ],
+                  "type": "string"
+                },
+                "points": {
+                  "description": "Координаты исключаемой области.",
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Explicit WGS84 point accepted by Routing API.",
+                    "properties": {
+                      "lat": {
+                        "description": "Широта WGS84.",
+                        "maximum": 90,
+                        "minimum": -90,
+                        "type": "number"
+                      },
+                      "lon": {
+                        "description": "Долгота WGS84.",
+                        "maximum": 180,
+                        "minimum": -180,
+                        "type": "number"
+                      },
+                      "type": {
+                        "anyOf": [
+                          {
+                            "enum": [
+                              "stop",
+                              "walking",
+                              "pref"
+                            ],
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "API-тип точки; по умолчанию walking для пешего маршрута и stop для остальных."
+                      },
+                      "object_id": {
+                        "anyOf": [
+                          {
+                            "minLength": 1,
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "ID здания или организации."
+                      },
+                      "floor_id": {
+                        "anyOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "ID этажа для indoor-маршрута."
+                      },
+                      "azimuth": {
+                        "anyOf": [
+                          {
+                            "maximum": 359,
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "Направление движения в градусах."
+                      },
+                      "zlevel": {
+                        "anyOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "Уровень транспортной развязки."
+                      },
+                      "distance_direction": {
+                        "anyOf": [
+                          {
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "Расстояние в метрах, на котором нужно сохранять направление движения."
+                      }
+                    },
+                    "required": [
+                      "lat",
+                      "lon"
+                    ],
+                    "type": "object"
+                  },
+                  "minItems": 1,
+                  "type": "array"
+                },
+                "extent": {
+                  "anyOf": [
+                    {
+                      "minimum": 1,
+                      "type": "integer"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "Радиус или ширина области в метрах."
+                },
+                "severity": {
+                  "default": "soft",
+                  "description": "Строгость исключения области.",
+                  "enum": [
+                    "soft",
+                    "hard"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "points"
+              ],
+              "type": "object"
+            },
+            "maxItems": 25,
+            "type": "array"
+          },
+          "locale": {
+            "default": "ru",
+            "description": "Язык навигационных инструкций.",
+            "enum": [
+              "en",
+              "ru",
+              "uk",
+              "es",
+              "it",
+              "cs",
+              "ar",
+              "az",
+              "uz",
+              "kk",
+              "hy",
+              "ka",
+              "tg",
+              "ky"
+            ],
+            "type": "string"
+          },
+          "alternative": {
+            "default": 1,
+            "description": "Количество альтернатив сверх основного маршрута.",
+            "minimum": 0,
+            "type": "integer"
+          },
+          "need_altitudes": {
+            "default": false,
+            "description": "Вернуть статистику высот.",
+            "type": "boolean"
+          },
+          "need_payment_info": {
+            "default": false,
+            "description": "Вернуть стоимость платных участков.",
+            "type": "boolean"
+          },
+          "params": {
+            "anyOf": [
+              {
+                "oneOf": [
+                  {
+                    "additionalProperties": false,
+                    "description": "Typed pedestrian-specific Routing API parameters.",
+                    "properties": {
+                      "kind": {
+                        "const": "pedestrian",
+                        "description": "Дискриминатор пешеходных параметров.",
+                        "type": "string"
+                      },
+                      "use_indoor": {
+                        "default": false,
+                        "description": "Строить маршрут внутри зданий.",
+                        "type": "boolean"
+                      },
+                      "use_instructions": {
+                        "default": false,
+                        "description": "Добавить пешеходные навигационные инструкции.",
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ],
+                    "type": "object"
+                  },
+                  {
+                    "additionalProperties": false,
+                    "description": "Typed truck-specific Routing API parameters.",
+                    "properties": {
+                      "kind": {
+                        "const": "truck",
+                        "description": "Дискриминатор параметров грузового транспорта.",
+                        "type": "string"
+                      },
+                      "max_perm_mass": {
+                        "default": 3.5,
+                        "description": "Максимальная разрешённая масса, тонны.",
+                        "exclusiveMinimum": 0,
+                        "type": "number"
+                      },
+                      "mass": {
+                        "default": 3.5,
+                        "description": "Фактическая масса, тонны.",
+                        "exclusiveMinimum": 0,
+                        "type": "number"
+                      },
+                      "axle_load": {
+                        "default": 1.5,
+                        "description": "Нагрузка на ось, тонны.",
+                        "exclusiveMinimum": 0,
+                        "type": "number"
+                      },
+                      "height": {
+                        "default": 2.0,
+                        "description": "Высота, метры.",
+                        "exclusiveMinimum": 0,
+                        "type": "number"
+                      },
+                      "width": {
+                        "default": 2.1,
+                        "description": "Ширина, метры.",
+                        "exclusiveMinimum": 0,
+                        "type": "number"
+                      },
+                      "length": {
+                        "default": 3.8,
+                        "description": "Длина, метры.",
+                        "exclusiveMinimum": 0,
+                        "type": "number"
+                      },
+                      "dangerous_cargo": {
+                        "default": false,
+                        "description": "Опасный груз.",
+                        "type": "boolean"
+                      },
+                      "explosive_cargo": {
+                        "default": false,
+                        "description": "Взрывчатый груз.",
+                        "type": "boolean"
+                      },
+                      "pass_zone_pass_ids": {
+                        "anyOf": [
+                          {
+                            "items": {
+                              "type": "integer"
+                            },
+                            "type": "array"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "description": "ID пропусков в зоны ограничения грузового транспорта."
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ],
+                    "type": "object"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Параметры walking или truck с полем kind."
+          }
+        },
+        "required": [
+          "points"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": false,
+        "description": "Normalized LLM-facing response from Routing API.",
+        "properties": {
+          "status": {
+            "enum": [
+              "OK",
+              "POINT_EXCLUDED",
+              "ROUTE_NOT_FOUND",
+              "ROUTE_DOES_NOT_EXISTS",
+              "ATTRACT_FAIL"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "transport": {
+            "enum": [
+              "driving",
+              "walking",
+              "taxi",
+              "bicycle",
+              "scooter",
+              "emergency",
+              "truck",
+              "motorcycle"
+            ],
+            "title": "Transport",
+            "type": "string"
+          },
+          "route_mode": {
+            "enum": [
+              "fastest",
+              "shortest"
+            ],
+            "title": "Route Mode",
+            "type": "string"
+          },
+          "route_count": {
+            "minimum": 0,
+            "title": "Route Count",
+            "type": "integer"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "routes": {
+            "items": {
+              "additionalProperties": false,
+              "description": "One normalized route alternative.",
+              "properties": {
+                "id": {
+                  "title": "Id",
+                  "type": "string"
+                },
+                "route_id": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Route Id"
+                },
+                "algorithm": {
+                  "title": "Algorithm",
+                  "type": "string"
+                },
+                "distance_meters": {
+                  "minimum": 0,
+                  "title": "Distance Meters",
+                  "type": "integer"
+                },
+                "duration_seconds": {
+                  "minimum": 0,
+                  "title": "Duration Seconds",
+                  "type": "integer"
+                },
+                "reliability": {
+                  "anyOf": [
+                    {
+                      "maximum": 1,
+                      "minimum": 0,
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Reliability"
+                },
+                "waypoints": {
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Original and road-network-projected route point.",
+                    "properties": {
+                      "original": {
+                        "additionalProperties": false,
+                        "description": "Normalized WGS84 coordinate in a route response.",
+                        "properties": {
+                          "lat": {
+                            "description": "Широта WGS84.",
+                            "maximum": 90,
+                            "minimum": -90,
+                            "title": "Lat",
+                            "type": "number"
+                          },
+                          "lon": {
+                            "description": "Долгота WGS84.",
+                            "maximum": 180,
+                            "minimum": -180,
+                            "title": "Lon",
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "lat",
+                          "lon"
+                        ],
+                        "title": "RouteCoordinate",
+                        "type": "object"
+                      },
+                      "projected": {
+                        "additionalProperties": false,
+                        "description": "Normalized WGS84 coordinate in a route response.",
+                        "properties": {
+                          "lat": {
+                            "description": "Широта WGS84.",
+                            "maximum": 90,
+                            "minimum": -90,
+                            "title": "Lat",
+                            "type": "number"
+                          },
+                          "lon": {
+                            "description": "Долгота WGS84.",
+                            "maximum": 180,
+                            "minimum": -180,
+                            "title": "Lon",
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "lat",
+                          "lon"
+                        ],
+                        "title": "RouteCoordinate",
+                        "type": "object"
+                      },
+                      "transit": {
+                        "description": "Является ли точка промежуточной.",
+                        "title": "Transit",
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "original",
+                      "projected",
+                      "transit"
+                    ],
+                    "title": "RouteWaypoint",
+                    "type": "object"
+                  },
+                  "title": "Waypoints",
+                  "type": "array"
+                },
+                "geometry": {
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "One WKT geometry segment of a normalized route.",
+                    "properties": {
+                      "wkt": {
+                        "description": "Геометрия сегмента в WKT.",
+                        "minLength": 1,
+                        "title": "Wkt",
+                        "type": "string"
+                      },
+                      "source": {
+                        "enum": [
+                          "begin_pedestrian",
+                          "maneuver",
+                          "end_pedestrian"
+                        ],
+                        "title": "Source",
+                        "type": "string"
+                      },
+                      "maneuver_id": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "title": "Maneuver Id"
+                      },
+                      "color": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "title": "Color"
+                      },
+                      "style": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "title": "Style"
+                      },
+                      "length_meters": {
+                        "anyOf": [
+                          {
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "title": "Length Meters"
+                      },
+                      "public_transport_lane": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "title": "Public Transport Lane"
+                      }
+                    },
+                    "required": [
+                      "wkt",
+                      "source"
+                    ],
+                    "title": "RouteGeometrySegment",
+                    "type": "object"
+                  },
+                  "title": "Geometry",
+                  "type": "array"
+                },
+                "maneuvers": {
+                  "items": {
+                    "additionalProperties": false,
+                    "description": "Normalized navigation instruction.",
+                    "properties": {
+                      "id": {
+                        "title": "Id",
+                        "type": "string"
+                      },
+                      "type": {
+                        "title": "Type",
+                        "type": "string"
+                      },
+                      "instruction": {
+                        "title": "Instruction",
+                        "type": "string"
+                      },
+                      "icon": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "title": "Icon"
+                      },
+                      "distance_meters": {
+                        "anyOf": [
+                          {
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "title": "Distance Meters"
+                      },
+                      "duration_seconds": {
+                        "anyOf": [
+                          {
+                            "minimum": 0,
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "title": "Duration Seconds"
+                      },
+                      "street_names": {
+                        "items": {
+                          "type": "string"
+                        },
+                        "title": "Street Names",
+                        "type": "array"
+                      },
+                      "turn_direction": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "title": "Turn Direction"
+                      },
+                      "turn_angle": {
+                        "anyOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "title": "Turn Angle"
+                      },
+                      "floor_from": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "title": "Floor From"
+                      },
+                      "floor_to": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "default": null,
+                        "title": "Floor To"
+                      },
+                      "geometry": {
+                        "items": {
+                          "additionalProperties": false,
+                          "description": "One WKT geometry segment of a normalized route.",
+                          "properties": {
+                            "wkt": {
+                              "description": "Геометрия сегмента в WKT.",
+                              "minLength": 1,
+                              "title": "Wkt",
+                              "type": "string"
+                            },
+                            "source": {
+                              "enum": [
+                                "begin_pedestrian",
+                                "maneuver",
+                                "end_pedestrian"
+                              ],
+                              "title": "Source",
+                              "type": "string"
+                            },
+                            "maneuver_id": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "default": null,
+                              "title": "Maneuver Id"
+                            },
+                            "color": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "default": null,
+                              "title": "Color"
+                            },
+                            "style": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "default": null,
+                              "title": "Style"
+                            },
+                            "length_meters": {
+                              "anyOf": [
+                                {
+                                  "minimum": 0,
+                                  "type": "integer"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "default": null,
+                              "title": "Length Meters"
+                            },
+                            "public_transport_lane": {
+                              "anyOf": [
+                                {
+                                  "type": "boolean"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "default": null,
+                              "title": "Public Transport Lane"
+                            }
+                          },
+                          "required": [
+                            "wkt",
+                            "source"
+                          ],
+                          "title": "RouteGeometrySegment",
+                          "type": "object"
+                        },
+                        "title": "Geometry",
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "instruction"
+                    ],
+                    "title": "RouteManeuver",
+                    "type": "object"
+                  },
+                  "title": "Maneuvers",
+                  "type": "array"
+                },
+                "altitudes": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "description": "Normalized route altitude statistics.",
+                      "properties": {
+                        "elevation_gain_cm": {
+                          "title": "Elevation Gain Cm",
+                          "type": "integer"
+                        },
+                        "elevation_loss_cm": {
+                          "title": "Elevation Loss Cm",
+                          "type": "integer"
+                        },
+                        "max_altitude_cm": {
+                          "title": "Max Altitude Cm",
+                          "type": "integer"
+                        },
+                        "min_altitude_cm": {
+                          "title": "Min Altitude Cm",
+                          "type": "integer"
+                        },
+                        "max_road_angle_degrees": {
+                          "title": "Max Road Angle Degrees",
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "elevation_gain_cm",
+                        "elevation_loss_cm",
+                        "max_altitude_cm",
+                        "min_altitude_cm",
+                        "max_road_angle_degrees"
+                      ],
+                      "title": "RouteAltitudes",
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null
+                },
+                "payments": {
+                  "anyOf": [
+                    {
+                      "items": {
+                        "additionalProperties": false,
+                        "description": "Total toll-road payment in one currency.",
+                        "properties": {
+                          "currency": {
+                            "title": "Currency",
+                            "type": "string"
+                          },
+                          "cost": {
+                            "minimum": 0,
+                            "title": "Cost",
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "currency",
+                          "cost"
+                        ],
+                        "title": "RoutePayment",
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Payments"
+                }
+              },
+              "required": [
+                "id",
+                "algorithm",
+                "distance_meters",
+                "duration_seconds",
+                "waypoints",
+                "geometry",
+                "maneuvers"
+              ],
+              "title": "RouteOption",
+              "type": "object"
+            },
+            "title": "Routes",
+            "type": "array"
+          }
+        },
+        "required": [
+          "status",
+          "transport",
+          "route_mode",
+          "route_count",
+          "message",
+          "routes"
+        ],
+        "title": "BuildRouteResult",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": {
+        "title": "Build route",
+        "readOnlyHint": true,
+        "destructiveHint": null,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "meta": {
+        "fastmcp": {
+          "tags": [
+            "gis",
+            "route",
+            "routing"
+          ]
+        }
+      },
+      "execution": null
+    },
+    {
+      "name": "calculate_distance_matrix",
+      "title": "Calculate distance matrix",
+      "description": "Рассчитывает расстояние и время в пути между каждой исходной и каждой конечной точкой через 2GIS Distance Matrix API. matrix[i][j] соответствует origins[i] → destinations[j]. Поддерживает до 25 точек каждого типа и расстояние не более 2000 км по прямой между точками. Для неуспешной пары сохраняет статус API, а distance_meters и duration_seconds возвращает как null.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "origins": {
+            "description": "От 1 до 25 точек WGS84.",
+            "items": {
+              "additionalProperties": false,
+              "description": "WGS84 point accepted by Distance Matrix API.",
+              "properties": {
+                "lat": {
+                  "description": "Широта WGS84.",
+                  "maximum": 90,
+                  "minimum": -90,
+                  "type": "number"
+                },
+                "lon": {
+                  "description": "Долгота WGS84.",
+                  "maximum": 180,
+                  "minimum": -180,
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "type": "object"
+            },
+            "maxItems": 25,
+            "minItems": 1,
+            "type": "array"
+          },
+          "destinations": {
+            "description": "От 1 до 25 точек WGS84.",
+            "items": {
+              "additionalProperties": false,
+              "description": "WGS84 point accepted by Distance Matrix API.",
+              "properties": {
+                "lat": {
+                  "description": "Широта WGS84.",
+                  "maximum": 90,
+                  "minimum": -90,
+                  "type": "number"
+                },
+                "lon": {
+                  "description": "Долгота WGS84.",
+                  "maximum": 180,
+                  "minimum": -180,
+                  "type": "number"
+                }
+              },
+              "required": [
+                "lat",
+                "lon"
+              ],
+              "type": "object"
+            },
+            "maxItems": 25,
+            "minItems": 1,
+            "type": "array"
+          },
+          "route_type": {
+            "default": "pedestrian",
+            "description": "Тип маршрута: pedestrian, car, bicycle, truck, public_transport, taxi, scooter или motorcycle.",
+            "enum": [
+              "pedestrian",
+              "car",
+              "bicycle",
+              "truck",
+              "public_transport",
+              "taxi",
+              "scooter",
+              "motorcycle"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "origins",
+          "destinations"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": false,
+        "description": "Normalized LLM-facing response from Distance Matrix API.",
+        "properties": {
+          "route_type": {
+            "description": "Запрошенный тип маршрута.",
+            "enum": [
+              "pedestrian",
+              "car",
+              "bicycle",
+              "truck",
+              "public_transport",
+              "taxi",
+              "scooter",
+              "motorcycle"
+            ],
+            "title": "Route Type",
+            "type": "string"
+          },
+          "matrix": {
+            "description": "matrix[i][j] соответствует маршруту origins[i] → destinations[j].",
+            "items": {
+              "items": {
+                "additionalProperties": false,
+                "description": "One origin-to-destination route result.",
+                "properties": {
+                  "status": {
+                    "description": "Статус построения маршрута для пары точек.",
+                    "enum": [
+                      "FAIL",
+                      "OK",
+                      "POINT_EXCLUDED",
+                      "ROUTE_NOT_FOUND",
+                      "ROUTE_DOES_NOT_EXISTS",
+                      "ATTRACT_FAIL",
+                      "PLATFORMS_NOT_FOUND"
+                    ],
+                    "title": "Status",
+                    "type": "string"
+                  },
+                  "distance_meters": {
+                    "anyOf": [
+                      {
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Длина маршрута в метрах для status=OK; иначе null.",
+                    "title": "Distance Meters"
+                  },
+                  "duration_seconds": {
+                    "anyOf": [
+                      {
+                        "minimum": 0,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Время в пути в секундах для status=OK; иначе null.",
+                    "title": "Duration Seconds"
+                  }
+                },
+                "required": [
+                  "status",
+                  "distance_meters",
+                  "duration_seconds"
+                ],
+                "title": "DistanceMatrixCell",
+                "type": "object"
+              },
+              "type": "array"
+            },
+            "maxItems": 25,
+            "minItems": 1,
+            "title": "Matrix",
+            "type": "array"
+          },
+          "summary": {
+            "additionalProperties": false,
+            "description": "Dimensions and success counters for a matrix result.",
+            "properties": {
+              "origin_count": {
+                "description": "Количество исходных точек.",
+                "maximum": 25,
+                "minimum": 1,
+                "title": "Origin Count",
+                "type": "integer"
+              },
+              "destination_count": {
+                "description": "Количество конечных точек.",
+                "maximum": 25,
+                "minimum": 1,
+                "title": "Destination Count",
+                "type": "integer"
+              },
+              "pair_count": {
+                "description": "Общее количество пар точек.",
+                "maximum": 625,
+                "minimum": 1,
+                "title": "Pair Count",
+                "type": "integer"
+              },
+              "successful_pair_count": {
+                "description": "Количество успешно построенных маршрутов.",
+                "maximum": 625,
+                "minimum": 0,
+                "title": "Successful Pair Count",
+                "type": "integer"
+              },
+              "failed_pair_count": {
+                "description": "Количество пар, для которых маршрут не построен.",
+                "maximum": 625,
+                "minimum": 0,
+                "title": "Failed Pair Count",
+                "type": "integer"
+              }
+            },
+            "required": [
+              "origin_count",
+              "destination_count",
+              "pair_count",
+              "successful_pair_count",
+              "failed_pair_count"
+            ],
+            "title": "DistanceMatrixSummary",
+            "type": "object"
+          }
+        },
+        "required": [
+          "route_type",
+          "matrix",
+          "summary"
+        ],
+        "title": "DistanceMatrixResult",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": {
+        "title": "Calculate distance matrix",
+        "readOnlyHint": true,
+        "destructiveHint": null,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "meta": {
+        "fastmcp": {
+          "tags": [
+            "distance-matrix",
+            "gis",
+            "routing"
+          ]
+        }
+      },
+      "execution": null
+    },
+    {
+      "name": "geocode_address",
+      "title": "Geocode address",
+      "description": "Преобразует адрес в список координат через 2GIS Geocoder API. Возвращает до пяти компактных кандидатов по умолчанию, чтобы можно было разрешить неоднозначность адреса. Список допустимых типов, локалей, дополнительных fields-селекторов и редких параметров доступен в resources tgis://geocoder/address/parameters, tgis://geocoder/address/fields и tgis://geocoder/address/examples. Обратное геокодирование координат в адрес не поддерживается.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "address": {
+            "description": "Адрес для прямого геокодирования, например «Новосибирск, проспект Димитрова, 7».",
+            "maxLength": 500,
+            "minLength": 1,
+            "type": "string"
+          },
+          "types": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Типы геообъектов, например building, street, attraction или adm_div.city."
+          },
+          "region_id": {
+            "anyOf": [
+              {
+                "minimum": 1,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Идентификатор региона для снятия географической неоднозначности."
+          },
+          "locale": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Локаль выдачи, например ru_RU."
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "maximum": 180,
+                "minimum": -180,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Долгота центра поиска (WGS84)."
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "maximum": 90,
+                "minimum": -90,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Широта центра поиска (WGS84)."
+          },
+          "radius": {
+            "anyOf": [
+              {
+                "maximum": 40000,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Радиус фильтра в метрах."
+          },
+          "sort": {
+            "default": "relevance",
+            "description": "relevance, distance, rating, flamp_rating, creation_time, opened_time или name.",
+            "type": "string"
+          },
+          "page": {
+            "default": 1,
+            "description": "Номер страницы.",
+            "maximum": 1000000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "page_size": {
+            "default": 5,
+            "description": "Число кандидатов на странице.",
+            "maximum": 50,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "extra_fields": {
+            "description": "Дополнительные fields-селекторы Geocoder API из field resources.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "additional_params": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    }
+                  ]
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                }
+              ]
+            },
+            "description": "Редкие документированные параметры Geocoder API из parameters resource.",
+            "type": "object"
+          }
+        },
+        "required": [
+          "address"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": false,
+        "description": "Normalized LLM-facing result of forward address geocoding.",
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "total": {
+            "minimum": 0,
+            "title": "Total",
+            "type": "integer"
+          },
+          "returned_count": {
+            "minimum": 0,
+            "title": "Returned Count",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "additionalProperties": false,
+              "description": "Stable compact catalog card with opt-in upstream details.",
+              "properties": {
+                "id": {
+                  "title": "Id",
+                  "type": "string"
+                },
+                "name": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Name"
+                },
+                "type": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Type"
+                },
+                "subtype": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Subtype"
+                },
+                "full_address_name": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Full Address Name"
+                },
+                "address": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Address"
+                },
+                "coordinates": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "description": "WGS84 coordinates returned for a catalog item.",
+                      "properties": {
+                        "lat": {
+                          "maximum": 90,
+                          "minimum": -90,
+                          "title": "Lat",
+                          "type": "number"
+                        },
+                        "lon": {
+                          "maximum": 180,
+                          "minimum": -180,
+                          "title": "Lon",
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "lat",
+                        "lon"
+                      ],
+                      "title": "CatalogCoordinates",
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null
+                },
+                "extra_fields": {
+                  "additionalProperties": true,
+                  "title": "Extra Fields",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "title": "CatalogItem",
+              "type": "object"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "query",
+          "total",
+          "returned_count",
+          "items"
+        ],
+        "title": "GeocodeAddressResult",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": {
+        "title": "Geocode address",
+        "readOnlyHint": true,
+        "destructiveHint": null,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "meta": {
+        "fastmcp": {
+          "tags": [
+            "address",
+            "geocoder",
+            "gis"
+          ]
+        }
+      },
+      "execution": null
+    },
+    {
+      "name": "render_static_map",
+      "title": "Render static map",
+      "description": "Создаёт PNG-изображение статической карты через 2GIS Static API. Возвращает изображение как MCP ImageContent с base64-данными и нормализованные метаданные. Поддерживает обязательный центр карты и до 50 цветных круговых маркеров.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "center": {
+            "additionalProperties": false,
+            "description": "Центр карты в координатах WGS84.",
+            "properties": {
+              "lat": {
+                "description": "Широта WGS84.",
+                "maximum": 90,
+                "minimum": -90,
+                "type": "number"
+              },
+              "lon": {
+                "description": "Долгота WGS84.",
+                "maximum": 180,
+                "minimum": -180,
+                "type": "number"
+              }
+            },
+            "required": [
+              "lat",
+              "lon"
+            ],
+            "type": "object"
+          },
+          "zoom": {
+            "default": 14,
+            "description": "Масштаб карты от 1 до 18.",
+            "maximum": 18,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "width": {
+            "default": 600,
+            "description": "Ширина изображения в пикселях.",
+            "maximum": 1280,
+            "minimum": 120,
+            "type": "integer"
+          },
+          "height": {
+            "default": 400,
+            "description": "Высота изображения в пикселях.",
+            "maximum": 1280,
+            "minimum": 90,
+            "type": "integer"
+          },
+          "markers": {
+            "description": "До 50 цветных круговых маркеров.",
+            "items": {
+              "additionalProperties": false,
+              "description": "Colored circular marker rendered on a static map.",
+              "properties": {
+                "coordinate": {
+                  "additionalProperties": false,
+                  "description": "Координаты маркера WGS84.",
+                  "properties": {
+                    "lat": {
+                      "description": "Широта WGS84.",
+                      "maximum": 90,
+                      "minimum": -90,
+                      "type": "number"
+                    },
+                    "lon": {
+                      "description": "Долгота WGS84.",
+                      "maximum": 180,
+                      "minimum": -180,
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "lat",
+                    "lon"
+                  ],
+                  "type": "object"
+                },
+                "color": {
+                  "default": "blue",
+                  "description": "Цвет маркера.",
+                  "enum": [
+                    "blue",
+                    "red",
+                    "green",
+                    "orange",
+                    "yellow",
+                    "purple",
+                    "pink",
+                    "grey",
+                    "black"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "coordinate"
+              ],
+              "type": "object"
+            },
+            "maxItems": 50,
+            "type": "array"
+          }
+        },
+        "required": [
+          "center"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": false,
+        "description": "Normalized JSON metadata accompanying the MCP image content.",
+        "properties": {
+          "center": {
+            "additionalProperties": false,
+            "description": "Запрошенный центр карты.",
+            "properties": {
+              "lat": {
+                "description": "Широта WGS84.",
+                "maximum": 90,
+                "minimum": -90,
+                "title": "Lat",
+                "type": "number"
+              },
+              "lon": {
+                "description": "Долгота WGS84.",
+                "maximum": 180,
+                "minimum": -180,
+                "title": "Lon",
+                "type": "number"
+              }
+            },
+            "required": [
+              "lat",
+              "lon"
+            ],
+            "title": "StaticMapPoint",
+            "type": "object"
+          },
+          "zoom": {
+            "description": "Запрошенный масштаб карты.",
+            "maximum": 18,
+            "minimum": 1,
+            "title": "Zoom",
+            "type": "integer"
+          },
+          "width": {
+            "description": "Ширина изображения в пикселях.",
+            "maximum": 1280,
+            "minimum": 120,
+            "title": "Width",
+            "type": "integer"
+          },
+          "height": {
+            "description": "Высота изображения в пикселях.",
+            "maximum": 1280,
+            "minimum": 90,
+            "title": "Height",
+            "type": "integer"
+          },
+          "marker_count": {
+            "description": "Количество отображённых маркеров.",
+            "maximum": 50,
+            "minimum": 0,
+            "title": "Marker Count",
+            "type": "integer"
+          },
+          "mime_type": {
+            "const": "image/png",
+            "description": "MIME-тип изображения в ImageContent.",
+            "title": "Mime Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "center",
+          "zoom",
+          "width",
+          "height",
+          "marker_count",
+          "mime_type"
+        ],
+        "title": "StaticMapResult",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": {
+        "title": "Render static map",
+        "readOnlyHint": true,
+        "destructiveHint": null,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "meta": {
+        "fastmcp": {
+          "tags": [
+            "gis",
+            "maps",
+            "static-map"
+          ]
+        }
+      },
+      "execution": null
+    },
+    {
+      "name": "search_places",
+      "title": "Search places",
+      "description": "Ищет организации, здания, адреса, транспорт, парковки, достопримечательности и другие места через 2GIS Places API. По умолчанию возвращает компактные карточки (имя, тип, адрес, координаты, категории, организация/бренд, часы работы, рейтинг). Для следующего, более детального запроса укажите extra_fields: любой документированный fields-селектор API, например items.contact_groups, items.geometry.centroid, items.attribute_groups, items.description, items.links или items.structure_info.year_of_construction. Редкие документированные фильтры передавайте в additional_params: location, search_type, search_nearby, point1/point2, polygon, viewpoint1/2, region_id, district_id, building_id, place_id, city_id, subway, rubric_id, org_id, brand_id, has_photos, has_rating, has_reviews, has_site, work_time, opened_after_date, has_itin, has_trade_license, search_territory_of_interest или search_input_method. Списковые значения additional_params API принимает как массивы; они будут преобразованы в CSV.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "query": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Текст запроса."
+          },
+          "types": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Типы объектов, например branch, building, street, parking, station, attraction, route или adm_div."
+          },
+          "locale": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Локаль выдачи, например ru_RU."
+          },
+          "longitude": {
+            "anyOf": [
+              {
+                "maximum": 180,
+                "minimum": -180,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Долгота центра поиска (WGS84)."
+          },
+          "latitude": {
+            "anyOf": [
+              {
+                "maximum": 90,
+                "minimum": -90,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Широта центра поиска (WGS84)."
+          },
+          "radius": {
+            "anyOf": [
+              {
+                "maximum": 40000,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Радиус фильтра в метрах."
+          },
+          "sort": {
+            "default": "relevance",
+            "description": "relevance, distance, rating, flamp_rating, creation_time, opened_time или name.",
+            "type": "string"
+          },
+          "page": {
+            "default": 1,
+            "description": "Номер страницы.",
+            "maximum": 1000000,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "page_size": {
+            "default": 20,
+            "description": "Число результатов на странице.",
+            "maximum": 50,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "extra_fields": {
+            "description": "Дополнительные fields-селекторы Places API. Запрашивайте только нужные поля.",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "additional_params": {
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    }
+                  ]
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                }
+              ]
+            },
+            "description": "Редкие документированные параметры Places API; допустимые имена перечислены в описании инструмента.",
+            "type": "object"
+          }
+        },
+        "type": "object"
+      },
+      "outputSchema": {
+        "additionalProperties": false,
+        "description": "Normalized LLM-facing result of a Places search.",
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "total": {
+            "minimum": 0,
+            "title": "Total",
+            "type": "integer"
+          },
+          "returned_count": {
+            "minimum": 0,
+            "title": "Returned Count",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "additionalProperties": false,
+              "description": "Stable compact catalog card with opt-in upstream details.",
+              "properties": {
+                "id": {
+                  "title": "Id",
+                  "type": "string"
+                },
+                "name": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Name"
+                },
+                "type": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Type"
+                },
+                "subtype": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Subtype"
+                },
+                "full_address_name": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Full Address Name"
+                },
+                "address": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "title": "Address"
+                },
+                "coordinates": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": false,
+                      "description": "WGS84 coordinates returned for a catalog item.",
+                      "properties": {
+                        "lat": {
+                          "maximum": 90,
+                          "minimum": -90,
+                          "title": "Lat",
+                          "type": "number"
+                        },
+                        "lon": {
+                          "maximum": 180,
+                          "minimum": -180,
+                          "title": "Lon",
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "lat",
+                        "lon"
+                      ],
+                      "title": "CatalogCoordinates",
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null
+                },
+                "extra_fields": {
+                  "additionalProperties": true,
+                  "title": "Extra Fields",
+                  "type": "object"
+                }
+              },
+              "required": [
+                "id"
+              ],
+              "title": "CatalogItem",
+              "type": "object"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "query",
+          "total",
+          "returned_count",
+          "items"
+        ],
+        "title": "SearchPlacesResult",
+        "type": "object"
+      },
+      "icons": null,
+      "annotations": {
+        "title": "Search places",
+        "readOnlyHint": true,
+        "destructiveHint": null,
+        "idempotentHint": true,
+        "openWorldHint": true
+      },
+      "meta": {
+        "fastmcp": {
+          "tags": [
+            "gis",
+            "places",
+            "search"
+          ]
+        }
+      },
+      "execution": null
+    },
+    {
+      "name": "server_info",
+      "title": "Server info",
+      "description": "Возвращает метаданные MCP-сервера и состояние runtime. Используйте для проверки discovery и доступности сервиса.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "include_capabilities": {
+            "default": true,
+            "description": "Включить в ответ список поддерживаемых MCP capabilities.",
+            "type": "boolean"
+          }
+        },
+        "type": "object"
+      },
+      "outputSchema": null,
+      "icons": null,
+      "annotations": {
+        "title": "Server info",
+        "readOnlyHint": true,
+        "destructiveHint": null,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
+      "meta": {
+        "fastmcp": {
+          "tags": [
+            "health",
+            "meta"
+          ]
+        }
+      },
+      "execution": null
+    },
+    {
+      "name": "list_resources",
+      "title": null,
+      "description": "List all available resources and resource templates.\n\nReturns JSON with resource metadata. Static resources have a\n'uri' field, while templates have a 'uri_template' field with\nplaceholders like {name}.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "icons": null,
+      "annotations": {
+        "title": null,
+        "readOnlyHint": true,
+        "destructiveHint": null,
+        "idempotentHint": null,
+        "openWorldHint": null
+      },
+      "meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
+      "execution": null
+    },
+    {
+      "name": "read_resource",
+      "title": null,
+      "description": "Read a resource by its URI.\n\nFor static resources, provide the exact URI. For templated\nresources, provide the URI with template parameters filled in.\n\nReturns the resource content as a string. Binary content is\nbase64-encoded.",
+      "inputSchema": {
+        "additionalProperties": false,
+        "properties": {
+          "uri": {
+            "description": "The URI of the resource to read",
+            "type": "string"
+          }
+        },
+        "required": [
+          "uri"
+        ],
+        "type": "object"
+      },
+      "outputSchema": {
+        "properties": {
+          "result": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "result"
+        ],
+        "type": "object",
+        "x-fastmcp-wrap-result": true
+      },
+      "icons": null,
+      "annotations": {
+        "title": null,
+        "readOnlyHint": true,
+        "destructiveHint": null,
+        "idempotentHint": null,
+        "openWorldHint": null
+      },
+      "meta": {
+        "fastmcp": {
+          "tags": []
+        }
+      },
+      "execution": null
+    }
+  ]
+}

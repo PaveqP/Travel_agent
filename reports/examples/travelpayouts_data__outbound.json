@@ -1,0 +1,23 @@
+{
+  "data": [
+    {
+      "flight_number": "6941",
+      "link": "/search/MOW1211AER1?t=DP17944830001794496800000230SVOAER_9ffc4f40c55677fe70d2cffbc1b875f6_3194&search_date=25102026&expected_price_uuid=01a1734a-a1f1-8030-6877-83bcacdefe4f&static_fare_key=[REDACTED]&itinerary_key=[REDACTED]&expected_price_source=share&expected_price_currency=rub&expected_price=3194",
+      "origin_airport": "SVO",
+      "destination_airport": "AER",
+      "departure_at": "2026-11-12T11:30:00+03:00",
+      "airline": "DP",
+      "destination": "AER",
+      "origin": "MOW",
+      "price": 3194,
+      "gate": "Kupi.com",
+      "return_transfers": 0,
+      "duration": 230,
+      "duration_to": 230,
+      "duration_back": 0,
+      "transfers": 0
+    }
+  ],
+  "currency": "rub",
+  "success": true
+}

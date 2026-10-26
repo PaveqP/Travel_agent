@@ -1,0 +1,13 @@
+{
+  "meta": null,
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"offers\": [], \"meta\": {\"transport\": \"etrain\", \"checkout_hint\": \"For электрички the offer's `checkout_url` IS the hand-off — the tutu.ru schedule page for this route. Hand it over exactly as returned (never rebuild it), or call `create_checkout_link` with the offer's `checkout_ref` for the same link.\", \"pricing\": {\"basis\": \"per_seat\", \"note\": \"Every price on this page — `price`, `fares.price_from` / `price_to`, `seat_categories[].price_from` — is ONE SEAT (one ticket). Upstream prices this product per passenger and ignores the party size, so nothing here scales with it. This search takes no party size, so no total is computed for you: multiply by the number of travellers yourself and present it as «от».\"}, \"from\": {\"name\": \"Адлер\", \"geo_id\": \"2665770\", \"region\": \"Краснодарский край\"}, \"to\": {\"name\": \"Роза Хутор\", \"geo_id\": \"2718547\", \"region\": \"Краснодарский край\"}, \"sort\": \"price_asc\", \"page\": 1, \"page_size\": 10, \"total_returned\": 0, \"total_matched\": 0, \"total_matched_exact\": true, \"has_more\": false, \"post_filter_dropped_over_cap\": 0, \"post_filter_dropped_not_direct\": 0, \"post_filter_dropped_wrong_carrier\": 0, \"carriers_available\": [], \"upstream_non_etrain_dropped\": 0}}",
+      "annotations": null,
+      "meta": null
+    }
+  ],
+  "structuredContent": null,
+  "isError": false
+}

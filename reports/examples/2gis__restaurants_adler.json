@@ -1,0 +1,1504 @@
+{
+  "meta": {
+    "tool": "search_places",
+    "returned_items": 10
+  },
+  "content": [
+    {
+      "type": "text",
+      "text": "Найдено 10 из 133 результатов для: Рестораны.\n\nРезультаты:\n1. По Чесноку, ресторан — branch; адрес: Сочи, улица Бестужева, 1/1; координаты: 43.418280, 39.922334; id: 70000001083997564\n2. Высота 5642, ресторан — branch; адрес: Сириус (Сириус городской округ), улица 65 лет Победы, 50/1; координаты: 43.392946, 39.976301; id: 70000001028994905\n3. Моя Звезда by Novikov, ресторан — branch; адрес: Сириус (Сириус городской округ), Олимпийский проспект, 36/6; координаты: 43.399433, 39.950924; id: 70000001075532956\n4. La luna, ресторан — branch; адрес: Сириус (Сириус городской округ), Таврическая улица, 1; координаты: 43.389872, 39.984469; id: 4222652931664012\n5. Сидрерия — branch; адрес: Сочи, улица Бестужева, 1/1; координаты: 43.418969, 39.923539; id: 70000001054842370\n6. Фабрика вкуса, ресторан — branch; адрес: Сириус (Сириус городской округ), Нижнеимеретинская улица, 171а; координаты: 43.396574, 39.973940; id: 70000001039505919\n7. Хинкали танцевали, кафе-ресторан — branch; адрес: Сочи, улица Кирова, 44; координаты: 43.424843, 39.923799; id: 70000001032226656\n8. У Рыбака, ресторан — branch; адрес: Сочи, улица Просвещения, 15а; координаты: 43.424104, 39.915891; id: 70000001039692368\n9. Pro.Хинкали by Novikov, ресторан грузинской кухни — branch; адрес: Сочи, улица Бестужева, 1/1; координаты: 43.418352, 39.923883; id: 70000001037672961\n10. Lali, ресторан узбекской кухни — branch; адрес: Сочи, улица Бестужева, 1/1; координаты: 43.417663, 39.923009; id: 70000001102234177",
+      "annotations": null,
+      "meta": null
+    }
+  ],
+  "structuredContent": {
+    "query": "Рестораны",
+    "total": 133,
+    "returned_count": 10,
+    "items": [
+      {
+        "id": "70000001083997564",
+        "name": "По Чесноку, ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, улица Бестужева, 1/1",
+        "address": {
+          "building_id": "4222760305899921",
+          "building_name": "Мандарин",
+          "components": [
+            {
+              "number": "1/1",
+              "street": "улица Бестужева",
+              "street_id": "4222863385035696",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354340"
+        },
+        "coordinates": {
+          "lat": 43.41828,
+          "lon": 39.922334
+        },
+        "extra_fields": {
+          "address_comment": "2 этаж",
+          "address_name": "улица Бестужева, 1/1",
+          "brand": {
+            "branch_count": 1,
+            "extension": "ресторан",
+            "id": "70000001103779314",
+            "name": "По Чесноку"
+          },
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 1,
+            "extension": "ресторан",
+            "id": "70000001083997563",
+            "name": "По Чесноку, ресторан",
+            "primary": "По Чесноку"
+          },
+          "reviews": {
+            "general_rating": 4.8,
+            "general_review_count": 1359,
+            "general_review_count_with_stars": 1654,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.8,
+            "org_review_count": 1359,
+            "org_review_count_with_stars": 1654
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001028994905",
+        "name": "Высота 5642, ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сириус (Сириус городской округ), улица 65 лет Победы, 50/1",
+        "address": {
+          "building_id": "4222760344573925",
+          "components": [
+            {
+              "number": "50/1",
+              "street": "улица 65 лет Победы",
+              "street_id": "4222863385043740",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354349"
+        },
+        "coordinates": {
+          "lat": 43.392946,
+          "lon": 39.976301
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "улица 65 лет Победы, 50/1",
+          "flags": {
+            "badges": [
+              {
+                "collection_uid": "62481d40-4b9e-11e9-8854-c962bdef95ed",
+                "text": "3 место",
+                "type": "award2018"
+              }
+            ],
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 1,
+            "extension": "ресторан",
+            "id": "70000001028994904",
+            "name": "Высота 5642, ресторан",
+            "primary": "Высота 5642"
+          },
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 1184,
+            "general_review_count_with_stars": 32348,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4.2,
+                "review_count": 24,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 1184,
+            "org_review_count_with_stars": 32348,
+            "rating": 4.2,
+            "review_count": 24
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001075532956",
+        "name": "Моя Звезда by Novikov, ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сириус (Сириус городской округ), Олимпийский проспект, 36/6",
+        "address": {
+          "building_id": "70030076160099171",
+          "components": [
+            {
+              "number": "36/6",
+              "street": "Олимпийский проспект",
+              "street_id": "4222863385036599",
+              "type": "street_number"
+            },
+            {
+              "number": "21",
+              "street": "Нижнеимеретинская улица",
+              "street_id": "4222863385036624",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354375"
+        },
+        "coordinates": {
+          "lat": 43.399433,
+          "lon": 39.950924
+        },
+        "extra_fields": {
+          "address_name": "Олимпийский проспект, 36/6",
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "full_name": "Сириус, Олимпийский проспект, 36/6 / Нижнеимеретинская улица, 21",
+          "org": {
+            "branch_count": 1,
+            "extension": "ресторан",
+            "id": "70000001075532955",
+            "name": "Моя Звезда by Novikov, ресторан",
+            "primary": "Моя Звезда by Novikov"
+          },
+          "purpose_name": "Ресторан",
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 1753,
+            "general_review_count_with_stars": 23634,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 3,
+                "review_count": 1,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 1749,
+            "org_review_count_with_stars": 23628,
+            "rating": 3,
+            "review_count": 1
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "4222652931664012",
+        "name": "La luna, ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сириус (Сириус городской округ), Таврическая улица, 1",
+        "address": {
+          "building_id": "4222760305822077",
+          "components": [
+            {
+              "number": "1",
+              "street": "Таврическая улица",
+              "street_id": "4222863385036673",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354349"
+        },
+        "coordinates": {
+          "lat": 43.389872,
+          "lon": 39.984469
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "Таврическая улица, 1",
+          "flags": {
+            "badges": [
+              {
+                "collection_uid": "62481d40-4b9e-11e9-8854-c962bdef95ed",
+                "text": "2 место",
+                "type": "award2018"
+              },
+              {
+                "collection_uid": "be8ffe10-7d43-11ea-ac4a-9b067a38b30b",
+                "text": "Победитель Премии 2ГИС 2019",
+                "type": "award2019"
+              }
+            ],
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 1,
+            "extension": "ресторан",
+            "id": "4222661521590907",
+            "name": "La luna, ресторан",
+            "primary": "La luna"
+          },
+          "reviews": {
+            "general_rating": 4.8,
+            "general_review_count": 892,
+            "general_review_count_with_stars": 1354,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4.3,
+                "recommendation_count": 10,
+                "review_count": 69,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.6,
+            "org_review_count": 969,
+            "org_review_count_with_stars": 1354,
+            "rating": 4.3,
+            "recommendation_count": 10,
+            "review_count": 69
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001054842370",
+        "name": "Сидрерия",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, улица Бестужева, 1/1",
+        "address": {
+          "building_id": "4222760305899921",
+          "building_name": "Мандарин",
+          "components": [
+            {
+              "number": "1/1",
+              "street": "улица Бестужева",
+              "street_id": "4222863385035696",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354340"
+        },
+        "coordinates": {
+          "lat": 43.418969,
+          "lon": 39.923539
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "улица Бестужева, 1/1",
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 1,
+            "id": "70000001054842369",
+            "name": "Сидрерия",
+            "primary": "Сидрерия"
+          },
+          "reviews": {
+            "general_rating": 4.8,
+            "general_review_count": 561,
+            "general_review_count_with_stars": 639,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4,
+                "review_count": 1,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.7,
+            "org_review_count": 561,
+            "org_review_count_with_stars": 639,
+            "rating": 4,
+            "review_count": 1
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "bary",
+              "id": "159",
+              "kind": "additional",
+              "name": "Бары",
+              "parent_id": "2",
+              "short_id": 159
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "02:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "02:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "02:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "02:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "02:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "02:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "02:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001039505919",
+        "name": "Фабрика вкуса, ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сириус (Сириус городской округ), Нижнеимеретинская улица, 171а",
+        "address": {
+          "building_id": "4222760344573821",
+          "components": [
+            {
+              "number": "171а",
+              "street": "Нижнеимеретинская улица",
+              "street_id": "4222863385036624",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354349"
+        },
+        "coordinates": {
+          "lat": 43.396574,
+          "lon": 39.97394
+        },
+        "extra_fields": {
+          "address_name": "Нижнеимеретинская улица, 171а",
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 1,
+            "extension": "ресторан",
+            "id": "70000001039505918",
+            "name": "Фабрика вкуса, ресторан",
+            "primary": "Фабрика вкуса"
+          },
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 2478,
+            "general_review_count_with_stars": 31656,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4.3,
+                "review_count": 20,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 2478,
+            "org_review_count_with_stars": 31655,
+            "rating": 4.3,
+            "review_count": 20
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "bary",
+              "id": "159",
+              "kind": "additional",
+              "name": "Бары",
+              "parent_id": "2",
+              "short_id": 159
+            },
+            {
+              "alias": "kejjtering",
+              "id": "9786",
+              "kind": "additional",
+              "name": "Кейтеринг",
+              "parent_id": "2",
+              "short_id": 9786
+            },
+            {
+              "alias": "kafe",
+              "id": "161",
+              "kind": "additional",
+              "name": "Кафе",
+              "parent_id": "2",
+              "short_id": 161
+            },
+            {
+              "alias": "banketnye_zaly",
+              "id": "10803",
+              "kind": "additional",
+              "name": "Банкетные залы",
+              "parent_id": "2",
+              "short_id": 10803
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001032226656",
+        "name": "Хинкали танцевали, кафе-ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, улица Кирова, 44",
+        "address": {
+          "building_id": "4222760305900993",
+          "building_name": "Форвард Апарт Отель",
+          "components": [
+            {
+              "number": "44",
+              "street": "улица Кирова",
+              "street_id": "4222863385035559",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354340"
+        },
+        "coordinates": {
+          "lat": 43.424843,
+          "lon": 39.923799
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "улица Кирова, 44",
+          "flags": {
+            "badges": [
+              {
+                "collection_uid": "62481d40-4b9e-11e9-8854-c962bdef95ed",
+                "text": "1 место",
+                "type": "award2018"
+              },
+              {
+                "collection_uid": "be8ffe10-7d43-11ea-ac4a-9b067a38b30b",
+                "text": "Победитель Премии 2ГИС 2019",
+                "type": "award2019"
+              }
+            ],
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 1,
+            "extension": "кафе-ресторан",
+            "id": "70000001032226655",
+            "name": "Хинкали танцевали, кафе-ресторан",
+            "primary": "Хинкали танцевали"
+          },
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 2603,
+            "general_review_count_with_stars": 18611,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4.2,
+                "review_count": 61,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 2603,
+            "org_review_count_with_stars": 18611,
+            "rating": 4.2,
+            "review_count": 61
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "kafe",
+              "id": "161",
+              "kind": "additional",
+              "name": "Кафе",
+              "parent_id": "2",
+              "short_id": 161
+            },
+            {
+              "alias": "bary",
+              "id": "159",
+              "kind": "additional",
+              "name": "Бары",
+              "parent_id": "2",
+              "short_id": 159
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            },
+            {
+              "alias": "nochnye_kluby",
+              "id": "173",
+              "kind": "additional",
+              "name": "Ночные клубы",
+              "parent_id": "2",
+              "short_id": 173
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "07:30",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "07:30",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "07:30",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "07:30",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "07:30",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "07:30",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "07:30",
+                  "to": "24:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001039692368",
+        "name": "У Рыбака, ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, улица Просвещения, 15а",
+        "address": {
+          "building_id": "4222760305838572",
+          "components": [
+            {
+              "number": "15а",
+              "street": "улица Просвещения",
+              "street_id": "4222863385035676",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354340"
+        },
+        "coordinates": {
+          "lat": 43.424104,
+          "lon": 39.915891
+        },
+        "extra_fields": {
+          "address_comment": "вход со стороны моря и теннисного корта",
+          "address_name": "улица Просвещения, 15а",
+          "flags": {
+            "badges": [
+              {
+                "collection_uid": "be8ffe10-7d43-11ea-ac4a-9b067a38b30b",
+                "text": "Открытие года",
+                "type": "award2019"
+              }
+            ],
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "full_name": "Сочи, улица Просвещения, 15а",
+          "org": {
+            "branch_count": 1,
+            "extension": "ресторан",
+            "id": "70000001033183065",
+            "name": "У Рыбака, ресторан",
+            "primary": "У Рыбака"
+          },
+          "purpose_name": "Кафе, бар",
+          "reviews": {
+            "general_rating": 4.8,
+            "general_review_count": 752,
+            "general_review_count_with_stars": 1213,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4.3,
+                "review_count": 8,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.7,
+            "org_review_count": 752,
+            "org_review_count_with_stars": 1213,
+            "rating": 4.3,
+            "review_count": 8
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            },
+            {
+              "alias": "kafe",
+              "id": "161",
+              "kind": "additional",
+              "name": "Кафе",
+              "parent_id": "2",
+              "short_id": 161
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "09:00",
+                  "to": "24:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001037672961",
+        "name": "Pro.Хинкали by Novikov, ресторан грузинской кухни",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, улица Бестужева, 1/1",
+        "address": {
+          "building_id": "4222760305899921",
+          "building_name": "Мандарин",
+          "components": [
+            {
+              "number": "1/1",
+              "street": "улица Бестужева",
+              "street_id": "4222863385035696",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354340"
+        },
+        "coordinates": {
+          "lat": 43.418352,
+          "lon": 39.923883
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "улица Бестужева, 1/1",
+          "brand": {
+            "branch_count": 4,
+            "extension": "ресторан грузинской кухни",
+            "id": "70000001103774308",
+            "name": "Pro.Хинкали"
+          },
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 4,
+            "extension": "ресторан грузинской кухни",
+            "id": "70000001037672960",
+            "name": "Pro.Хинкали by Novikov, ресторан грузинской кухни",
+            "primary": "Pro.Хинкали by Novikov"
+          },
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 3415,
+            "general_review_count_with_stars": 41696,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4.6,
+                "review_count": 12,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 7817,
+            "org_review_count_with_stars": 90710,
+            "rating": 4.6,
+            "review_count": 12
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "comment": "служба доставки: пн-вс 11:00-23:00"
+          }
+        }
+      },
+      {
+        "id": "70000001102234177",
+        "name": "Lali, ресторан узбекской кухни",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Сочи, улица Бестужева, 1/1",
+        "address": {
+          "building_id": "4222760305899921",
+          "building_name": "Мандарин",
+          "components": [
+            {
+              "number": "1/1",
+              "street": "улица Бестужева",
+              "street_id": "4222863385035696",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354340"
+        },
+        "coordinates": {
+          "lat": 43.417663,
+          "lon": 39.923009
+        },
+        "extra_fields": {
+          "address_comment": "2 этаж",
+          "address_name": "улица Бестужева, 1/1",
+          "brand": {
+            "branch_count": 2,
+            "id": "70000001117642721",
+            "name": "Lali"
+          },
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 2,
+            "extension": "ресторан узбекской кухни",
+            "id": "70000001096266498",
+            "name": "Lali, ресторан узбекской кухни",
+            "primary": "Lali"
+          },
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 459,
+            "general_review_count_with_stars": 2580,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 791,
+            "org_review_count_with_stars": 2970
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "23:00"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "isError": false
+}

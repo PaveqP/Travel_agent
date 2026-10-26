@@ -1,0 +1,1825 @@
+{
+  "search": {
+    "from": {
+      "type": "station",
+      "title": "Адлер",
+      "short_title": "",
+      "popular_title": "",
+      "code": "s9613054",
+      "station_type": "station",
+      "station_type_name": "станция",
+      "transport_type": "train"
+    },
+    "to": {
+      "type": "station",
+      "title": "Роза Хутор",
+      "short_title": "",
+      "popular_title": "",
+      "code": "s9812791",
+      "station_type": "station",
+      "station_type_name": "станция",
+      "transport_type": "train"
+    },
+    "date": "2026-11-12"
+  },
+  "segments": [
+    {
+      "thread": {
+        "number": "6101",
+        "title": "Лазаревская — Роза Хутор",
+        "short_title": "Лазаревская — Роза Хутор",
+        "express_type": null,
+        "transport_type": "suburban",
+        "carrier": {
+          "code": 2919,
+          "title": "Кубань Экспресс-пригород",
+          "codes": {
+            "sirena": null,
+            "iata": null,
+            "icao": null
+          },
+          "address": "350033, г. Краснодар, Привокзальная площадь, д.1",
+          "url": "http://www.kuban-express-prigorod.ru/",
+          "email": "[REDACTED]",
+          "contacts": "[REDACTED]",
+          "phone": "[REDACTED]",
+          "logo": "https://yastat.net/s3/rasp/media/data/company/logo/kep_logo.png",
+          "logo_svg": null
+        },
+        "uid": "6101_0_9612942_g25_4",
+        "vehicle": null,
+        "transport_subtype": {
+          "title": "«Ласточка»",
+          "code": "last",
+          "color": "#CC6600"
+        },
+        "thread_method_link": "api.rasp.yandex-net.ru/v3/thread/?date=2026-11-12&uid=6101_0_9612942_g25_4"
+      },
+      "stops": "везде",
+      "from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "departure_platform": "",
+      "arrival_platform": "",
+      "departure_terminal": null,
+      "arrival_terminal": null,
+      "duration": 1800.0,
+      "has_transfers": false,
+      "tickets_info": {
+        "et_marker": false,
+        "places": [
+          {
+            "name": null,
+            "price": {
+              "whole": 300,
+              "cents": 0
+            },
+            "currency": "RUB"
+          }
+        ]
+      },
+      "departure": "2026-11-12T07:49:00+03:00",
+      "arrival": "2026-11-12T08:19:00+03:00",
+      "start_date": "2026-11-12"
+    },
+    {
+      "thread": {
+        "number": "6103",
+        "title": "Сочи — Роза Хутор",
+        "short_title": "Сочи — Роза Хутор",
+        "express_type": null,
+        "transport_type": "suburban",
+        "carrier": {
+          "code": 2919,
+          "title": "Кубань Экспресс-пригород",
+          "codes": {
+            "sirena": null,
+            "iata": null,
+            "icao": null
+          },
+          "address": "350033, г. Краснодар, Привокзальная площадь, д.1",
+          "url": "http://www.kuban-express-prigorod.ru/",
+          "email": "[REDACTED]",
+          "contacts": "[REDACTED]",
+          "phone": "[REDACTED]",
+          "logo": "https://yastat.net/s3/rasp/media/data/company/logo/kep_logo.png",
+          "logo_svg": null
+        },
+        "uid": "6103_1_9613034_g25_4",
+        "vehicle": null,
+        "transport_subtype": {
+          "title": "«Ласточка»",
+          "code": "last",
+          "color": "#CC6600"
+        },
+        "thread_method_link": "api.rasp.yandex-net.ru/v3/thread/?date=2026-11-12&uid=6103_1_9613034_g25_4"
+      },
+      "stops": "везде",
+      "from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "departure_platform": "",
+      "arrival_platform": "",
+      "departure_terminal": null,
+      "arrival_terminal": null,
+      "duration": 1920.0,
+      "has_transfers": false,
+      "tickets_info": {
+        "et_marker": false,
+        "places": [
+          {
+            "name": null,
+            "price": {
+              "whole": 300,
+              "cents": 0
+            },
+            "currency": "RUB"
+          }
+        ]
+      },
+      "departure": "2026-11-12T09:10:00+03:00",
+      "arrival": "2026-11-12T09:42:00+03:00",
+      "start_date": "2026-11-12"
+    },
+    {
+      "thread": {
+        "number": "6114/6113",
+        "title": "Аэропорт Сочи — Роза Хутор",
+        "short_title": "Аэропорт Сочи — Роза Хутор",
+        "express_type": null,
+        "transport_type": "suburban",
+        "carrier": {
+          "code": 2919,
+          "title": "Кубань Экспресс-пригород",
+          "codes": {
+            "sirena": null,
+            "iata": null,
+            "icao": null
+          },
+          "address": "350033, г. Краснодар, Привокзальная площадь, д.1",
+          "url": "http://www.kuban-express-prigorod.ru/",
+          "email": "[REDACTED]",
+          "contacts": "[REDACTED]",
+          "phone": "[REDACTED]",
+          "logo": "https://yastat.net/s3/rasp/media/data/company/logo/kep_logo.png",
+          "logo_svg": null
+        },
+        "uid": "6114x6113_1_9882415_g25_4",
+        "vehicle": null,
+        "transport_subtype": {
+          "title": "«Ласточка»",
+          "code": "last",
+          "color": "#CC6600"
+        },
+        "thread_method_link": "api.rasp.yandex-net.ru/v3/thread/?date=2026-11-12&uid=6114x6113_1_9882415_g25_4"
+      },
+      "stops": "везде",
+      "from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "departure_platform": "",
+      "arrival_platform": "",
+      "departure_terminal": null,
+      "arrival_terminal": null,
+      "duration": 1920.0,
+      "has_transfers": false,
+      "tickets_info": {
+        "et_marker": false,
+        "places": [
+          {
+            "name": null,
+            "price": {
+              "whole": 300,
+              "cents": 0
+            },
+            "currency": "RUB"
+          }
+        ]
+      },
+      "departure": "2026-11-12T11:58:00+03:00",
+      "arrival": "2026-11-12T12:30:00+03:00",
+      "start_date": "2026-11-12"
+    },
+    {
+      "thread": {
+        "number": "815С",
+        "title": "Краснодар — Роза Хутор",
+        "short_title": "Краснодар — Роза Хутор",
+        "express_type": null,
+        "transport_type": "train",
+        "carrier": {
+          "code": 112,
+          "title": "РЖД/ФПК",
+          "codes": {
+            "sirena": null,
+            "iata": null,
+            "icao": null
+          },
+          "address": "Москва, ул. Новая Басманная , д. 2",
+          "url": "http://www.rzd.ru/",
+          "email": "[REDACTED]",
+          "contacts": "[REDACTED]",
+          "phone": "[REDACTED]",
+          "logo": "https://yastat.net/s3/rasp/media/data/company/logo/logo.gif",
+          "logo_svg": null
+        },
+        "uid": "815S_2_2",
+        "vehicle": null,
+        "transport_subtype": {
+          "title": "«Ласточка»",
+          "code": "lastdal",
+          "color": "#CC6600"
+        },
+        "thread_method_link": "api.rasp.yandex-net.ru/v3/thread/?date=2026-11-12&uid=815S_2_2"
+      },
+      "stops": "",
+      "from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "departure_platform": "",
+      "arrival_platform": "",
+      "departure_terminal": null,
+      "arrival_terminal": null,
+      "duration": 2160.0,
+      "has_transfers": false,
+      "tickets_info": {
+        "et_marker": false,
+        "places": [
+          {
+            "name": null,
+            "price": {
+              "whole": 300,
+              "cents": 0
+            },
+            "currency": "RUB"
+          }
+        ]
+      },
+      "departure": "2026-11-12T12:09:00+03:00",
+      "arrival": "2026-11-12T12:45:00+03:00",
+      "start_date": "2026-11-12"
+    },
+    {
+      "thread": {
+        "number": "6105",
+        "title": "Сочи — Роза Хутор",
+        "short_title": "Сочи — Роза Хутор",
+        "express_type": null,
+        "transport_type": "suburban",
+        "carrier": {
+          "code": 2919,
+          "title": "Кубань Экспресс-пригород",
+          "codes": {
+            "sirena": null,
+            "iata": null,
+            "icao": null
+          },
+          "address": "350033, г. Краснодар, Привокзальная площадь, д.1",
+          "url": "http://www.kuban-express-prigorod.ru/",
+          "email": "[REDACTED]",
+          "contacts": "[REDACTED]",
+          "phone": "[REDACTED]",
+          "logo": "https://yastat.net/s3/rasp/media/data/company/logo/kep_logo.png",
+          "logo_svg": null
+        },
+        "uid": "6105_0_9613034_g25_4",
+        "vehicle": null,
+        "transport_subtype": {
+          "title": "«Ласточка»",
+          "code": "last",
+          "color": "#CC6600"
+        },
+        "thread_method_link": "api.rasp.yandex-net.ru/v3/thread/?date=2026-11-12&uid=6105_0_9613034_g25_4"
+      },
+      "stops": "везде",
+      "from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "departure_platform": "",
+      "arrival_platform": "",
+      "departure_terminal": null,
+      "arrival_terminal": null,
+      "duration": 1980.0,
+      "has_transfers": false,
+      "tickets_info": {
+        "et_marker": false,
+        "places": [
+          {
+            "name": null,
+            "price": {
+              "whole": 300,
+              "cents": 0
+            },
+            "currency": "RUB"
+          }
+        ]
+      },
+      "departure": "2026-11-12T12:33:00+03:00",
+      "arrival": "2026-11-12T13:06:00+03:00",
+      "start_date": "2026-11-12"
+    },
+    {
+      "thread": {
+        "number": "6107",
+        "title": "Сочи — Роза Хутор",
+        "short_title": "Сочи — Роза Хутор",
+        "express_type": null,
+        "transport_type": "suburban",
+        "carrier": {
+          "code": 2919,
+          "title": "Кубань Экспресс-пригород",
+          "codes": {
+            "sirena": null,
+            "iata": null,
+            "icao": null
+          },
+          "address": "350033, г. Краснодар, Привокзальная площадь, д.1",
+          "url": "http://www.kuban-express-prigorod.ru/",
+          "email": "[REDACTED]",
+          "contacts": "[REDACTED]",
+          "phone": "[REDACTED]",
+          "logo": "https://yastat.net/s3/rasp/media/data/company/logo/kep_logo.png",
+          "logo_svg": null
+        },
+        "uid": "6107_1_9613034_g25_4",
+        "vehicle": null,
+        "transport_subtype": {
+          "title": "«Ласточка»",
+          "code": "last",
+          "color": "#CC6600"
+        },
+        "thread_method_link": "api.rasp.yandex-net.ru/v3/thread/?date=2026-11-12&uid=6107_1_9613034_g25_4"
+      },
+      "stops": "везде",
+      "from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "departure_platform": "",
+      "arrival_platform": "",
+      "departure_terminal": null,
+      "arrival_terminal": null,
+      "duration": 1920.0,
+      "has_transfers": false,
+      "tickets_info": {
+        "et_marker": false,
+        "places": [
+          {
+            "name": null,
+            "price": {
+              "whole": 300,
+              "cents": 0
+            },
+            "currency": "RUB"
+          }
+        ]
+      },
+      "departure": "2026-11-12T15:35:00+03:00",
+      "arrival": "2026-11-12T16:07:00+03:00",
+      "start_date": "2026-11-12"
+    },
+    {
+      "thread": {
+        "number": "6109",
+        "title": "Сочи — Роза Хутор",
+        "short_title": "Сочи — Роза Хутор",
+        "express_type": null,
+        "transport_type": "suburban",
+        "carrier": {
+          "code": 2919,
+          "title": "Кубань Экспресс-пригород",
+          "codes": {
+            "sirena": null,
+            "iata": null,
+            "icao": null
+          },
+          "address": "350033, г. Краснодар, Привокзальная площадь, д.1",
+          "url": "http://www.kuban-express-prigorod.ru/",
+          "email": "[REDACTED]",
+          "contacts": "[REDACTED]",
+          "phone": "[REDACTED]",
+          "logo": "https://yastat.net/s3/rasp/media/data/company/logo/kep_logo.png",
+          "logo_svg": null
+        },
+        "uid": "6109_1_9613034_g25_4",
+        "vehicle": null,
+        "transport_subtype": {
+          "title": "«Ласточка»",
+          "code": "last",
+          "color": "#CC6600"
+        },
+        "thread_method_link": "api.rasp.yandex-net.ru/v3/thread/?date=2026-11-12&uid=6109_1_9613034_g25_4"
+      },
+      "stops": "везде",
+      "from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "departure_platform": "",
+      "arrival_platform": "",
+      "departure_terminal": null,
+      "arrival_terminal": null,
+      "duration": 1920.0,
+      "has_transfers": false,
+      "tickets_info": {
+        "et_marker": false,
+        "places": [
+          {
+            "name": null,
+            "price": {
+              "whole": 300,
+              "cents": 0
+            },
+            "currency": "RUB"
+          }
+        ]
+      },
+      "departure": "2026-11-12T18:32:00+03:00",
+      "arrival": "2026-11-12T19:04:00+03:00",
+      "start_date": "2026-11-12"
+    },
+    {
+      "thread": {
+        "number": "6115",
+        "title": "Сочи — Роза Хутор",
+        "short_title": "Сочи — Роза Хутор",
+        "express_type": null,
+        "transport_type": "suburban",
+        "carrier": {
+          "code": 2919,
+          "title": "Кубань Экспресс-пригород",
+          "codes": {
+            "sirena": null,
+            "iata": null,
+            "icao": null
+          },
+          "address": "350033, г. Краснодар, Привокзальная площадь, д.1",
+          "url": "http://www.kuban-express-prigorod.ru/",
+          "email": "[REDACTED]",
+          "contacts": "[REDACTED]",
+          "phone": "[REDACTED]",
+          "logo": "https://yastat.net/s3/rasp/media/data/company/logo/kep_logo.png",
+          "logo_svg": null
+        },
+        "uid": "6115_0_9613034_g25_4",
+        "vehicle": null,
+        "transport_subtype": {
+          "title": "«Ласточка»",
+          "code": "last",
+          "color": "#CC6600"
+        },
+        "thread_method_link": "api.rasp.yandex-net.ru/v3/thread/?date=2026-11-12&uid=6115_0_9613034_g25_4"
+      },
+      "stops": "везде",
+      "from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "departure_platform": "",
+      "arrival_platform": "",
+      "departure_terminal": null,
+      "arrival_terminal": null,
+      "duration": 1920.0,
+      "has_transfers": false,
+      "tickets_info": {
+        "et_marker": false,
+        "places": [
+          {
+            "name": null,
+            "price": {
+              "whole": 300,
+              "cents": 0
+            },
+            "currency": "RUB"
+          }
+        ]
+      },
+      "departure": "2026-11-12T19:56:00+03:00",
+      "arrival": "2026-11-12T20:28:00+03:00",
+      "start_date": "2026-11-12"
+    },
+    {
+      "departure_from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "arrival_to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "transport_types": [
+        "suburban",
+        "suburban"
+      ],
+      "departure": "2026-11-12T13:51:00+03:00",
+      "arrival": "2026-11-12T14:37:00+03:00",
+      "transfers": [
+        {
+          "type": "station",
+          "title": "Научный парк (Олимпийская деревня)",
+          "short_title": null,
+          "popular_title": null,
+          "code": "s9812788",
+          "station_type": "stop",
+          "station_type_name": "остановочный пункт",
+          "transport_type": "train"
+        }
+      ],
+      "has_transfers": true,
+      "details": [
+        {
+          "thread": {
+            "number": "6805",
+            "title": "Туапсе-Пасс. — Сириус (Имеретинский курорт)",
+            "short_title": "Туапсе-Пасс. — Сириус (Имеретинский курорт)",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6805_1_9613044_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Адлер",
+            "short_title": "Адлер",
+            "popular_title": "Адлер",
+            "code": "c85275"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 480.0,
+          "departure": "2026-11-12T13:51:00+03:00",
+          "arrival": "2026-11-12T13:59:00+03:00",
+          "start_date": "2026-11-12"
+        },
+        {
+          "is_transfer": true,
+          "duration": 420.0,
+          "transfer_point": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "transfer_from": {
+            "type": "station",
+            "title": "Научный парк (Олимпийская деревня)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812788",
+            "station_type": "stop",
+            "station_type_name": "остановочный пункт",
+            "transport_type": "train"
+          },
+          "transfer_to": {
+            "type": "station",
+            "title": "Научный парк (Олимпийская деревня)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812788",
+            "station_type": "stop",
+            "station_type_name": "остановочный пункт",
+            "transport_type": "train"
+          }
+        },
+        {
+          "thread": {
+            "number": "6064/6063",
+            "title": "Имеретинский курорт (Олимпийский парк) — Роза Хутор",
+            "short_title": "Имеретинский курорт (Олимпийский парк) — Роза Хутор",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6064x6063_1_9812789_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Красная Поляна",
+            "short_title": "Красная Поляна",
+            "popular_title": "Красная Поляна",
+            "code": "c10994"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 1860.0,
+          "departure": "2026-11-12T14:06:00+03:00",
+          "arrival": "2026-11-12T14:37:00+03:00",
+          "start_date": "2026-11-12"
+        }
+      ]
+    },
+    {
+      "departure_from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "arrival_to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "transport_types": [
+        "suburban",
+        "suburban"
+      ],
+      "departure": "2026-11-12T16:11:00+03:00",
+      "arrival": "2026-11-12T16:58:00+03:00",
+      "transfers": [
+        {
+          "type": "station",
+          "title": "Научный парк (Олимпийская деревня)",
+          "short_title": null,
+          "popular_title": null,
+          "code": "s9812788",
+          "station_type": "stop",
+          "station_type_name": "остановочный пункт",
+          "transport_type": "train"
+        }
+      ],
+      "has_transfers": true,
+      "details": [
+        {
+          "thread": {
+            "number": "6337",
+            "title": "Сочи — Сириус (Имеретинский курорт)",
+            "short_title": "Сочи — Сириус (Имеретинский курорт)",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6337_1_9613034_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Адлер",
+            "short_title": "Адлер",
+            "popular_title": "Адлер",
+            "code": "c85275"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 480.0,
+          "departure": "2026-11-12T16:11:00+03:00",
+          "arrival": "2026-11-12T16:19:00+03:00",
+          "start_date": "2026-11-12"
+        },
+        {
+          "is_transfer": true,
+          "duration": 360.0,
+          "transfer_point": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "transfer_from": {
+            "type": "station",
+            "title": "Научный парк (Олимпийская деревня)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812788",
+            "station_type": "stop",
+            "station_type_name": "остановочный пункт",
+            "transport_type": "train"
+          },
+          "transfer_to": {
+            "type": "station",
+            "title": "Научный парк (Олимпийская деревня)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812788",
+            "station_type": "stop",
+            "station_type_name": "остановочный пункт",
+            "transport_type": "train"
+          }
+        },
+        {
+          "thread": {
+            "number": "6076/6075",
+            "title": "Имеретинский курорт (Олимпийский парк) — Роза Хутор",
+            "short_title": "Имеретинский курорт (Олимпийский парк) — Роза Хутор",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6076x6075_0_9812789_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Красная Поляна",
+            "short_title": "Красная Поляна",
+            "popular_title": "Красная Поляна",
+            "code": "c10994"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 1980.0,
+          "departure": "2026-11-12T16:25:00+03:00",
+          "arrival": "2026-11-12T16:58:00+03:00",
+          "start_date": "2026-11-12"
+        }
+      ]
+    },
+    {
+      "departure_from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "arrival_to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "transport_types": [
+        "suburban",
+        "suburban"
+      ],
+      "departure": "2026-11-12T15:07:00+03:00",
+      "arrival": "2026-11-12T15:58:00+03:00",
+      "transfers": [
+        {
+          "type": "station",
+          "title": "Научный парк (Олимпийская деревня)",
+          "short_title": null,
+          "popular_title": null,
+          "code": "s9812788",
+          "station_type": "stop",
+          "station_type_name": "остановочный пункт",
+          "transport_type": "train"
+        }
+      ],
+      "has_transfers": true,
+      "details": [
+        {
+          "thread": {
+            "number": "6359",
+            "title": "Сочи — Сириус (Имеретинский курорт)",
+            "short_title": "Сочи — Сириус (Имеретинский курорт)",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6359_0_9613034_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Адлер",
+            "short_title": "Адлер",
+            "popular_title": "Адлер",
+            "code": "c85275"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 480.0,
+          "departure": "2026-11-12T15:07:00+03:00",
+          "arrival": "2026-11-12T15:15:00+03:00",
+          "start_date": "2026-11-12"
+        },
+        {
+          "is_transfer": true,
+          "duration": 660.0,
+          "transfer_point": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "transfer_from": {
+            "type": "station",
+            "title": "Научный парк (Олимпийская деревня)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812788",
+            "station_type": "stop",
+            "station_type_name": "остановочный пункт",
+            "transport_type": "train"
+          },
+          "transfer_to": {
+            "type": "station",
+            "title": "Научный парк (Олимпийская деревня)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812788",
+            "station_type": "stop",
+            "station_type_name": "остановочный пункт",
+            "transport_type": "train"
+          }
+        },
+        {
+          "thread": {
+            "number": "6072/6071",
+            "title": "Имеретинский курорт (Олимпийский парк) — Роза Хутор",
+            "short_title": "Имеретинский курорт (Олимпийский парк) — Роза Хутор",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6072x6071_0_9812789_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Красная Поляна",
+            "short_title": "Красная Поляна",
+            "popular_title": "Красная Поляна",
+            "code": "c10994"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 1920.0,
+          "departure": "2026-11-12T15:26:00+03:00",
+          "arrival": "2026-11-12T15:58:00+03:00",
+          "start_date": "2026-11-12"
+        }
+      ]
+    },
+    {
+      "departure_from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "arrival_to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "transport_types": [
+        "suburban",
+        "suburban"
+      ],
+      "departure": "2026-11-12T16:55:00+03:00",
+      "arrival": "2026-11-12T17:48:00+03:00",
+      "transfers": [
+        {
+          "type": "station",
+          "title": "Научный парк (Олимпийская деревня)",
+          "short_title": null,
+          "popular_title": null,
+          "code": "s9812788",
+          "station_type": "stop",
+          "station_type_name": "остановочный пункт",
+          "transport_type": "train"
+        }
+      ],
+      "has_transfers": true,
+      "details": [
+        {
+          "thread": {
+            "number": "6339",
+            "title": "Сочи — Сириус (Имеретинский курорт)",
+            "short_title": "Сочи — Сириус (Имеретинский курорт)",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6339_1_9613034_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Адлер",
+            "short_title": "Адлер",
+            "popular_title": "Адлер",
+            "code": "c85275"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 480.0,
+          "departure": "2026-11-12T16:55:00+03:00",
+          "arrival": "2026-11-12T17:03:00+03:00",
+          "start_date": "2026-11-12"
+        },
+        {
+          "is_transfer": true,
+          "duration": 540.0,
+          "transfer_point": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "transfer_from": {
+            "type": "station",
+            "title": "Научный парк (Олимпийская деревня)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812788",
+            "station_type": "stop",
+            "station_type_name": "остановочный пункт",
+            "transport_type": "train"
+          },
+          "transfer_to": {
+            "type": "station",
+            "title": "Научный парк (Олимпийская деревня)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812788",
+            "station_type": "stop",
+            "station_type_name": "остановочный пункт",
+            "transport_type": "train"
+          }
+        },
+        {
+          "thread": {
+            "number": "6080/6079",
+            "title": "Имеретинский курорт (Олимпийский парк) — Роза Хутор",
+            "short_title": "Имеретинский курорт (Олимпийский парк) — Роза Хутор",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6080x6079_0_9812789_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Красная Поляна",
+            "short_title": "Красная Поляна",
+            "popular_title": "Красная Поляна",
+            "code": "c10994"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 2160.0,
+          "departure": "2026-11-12T17:12:00+03:00",
+          "arrival": "2026-11-12T17:48:00+03:00",
+          "start_date": "2026-11-12"
+        }
+      ]
+    },
+    {
+      "departure_from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "arrival_to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "transport_types": [
+        "suburban",
+        "suburban"
+      ],
+      "departure": "2026-11-12T21:17:00+03:00",
+      "arrival": "2026-11-12T22:13:00+03:00",
+      "transfers": [
+        {
+          "type": "station",
+          "title": "Сириус (Имеретинский курорт)",
+          "short_title": null,
+          "popular_title": null,
+          "code": "s9812789",
+          "station_type": "station",
+          "station_type_name": "станция",
+          "transport_type": "train"
+        }
+      ],
+      "has_transfers": true,
+      "details": [
+        {
+          "thread": {
+            "number": "6367",
+            "title": "Сочи — Сириус (Имеретинский курорт)",
+            "short_title": "Сочи — Сириус (Имеретинский курорт)",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6367_0_9613034_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Адлер",
+            "short_title": "Адлер",
+            "popular_title": "Адлер",
+            "code": "c85275"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 780.0,
+          "departure": "2026-11-12T21:17:00+03:00",
+          "arrival": "2026-11-12T21:30:00+03:00",
+          "start_date": "2026-11-12"
+        },
+        {
+          "is_transfer": true,
+          "duration": 360.0,
+          "transfer_point": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "transfer_from": {
+            "type": "station",
+            "title": "Сириус (Имеретинский курорт)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812789",
+            "station_type": "station",
+            "station_type_name": "станция",
+            "transport_type": "train"
+          },
+          "transfer_to": {
+            "type": "station",
+            "title": "Сириус (Имеретинский курорт)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812789",
+            "station_type": "station",
+            "station_type_name": "станция",
+            "transport_type": "train"
+          }
+        },
+        {
+          "thread": {
+            "number": "6088/6087",
+            "title": "Сириус (Имеретинский курорт) — Роза Хутор",
+            "short_title": "Сириус (Имеретинский курорт) — Роза Хутор",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6088x6087_1_9812789_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Красная Поляна",
+            "short_title": "Красная Поляна",
+            "popular_title": "Красная Поляна",
+            "code": "c10994"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 2220.0,
+          "departure": "2026-11-12T21:36:00+03:00",
+          "arrival": "2026-11-12T22:13:00+03:00",
+          "start_date": "2026-11-12"
+        }
+      ]
+    },
+    {
+      "departure_from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "arrival_to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "transport_types": [
+        "train",
+        "suburban"
+      ],
+      "departure": "2026-11-12T09:17:00+03:00",
+      "arrival": "2026-11-12T10:17:00+03:00",
+      "transfers": [
+        {
+          "type": "settlement",
+          "title": "Сочи",
+          "short_title": "Сочи",
+          "popular_title": "Сочи",
+          "code": "c239"
+        }
+      ],
+      "has_transfers": true,
+      "details": [
+        {
+          "thread": {
+            "number": "044М",
+            "title": "Москва — Сириус (Имеретинский курорт)",
+            "short_title": "Москва — Сириус (Имеретинский курорт)",
+            "express_type": null,
+            "transport_type": "train",
+            "carrier": {
+              "code": 112,
+              "title": "РЖД/ФПК",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "044M_4_2",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": null,
+              "code": null,
+              "color": null
+            }
+          },
+          "stops": "",
+          "from": {
+            "type": "settlement",
+            "title": "Адлер",
+            "short_title": "Адлер",
+            "popular_title": "Адлер",
+            "code": "c85275"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 840.0,
+          "departure": "2026-11-12T09:17:00+03:00",
+          "arrival": "2026-11-12T09:31:00+03:00",
+          "start_date": "2026-11-10"
+        },
+        {
+          "is_transfer": true,
+          "duration": 720.0,
+          "transfer_point": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "transfer_from": {
+            "type": "station",
+            "title": "Сириус (Имеретинский курорт)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812789",
+            "station_type": "station",
+            "station_type_name": "станция",
+            "transport_type": "train"
+          },
+          "transfer_to": {
+            "type": "station",
+            "title": "Сириус (Имеретинский курорт)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812789",
+            "station_type": "station",
+            "station_type_name": "станция",
+            "transport_type": "train"
+          }
+        },
+        {
+          "thread": {
+            "number": "6002/6001",
+            "title": "Имеретинский курорт (Олимпийский парк) — Роза Хутор",
+            "short_title": "Имеретинский курорт (Олимпийский парк) — Роза Хутор",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6002x6001_0_9812789_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Красная Поляна",
+            "short_title": "Красная Поляна",
+            "popular_title": "Красная Поляна",
+            "code": "c10994"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 2040.0,
+          "departure": "2026-11-12T09:43:00+03:00",
+          "arrival": "2026-11-12T10:17:00+03:00",
+          "start_date": "2026-11-12"
+        }
+      ]
+    },
+    {
+      "departure_from": {
+        "type": "station",
+        "title": "Адлер",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9613054",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "arrival_to": {
+        "type": "station",
+        "title": "Роза Хутор",
+        "short_title": "",
+        "popular_title": "",
+        "code": "s9812791",
+        "station_type": "station",
+        "station_type_name": "станция",
+        "transport_type": "train"
+      },
+      "transport_types": [
+        "suburban",
+        "suburban"
+      ],
+      "departure": "2026-11-12T04:36:00+03:00",
+      "arrival": "2026-11-12T06:37:00+03:00",
+      "transfers": [
+        {
+          "type": "settlement",
+          "title": "Сочи",
+          "short_title": "Сочи",
+          "popular_title": "Сочи",
+          "code": "c239"
+        }
+      ],
+      "has_transfers": true,
+      "details": [
+        {
+          "thread": {
+            "number": "6324",
+            "title": "Имеретинский курорт (Олимпийский парк) — Сочи",
+            "short_title": "Имеретинский курорт (Олимпийский парк) — Сочи",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6324_0_9812789_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Адлер",
+            "short_title": "Адлер",
+            "popular_title": "Адлер",
+            "code": "c85275"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 2040.0,
+          "departure": "2026-11-12T04:36:00+03:00",
+          "arrival": "2026-11-12T05:10:00+03:00",
+          "start_date": "2026-11-12"
+        },
+        {
+          "is_transfer": true,
+          "duration": 3360.0,
+          "transfer_point": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "transfer_from": {
+            "type": "station",
+            "title": "Сочи",
+            "short_title": "",
+            "popular_title": "",
+            "code": "s9613034",
+            "station_type": "station",
+            "station_type_name": "станция",
+            "transport_type": "train"
+          },
+          "transfer_to": {
+            "type": "station",
+            "title": "Научный парк (Олимпийская деревня)",
+            "short_title": null,
+            "popular_title": null,
+            "code": "s9812788",
+            "station_type": "stop",
+            "station_type_name": "остановочный пункт",
+            "transport_type": "train"
+          }
+        },
+        {
+          "thread": {
+            "number": "6096/6095",
+            "title": "Сириус (Имеретинский курорт) — Роза Хутор",
+            "short_title": "Сириус (Имеретинский курорт) — Роза Хутор",
+            "express_type": null,
+            "transport_type": "suburban",
+            "carrier": {
+              "code": 2919,
+              "title": "Кубань Экспресс-пригород",
+              "codes": {
+                "sirena": null,
+                "iata": null,
+                "icao": null
+              }
+            },
+            "uid": "6096x6095_0_9812789_g25_4",
+            "vehicle": null,
+            "transport_subtype": {
+              "title": "«Ласточка»",
+              "code": "last",
+              "color": "#CC6600"
+            }
+          },
+          "stops": "везде",
+          "from": {
+            "type": "settlement",
+            "title": "Сочи",
+            "short_title": "Сочи",
+            "popular_title": "Сочи",
+            "code": "c239"
+          },
+          "to": {
+            "type": "settlement",
+            "title": "Красная Поляна",
+            "short_title": "Красная Поляна",
+            "popular_title": "Красная Поляна",
+            "code": "c10994"
+          },
+          "departure_platform": "",
+          "arrival_platform": "",
+          "departure_terminal": null,
+          "arrival_terminal": null,
+          "duration": 1860.0,
+          "departure": "2026-11-12T06:06:00+03:00",
+          "arrival": "2026-11-12T06:37:00+03:00",
+          "start_date": "2026-11-12"
+        }
+      ]
+    }
+  ],
+  "interval_segments": [],
+  "pagination": {
+    "total": 15,
+    "limit": 30,
+    "offset": 0
+  }
+}

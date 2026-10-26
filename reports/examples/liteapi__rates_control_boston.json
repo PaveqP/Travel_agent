@@ -1,0 +1,1127 @@
+{
+  "data": [
+    {
+      "hotelId": "lp2444a",
+      "roomTypes": [
+        {
+          "roomTypeId": "GY3DSLJRGQ4DKNJUPRJEMTT4GIYDENRRGEYDSMJQGAYHYML4KIYTCNJQPQYTINJSGE4Q",
+          "offerId": "[REDACTED]",
+          "supplier": "nuitee",
+          "supplierId": 2,
+          "rates": [
+            {
+              "rateId": "[REDACTED]",
+              "occupancyNumber": 1,
+              "name": "Deluxe King",
+              "maxOccupancy": 2,
+              "adultCount": 2,
+              "childCount": 0,
+              "childrenAges": [],
+              "boardType": "RO",
+              "boardName": "Room Only",
+              "remarks": "",
+              "priceType": "commission",
+              "commission": [
+                {
+                  "amount": 0,
+                  "currency": "USD"
+                }
+              ],
+              "retailRate": {
+                "total": [
+                  {
+                    "amount": 1452.19,
+                    "currency": "USD"
+                  }
+                ],
+                "suggestedSellingPrice": [
+                  {
+                    "amount": 1670.01,
+                    "currency": "USD",
+                    "source": ""
+                  }
+                ],
+                "initialPrice": [
+                  {
+                    "amount": 1452.19,
+                    "currency": "USD"
+                  }
+                ],
+                "taxesAndFees": [
+                  {
+                    "included": false,
+                    "description": "Accommodation Fee",
+                    "amount": 139.76,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "LODGING",
+                    "amount": 83.1,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "LODGING",
+                    "amount": 37.06,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "LODGING",
+                    "amount": 21.75,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "LODGING",
+                    "amount": 73.27,
+                    "currency": "USD"
+                  }
+                ]
+              },
+              "cancellationPolicies": {
+                "cancelPolicyInfos": [
+                  {
+                    "cancelTime": "2026-11-09 10:00:00",
+                    "amount": 518.02,
+                    "currency": "USD",
+                    "type": "amount",
+                    "timezone": "GMT"
+                  },
+                  {
+                    "cancelTime": "2026-11-11 10:00:00",
+                    "amount": 518.02,
+                    "currency": "USD",
+                    "type": "amount",
+                    "timezone": "GMT"
+                  }
+                ],
+                "hotelRemarks": [],
+                "refundableTag": "RFN"
+              },
+              "paymentTypes": [
+                "NUITEE_PAY"
+              ],
+              "providerCommission": {
+                "amount": 0,
+                "currency": ""
+              },
+              "perks": [],
+              "promotions": null
+            }
+          ],
+          "offerRetailRate": {
+            "amount": 1452.19,
+            "currency": "USD"
+          },
+          "suggestedSellingPrice": {
+            "amount": 1670.01,
+            "currency": "USD",
+            "source": ""
+          },
+          "offerInitialPrice": {
+            "amount": 1452.19,
+            "currency": "USD"
+          },
+          "priceType": "commission",
+          "rateType": "package",
+          "paymentTypes": [
+            "NUITEE_PAY"
+          ],
+          "paymentSchedule": "now"
+        }
+      ],
+      "et": 10800
+    },
+    {
+      "hotelId": "lp1d5df9",
+      "roomTypes": [
+        {
+          "roomTypeId": "GEZDIOBNGE4TENBWGAYXYTSSIZHHYMRQGI3DCMBSGMZDGMBQPQYTK7CSGEYDAND4GEYDOMBUGE",
+          "offerId": "[REDACTED]",
+          "supplier": "nuitee",
+          "supplierId": 2,
+          "rates": [
+            {
+              "rateId": "[REDACTED]",
+              "occupancyNumber": 1,
+              "name": "ROOM, KING BED",
+              "maxOccupancy": 2,
+              "adultCount": 2,
+              "childCount": 0,
+              "childrenAges": [],
+              "boardType": "RO",
+              "boardName": "Room Only",
+              "remarks": "",
+              "priceType": "commission",
+              "commission": [
+                {
+                  "amount": 0,
+                  "currency": "USD"
+                }
+              ],
+              "retailRate": {
+                "total": [
+                  {
+                    "amount": 1070.41,
+                    "currency": "USD"
+                  }
+                ],
+                "suggestedSellingPrice": [
+                  {
+                    "amount": 1075.76,
+                    "currency": "USD",
+                    "source": "providerDirect"
+                  }
+                ],
+                "initialPrice": [
+                  {
+                    "amount": 1070.41,
+                    "currency": "USD"
+                  }
+                ],
+                "taxesAndFees": [
+                  {
+                    "included": true,
+                    "description": "",
+                    "amount": 172.1,
+                    "currency": "USD"
+                  }
+                ]
+              },
+              "cancellationPolicies": {
+                "cancelPolicyInfos": [],
+                "hotelRemarks": [],
+                "refundableTag": "NRFN"
+              },
+              "paymentTypes": [
+                "NUITEE_PAY"
+              ],
+              "providerCommission": {
+                "amount": 0,
+                "currency": ""
+              },
+              "perks": [],
+              "promotions": null
+            }
+          ],
+          "offerRetailRate": {
+            "amount": 1070.41,
+            "currency": "USD"
+          },
+          "suggestedSellingPrice": {
+            "amount": 1075.76,
+            "currency": "USD",
+            "source": "providerDirect"
+          },
+          "offerInitialPrice": {
+            "amount": 1070.41,
+            "currency": "USD"
+          },
+          "priceType": "commission",
+          "rateType": "standard",
+          "paymentTypes": [
+            "NUITEE_PAY"
+          ],
+          "paymentSchedule": "now"
+        }
+      ],
+      "et": 10800
+    },
+    {
+      "hotelId": "lp322e7",
+      "roomTypes": [
+        {
+          "roomTypeId": "GEZDSNJNGIYDKNJUGN6E4USGJZ6DEMBSGYYTAMRVGAYDAMD4GF6FEMJQGE4HYMJUGM2DIMQ",
+          "offerId": "[REDACTED]",
+          "supplier": "nuitee",
+          "supplierId": 2,
+          "rates": [
+            {
+              "rateId": "[REDACTED]",
+              "occupancyNumber": 1,
+              "name": "ADA King",
+              "maxOccupancy": 2,
+              "adultCount": 2,
+              "childCount": 0,
+              "childrenAges": [],
+              "boardType": "RO",
+              "boardName": "Room Only",
+              "remarks": "",
+              "priceType": "commission",
+              "commission": [
+                {
+                  "amount": 0,
+                  "currency": "USD"
+                }
+              ],
+              "retailRate": {
+                "total": [
+                  {
+                    "amount": 1434.42,
+                    "currency": "USD"
+                  }
+                ],
+                "suggestedSellingPrice": [
+                  {
+                    "amount": 1460.24,
+                    "currency": "USD",
+                    "source": "providerDirect"
+                  }
+                ],
+                "initialPrice": [
+                  {
+                    "amount": 1434.42,
+                    "currency": "USD"
+                  }
+                ],
+                "taxesAndFees": [
+                  {
+                    "included": true,
+                    "description": "Tax",
+                    "amount": 202.64,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": false,
+                    "description": "Resort Fee",
+                    "amount": 186.32,
+                    "currency": "USD"
+                  }
+                ]
+              },
+              "cancellationPolicies": {
+                "cancelPolicyInfos": [],
+                "hotelRemarks": [],
+                "refundableTag": "NRFN"
+              },
+              "paymentTypes": [
+                "NUITEE_PAY"
+              ],
+              "providerCommission": {
+                "amount": 0,
+                "currency": ""
+              },
+              "perks": [],
+              "promotions": null
+            }
+          ],
+          "offerRetailRate": {
+            "amount": 1434.42,
+            "currency": "USD"
+          },
+          "suggestedSellingPrice": {
+            "amount": 1460.24,
+            "currency": "USD",
+            "source": "providerDirect"
+          },
+          "offerInitialPrice": {
+            "amount": 1434.42,
+            "currency": "USD"
+          },
+          "priceType": "commission",
+          "rateType": "standard",
+          "paymentTypes": [
+            "NUITEE_PAY"
+          ],
+          "paymentSchedule": "now"
+        }
+      ],
+      "et": 10800
+    },
+    {
+      "hotelId": "lp1aa33",
+      "roomTypes": [
+        {
+          "roomTypeId": "GEYTCNRNGEYDSMJQG56FERSOPQZDAMRWGEYTAOBRGAYDA7BRPRJDCMBSGZ6DCMBZGU3DS",
+          "offerId": "[REDACTED]",
+          "supplier": "nuitee",
+          "supplierId": 2,
+          "rates": [
+            {
+              "rateId": "[REDACTED]",
+              "occupancyNumber": 1,
+              "name": "Deluxe City View Two Queen Room",
+              "maxOccupancy": 2,
+              "adultCount": 2,
+              "childCount": 0,
+              "childrenAges": [],
+              "boardType": "RO",
+              "boardName": "Room Only",
+              "remarks": "",
+              "priceType": "commission",
+              "commission": [
+                {
+                  "amount": 0,
+                  "currency": "USD"
+                }
+              ],
+              "retailRate": {
+                "total": [
+                  {
+                    "amount": 1095.69,
+                    "currency": "USD"
+                  }
+                ],
+                "suggestedSellingPrice": [
+                  {
+                    "amount": 1124.18,
+                    "currency": "USD",
+                    "source": "providerDirect"
+                  }
+                ],
+                "initialPrice": [
+                  {
+                    "amount": 1095.69,
+                    "currency": "USD"
+                  }
+                ],
+                "taxesAndFees": [
+                  {
+                    "included": false,
+                    "description": "Resort Fee",
+                    "amount": 186.32,
+                    "currency": "USD"
+                  }
+                ]
+              },
+              "cancellationPolicies": {
+                "cancelPolicyInfos": [
+                  {
+                    "cancelTime": "2026-11-08 10:00:00",
+                    "amount": 263.58,
+                    "currency": "USD",
+                    "type": "amount",
+                    "timezone": "GMT"
+                  }
+                ],
+                "hotelRemarks": [],
+                "refundableTag": "RFN"
+              },
+              "paymentTypes": [
+                "NUITEE_PAY"
+              ],
+              "providerCommission": {
+                "amount": 0,
+                "currency": ""
+              },
+              "perks": [],
+              "promotions": null
+            }
+          ],
+          "offerRetailRate": {
+            "amount": 1095.69,
+            "currency": "USD"
+          },
+          "suggestedSellingPrice": {
+            "amount": 1124.18,
+            "currency": "USD",
+            "source": "providerDirect"
+          },
+          "offerInitialPrice": {
+            "amount": 1095.69,
+            "currency": "USD"
+          },
+          "priceType": "commission",
+          "rateType": "package",
+          "paymentTypes": [
+            "NUITEE_PAY"
+          ],
+          "paymentSchedule": "now"
+        }
+      ],
+      "et": 10800
+    },
+    {
+      "hotelId": "lp40a40",
+      "roomTypes": [
+        {
+          "roomTypeId": "GE2DIOJNGI3DINZWHB6E4USGJZ6DEMBSGYYTAMRTGEYDAMD4GF6FEMJQGUZXYMJQHE3TQMA",
+          "offerId": "[REDACTED]",
+          "supplier": "nuitee",
+          "supplierId": 2,
+          "rates": [
+            {
+              "rateId": "[REDACTED]",
+              "occupancyNumber": 1,
+              "name": "1 King Classic Mobility Accessible Tub",
+              "maxOccupancy": 2,
+              "adultCount": 2,
+              "childCount": 0,
+              "childrenAges": [],
+              "boardType": "RO",
+              "boardName": "Room Only",
+              "remarks": "",
+              "priceType": "commission",
+              "commission": [
+                {
+                  "amount": 0,
+                  "currency": "USD"
+                }
+              ],
+              "retailRate": {
+                "total": [
+                  {
+                    "amount": 1097.8,
+                    "currency": "USD"
+                  }
+                ],
+                "suggestedSellingPrice": [
+                  {
+                    "amount": 1155.98,
+                    "currency": "USD",
+                    "source": "providerDirect"
+                  }
+                ],
+                "initialPrice": [
+                  {
+                    "amount": 1097.8,
+                    "currency": "USD"
+                  }
+                ],
+                "taxesAndFees": [
+                  {
+                    "included": false,
+                    "description": "Accommodation Fee",
+                    "amount": 172.36,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "LODGING",
+                    "amount": 62.34,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "LODGING",
+                    "amount": 27.38,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "LODGING",
+                    "amount": 15.76,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "LODGING",
+                    "amount": 54.89,
+                    "currency": "USD"
+                  }
+                ]
+              },
+              "cancellationPolicies": {
+                "cancelPolicyInfos": [],
+                "hotelRemarks": [],
+                "refundableTag": "NRFN"
+              },
+              "paymentTypes": [
+                "NUITEE_PAY"
+              ],
+              "providerCommission": {
+                "amount": 0,
+                "currency": ""
+              },
+              "perks": [],
+              "promotions": null
+            }
+          ],
+          "offerRetailRate": {
+            "amount": 1097.8,
+            "currency": "USD"
+          },
+          "suggestedSellingPrice": {
+            "amount": 1155.98,
+            "currency": "USD",
+            "source": "providerDirect"
+          },
+          "offerInitialPrice": {
+            "amount": 1097.8,
+            "currency": "USD"
+          },
+          "priceType": "commission",
+          "rateType": "package",
+          "paymentTypes": [
+            "NUITEE_PAY"
+          ],
+          "paymentSchedule": "now"
+        }
+      ],
+      "et": 10800
+    },
+    {
+      "hotelId": "lp65555732",
+      "roomTypes": [
+        {
+          "roomTypeId": "GEZDONRNGE3TAMBQHEYTMOJYPRHFERSOPQZDAMRWGEYDENBRG4YTQ7BRPRJDCMBQGJ6DOOJTHAZA",
+          "offerId": "[REDACTED]",
+          "supplier": "nuitee",
+          "supplierId": 2,
+          "rates": [
+            {
+              "rateId": "[REDACTED]",
+              "occupancyNumber": 1,
+              "name": "King Room With Sofa",
+              "maxOccupancy": 2,
+              "adultCount": 2,
+              "childCount": 0,
+              "childrenAges": [],
+              "boardType": "BI",
+              "boardName": "Breakfast Included",
+              "remarks": "",
+              "priceType": "commission",
+              "commission": [
+                {
+                  "amount": 0,
+                  "currency": "USD"
+                }
+              ],
+              "retailRate": {
+                "total": [
+                  {
+                    "amount": 793.82,
+                    "currency": "USD"
+                  }
+                ],
+                "suggestedSellingPrice": [
+                  {
+                    "amount": 796.2,
+                    "currency": "USD",
+                    "source": "providerDirect"
+                  }
+                ],
+                "initialPrice": [
+                  {
+                    "amount": 793.82,
+                    "currency": "USD"
+                  }
+                ],
+                "taxesAndFees": [
+                  {
+                    "included": true,
+                    "description": "local_government_tax_",
+                    "amount": 67.78,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "sales_tax",
+                    "amount": 41.75,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "tourism_tax",
+                    "amount": 10.98,
+                    "currency": "USD"
+                  }
+                ]
+              },
+              "cancellationPolicies": {
+                "cancelPolicyInfos": [],
+                "hotelRemarks": [],
+                "refundableTag": "NRFN"
+              },
+              "paymentTypes": [
+                "NUITEE_PAY"
+              ],
+              "providerCommission": {
+                "amount": 0,
+                "currency": ""
+              },
+              "perks": [],
+              "promotions": null
+            }
+          ],
+          "offerRetailRate": {
+            "amount": 793.82,
+            "currency": "USD"
+          },
+          "suggestedSellingPrice": {
+            "amount": 796.2,
+            "currency": "USD",
+            "source": "providerDirect"
+          },
+          "offerInitialPrice": {
+            "amount": 793.82,
+            "currency": "USD"
+          },
+          "priceType": "commission",
+          "rateType": "standard",
+          "paymentTypes": [
+            "NUITEE_PAY"
+          ],
+          "paymentSchedule": "now"
+        }
+      ],
+      "et": 10800
+    },
+    {
+      "hotelId": "lp65563e3d",
+      "roomTypes": [
+        {
+          "roomTypeId": "GE2DIOJNGE3TAMBRGUYDQNBVPRJEMTT4GIYDENRRGEYDSMJQGAYHYML4KIYTAMBWPQ4TCNZXGM",
+          "offerId": "[REDACTED]",
+          "supplier": "nuitee",
+          "supplierId": 2,
+          "rates": [
+            {
+              "rateId": "[REDACTED]",
+              "occupancyNumber": 1,
+              "name": "Standard King Bed (plus Sofa Bed)",
+              "maxOccupancy": 2,
+              "adultCount": 2,
+              "childCount": 0,
+              "childrenAges": [],
+              "boardType": "BI",
+              "boardName": "Breakfast Included",
+              "remarks": "",
+              "priceType": "commission",
+              "commission": [
+                {
+                  "amount": 0,
+                  "currency": "USD"
+                }
+              ],
+              "retailRate": {
+                "total": [
+                  {
+                    "amount": 917.73,
+                    "currency": "USD"
+                  }
+                ],
+                "suggestedSellingPrice": [
+                  {
+                    "amount": 924.16,
+                    "currency": "USD",
+                    "source": "providerDirect"
+                  }
+                ],
+                "initialPrice": [
+                  {
+                    "amount": 917.73,
+                    "currency": "USD"
+                  }
+                ],
+                "taxesAndFees": [
+                  {
+                    "included": true,
+                    "description": "LODGING",
+                    "amount": 52.19,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "LODGING",
+                    "amount": 23,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "LODGING",
+                    "amount": 13.28,
+                    "currency": "USD"
+                  },
+                  {
+                    "included": true,
+                    "description": "LODGING",
+                    "amount": 45.95,
+                    "currency": "USD"
+                  }
+                ]
+              },
+              "cancellationPolicies": {
+                "cancelPolicyInfos": [
+                  {
+                    "cancelTime": "2026-11-09 10:00:00",
+                    "amount": 230.3,
+                    "currency": "USD",
+                    "type": "amount",
+                    "timezone": "GMT"
+                  },
+                  {
+                    "cancelTime": "2026-11-11 10:00:00",
+                    "amount": 230.3,
+                    "currency": "USD",
+                    "type": "amount",
+                    "timezone": "GMT"
+                  }
+                ],
+                "hotelRemarks": [],
+                "refundableTag": "RFN"
+              },
+              "paymentTypes": [
+                "NUITEE_PAY"
+              ],
+              "providerCommission": {
+                "amount": 0,
+                "currency": ""
+              },
+              "perks": [],
+              "promotions": null
+            }
+          ],
+          "offerRetailRate": {
+            "amount": 917.73,
+            "currency": "USD"
+          },
+          "suggestedSellingPrice": {
+            "amount": 924.16,
+            "currency": "USD",
+            "source": "providerDirect"
+          },
+          "offerInitialPrice": {
+            "amount": 917.73,
+            "currency": "USD"
+          },
+          "priceType": "commission",
+          "rateType": "package",
+          "paymentTypes": [
+            "NUITEE_PAY"
+          ],
+          "paymentSchedule": "now"
+        }
+      ],
+      "et": 10800
+    },
+    {
+      "hotelId": "lp65571f33",
+      "roomTypes": [
+        {
+          "roomTypeId": "GE3TEMJNGE3TAMBSGA4DIMZVPRJEMTT4GIYDENRRGEYDSMJQGAYHYML4KIYTAMBWPQYTEMRYGY2A",
+          "offerId": "[REDACTED]",
+          "supplier": "nuitee",
+          "supplierId": 2,
+          "rates": [
+            {
+              "rateId": "[REDACTED]",
+              "occupancyNumber": 1,
+              "name": "Artist Tower Studio Room 1 King Bed",
+              "maxOccupancy": 2,
+              "adultCount": 2,
+              "childCount": 0,
+              "childrenAges": [],
+              "boardType": "RO",
+              "boardName": "Room Only",
+              "remarks": "",
+              "priceType": "commission",
+              "commission": [
+                {
+                  "amount": 0,
+                  "currency": "USD"
+                }
+              ],
+              "retailRate": {
+                "total": [
+                  {
+                    "amount": 1228.64,
+                    "currency": "USD"
+                  }
+                ],
+                "suggestedSellingPrice": [
+                  {
+                    "amount": 1236.01,
+                    "currency": "USD",
+                    "source": "providerDirect"
+                  }
+                ],
+                "initialPrice": [
+                  {
+                    "amount": 1228.64,
+                    "currency": "USD"
+                  }
+                ],
+                "taxesAndFees": [
+                  {
+                    "included": true,
+                    "description": "Taxes",
+                    "amount": 165.38,
+                    "currency": "USD"
+                  }
+                ]
+              },
+              "cancellationPolicies": {
+                "cancelPolicyInfos": [
+                  {
+                    "cancelTime": "2026-11-09 10:00:00",
+                    "amount": 304.95,
+                    "currency": "USD",
+                    "type": "amount",
+                    "timezone": "GMT"
+                  }
+                ],
+                "hotelRemarks": [],
+                "refundableTag": "RFN"
+              },
+              "paymentTypes": [
+                "NUITEE_PAY"
+              ],
+              "providerCommission": {
+                "amount": 0,
+                "currency": ""
+              },
+              "perks": [],
+              "promotions": null
+            }
+          ],
+          "offerRetailRate": {
+            "amount": 1228.64,
+            "currency": "USD"
+          },
+          "suggestedSellingPrice": {
+            "amount": 1236.01,
+            "currency": "USD",
+            "source": "providerDirect"
+          },
+          "offerInitialPrice": {
+            "amount": 1228.64,
+            "currency": "USD"
+          },
+          "priceType": "commission",
+          "rateType": "standard",
+          "paymentTypes": [
+            "NUITEE_PAY"
+          ],
+          "paymentSchedule": "now"
+        }
+      ],
+      "et": 10800
+    },
+    {
+      "hotelId": "lp7978c",
+      "roomTypes": [
+        {
+          "roomTypeId": "GE4TMMJNGQ4TONJUHB6FERSOPQZDAMRWGEYTCMBQGUYDA7BRPRJDCMBWGR6DCMBTGAYDG",
+          "offerId": "[REDACTED]",
+          "supplier": "nuitee",
+          "supplierId": 2,
+          "rates": [
+            {
+              "rateId": "[REDACTED]",
+              "occupancyNumber": 1,
+              "name": "King Room",
+              "maxOccupancy": 2,
+              "adultCount": 2,
+              "childCount": 0,
+              "childrenAges": [],
+              "boardType": "RO",
+              "boardName": "Room Only",
+              "remarks": "",
+              "priceType": "commission",
+              "commission": [
+                {
+                  "amount": 0,
+                  "currency": "USD"
+                }
+              ],
+              "retailRate": {
+                "total": [
+                  {
+                    "amount": 1030.03,
+                    "currency": "USD"
+                  }
+                ],
+                "suggestedSellingPrice": [
+                  {
+                    "amount": 1095.95,
+                    "currency": "USD",
+                    "source": "providerDirect"
+                  }
+                ],
+                "initialPrice": [
+                  {
+                    "amount": 1030.03,
+                    "currency": "USD"
+                  }
+                ],
+                "taxesAndFees": [
+                  {
+                    "included": false,
+                    "description": "Urban Fee",
+                    "amount": 163.08,
+                    "currency": "USD"
+                  }
+                ]
+              },
+              "cancellationPolicies": {
+                "cancelPolicyInfos": [
+                  {
+                    "cancelTime": "2026-11-10 05:00:00",
+                    "amount": 1030.03,
+                    "currency": "USD",
+                    "type": "amount",
+                    "timezone": "GMT"
+                  }
+                ],
+                "hotelRemarks": [],
+                "refundableTag": "RFN"
+              },
+              "paymentTypes": [
+                "NUITEE_PAY"
+              ],
+              "providerCommission": {
+                "amount": 0,
+                "currency": ""
+              },
+              "perks": [],
+              "promotions": null
+            }
+          ],
+          "offerRetailRate": {
+            "amount": 1030.03,
+            "currency": "USD"
+          },
+          "suggestedSellingPrice": {
+            "amount": 1095.95,
+            "currency": "USD",
+            "source": "providerDirect"
+          },
+          "offerInitialPrice": {
+            "amount": 1030.03,
+            "currency": "USD"
+          },
+          "priceType": "commission",
+          "rateType": "standard",
+          "paymentTypes": [
+            "NUITEE_PAY"
+          ],
+          "paymentSchedule": "now"
+        }
+      ],
+      "et": 10800
+    }
+  ],
+  "guestLevel": 0,
+  "sandbox": true,
+  "hotels": [
+    {
+      "id": "lp1aa33",
+      "name": "Revere Hotel Boston Common",
+      "main_photo": "https://static.cupid.travel/hotels/143421193.jpg",
+      "thumbnail": "https://static.cupid.travel/hotels/thumbnail/143421193.jpg",
+      "address": "200 Stuart Street",
+      "country_code": "US",
+      "city_name": "Boston",
+      "latitude": 42.350783,
+      "longitude": -71.067213,
+      "rating": 8.6,
+      "stars": 4,
+      "review_count": 4945
+    },
+    {
+      "id": "lp2444a",
+      "name": "The Dagny Boston",
+      "main_photo": "https://static.cupid.travel/hotels/488232492.jpg",
+      "thumbnail": "https://static.cupid.travel/hotels/thumbnail/488232492.jpg",
+      "address": "89 Broad Street",
+      "country_code": "US",
+      "city_name": "Boston",
+      "latitude": 42.357244,
+      "longitude": -71.053424,
+      "rating": 9.8,
+      "stars": 4,
+      "review_count": 3517
+    },
+    {
+      "id": "lp322e7",
+      "name": "Hotel Commonwealth",
+      "main_photo": "https://static.cupid.travel/hotels/441380590.jpg",
+      "thumbnail": "https://static.cupid.travel/hotels/thumbnail/441380590.jpg",
+      "address": "500 Commonwealth Avenue",
+      "country_code": "US",
+      "city_name": "Boston",
+      "latitude": 42.348679,
+      "longitude": -71.095206,
+      "rating": 9.4,
+      "stars": 5,
+      "review_count": 2144
+    },
+    {
+      "id": "lp40a40",
+      "name": "InterContinental Boston by IHG",
+      "main_photo": "https://static.cupid.travel/hotels/467945278.jpg",
+      "thumbnail": "https://static.cupid.travel/hotels/thumbnail/467945278.jpg",
+      "address": "510 Atlantic Avenue",
+      "country_code": "US",
+      "city_name": "Boston",
+      "latitude": 42.354101,
+      "longitude": -71.052397,
+      "rating": 9.2,
+      "stars": 5,
+      "review_count": 1648
+    },
+    {
+      "id": "lp7978c",
+      "name": "The Godfrey Hotel Boston",
+      "main_photo": "https://static.cupid.travel/hotels/63670419.jpg",
+      "thumbnail": "https://static.cupid.travel/hotels/thumbnail/63670419.jpg",
+      "address": "505 Washington Street",
+      "country_code": "US",
+      "city_name": "Boston",
+      "latitude": 42.35456,
+      "longitude": -71.061512,
+      "rating": 9,
+      "stars": 4,
+      "review_count": 6662
+    },
+    {
+      "id": "lp1d5df9",
+      "name": "citizenM Boston North Station",
+      "main_photo": "https://static.cupid.travel/hotels/252854445.jpg",
+      "thumbnail": "https://static.cupid.travel/hotels/thumbnail/252854445.jpg",
+      "address": "70 Causeway Street",
+      "country_code": "US",
+      "city_name": "Boston",
+      "latitude": 42.365387,
+      "longitude": -71.06182,
+      "rating": 8.8,
+      "stars": 4,
+      "review_count": 6398
+    },
+    {
+      "id": "lp65555732",
+      "name": "Hampton by Hilton at the Boston Seaport District",
+      "main_photo": "https://static.cupid.travel/hotels/484124932.jpg",
+      "thumbnail": "https://static.cupid.travel/hotels/thumbnail/484124932.jpg",
+      "address": "670 Summer Street",
+      "country_code": "US",
+      "city_name": "Boston",
+      "latitude": 42.34435,
+      "longitude": -71.037701,
+      "rating": 9.4,
+      "stars": 3,
+      "review_count": 3447
+    },
+    {
+      "id": "lp65563e3d",
+      "name": "Hyatt Place Boston/Seaport District",
+      "main_photo": "https://static.cupid.travel/hotels/535073678.jpg",
+      "thumbnail": "https://static.cupid.travel/hotels/thumbnail/535073678.jpg",
+      "address": "295 Northern Avenue",
+      "country_code": "US",
+      "city_name": "Boston",
+      "latitude": 42.347605,
+      "longitude": -71.03655,
+      "rating": 9.2,
+      "stars": 3,
+      "review_count": 3399
+    },
+    {
+      "id": "lp65571f33",
+      "name": "Omni Boston Hotel at the Seaport",
+      "main_photo": "https://static.cupid.travel/hotels/429103907.jpg",
+      "thumbnail": "https://static.cupid.travel/hotels/thumbnail/429103907.jpg",
+      "address": "450 Summer Street",
+      "country_code": "US",
+      "city_name": "Boston",
+      "latitude": 42.34705,
+      "longitude": -71.042162,
+      "rating": 9,
+      "stars": 4,
+      "review_count": 4504
+    }
+  ]
+}

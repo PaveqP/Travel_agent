@@ -1,0 +1,37 @@
+{
+  "pagination": {
+    "total": 1,
+    "limit": 50,
+    "offset": 0
+  },
+  "stations": [
+    {
+      "type": "station",
+      "title": "Сочи",
+      "short_title": "",
+      "popular_title": "",
+      "code": "s9613034",
+      "lat": 43.591448,
+      "lng": 39.728683,
+      "station_type": "station",
+      "station_type_name": "станция",
+      "transport_type": "train",
+      "distance": 0.17019499343235323,
+      "majority": 1,
+      "type_choices": {
+        "tablo": {
+          "desktop_url": "https://rasp.yandex.ru/station/9613034/tablo",
+          "touch_url": "https://t.rasp.yandex.ru/station/9613034/tablo"
+        },
+        "train": {
+          "desktop_url": "https://rasp.yandex.ru/station/9613034/train",
+          "touch_url": "https://t.rasp.yandex.ru/station/9613034/train"
+        },
+        "suburban": {
+          "desktop_url": "https://rasp.yandex.ru/station/9613034/suburban",
+          "touch_url": "https://t.rasp.yandex.ru/station/9613034/suburban"
+        }
+      }
+    }
+  ]
+}

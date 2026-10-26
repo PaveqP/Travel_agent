@@ -1,0 +1,31 @@
+{
+  "xid": "N2493948467",
+  "name": "Учительница",
+  "address": {
+    "city": "Сочи",
+    "road": "Советская улица",
+    "state": "Краснодарский край",
+    "county": "городской округ Сочи",
+    "suburb": "Центральный район",
+    "country": "Россия",
+    "postcode": "354000",
+    "address29": "Площаь Флага",
+    "country_code": "ru",
+    "city_district": "Центральный внутригородской район",
+    "neighbourhood": "Ареда"
+  },
+  "rate": "1",
+  "osm": "node/2493948467",
+  "kinds": "cultural,urban_environment,interesting_places,installation",
+  "sources": {
+    "geometry": "osm",
+    "attributes": [
+      "osm"
+    ]
+  },
+  "otm": "https://opentripmap.com/ru/card/N2493948467",
+  "point": {
+    "lon": 39.72251892089844,
+    "lat": 43.58509063720703
+  }
+}

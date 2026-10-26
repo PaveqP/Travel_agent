@@ -1,0 +1,12 @@
+[project]
+name = "flinters-integration-research"
+version = "0.1.0"
+description = "Reproducible API and MCP research for Greater Sochi"
+requires-python = ">=3.11"
+dependencies = [
+  "httpx>=0.28,<0.29",
+  "python-dotenv>=1.1,<2",
+  "pydantic>=2.11,<3",
+  "mcp>=1.20,<2",
+  "jsonschema>=4.26,<5",
+]

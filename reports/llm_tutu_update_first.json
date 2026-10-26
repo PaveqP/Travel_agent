@@ -1,0 +1,6 @@
+{
+  "status": "error",
+  "exception_type": "TypeError",
+  "actual_cost_usd": "0.053398",
+  "cost_is_reservation": true
+}

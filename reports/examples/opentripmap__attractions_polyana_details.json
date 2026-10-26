@@ -1,0 +1,35 @@
+{
+  "xid": "W55684190",
+  "name": "Церковь Евангельских Христиан",
+  "address": {
+    "road": "улица Пчеловодов",
+    "town": "Красная Поляна",
+    "state": "Краснодарский край",
+    "county": "городской округ Сочи",
+    "country": "Россия",
+    "postcode": "354392",
+    "country_code": "ru",
+    "house_number": "6",
+    "city_district": "Адлерский внутригородской район"
+  },
+  "rate": "1",
+  "osm": "way/55684190",
+  "bbox": {
+    "lon_min": 40.201349,
+    "lon_max": 40.201525,
+    "lat_min": 43.680052,
+    "lat_max": 43.680217
+  },
+  "kinds": "religion,churches,interesting_places,other_churches",
+  "sources": {
+    "geometry": "osm",
+    "attributes": [
+      "osm"
+    ]
+  },
+  "otm": "https://opentripmap.com/ru/card/W55684190",
+  "point": {
+    "lon": 40.20143508911133,
+    "lat": 43.68013381958008
+  }
+}

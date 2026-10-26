@@ -1,0 +1,1442 @@
+{
+  "meta": {
+    "tool": "search_places",
+    "returned_items": 10
+  },
+  "content": [
+    {
+      "type": "text",
+      "text": "Найдено 10 из 140 результатов для: Отели.\n\nРезультаты:\n1. Гранд Отель Поляна, гостиничный комплекс — branch; адрес: Эстосадок (Сочи городской округ), Ачипсинская улица, 16; координаты: 43.690926, 40.274405; id: 4222652931699561\n2. Риксос Красная Поляна Сочи — branch; адрес: Эстосадок (Сочи городской округ), улица Созвездий, 3; координаты: 43.670868, 40.261670; id: 4222653932200431\n3. Snega by Provence, апарт-отель — branch; адрес: Эстосадок (Сочи городской округ), Эстонская улица, 105; координаты: 43.683443, 40.270225; id: 70000001046866164\n4. Сочи Марриотт Красная Поляна — branch; адрес: Эстосадок (Сочи городской округ), набережная Времена Года, 1; координаты: 43.683765, 40.256921; id: 70000001061747530\n5. Панорама by Mercure Красная Поляна — branch; адрес: Эстосадок (Сочи городской округ), Февральская улица, 1; координаты: 43.669416, 40.260765; id: 70000001006403338\n6. Грейс Империал, СПА-отель — branch; адрес: Эстосадок (Сочи городской округ), Лунный переулок, 6; координаты: 43.688081, 40.248079; id: 70000001034812151\n7. Апартаменты Курорта Красная Поляна, 540 Апарт-отель — branch; адрес: Эстосадок (Сочи городской округ), улица Горная Карусель, 5; координаты: 43.683983, 40.264757; id: 70000001063074193\n8. Аркадия by Provence, сеть отелей — branch; адрес: Эстосадок (Сочи городской округ), Эстонская улица, 81; координаты: 43.684690, 40.262837; id: 70000001028624525\n9. Горная Кадриль Редэнс, отель — branch; адрес: Красная Поляна (Сочи городской округ), Волоколамская улица, 2; координаты: 43.678462, 40.200103; id: 70000001065391766\n10. Ламонт, апарт-отель — branch; адрес: Эстосадок (Сочи городской округ), Берёзовая улица, 36/1; координаты: 43.688767, 40.249967; id: 70000001059689903",
+      "annotations": null,
+      "meta": null
+    }
+  ],
+  "structuredContent": {
+    "query": "Отели",
+    "total": 140,
+    "returned_count": 10,
+    "items": [
+      {
+        "id": "4222652931699561",
+        "name": "Гранд Отель Поляна, гостиничный комплекс",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), Ачипсинская улица, 16",
+        "address": {
+          "building_id": "4222760305892916",
+          "building_name": "Корпус В",
+          "components": [
+            {
+              "number": "16",
+              "street": "Ачипсинская улица",
+              "street_id": "4222863385039233",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Газпром Лаура",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.690926,
+          "lon": 40.274405
+        },
+        "extra_fields": {
+          "address_comment": "B корпус",
+          "address_name": "Ачипсинская улица, 16",
+          "building_name": "Гранд Отель Поляна, ресторанно-гостиничный комплекс",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Эстосадок, Гранд Отель Поляна, ресторанно-гостиничный комплекс",
+          "org": {
+            "branch_count": 6,
+            "id": "70000001026740172",
+            "name": "Газпром Поляна",
+            "primary": "Газпром Поляна"
+          },
+          "purpose_name": "Административное здание",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 442,
+            "general_review_count_with_stars": 1062,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 3.5,
+                "recommendation_count": 2,
+                "review_count": 8,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4,
+            "org_review_count": 1765,
+            "org_review_count_with_stars": 4498,
+            "rating": 3.5,
+            "recommendation_count": 2,
+            "review_count": 8
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            },
+            {
+              "alias": "spa_procedury",
+              "id": "56759",
+              "kind": "additional",
+              "name": "SPA-процедуры",
+              "parent_id": "5",
+              "short_id": 56759
+            },
+            {
+              "alias": "bassejjny",
+              "id": "261",
+              "kind": "additional",
+              "name": "Бассейны",
+              "parent_id": "8",
+              "short_id": 261
+            },
+            {
+              "alias": "konferenc_zaly",
+              "id": "17379",
+              "kind": "additional",
+              "name": "Конференц-залы",
+              "parent_id": "9",
+              "short_id": 17379
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "4222653932200431",
+        "name": "Риксос Красная Поляна Сочи",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), улица Созвездий, 3",
+        "address": {
+          "building_id": "4222760305904436",
+          "building_name": "Отель Rixos",
+          "components": [
+            {
+              "number": "3",
+              "street": "улица Созвездий",
+              "street_id": "4222863385044430",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Курорт Красная Поляна",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.670868,
+          "lon": 40.26167
+        },
+        "extra_fields": {
+          "address_comment": "1-5 этаж",
+          "address_name": "улица Созвездий, 3",
+          "building_name": "Rixos, отель",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Эстосадок, Rixos, отель",
+          "org": {
+            "branch_count": 1,
+            "id": "70000001050826780",
+            "name": "Риксос Красная Поляна Сочи",
+            "primary": "Риксос Красная Поляна Сочи"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 679,
+            "general_review_count_with_stars": 1173,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 5,
+                "review_count": 3,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 680,
+            "org_review_count_with_stars": 1173,
+            "rating": 5,
+            "review_count": 3
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001046866164",
+        "name": "Snega by Provence, апарт-отель",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), Эстонская улица, 105",
+        "address": {
+          "building_id": "4222760305893092",
+          "components": [
+            {
+              "number": "105",
+              "street": "Эстонская улица",
+              "street_id": "4222863385039403",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.683443,
+          "lon": 40.270225
+        },
+        "extra_fields": {
+          "address_comment": "1-5 этаж",
+          "address_name": "Эстонская улица, 105",
+          "building_name": "Снега в горах, апарт-отель",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Эстосадок, Снега в горах, апарт-отель",
+          "org": {
+            "branch_count": 1,
+            "extension": "апарт-отель",
+            "id": "70000001046866163",
+            "name": "Snega by Provence, апарт-отель",
+            "primary": "Snega by Provence"
+          },
+          "purpose_name": "Апартаменты",
+          "reviews": {
+            "general_rating": 4.8,
+            "general_review_count": 633,
+            "general_review_count_with_stars": 973,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 1,
+                "review_count": 1,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.7,
+            "org_review_count": 633,
+            "org_review_count_with_stars": 973,
+            "rating": 1,
+            "review_count": 1
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001061747530",
+        "name": "Сочи Марриотт Красная Поляна",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), набережная Времена Года, 1",
+        "address": {
+          "building_id": "4222760305903555",
+          "components": [
+            {
+              "number": "1",
+              "street": "набережная Времена Года",
+              "street_id": "4222863385044781",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Курорт Красная Поляна",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.683765,
+          "lon": 40.256921
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "набережная Времена Года, 1",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Эстосадок, набережная Времена Года, 1",
+          "org": {
+            "branch_count": 1,
+            "id": "70000001061747529",
+            "name": "Сочи Марриотт Красная Поляна",
+            "primary": "Сочи Марриотт Красная Поляна"
+          },
+          "purpose_name": "Административное здание",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 970,
+            "general_review_count_with_stars": 2286,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 5,
+                "review_count": 1,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.8,
+            "org_review_count": 967,
+            "org_review_count_with_stars": 2282,
+            "rating": 5,
+            "review_count": 1
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001006403338",
+        "name": "Панорама by Mercure Красная Поляна",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), Февральская улица, 1",
+        "address": {
+          "building_id": "4222760305904443",
+          "components": [
+            {
+              "number": "1",
+              "street": "Февральская улица",
+              "street_id": "4222863385044435",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Курорт Красная Поляна",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.669416,
+          "lon": 40.260765
+        },
+        "extra_fields": {
+          "address_name": "Февральская улица, 1",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Эстосадок, Февральская улица, 1",
+          "org": {
+            "branch_count": 1,
+            "id": "70000001006403339",
+            "name": "Панорама by Mercure Красная Поляна",
+            "primary": "Панорама by Mercure Красная Поляна"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 1457,
+            "general_review_count_with_stars": 2709,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4.6,
+                "recommendation_count": 1,
+                "review_count": 14,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 1485,
+            "org_review_count_with_stars": 2700,
+            "rating": 4.6,
+            "recommendation_count": 1,
+            "review_count": 14
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001034812151",
+        "name": "Грейс Империал, СПА-отель",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), Лунный переулок, 6",
+        "address": {
+          "building_id": "70030076169398795",
+          "components": [
+            {
+              "number": "6",
+              "street": "Лунный переулок",
+              "street_id": "4222863385039424",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.688081,
+          "lon": 40.248079
+        },
+        "extra_fields": {
+          "address_name": "Лунный переулок, 6",
+          "building_name": "Грейс Империал, СПА-отель",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Эстосадок, Грейс Империал, СПА-отель",
+          "org": {
+            "branch_count": 1,
+            "extension": "СПА-отель",
+            "id": "70000001034812150",
+            "name": "Грейс Империал, СПА-отель",
+            "primary": "Грейс Империал"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.6,
+            "general_review_count": 811,
+            "general_review_count_with_stars": 1254,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.6,
+            "org_review_count": 811,
+            "org_review_count_with_stars": 1254
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "comment": "СПА-комплекс: пн-вс 10:00-22:00",
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001063074193",
+        "name": "Апартаменты Курорта Красная Поляна, 540 Апарт-отель",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), улица Горная Карусель, 5",
+        "address": {
+          "building_id": "4222760305893654",
+          "components": [
+            {
+              "number": "5",
+              "street": "улица Горная Карусель",
+              "street_id": "4222863385044858",
+              "type": "street_number"
+            },
+            {
+              "number": "5 к31",
+              "street": "улица Горная Карусель",
+              "street_id": "4222863385044858",
+              "type": "street_number"
+            },
+            {
+              "number": "5 к33",
+              "street": "улица Горная Карусель",
+              "street_id": "4222863385044858",
+              "type": "street_number"
+            },
+            {
+              "number": "5 к34",
+              "street": "улица Горная Карусель",
+              "street_id": "4222863385044858",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Курорт Красная Поляна",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.683983,
+          "lon": 40.264757
+        },
+        "extra_fields": {
+          "address_name": "улица Горная Карусель, 5",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Эстосадок, улица Горная Карусель, 5 / улица Горная Карусель, 5 к31 / улица Горная Карусель, 5 к33 / улица Горная Карусель, 5 к34",
+          "org": {
+            "branch_count": 10,
+            "id": "70000001061749425",
+            "name": "Апартаменты Курорта Красная Поляна",
+            "primary": "Апартаменты Курорта Красная Поляна"
+          },
+          "purpose_name": "Апартаменты",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 98,
+            "general_review_count_with_stars": 302,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.1,
+            "org_review_count": 816,
+            "org_review_count_with_stars": 1644
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001028624525",
+        "name": "Аркадия by Provence, сеть отелей",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), Эстонская улица, 81",
+        "address": {
+          "building_id": "4222760305893182",
+          "components": [
+            {
+              "number": "81",
+              "street": "Эстонская улица",
+              "street_id": "4222863385039403",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.68469,
+          "lon": 40.262837
+        },
+        "extra_fields": {
+          "address_comment": "1-6 этаж",
+          "address_name": "Эстонская улица, 81",
+          "building_name": "Arcadia by Provence, отель",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Эстосадок, Arcadia by Provence, отель",
+          "org": {
+            "branch_count": 2,
+            "extension": "сеть отелей",
+            "id": "70000001028624524",
+            "name": "Аркадия by Provence, сеть отелей",
+            "primary": "Аркадия by Provence"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 813,
+            "general_review_count_with_stars": 1275,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.6,
+            "org_review_count": 822,
+            "org_review_count_with_stars": 1297
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            },
+            {
+              "alias": "bassejjny",
+              "id": "261",
+              "kind": "additional",
+              "name": "Бассейны",
+              "parent_id": "8",
+              "short_id": 261
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001065391766",
+        "name": "Горная Кадриль Редэнс, отель",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Красная Поляна (Сочи городской округ), Волоколамская улица, 2",
+        "address": {
+          "building_id": "4222760305859609",
+          "components": [
+            {
+              "number": "2",
+              "street": "Волоколамская улица",
+              "street_id": "4222863385039627",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.678462,
+          "lon": 40.200103
+        },
+        "extra_fields": {
+          "address_name": "Волоколамская улица, 2",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Красная Поляна, Волоколамская улица, 2",
+          "org": {
+            "branch_count": 4,
+            "extension": "отель",
+            "id": "70000001065391765",
+            "name": "Редэнс, отель",
+            "primary": "Редэнс"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 146,
+            "general_review_count_with_stars": 274,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 5,
+                "review_count": 1,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.6,
+            "org_review_count": 429,
+            "org_review_count_with_stars": 744,
+            "rating": 5,
+            "review_count": 1
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            },
+            {
+              "alias": "bani_i_sauny",
+              "id": "946",
+              "kind": "additional",
+              "name": "Бани и сауны",
+              "parent_id": "2",
+              "short_id": 946
+            },
+            {
+              "alias": "spa_procedury",
+              "id": "56759",
+              "kind": "additional",
+              "name": "SPA-процедуры",
+              "parent_id": "5",
+              "short_id": 56759
+            },
+            {
+              "alias": "massazhist",
+              "id": "13726",
+              "kind": "additional",
+              "name": "Массажист",
+              "parent_id": "5",
+              "short_id": 13726
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "comment": "администрация: пн-вс 9:00-18:00, перерыв: 13:00-14:00",
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001059689903",
+        "name": "Ламонт, апарт-отель",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), Берёзовая улица, 36/1",
+        "address": {
+          "building_id": "70030076169401358",
+          "components": [
+            {
+              "number": "36/1",
+              "street": "Берёзовая улица",
+              "street_id": "4222863385039396",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.688767,
+          "lon": 40.249967
+        },
+        "extra_fields": {
+          "address_comment": "1-6 этаж",
+          "address_name": "Берёзовая улица, 36/1",
+          "building_name": "Lamont, апарт-отель",
+          "flags": {
+            "photos": true
+          },
+          "full_name": "Эстосадок, Lamont, апарт-отель",
+          "org": {
+            "branch_count": 1,
+            "extension": "апарт-отель",
+            "id": "70000001059689902",
+            "name": "Ламонт, апарт-отель",
+            "primary": "Ламонт"
+          },
+          "purpose_name": "Гостиница",
+          "reviews": {
+            "general_rating": 4.7,
+            "general_review_count": 226,
+            "general_review_count_with_stars": 404,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.7,
+            "org_review_count": 225,
+            "org_review_count_with_stars": 403
+          },
+          "rubrics": [
+            {
+              "alias": "gostinicy",
+              "id": "269",
+              "kind": "primary",
+              "name": "Гостиницы",
+              "parent_id": "8",
+              "short_id": 269
+            },
+            {
+              "alias": "konferenc_zaly",
+              "id": "17379",
+              "kind": "additional",
+              "name": "Конференц-залы",
+              "parent_id": "9",
+              "short_id": 17379
+            },
+            {
+              "alias": "bani_i_sauny",
+              "id": "946",
+              "kind": "additional",
+              "name": "Бани и сауны",
+              "parent_id": "2",
+              "short_id": 946
+            },
+            {
+              "alias": "massazhist",
+              "id": "13726",
+              "kind": "additional",
+              "name": "Массажист",
+              "parent_id": "5",
+              "short_id": 13726
+            },
+            {
+              "alias": "spa_procedury",
+              "id": "56759",
+              "kind": "additional",
+              "name": "SPA-процедуры",
+              "parent_id": "5",
+              "short_id": 56759
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      }
+    ]
+  },
+  "isError": false
+}

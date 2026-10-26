@@ -1,0 +1,65 @@
+{
+  "pagination": {
+    "total": 2,
+    "limit": 50,
+    "offset": 0
+  },
+  "stations": [
+    {
+      "type": "station",
+      "title": "Роза Хутор",
+      "short_title": "",
+      "popular_title": "",
+      "code": "s9812791",
+      "lat": 43.676847,
+      "lng": 40.279299,
+      "station_type": "station",
+      "station_type_name": "станция",
+      "transport_type": "train",
+      "distance": 0.18753667115761605,
+      "majority": 1,
+      "type_choices": {
+        "train": {
+          "desktop_url": "https://rasp.yandex.ru/station/9812791/train",
+          "touch_url": "https://t.rasp.yandex.ru/station/9812791/train"
+        },
+        "tablo": {
+          "desktop_url": "https://rasp.yandex.ru/station/9812791/tablo",
+          "touch_url": "https://t.rasp.yandex.ru/station/9812791/tablo"
+        },
+        "suburban": {
+          "desktop_url": "https://rasp.yandex.ru/station/9812791/suburban",
+          "touch_url": "https://t.rasp.yandex.ru/station/9812791/suburban"
+        }
+      }
+    },
+    {
+      "type": "station",
+      "title": "Эсто-Садок",
+      "short_title": "",
+      "popular_title": "",
+      "code": "s9812790",
+      "lat": 43.683797,
+      "lng": 40.231808,
+      "station_type": "station",
+      "station_type_name": "станция",
+      "transport_type": "train",
+      "distance": 4.009121599022734,
+      "majority": 2,
+      "type_choices": {
+        "train": {
+          "desktop_url": "https://rasp.yandex.ru/station/9812790/train",
+          "touch_url": "https://t.rasp.yandex.ru/station/9812790/train"
+        },
+        "tablo": {
+          "desktop_url": "https://rasp.yandex.ru/station/9812790/tablo",
+          "touch_url": "https://t.rasp.yandex.ru/station/9812790/tablo"
+        },
+        "suburban": {
+          "desktop_url": "https://rasp.yandex.ru/station/9812790/suburban",
+          "touch_url": "https://t.rasp.yandex.ru/station/9812790/suburban"
+        }
+      }
+    }
+  ]
+}

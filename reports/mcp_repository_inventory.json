@@ -1,0 +1,71 @@
+[
+  {
+    "repo": "stufently/aviasales-mcp",
+    "checked_at": "2026-10-25T13:31:59.834304+00:00",
+    "executed": false,
+    "security_audit": "not_performed",
+    "http_status": 200,
+    "html_url": "https://github.com/stufently/aviasales-mcp",
+    "pushed_at": "2026-10-24T02:58:27Z",
+    "archived": false,
+    "default_branch": "main",
+    "license": "GPL-3.0",
+    "commit": "bba6ed42d37169fc027bf77d10f74675472bbe07",
+    "pyproject.toml": "[build-system]\nrequires = [\"hatchling\"]\nbuild-backend = \"hatchling.build\"\n\n[project]\nname = \"aviasales-mcp\"\nversion = \"0.5.3\"\ndescription = \"MCP server for Aviasales/Travelpayouts Flight Search API\"\nreadme = \"README.md\"\nlicense = \"GPL-3.0-or-later\"\nlicense-files = [\"LICENSE\"]\n# Lower bound, not a pin: CI runs 3.12 and 3.13.\nrequires-python = \">=3.12\"\nauthors = [\n    { name = \"aviasales-mcp contributors\" },\n]\nkeywords = [\n    \"mcp\",\n    \"mcp-server\",\n    \"model-context-protocol\",\n    \"aviasales\",\n    \"travelpayouts\",\n    \"flights\",\n    \"flight-search\",\n    \"travel\",\n    \"airfare\",\n    \"fastmcp\",\n    \"llm-tools\",\n]\nclassifiers = [\n    \"Development Status :: 4 - Beta\",\n    \"Environment :: Console\",\n    \"Intended Audience :: Developers\",\n    \"Operating System :: OS Independent\",\n    \"Programming Language :: Python :: 3\",\n    \"Programming Language :: Python :: 3.12\",\n    \"Programming Language :: Python :: 3.13\",\n    \"Programming Language :: Python :: 3.14\",\n    \"Programming Language :: Python :: 3 :: Only\",\n    \"Topic :: Internet :: WWW/HTTP\",\n    \"Topic :: Software Development :: Libraries :: Python Modules\",\n    \"Typing :: Typed\",\n]\ndependencies = [\n    \"fastmcp>=3.1,<4\",\n    \"httpx>=0.28,<1\",\n    \"pydantic>=2.12,<3\",\n    \"pydantic-settings>=2.7,<3\",\n    # Pulled in by fastmcp, but imported directly for the HTTP transport's auth\n    # middleware, so it is declared here too.\n    \"starlette>=0.40,<1\",\n]\n\n[project.optional-dependencies]\ndev = [\n    \"pytest>=9.1,<10\",\n    \"pytest-asyncio>=1.4,<2\",\n    \"pytest-cov>=7.1,<8\",\n    \"respx>=0.22,<1\",\n    \"ruff>=0.9,<1\",\n]\n\n[project.scripts]\naviasales-mcp = \"aviasales_mcp.server:main\"\n\n[project.urls]\nHomepage = \"https://github.com/stufently/aviasales-mcp\"\nRepository = \"https://github.com/stufently/aviasales-mcp\"\nIssues = \"https://github.com/stufently/aviasales-mcp/issues\"\nChangelog = \"https://github.com/stufently/aviasales-mcp/blob/main/CHANGELOG.md\"\n\n[tool.hatch.build.targets.wheel]\npackages = [\"src/aviasales_mcp\"]\n\n# Without this the sdist is the whole checkout: agent notes, specs, CI files.\n[tool.hatch.build.targets.sdist]\ninclude = [\n    \"/src\",\n    \"/tests\",\n    \"/README.md\",\n    \"/CHANGELOG.md\",\n    \"/SECURITY.md\",\n    \"/LICENSE\",\n    \"/pyproject.toml\",\n]\n\n[tool.ruff]\ntarget-version = \"py312\"\nline-length = 100\n\n[tool.ruff.lint]\nselect = [\"E\", \"F\", \"I\", \"N\", \"W\", \"UP\"]\n\n[tool.pytest.ini_options]\ntestpaths = [\"tests\"]\nasyncio_mode = \"auto\"\nasyncio_default_fixture_loop_scope = \"function\"\n\n[tool.coverage.run]\nsource = [\"aviasales_mcp\"]\n"
+  },
+  {
+    "repo": "airlabs-co/airlabs-mcp",
+    "checked_at": "2026-10-25T13:31:59.851038+00:00",
+    "executed": false,
+    "security_audit": "not_performed",
+    "http_status": 200,
+    "html_url": "https://github.com/airlabs-co/airlabs-mcp",
+    "pushed_at": "2026-06-25T09:41:22Z",
+    "archived": false,
+    "default_branch": "main",
+    "license": "MIT",
+    "commit": "8867967e9944b517d923391743b2d7e13c6782b8",
+    "package.json": "{\"name\": \"@airlabs-co/airlabs-mcp\", \"version\": \"1.0.0\", \"description\": \"Official AirLabs API MCP server — real-time flight data, schedules, delays, airports, airlines, fleets and routes as tools for AI assistants.\", \"type\": \"module\", \"bin\": {\"airlabs-mcp\": \"build/index.js\"}, \"files\": [\"build\"], \"scripts\": {\"build\": \"tsc && chmod +x build/index.js\", \"start\": \"node build/index.js\", \"prepublishOnly\": \"npm run build\"}, \"keywords\": [\"mcp\", \"model-context-protocol\", \"airlabs\", \"flight-data\", \"aviation\", \"flight-api\", \"ai-agent\", \"claude\", \"llm\"], \"author\": \"AirLabs (Data Products Ltd)\", \"license\": \"MIT\", \"homepage\": \"https://airlabs.co\", \"repository\": {\"type\": \"git\", \"url\": \"git+https://github.com/airlabs-co/airlabs-mcp.git\"}, \"bugs\": {\"url\": \"https://github.com/airlabs-co/airlabs-mcp/issues\"}, \"engines\": {\"node\": \">=18.0.0\"}, \"dependencies\": {\"@modelcontextprotocol/sdk\": \"^1.29.0\"}, \"devDependencies\": {\"typescript\": \"^5.4.0\", \"@types/node\": \"^20.0.0\"}}"
+  },
+  {
+    "repo": "mapbox/mcp-server",
+    "checked_at": "2026-10-25T13:31:59.851438+00:00",
+    "executed": false,
+    "security_audit": "not_performed",
+    "http_status": 200,
+    "html_url": "https://github.com/mapbox/mcp-server",
+    "pushed_at": "2026-10-23T21:27:44Z",
+    "archived": false,
+    "default_branch": "main",
+    "license": "MIT",
+    "commit": "7b39175aabd8569d340a0c96904b6f286ab784ba",
+    "package.json": "{\"name\": \"@mapbox/mcp-server\", \"version\": \"0.16.1-dev\", \"description\": \"Mapbox MCP server.\", \"mcpName\": \"io.github.mapbox/mcp-server\", \"main\": \"./dist/commonjs/index.js\", \"module\": \"./dist/esm/index.js\", \"type\": \"module\", \"bin\": {\"mcp-server\": \"dist/esm/index.js\"}, \"scripts\": {\"build\": \"npm run prepare && tshy && npm run generate-version && node scripts/add-shebang.cjs\", \"changelog:prepare-release\": \"node scripts/prepare-changelog-release.cjs\", \"format\": \"prettier --check \\\"./src/**/*.{ts,tsx,js,json,md}\\\" \\\"./test/**/*.{ts,tsx,js,json,md}\\\" \\\"./examples/**/*.{ts,tsx,js,json,md}\\\"\", \"format:fix\": \"prettier --write \\\"./src/**/*.{ts,tsx,js,json,md}\\\" \\\"./test/**/*.{ts,tsx,js,json,md}\\\" \\\"./examples/**/*.{ts,tsx,js,json,md}\\\"\", \"generate-version\": \"node scripts/build-helpers.cjs generate-version\", \"inspect:build\": \"npm run build && npx @modelcontextprotocol/inspector -e MAPBOX_ACCESS_TOKEN=\\\"$MAPBOX_ACCESS_TOKEN\\\" node dist/esm/index.js\", \"inspect:dev\": \"npx @modelcontextprotocol/inspector -e MAPBOX_ACCESS_TOKEN=\\\"$MAPBOX_ACCESS_TOKEN\\\" npx -y tsx src/index.ts\", \"dev:http\": \"npx -y tsx scripts/dev-http-server.ts\", \"lint\": \"eslint \\\"./src/**/*.{ts,tsx}\\\" \\\"./test/**/*.{ts,tsx}\\\" \\\"./examples/**/*.{ts,tsx}\\\"\", \"lint:fix\": \"eslint \\\"./src/**/*.{ts,tsx}\\\" \\\"./test/**/*.{ts,tsx}\\\" \\\"./examples/**/*.{ts,tsx}\\\" --fix\", \"postinstall\": \"patch-package || (cd ../../.. && node ./node_modules/patch-package/index.js --patch-dir ./node_modules/@mapbox/mcp-server/patches) || true\", \"prepare\": \"node -e \\\"try { require('fs').accessSync('.husky/setup-hooks.js'); require('child_process').execSync('husky && node .husky/setup-hooks.js', {stdio:'inherit'}) } catch { }\\\"\", \"spellcheck\": \"cspell \\\"*.md\\\" \\\"src/**/*.ts\\\" \\\"test/**/*.ts\\\" \\\"examples/**/*.ts\\\"\", \"sync-manifest\": \"node scripts/sync-manifest-version.cjs\", \"test\": \"vitest\", \"tracing:jaeger:start\": \"docker run --rm -d --name jaeger -p 16686:16686 -p 14250:14250 -p 4317:4317 -p 4318:4318 jaegertracing/all-in-one:latest\", \"tracing:jaeger:stop\": \"docker stop jaeger\", \"tracing:verify\": \"node -e \\\"console.log('🔍 Verifying tracing setup with Jaeger...\\\\n1. Copy .env.example to .env and add your MAPBOX_ACCESS_TOKEN\\\\n2. Start Jaeger: npm run tracing:jaeger:start\\\\n3. Run server: npm run inspect:build\\\\n4. Check traces at: http://localhost:16686')\\\"\", \"eval:tools\": \"tsx evals/tool-selection/run-eval.mjs\", \"eval:tools:report\": \"node evals/tool-selection/build-report-lite.mjs .claude/hillclimb/tool-selection\", \"eval:tools:openai\": \"EVAL_PROVIDER=openai tsx evals/tool-selection/run-eval.mjs --flow .claude/hillclimb/tool-selection-openai\", \"eval:tools:report:openai\": \"node evals/tool-selection/build-report-lite.mjs .claude/hillclimb/tool-selection-openai\"}, \"lint-staged\": {\"*.{js,jsx,ts,tsx}\": \"eslint --fix\", \"*.{js,jsx,ts,tsx,md,html,css}\": \"prettier --write\"}, \"license\": \"MIT\", \"homepage\": \"https://github.com/mapbox/mcp-server#readme\", \"devDependencies\": {\"@anthropic-ai/sdk\": \"^0.133.0\", \"@eslint/js\": \"^9.27.0\", \"@modelcontextprotocol/client\": \"^2.3.1\", \"@modelcontextprotocol/node\": \"^2.1.1\", \"@types/node\": \"^22.0.0\", \"@typescript-eslint/eslint-plugin\": \"^8.58.2\", \"@typescript-eslint/parser\": \"^8.58.2\", \"@vitest/coverage-istanbul\": \"^4.1.4\", \"cspell\": \"^9.2.1\", \"eslint\": \"^9.0.0\", \"eslint-config-prettier\": \"^10.1.8\", \"eslint-plugin-n\": \"^17.21.3\", \"eslint-plugin-prettier\": \"^5.5.4\", \"eslint-plugin-unused-imports\": \"^4.2.0\", \"globals\": \"^16.3.0\", \"husky\": \"^9.0.0\", \"lint-staged\": \"^16.1.0\", \"openai\": \"^7.32.0\", \"plop\": \"^4.0.1\", \"prettier\": \"^3.0.0\", \"tshy\": \"^4.1.1\", \"tsx\": \"^4.23.15\", \"typescript\": \"^6.0.2\", \"typescript-eslint\": \"^8.58.2\", \"vitest\": \"^4.1.4\"}, \"prettier\": {\"singleQuote\": true, \"trailingComma\": \"none\", \"endOfLine\": \"lf\"}, \"engines\": {\"node\": \">=22\"}, \"files\": [\"dist\", \"patches\"], \"repository\": {\"type\": \"git\", \"url\": \"https://github.com/mapbox/mcp-server.git\"}, \"keywords\": [\"mapbox\", \"mcp\"], \"dependencies\": {\"@modelcontextprotocol/core\": \"^2.3.1\", \"@modelcontextprotocol/ext-apps\": \"^2.0.3\", \"@modelcontextprotocol/server\": \"^2.3.1\", \"@opentelemetry/api\": \"^1.9.1\", \"@opentelemetry/auto-instrumentations-node\": \"^0.74.0\", \"@opentelemetry/exporter-trace-otlp-http\": \"^0.216.0\", \"@opentelemetry/instrumentation\": \"^0.216.0\", \"@opentelemetry/resources\": \"^2.7.1\", \"@opentelemetry/sdk-node\": \"^0.216.0\", \"@opentelemetry/sdk-trace-base\": \"^2.7.1\", \"@opentelemetry/semantic-conventions\": \"^1.40.0\", \"@turf/turf\": \"^7.3.1\", \"ipaddr.js\": \"^2.4.0\", \"patch-package\": \"^8.0.1\", \"zod\": \"^4.3.6\"}, \"overrides\": {\"brace-expansion\": \"^2.0.3\"}, \"tshy\": {\"project\": \"./tsconfig.src.json\", \"exports\": {\".\": \"./src/index.ts\", \"./tools\": \"./src/tools/index.ts\", \"./resources\": \"./src/resources/index.ts\", \"./prompts\": \"./src/prompts/index.ts\", \"./utils\": \"./src/utils/index.ts\"}, \"dialects\": [\"esm\", \"commonjs\"], \"selfLink\": false}, \"exports\": {\".\": {\"import\": {\"types\": \"./dist/esm/index.d.ts\", \"default\": \"./dist/esm/index.js\"}, \"require\": {\"types\": \"./dist/commonjs/index.d.ts\", \"default\": \"./dist/commonjs/index.js\"}}, \"./tools\": {\"import\": {\"types\": \"./dist/esm/tools/index.d.ts\", \"default\": \"./dist/esm/tools/index.js\"}, \"require\": {\"types\": \"./dist/commonjs/tools/index.d.ts\", \"default\": \"./dist/commonjs/tools/index.js\"}}, \"./resources\": {\"import\": {\"types\": \"./dist/esm/resources/index.d.ts\", \"default\": \"./dist/esm/resources/index.js\"}, \"require\": {\"types\": \"./dist/commonjs/resources/index.d.ts\", \"default\": \"./dist/commonjs/resources/index.js\"}}, \"./prompts\": {\"import\": {\"types\": \"./dist/esm/prompts/index.d.ts\", \"default\": \"./dist/esm/prompts/index.js\"}, \"require\": {\"types\": \"./dist/commonjs/prompts/index.d.ts\", \"default\": \"./dist/commonjs/prompts/index.js\"}}, \"./utils\": {\"import\": {\"types\": \"./dist/esm/utils/index.d.ts\", \"default\": \"./dist/esm/utils/index.js\"}, \"require\": {\"types\": \"./dist/commonjs/utils/index.d.ts\", \"default\": \"./dist/commonjs/utils/index.js\"}}}, \"types\": \"./dist/commonjs/index.d.ts\"}"
+  },
+  {
+    "repo": "weatherapicom/weatherapi-mcp",
+    "checked_at": "2026-10-25T13:31:59.851661+00:00",
+    "executed": false,
+    "security_audit": "not_performed",
+    "http_status": 200,
+    "html_url": "https://github.com/weatherapicom/weatherapi-mcp",
+    "pushed_at": "2026-03-22T21:54:04Z",
+    "archived": false,
+    "default_branch": "main",
+    "license": null,
+    "commit": "4277e34d70182548a5e71f7aeca752c3ccd5a739",
+    "package.json": "{\"name\": \"weatherapi-mcp\", \"version\": \"1.0.0\", \"description\": \"MCP server for WeatherAPI.com — real-time weather, forecasts, history, marine, astronomy, air quality and more for AI agents\", \"main\": \"dist/index.js\", \"types\": \"dist/index.d.ts\", \"bin\": {\"weatherapi-mcp\": \"dist/index.js\"}, \"scripts\": {\"build\": \"tsc\", \"dev\": \"ts-node src/index.ts\", \"start\": \"node dist/index.js\", \"prepublishOnly\": \"npm run build\"}, \"keywords\": [\"mcp\", \"weather\", \"weatherapi\", \"forecast\", \"ai\", \"claude\", \"model-context-protocol\", \"agent\", \"geolocation\", \"astronomy\"], \"author\": \"WeatherAPI.com\", \"license\": \"MIT\", \"dependencies\": {\"@modelcontextprotocol/sdk\": \"^1.0.0\"}, \"devDependencies\": {\"@types/node\": \"^20.0.0\", \"ts-node\": \"^10.9.0\", \"typescript\": \"^5.0.0\"}, \"engines\": {\"node\": \">=18.0.0\"}, \"repository\": {\"type\": \"git\", \"url\": \"https://github.com/weatherapicom/weatherapi-mcp\"}, \"homepage\": \"https://www.weatherapi.com\", \"bugs\": {\"url\": \"https://www.weatherapi.com/contact.aspx\"}}"
+  },
+  {
+    "repo": "amadeus4dev/amadeus-python",
+    "checked_at": "2026-10-25T13:31:59.851877+00:00",
+    "executed": false,
+    "security_audit": "not_performed",
+    "http_status": 200,
+    "html_url": "https://github.com/amadeus4dev/amadeus-python",
+    "pushed_at": "2025-03-11T13:47:36Z",
+    "archived": true,
+    "default_branch": "master",
+    "license": "MIT",
+    "commit": "0bc7089cb2e49b5b662ee890a5fe611f59ad4332"
+  }
+]

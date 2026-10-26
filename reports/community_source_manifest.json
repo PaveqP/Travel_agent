@@ -1,0 +1,21 @@
+{
+  "repository": "stufently/aviasales-mcp",
+  "commit": "bba6ed42d37169fc027bf77d10f74675472bbe07",
+  "files": {
+    "pyproject.toml": "86ce5046c3a41c3c2f7c5b4798031841a764f7ece92a4788e00fc35548001ca1",
+    "README.md": "7a72df300c0a3738cb8b2a2f08de641c639db58c36fe018405493e01067f158f",
+    "LICENSE": "3972dc9744f6499f0f9b2dbf76696f2ae7ad8af9b23dde66d6af86c9dfb36986",
+    "src/aviasales_mcp/__init__.py": "ab0a3cb6ec507a53c97f2aa1f6382b29df4a2cab8b9096dcf71c3fb2ca67a1da",
+    "src/aviasales_mcp/auth.py": "71663f445f986bc106f4d659e1bea5cfda0d072dc7cf7dccb43fbd403edb10a6",
+    "src/aviasales_mcp/validation.py": "0a3d0b1cafa5cc8ecd78a42e36a27f028f0bd0a1242d4fa23744df3a3d33293f",
+    "src/aviasales_mcp/config.py": "855d5187cb393a5066d43cc48b4262830acc61dcec8b2af3419116f099e88e18",
+    "src/aviasales_mcp/server.py": "6abf97ed5c974e550cf3e3e281e54c56cb4f1969fc17c1a1c42ee0c48f4964ae",
+    "src/aviasales_mcp/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/aviasales_mcp/tools/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/aviasales_mcp/tools/responses.py": "0ecb40f880b4cf5356ead17f8ee13c583c73c3b18e950861309ad969fb5fa2bf",
+    "src/aviasales_mcp/tools/flights.py": "c02856a021fbd8bf4a6838eee0a7eaf61637e88528cb4aa09cc442af9b998f37",
+    "src/aviasales_mcp/tools/reference.py": "9504585f3aedf30ed6a1f1388c707d58495d77ccec63784975819acba0426529",
+    "src/aviasales_mcp/api/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "src/aviasales_mcp/api/client.py": "79924487e91ff0e4470f1c3a3ebbb8027514147c71b307eda50375926d074db1"
+  }
+}

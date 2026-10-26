@@ -1,0 +1,77 @@
+[
+  {
+    "provider": "aviasales_community",
+    "case": "mcp_discovery",
+    "status": "ok",
+    "retrieved_at": "2026-10-25T14:19:59.349578+00:00",
+    "tool_count": 13,
+    "latency_ms": 2754
+  },
+  {
+    "provider": "aviasales_community",
+    "case": "search_flights",
+    "status": "ok",
+    "retrieved_at": "2026-10-25T14:19:59.836153+00:00",
+    "tool": "search_flights",
+    "request": {
+      "origin": "MOW",
+      "destination": "AER",
+      "departure_at": "2026-11-12",
+      "one_way": true,
+      "adults": 2,
+      "limit": 3,
+      "currency": "rub",
+      "market": "ru"
+    },
+    "latency_ms": 481,
+    "data": {
+      "meta": null,
+      "content": [
+        {
+          "type": "text",
+          "text": "{\"status\": \"ok\", \"currency\": \"rub\", \"passengers\": {\"adults\": 2, \"children\": 0, \"infants\": 0}, \"trip_class\": \"economy\", \"price_note\": \"Prices are per adult in economy (cached). booking_link opens the search for the full party with the actual total.\", \"field_note\": \"All duration fields are in minutes. departure_at/return_at are local time at the respective airport.\", \"price_summary\": {\"min\": 3194, \"median\": 3194, \"max\": 3194, \"count\": 1}, \"data\": [{\"origin\": \"MOW\", \"destination\": \"AER\", \"price\": 3194, \"airline\": \"DP\", \"flight_number\": \"6941\", \"departure_at\": \"2026-11-12T11:30:00+03:00\", \"return_at\": \"\", \"transfers\": 0, \"return_transfers\": 0, \"duration_total\": 230, \"duration_to\": 230, \"duration_back\": 0, \"layover_minutes\": 0, \"expires_at\": \"\", \"booking_link\": \"https://www.aviasales.ru/search/MOW1211AER2?t=DP17944830001794496800000230SVOAER_9ffc4f40c55677fe70d2cffbc1b875f6_3194&search_date=25102026&expected_price_uuid=01a1734a-a1f1-8030-6877-83bcacdefe4f&static_fare_key=[REDACTED]&itinerary_key=[REDACTED]&expected_price_source=share&expected_price_currency=rub&expected_price=3194&marker=[REDACTED]\"}]}",
+          "annotations": null,
+          "meta": null
+        }
+      ],
+      "structuredContent": {
+        "status": "ok",
+        "currency": "rub",
+        "passengers": {
+          "adults": 2,
+          "children": 0,
+          "infants": 0
+        },
+        "trip_class": "economy",
+        "price_note": "Prices are per adult in economy (cached). booking_link opens the search for the full party with the actual total.",
+        "field_note": "All duration fields are in minutes. departure_at/return_at are local time at the respective airport.",
+        "price_summary": {
+          "min": 3194,
+          "median": 3194,
+          "max": 3194,
+          "count": 1
+        },
+        "data": [
+          {
+            "origin": "MOW",
+            "destination": "AER",
+            "price": 3194,
+            "airline": "DP",
+            "flight_number": "6941",
+            "departure_at": "2026-11-12T11:30:00+03:00",
+            "return_at": "",
+            "transfers": 0,
+            "return_transfers": 0,
+            "duration_total": 230,
+            "duration_to": 230,
+            "duration_back": 0,
+            "layover_minutes": 0,
+            "expires_at": "",
+            "booking_link": "https://www.aviasales.ru/search/MOW1211AER2?t=DP17944830001794496800000230SVOAER_9ffc4f40c55677fe70d2cffbc1b875f6_3194&search_date=25102026&expected_price_uuid=01a1734a-a1f1-8030-6877-83bcacdefe4f&static_fare_key=[REDACTED]&itinerary_key=[REDACTED]&expected_price_source=share&expected_price_currency=rub&expected_price=3194&marker=[REDACTED]"
+          }
+        ]
+      },
+      "isError": false
+    }
+  }
+]

@@ -1,0 +1,1442 @@
+{
+  "meta": {
+    "tool": "search_places",
+    "returned_items": 10
+  },
+  "content": [
+    {
+      "type": "text",
+      "text": "Найдено 10 из 32 результатов для: Рестораны.\n\nРезультаты:\n1. Frank by Баста, реберная — branch; адрес: Эстосадок (Сочи городской округ), улица Горная Карусель, 6; координаты: 43.683437, 40.265098; id: 70000001066442217\n2. Мидийное место, ресторан — branch; адрес: Эстосадок (Сочи городской округ), улица Горная Карусель, 2; координаты: 43.683223, 40.260135; id: 70000001062376255\n3. Бумбараш, ресторан — branch; адрес: Эстосадок (Сочи городской округ), улица Горная Карусель, 7; координаты: 43.683589, 40.265145; id: 70000001071831386\n4. Lali, ресторан узбекской кухни — branch; адрес: Эстосадок (Сочи городской округ), набережная Времена Года, 3; координаты: 43.683325, 40.260885; id: 70000001096266499\n5. Сыроварня, ресторан — branch; адрес: Эстосадок (Сочи городской округ), набережная Времена Года, 3; координаты: 43.683345, 40.259010; id: 70000001058723863\n6. Гури, курортный ресторан — branch; адрес: Эстосадок (Сочи городской округ), улица Горная Карусель, 9; координаты: 43.683509, 40.266336; id: 70000001023796701\n7. Сорренто, ресторан — branch; адрес: Эстосадок (Сочи городской округ), улица Горная Карусель, 6; координаты: 43.683284, 40.264213; id: 70000001082615141\n8. Giorgio Suluguni — branch; адрес: Эстосадок (Сочи городской округ), Эстонская улица, 7; координаты: 43.687702, 40.247698; id: 70000001066464787\n9. Гостидзе, грузинский ресторан — branch; адрес: Эстосадок (Сочи городской округ), улица Горная Карусель, 4; координаты: 43.683359, 40.263687; id: 70000001017839575\n10. Султан Кебаб — branch; адрес: Эстосадок (Сочи городской округ), Эстонская улица, 29; координаты: 43.686514, 40.251999; id: 70000001102839990",
+      "annotations": null,
+      "meta": null
+    }
+  ],
+  "structuredContent": {
+    "query": "Рестораны",
+    "total": 32,
+    "returned_count": 10,
+    "items": [
+      {
+        "id": "70000001066442217",
+        "name": "Frank by Баста, реберная",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), улица Горная Карусель, 6",
+        "address": {
+          "building_id": "4222760305903543",
+          "components": [
+            {
+              "number": "6",
+              "street": "улица Горная Карусель",
+              "street_id": "4222863385044858",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Курорт Красная Поляна",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.683437,
+          "lon": 40.265098
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "улица Горная Карусель, 6",
+          "brand": {
+            "branch_count": 2,
+            "extension": "реберная",
+            "id": "70000001103773287",
+            "name": "Frank by Баста"
+          },
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 1,
+            "extension": "реберная",
+            "id": "70000001066442216",
+            "name": "Frank by Баста, реберная",
+            "primary": "Frank by Баста"
+          },
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 3174,
+            "general_review_count_with_stars": 35106,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 5,
+            "org_review_count": 3174,
+            "org_review_count_with_stars": 35106
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "23:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001062376255",
+        "name": "Мидийное место, ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), улица Горная Карусель, 2",
+        "address": {
+          "building_id": "4222760305903552",
+          "components": [
+            {
+              "number": "2",
+              "street": "улица Горная Карусель",
+              "street_id": "4222863385044858",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Курорт Красная Поляна",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.683223,
+          "lon": 40.260135
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "улица Горная Карусель, 2",
+          "brand": {
+            "branch_count": 8,
+            "extension": "ресторан",
+            "id": "70000001103778366",
+            "name": "Мидийное место"
+          },
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 6,
+            "extension": "ресторан",
+            "id": "70000001053961380",
+            "name": "Мидийное место, ресторан",
+            "primary": "Мидийное место"
+          },
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 2419,
+            "general_review_count_with_stars": 2850,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 9937,
+            "org_review_count_with_stars": 13072
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "kafe",
+              "id": "161",
+              "kind": "additional",
+              "name": "Кафе",
+              "parent_id": "2",
+              "short_id": 161
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001071831386",
+        "name": "Бумбараш, ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), улица Горная Карусель, 7",
+        "address": {
+          "building_id": "4222760334922553",
+          "components": [
+            {
+              "number": "7",
+              "street": "улица Горная Карусель",
+              "street_id": "4222863385044858",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Курорт Красная Поляна",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.683589,
+          "lon": 40.265145
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "улица Горная Карусель, 7",
+          "brand": {
+            "branch_count": 3,
+            "extension": "ресторан",
+            "id": "70000001103775979",
+            "name": "Бумбараш"
+          },
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 3,
+            "extension": "ресторан",
+            "id": "70000001071831385",
+            "name": "Бумбараш, ресторан",
+            "primary": "Бумбараш"
+          },
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 1346,
+            "general_review_count_with_stars": 10983,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.8,
+            "org_review_count": 1741,
+            "org_review_count_with_stars": 11463
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            },
+            {
+              "alias": "banketnye_zaly",
+              "id": "10803",
+              "kind": "additional",
+              "name": "Банкетные залы",
+              "parent_id": "2",
+              "short_id": 10803
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "12:00",
+                  "to": "24:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001096266499",
+        "name": "Lali, ресторан узбекской кухни",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), набережная Времена Года, 3",
+        "address": {
+          "building_id": "4222760305903552",
+          "components": [
+            {
+              "number": "3",
+              "street": "набережная Времена Года",
+              "street_id": "4222863385044781",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Курорт Красная Поляна",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.683325,
+          "lon": 40.260885
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "набережная Времена Года, 3",
+          "brand": {
+            "branch_count": 2,
+            "id": "70000001117642721",
+            "name": "Lali"
+          },
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 2,
+            "extension": "ресторан узбекской кухни",
+            "id": "70000001096266498",
+            "name": "Lali, ресторан узбекской кухни",
+            "primary": "Lali"
+          },
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 332,
+            "general_review_count_with_stars": 390,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 791,
+            "org_review_count_with_stars": 2970
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001058723863",
+        "name": "Сыроварня, ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), набережная Времена Года, 3",
+        "address": {
+          "building_id": "4222760305903552",
+          "components": [
+            {
+              "number": "3",
+              "street": "набережная Времена Года",
+              "street_id": "4222863385044781",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Курорт Красная Поляна",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.683345,
+          "lon": 40.25901
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "набережная Времена Года, 3",
+          "brand": {
+            "branch_count": 3,
+            "extension": "ресторан",
+            "id": "70000001101346639",
+            "name": "Сыроварня"
+          },
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 3,
+            "extension": "ресторан",
+            "id": "70000001040163844",
+            "name": "Сыроварня, ресторан",
+            "primary": "Сыроварня"
+          },
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 897,
+            "general_review_count_with_stars": 24813,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 5,
+                "review_count": 1,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 2420,
+            "org_review_count_with_stars": 50368,
+            "rating": 5,
+            "review_count": 1
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001023796701",
+        "name": "Гури, курортный ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), улица Горная Карусель, 9",
+        "address": {
+          "building_id": "4222760305905089",
+          "components": [
+            {
+              "number": "9",
+              "street": "улица Горная Карусель",
+              "street_id": "4222863385044858",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Курорт Красная Поляна",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.683509,
+          "lon": 40.266336
+        },
+        "extra_fields": {
+          "address_name": "улица Горная Карусель, 9",
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 4,
+            "extension": "курортный ресторан",
+            "id": "70000001023796700",
+            "name": "Гури, курортный ресторан",
+            "primary": "Гури"
+          },
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 1884,
+            "general_review_count_with_stars": 2069,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 4.4,
+                "review_count": 23,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.8,
+            "org_review_count": 4021,
+            "org_review_count_with_stars": 4914,
+            "rating": 4.4,
+            "review_count": 23
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "kafe",
+              "id": "161",
+              "kind": "additional",
+              "name": "Кафе",
+              "parent_id": "2",
+              "short_id": 161
+            },
+            {
+              "alias": "bary",
+              "id": "159",
+              "kind": "additional",
+              "name": "Бары",
+              "parent_id": "2",
+              "short_id": 159
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "23:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001082615141",
+        "name": "Сорренто, ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), улица Горная Карусель, 6",
+        "address": {
+          "building_id": "4222760305903543",
+          "components": [
+            {
+              "number": "6",
+              "street": "улица Горная Карусель",
+              "street_id": "4222863385044858",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Курорт Красная Поляна",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.683284,
+          "lon": 40.264213
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "улица Горная Карусель, 6",
+          "brand": {
+            "branch_count": 2,
+            "id": "70000001117640196",
+            "name": "Сорренто"
+          },
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 2,
+            "extension": "ресторан",
+            "id": "70000001080125133",
+            "name": "Сорренто, ресторан",
+            "primary": "Сорренто"
+          },
+          "reviews": {
+            "general_rating": 5,
+            "general_review_count": 962,
+            "general_review_count_with_stars": 10613,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.9,
+            "org_review_count": 1315,
+            "org_review_count_with_stars": 11165
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "23:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001066464787",
+        "name": "Giorgio Suluguni",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), Эстонская улица, 7",
+        "address": {
+          "building_id": "4222760305893324",
+          "components": [
+            {
+              "number": "7",
+              "street": "Эстонская улица",
+              "street_id": "4222863385039403",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.687702,
+          "lon": 40.247698
+        },
+        "extra_fields": {
+          "address_comment": "1-2 этаж",
+          "address_name": "Эстонская улица, 7",
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 1,
+            "id": "70000001066464785",
+            "name": "Giorgio Suluguni",
+            "primary": "Giorgio Suluguni"
+          },
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 215,
+            "general_review_count_with_stars": 298,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 5,
+                "review_count": 1,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.8,
+            "org_review_count": 215,
+            "org_review_count_with_stars": 298,
+            "rating": 5,
+            "review_count": 1
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "bary",
+              "id": "159",
+              "kind": "additional",
+              "name": "Бары",
+              "parent_id": "2",
+              "short_id": 159
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            },
+            {
+              "alias": "banketnye_zaly",
+              "id": "10803",
+              "kind": "additional",
+              "name": "Банкетные залы",
+              "parent_id": "2",
+              "short_id": 10803
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "00:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "is_24x7": true
+          }
+        }
+      },
+      {
+        "id": "70000001017839575",
+        "name": "Гостидзе, грузинский ресторан",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), улица Горная Карусель, 4",
+        "address": {
+          "building_id": "4222760305903545",
+          "components": [
+            {
+              "number": "4",
+              "street": "улица Горная Карусель",
+              "street_id": "4222863385044858",
+              "type": "street_number"
+            }
+          ],
+          "landmark_name": "Курорт Красная Поляна",
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.683359,
+          "lon": 40.263687
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "улица Горная Карусель, 4",
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 3,
+            "extension": "ресторан",
+            "id": "4222662621879010",
+            "name": "Гости, ресторан",
+            "primary": "Гости"
+          },
+          "reviews": {
+            "general_rating": 4.9,
+            "general_review_count": 263,
+            "general_review_count_with_stars": 397,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "rating": 3.8,
+                "review_count": 12,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.2,
+            "org_review_count": 456,
+            "org_review_count_with_stars": 656,
+            "rating": 3.8,
+            "review_count": 12
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            },
+            {
+              "alias": "dostavka_edy",
+              "id": "1203",
+              "kind": "additional",
+              "name": "Доставка еды",
+              "parent_id": "2",
+              "short_id": 1203
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "11:00",
+                  "to": "24:00"
+                }
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": "70000001102839990",
+        "name": "Султан Кебаб",
+        "type": "branch",
+        "subtype": null,
+        "full_address_name": "Эстосадок (Сочи городской округ), Эстонская улица, 29",
+        "address": {
+          "building_id": "4222760305855898",
+          "components": [
+            {
+              "number": "29",
+              "street": "Эстонская улица",
+              "street_id": "4222863385039403",
+              "type": "street_number"
+            }
+          ],
+          "postcode": "354392"
+        },
+        "coordinates": {
+          "lat": 43.686514,
+          "lon": 40.251999
+        },
+        "extra_fields": {
+          "address_comment": "1 этаж",
+          "address_name": "Эстонская улица, 29",
+          "flags": {
+            "has_avg_bill": {},
+            "photos": true
+          },
+          "org": {
+            "branch_count": 1,
+            "id": "70000001102839989",
+            "name": "Султан Кебаб",
+            "primary": "Султан Кебаб"
+          },
+          "reviews": {
+            "general_rating": 4.8,
+            "general_review_count": 313,
+            "general_review_count_with_stars": 340,
+            "is_reviewable": true,
+            "is_reviewable_on_flamp": true,
+            "items": [
+              {
+                "is_reviewable": true,
+                "tag": "2gis_reviews"
+              },
+              {
+                "is_reviewable": true,
+                "tag": "flamp"
+              }
+            ],
+            "org_rating": 4.8,
+            "org_review_count": 313,
+            "org_review_count_with_stars": 340
+          },
+          "rubrics": [
+            {
+              "alias": "restorany",
+              "id": "164",
+              "kind": "primary",
+              "name": "Рестораны",
+              "parent_id": "2",
+              "short_id": 164
+            }
+          ],
+          "schedule": {
+            "Fri": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Mon": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sat": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Sun": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Thu": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Tue": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            },
+            "Wed": {
+              "working_hours": [
+                {
+                  "from": "10:00",
+                  "to": "24:00"
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  },
+  "isError": false
+}
