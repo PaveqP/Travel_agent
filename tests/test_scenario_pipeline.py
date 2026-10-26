@@ -8,7 +8,10 @@ from pydantic import ValidationError
 
 from travel_agent.engine import apply_delta, compose, diagnose
 from travel_agent.graph import supervise
-from travel_agent.schemas import TripDelta
+from travel_agent.graph import build_graph
+from travel_agent.schemas import SpecialistResult, SupervisorDecision, TripDelta, TripScenario
+from langchain_core.messages import HumanMessage
+from langgraph.checkpoint.memory import InMemorySaver
 from test_travel_agent import TRIP, candidates
 
 
@@ -59,3 +62,76 @@ class ReliabilityTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(restored["selected"], state["selected"])
         self.assertEqual(restored["revision"], 1)
         self.assertNotIn("offline failure", json.dumps(update))
+
+
+class StagedPlanningTests(unittest.IsolatedAsyncioTestCase):
+    def scenario(self, ident="coast"):
+        return TripScenario(id=ident, title="Прогулки у моря", destination="Сочи", purpose="Море и прогулки", tradeoff="Тарифы и детали проверим после выбора")
+
+    async def test_scenarios_and_each_component_require_a_separate_choice(self):
+        from test_travel_agent import run
+
+        runner = AsyncMock(side_effect=run)
+        planner = AsyncMock(return_value=SupervisorDecision(action="scenarios", scenarios=[self.scenario(str(i)) for i in range(4)]))
+        graph = build_graph(planner, runner, InMemorySaver())
+        config = {"configurable": {"thread_id": "staged"}}
+        state = await graph.ainvoke({"constraints": TRIP.model_dump(mode="json"), "messages": [HumanMessage(content="Предложи отдых")], "calls": 0}, config)
+        self.assertEqual(len(state["choices"]), 4)
+        runner.assert_not_called()
+        for expected_stage, roles in (("transport", ["transport"]), ("stays", ["transport", "stays"]), ("itinerary", ["transport", "stays", "experience"]), ("review", ["transport", "stays", "experience"])):
+            state = await graph.ainvoke({"requested_choice": state["choices"][0]["id"], "calls": 0}, config)
+            self.assertEqual(state["stage"], expected_stage)
+            self.assertEqual([c.args[0] for c in runner.await_args_list], roles)
+        self.assertEqual(len(state["options"]), 1)
+        self.assertEqual(runner.await_args_list[-1].args[4][0].id, state["selected_stay"])
+        self.assertIsNone(state["options"][0]["budget"]["confirmed_total"])
+
+    async def test_vague_request_can_choose_a_scenario_before_dates(self):
+        runner = AsyncMock()
+        graph = build_graph(AsyncMock(return_value=SupervisorDecision(action="scenarios", scenarios=[self.scenario()])), runner, InMemorySaver())
+        config = {"configurable": {"thread_id": "vague"}}
+        state = await graph.ainvoke({"messages": [HumanMessage(content="Хочу отдохнуть")], "calls": 0}, config)
+        self.assertEqual(state["stage"], "scenarios")
+        state = await graph.ainvoke({"requested_choice": "coast", "calls": 0}, config)
+        self.assertEqual(state["status"], "needs_input")
+        self.assertIn("города", state["answer"])
+        runner.assert_not_called()
+
+    async def test_night_flight_waits_for_agreement_before_hotel_search(self):
+        async def run(role, trip, revision, task, previous):
+            rows = [c for c in candidates() if c.role == role]
+            for row in rows:
+                if role == "transport":
+                    row.arrival_at += timedelta(days=1)
+                elif role == "stays":
+                    row.start = trip.stay_start
+            return SpecialistResult(role=role, revision=revision, status="ok", candidates=rows)
+
+        runner = AsyncMock(side_effect=run)
+        planner = AsyncMock(side_effect=[SupervisorDecision(action="scenarios", scenarios=[self.scenario()]), SupervisorDecision(action="approve", confirmed=True)])
+        graph = build_graph(planner, runner, InMemorySaver())
+        config = {"configurable": {"thread_id": "overnight"}}
+        state = await graph.ainvoke({"constraints": TRIP.model_dump(mode="json"), "messages": [HumanMessage(content="Поездка")], "calls": 0}, config)
+        state = await graph.ainvoke({"requested_choice": "coast", "calls": 0}, config)
+        state = await graph.ainvoke({"requested_choice": state["choices"][0]["id"], "calls": 0}, config)
+        self.assertTrue(state["pending_check_in"])
+        self.assertEqual([c.args[0] for c in runner.await_args_list], ["transport"])
+        self.assertIsNone(state["constraints"]["check_in"])
+        state = await graph.ainvoke({"messages": [HumanMessage(content="Да, заселение с прилёта")], "calls": 0}, config)
+        self.assertEqual([c.args[0] for c in runner.await_args_list], ["transport", "stays"])
+        self.assertEqual(state["constraints"]["check_in"], (TRIP.start + timedelta(days=1)).isoformat())
+        self.assertEqual(state["constraints"]["start"], TRIP.start.isoformat())
+
+    async def test_foreign_id_cannot_advance_or_call_a_specialist(self):
+        runner = AsyncMock()
+        graph = build_graph(AsyncMock(return_value=SupervisorDecision(action="scenarios", scenarios=[self.scenario()])), runner, InMemorySaver())
+        config = {"configurable": {"thread_id": "unknown"}}
+        await graph.ainvoke({"constraints": TRIP.model_dump(mode="json"), "calls": 0}, config)
+        state = await graph.ainvoke({"requested_choice": "forged", "calls": 0}, config)
+        self.assertEqual(state["stage"], "scenarios")
+        self.assertEqual(state["status"], "needs_input")
+        runner.assert_not_called()
+        with self.assertRaises(ValidationError):
+            SupervisorDecision(action="scenarios", scenarios=[self.scenario(str(i)) for i in range(5)])
+        with self.assertRaises(ValidationError):
+            TripScenario(id="abroad", title="Пляж", destination="Бали", purpose="Море", tradeoff="Перелёт")

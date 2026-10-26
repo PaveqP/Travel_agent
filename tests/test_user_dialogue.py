@@ -74,14 +74,17 @@ class DialogueTests(unittest.IsolatedAsyncioTestCase):
             config,
         )
         self.assertEqual(result["status"], "needs_input")
-        self.assertIn("Для чего", result["answer"])
+        self.assertIn("Какой отдых", result["answer"])
         runner.assert_not_called()
         result = await graph.ainvoke(
             {"messages": [HumanMessage(content="Гулять")], "calls": 0, "attempts": []},
             config,
         )
-        self.assertEqual(result["status"], "ready")
-        self.assertEqual(runner.await_count, 3)
+        self.assertEqual(result["stage"], "scenarios")
+        runner.assert_not_called()
+        result = await graph.ainvoke({"requested_choice": result["choices"][0]["id"], "calls": 0}, config)
+        self.assertEqual(result["stage"], "transport")
+        self.assertEqual(runner.await_count, 1)
 
     async def test_research_preserves_quotes_revision_selection_and_constraints(self):
         state = planned()
@@ -423,6 +426,6 @@ class DialogueTests(unittest.IsolatedAsyncioTestCase):
         )
         self.assertEqual(result["constraints"]["origin"], "Москва")
         self.assertEqual(result["constraints"]["adults"], 2)
-        self.assertEqual(result["answer"], "Когда хотите поехать и на сколько дней?")
+        self.assertIn("Какой отдых", result["answer"])
         self.assertEqual(len(result["messages"]), 4)
         runner.assert_not_called()

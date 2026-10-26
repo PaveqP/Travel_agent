@@ -20,3 +20,11 @@ class TripState(TypedDict, total=False):
     research: dict
     plan_answer: str
     diagnostics: dict
+    stage: str
+    scenarios: list[dict]
+    selected_scenario: str | None
+    selected_transport: str | None
+    selected_stay: str | None
+    choices: list[dict]
+    pending_check_in: str | None
+    requested_choice: str | None

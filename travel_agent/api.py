@@ -156,6 +156,13 @@ def create_app(
                 ("selected", None),
                 ("bookings", {}),
                 ("diagnostics", {}),
+                ("stage", "scenarios"),
+                ("scenarios", []),
+                ("selected_scenario", None),
+                ("selected_transport", None),
+                ("selected_stay", None),
+                ("choices", []),
+                ("pending_check_in", None),
             )
         }
 
@@ -193,6 +200,7 @@ def create_app(
                 "messages": [HumanMessage(content=request.message)],
                 "calls": 0,
                 "attempts": [],
+                "requested_choice": None,
             }
             if not snapshot.values:
                 profile = await app.state.store.aget(("profiles", user), "preferences")
@@ -217,6 +225,17 @@ def create_app(
         config = config_for(user, trip_id)
         async with locks.setdefault(user + ":" + trip_id, asyncio.Lock()):
             snapshot = await app.state.graph.aget_state(config)
+            if snapshot.values.get("stage") and option_id in {c["id"] for c in snapshot.values.get("choices", [])}:
+                if revision != snapshot.values.get("revision", 0):
+                    raise HTTPException(409, "Stale revision")
+                try:
+                    async with asyncio.timeout(150):
+                        result = await app.state.graph.ainvoke({"requested_choice": option_id, "calls": 0, "messages": [HumanMessage(content="/select " + option_id)]}, config)
+                except TimeoutError:
+                    raise HTTPException(504, "Stage deadline exceeded; read current trip state") from None
+                return view(result)
+            if snapshot.values.get("stage"):
+                raise HTTPException(409, "Unknown choice for the current stage")
             if revision != snapshot.values.get("revision", 0) or option_id not in [
                 o["id"] for o in snapshot.values.get("options", [])
             ]:
@@ -258,6 +277,8 @@ def create_app(
                 None,
             )
             trip = TripConstraints.model_validate(state.get("constraints", {}))
+            if state.get("stage") and state["stage"] != "review":
+                raise HTTPException(409, "Approve the itinerary before checkout")
             if option is None or not option.transport or not option.stay:
                 raise HTTPException(409, "Incomplete trip")
             if not all(

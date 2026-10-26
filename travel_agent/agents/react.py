@@ -64,6 +64,7 @@ async def run_react(
                 model=model,
                 tools=tools,
                 system_prompt=prompt,
+                checkpointer=False,
                 response_format=ToolStrategy(SpecialistSelection, handle_errors=False),
                 middleware=[
                     ModelCallLimitMiddleware(run_limit=4, exit_behavior="error"),

@@ -99,18 +99,41 @@ class PipelineE2ETests(unittest.TestCase):
                 revision = result["revision"]
                 return result
 
+            def choose(result):
+                nonlocal revision
+                response = api.post(url + '/select/' + result['choices'][0]['id'], headers=headers, params={'revision': revision})
+                self.assertEqual(response.status_code, 200, response.text)
+                result = response.json()
+                revision = result['revision']
+                return result
+
+            def complete(result):
+                while result['stage'] != 'review':
+                    self.assertTrue(result['choices'], result['answer'])
+                    result = choose(result)
+                return result
+
             result = send("начать")
-            self.assertEqual(result["status"], "needs_input")
+            self.assertEqual(result["stage"], "scenarios")
             self.assertEqual(calls, [])
+            result = choose(result)
+            self.assertEqual(result['status'], 'needs_input')
             result = send("даты")
+            self.assertEqual([c[1] for c in calls], ['search_avia'])
+            result = choose(result)
+            self.assertEqual([c[1] for c in calls], ['search_avia', 'search_hotels'])
+            result = complete(result)
             self.assertEqual(result["status"], "ready")
-            self.assertEqual(len(result["options"]), 3)
+            self.assertEqual(len(result["options"]), 1)
             self.assertEqual(
                 [c[1] for c in calls], ["search_avia", "search_hotels", "search_places"]
             )
             transport = result["results"]["transport"]
             calls.clear()
             result = send("отель")
+            self.assertEqual(calls, [])
+            self.assertEqual(result["stage"], "stays")
+            result = complete(result)
             self.assertEqual([c[1] for c in calls], ["search_places"])
             self.assertEqual(result["results"]["transport"], transport)
             self.assertTrue(
@@ -124,6 +147,8 @@ class PipelineE2ETests(unittest.TestCase):
             self.assertEqual(calls, [])
             self.assertIn("Mirror", result["answer"])
             result = send("сдвиг")
+            self.assertEqual([c[1] for c in calls], ["search_avia"])
+            result = complete(result)
             self.assertEqual(
                 [c[1] for c in calls], ["search_avia", "search_hotels", "search_places"]
             )
@@ -133,18 +158,12 @@ class PipelineE2ETests(unittest.TestCase):
             )
             calls.clear()
             result = send("гости")
+            self.assertEqual(len(calls), 1)
+            result = complete(result)
             self.assertEqual(len(calls), 3)
             self.assertEqual(result["options"][0]["stay"]["adults"], 3)
             option = result["options"][0]
             self.assertIsNone(option["budget"]["confirmed_total"])
-            self.assertEqual(
-                api.post(
-                    url + "/select/" + option["id"],
-                    headers=headers,
-                    params={"revision": revision},
-                ).status_code,
-                200,
-            )
             request = {
                 "option_id": option["id"],
                 "revision": revision,

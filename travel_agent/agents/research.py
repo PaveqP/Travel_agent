@@ -48,6 +48,7 @@ async def research(state, *, models, client, env, prompt) -> ResearchResult:
                     model=models[role],
                     tools=tools,
                     system_prompt=prompt,
+                    checkpointer=False,
                     response_format=ToolStrategy(
                         SpecialistSelection, handle_errors=False
                     ),

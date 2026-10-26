@@ -10,6 +10,58 @@ from pydantic import ValidationError
 from travel_agent.schemas import UserResponse
 
 
+def render_stage(state: dict) -> str:
+    from travel_agent.schemas import TripConstraints
+
+    stage = state.get("stage", "scenarios")
+    trip = TripConstraints.model_validate(state.get("constraints", {}))
+    titles = {"scenarios": "Выберем сценарий поездки", "transport": "Сначала согласуем транспорт", "stays": "Теперь выберем проживание", "itinerary": "Программа для выбранного проживания", "review": "Поездка собрана — проверьте корзину", "booked": "Имитированная покупка оформлена"}
+    lines = [titles[stage] + "."]
+    if trip.budget:
+        basis = "на человека" if trip.budget_basis == "person" else "на группу"
+        total = f"; предел группы {trip.party_budget:,.0f} ₽" if trip.party_budget else ""
+        lines.append(f"Бюджет {trip.budget:,.0f} ₽ {basis}{total}.".replace(",", " "))
+    for role, label in (("transport", "Транспорт согласован"), ("stays", "Проживание согласовано")):
+        ident = state.get("selected_transport" if role == "transport" else "selected_stay")
+        candidate = next((c for r in state.get("results", {}).values() for c in r.get("candidates", []) if c["id"] == ident), None)
+        if candidate:
+            lines.append(f"{label}: {candidate['name']}.")
+    for index, choice in enumerate(state.get("choices", []), 1):
+        lines.append(f"\n{index}. {choice['title']}\n{choice['details']}")
+        if choice.get("price"):
+            amount = Decimal(choice["price"]["amount"])
+            per_person = f"; {amount / trip.adults:,.2f} ₽ на человека" if trip.adults else ""
+            lines.append(f"{amount:,.2f} ₽ за всю группу и весь период{per_person}.".replace(",", " "))
+    if stage == "scenarios":
+        lines.append("Это направления поиска. Цены, наличие и свойства конкретных отелей ещё не проверены. Выберите сценарий по номеру; затем согласуем даты и транспорт.")
+    elif stage in ("transport", "stays"):
+        result = state.get("results", {}).get(stage, {})
+        if not state.get("choices"):
+            received = len(result.get("candidates", []))
+            warnings = result.get("warnings", [])
+            issues = {"timeout": "источник не ответил вовремя", "network_error": "ошибка соединения", "schema_error": "не удалось проверить формат ответа", "missing_key": "не настроен ключ источника", "forbidden": "доступ запрещён", "no_availability": "источник не подтвердил наличие", "llm_error": "не удалось завершить обработку моделью", "agent_limit": "достигнут лимит обработки"}
+            causes = list(dict.fromkeys(issues[w.split(":")[-1]] for w in warnings if w.split(":")[-1] in issues))
+            lines.append(f"Получено кандидатов: {received}; подходящих свежих предложений для этого этапа нет.")
+            if causes:
+                lines.append("Причина: " + "; ".join(causes) + ".")
+            lines.append("Можно попросить обновить этот этап, изменить даты или требования. Предыдущие согласованные компоненты сохранены.")
+        else:
+            lines.append("Выберите номер предложения. Поисковая цена не подтверждает резерв; стоимость остальных компонентов ещё не включена.")
+    elif stage in ("itinerary", "review"):
+        for option in state.get("options", []):
+            amount = Decimal(option["budget"]["known_subtotal"])
+            lines.append(f"\nБилеты и проживание: {amount:,.2f} ₽ за группу.".replace(",", " "))
+            if trip.adults:
+                lines.append(f"На человека: {amount / trip.adults:,.2f} ₽.".replace(",", " "))
+            for day in option.get("days", []):
+                places = ", ".join(c["name"] for c in day["candidates"]) or "свободное время / дорога"
+                lines.append(f"{day['date']}: {places}.")
+            lines.extend(option.get("warnings", []))
+        lines.append("Питание, трансферы, входные билеты и сборы не подтверждены и не включены; часы работы и время переездов требуют проверки.")
+        lines.append("Согласуйте программу, чтобы перейти к корзине." if stage == "itinerary" else "Для имитации покупки введите /book confirm или явно попросите оформить имитированную покупку.")
+    return "\n".join(lines)
+
+
 def option_context(state: dict) -> list[dict]:
     return [
         {

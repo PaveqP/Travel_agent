@@ -50,6 +50,18 @@ async def run(role, trip, revision, task, previous):
                             candidates=[c for c in candidates() if c.role == role])
 
 
+def agreed_state(stage='transport'):
+    rows = candidates()
+    option = compose(TRIP, rows, 1)[0]
+    return {'constraints': TRIP.model_dump(mode='json'), 'revision': 1, 'stage': stage,
+            'scenarios': [{'id': 'personal', 'title': 'Прогулки', 'destination': 'Сочи', 'purpose': 'Прогулки', 'interests': [], 'tradeoff': 'Цены проверяются', 'priority': 'balance'}],
+            'selected_scenario': 'personal',
+            'selected_transport': option.transport.id if stage != 'transport' else None,
+            'selected_stay': option.stay.id if stage in ('itinerary', 'review') else None,
+            'results': {role: SpecialistResult(role=role, revision=1, status='ok', candidates=[c for c in rows if c.role == role]).model_dump(mode='json') for role in ('transport', 'stays', 'experience')},
+            'options': [option.model_dump(mode='json')] if stage == 'review' else []}
+
+
 class EngineTests(unittest.TestCase):
     def test_contracts(self):
         for patch in [{'adults': 0}, {'destination': 'Москва'}, {'start': '2026-11-16', 'end': '2026-11-12'}, {'currency': 'USD'}]:
@@ -143,27 +155,35 @@ class GraphTests(unittest.IsolatedAsyncioTestCase):
         runner=AsyncMock(side_effect=run)
         graph=build_graph(decide,runner,InMemorySaver())
         cfg={'configurable':{'thread_id':'a'}}
-        result=await graph.ainvoke({'messages':[HumanMessage(content='Сочи')],'calls':0,'attempts':[]},cfg)
+        result=await graph.ainvoke({'messages':[HumanMessage(content='Сочи')],'calls':0},cfg)
+        self.assertEqual(result['stage'], 'scenarios')
         runner.assert_not_called()
-        self.assertEqual(result['decision']['action'],'clarify')
-        result=await graph.ainvoke({'messages':[HumanMessage(content='даты')],'calls':0,'attempts':[]},cfg)
-        self.assertEqual([c.args[0] for c in runner.await_args_list],['transport','stays','experience'])
-        self.assertEqual(len(result['options']),3)
+        result=await graph.ainvoke({'requested_choice':result['choices'][0]['id'],'calls':0},cfg)
+        self.assertEqual(result['status'], 'needs_input')
+        result=await graph.ainvoke({'messages':[HumanMessage(content='даты')],'calls':0},cfg)
+        self.assertEqual([c.args[0] for c in runner.await_args_list], ['transport'])
+        result=await graph.ainvoke({'requested_choice':result['choices'][0]['id'],'calls':0},cfg)
+        self.assertEqual([c.args[0] for c in runner.await_args_list], ['transport', 'stays'])
         runner.reset_mock()
-        result=await graph.ainvoke({'messages':[HumanMessage(content='замени отель')],'calls':0,'attempts':[]},cfg)
-        self.assertEqual([c.args[0] for c in runner.await_args_list],['experience'])
-        self.assertTrue(all('Mirror' in o['stay']['name'] for o in result['options']))
-        self.assertEqual(len(result['messages']),6)
+        result=await graph.ainvoke({'messages':[HumanMessage(content='замени отель')],'calls':0},cfg)
+        runner.assert_not_called()
+        self.assertTrue(all('Mirror' in c['title'] for c in result['choices']))
+        result=await graph.ainvoke({'requested_choice':result['choices'][0]['id'],'calls':0},cfg)
+        self.assertEqual([c.args[0] for c in runner.await_args_list], ['experience'])
+        self.assertEqual(result['stage'], 'itinerary')
+        result=await graph.ainvoke({'requested_choice':result['choices'][0]['id'],'calls':0},cfg)
+        self.assertEqual(result['stage'], 'review')
+        self.assertEqual(len(result['options']), 1)
         runner.reset_mock()
-        result=await graph.ainvoke({'messages':[HumanMessage(content='сдвиг')],'calls':0,'attempts':[]},cfg)
-        self.assertEqual(runner.await_count,3)
-        self.assertEqual(result['options'],[])
+        result=await graph.ainvoke({'messages':[HumanMessage(content='сдвиг')],'calls':0},cfg)
+        self.assertEqual([c.args[0] for c in runner.await_args_list], ['transport'])
+        self.assertFalse(result['choices'])
 
     async def test_loop_and_stale_results(self):
         planner=AsyncMock(return_value=SupervisorDecision(action='transport'))
         runner=AsyncMock(return_value=SpecialistResult(role='transport',revision=999,status='ok'))
         graph=build_graph(planner,runner,InMemorySaver())
-        result=await graph.ainvoke({'constraints':TRIP.model_dump(mode='json'),'revision':1,'messages':[HumanMessage(content='plan')]},{'configurable':{'thread_id':'b'}})
+        result=await graph.ainvoke({**agreed_state(), 'results': {}, 'messages':[HumanMessage(content='plan')]},{'configurable':{'thread_id':'b'}})
         self.assertLessEqual(planner.await_count,7)
         self.assertIn('stale_or_invalid_result',result['results']['transport']['warnings'])
         self.assertEqual(result['options'],[])
@@ -181,10 +201,12 @@ class ApiTests(unittest.TestCase):
             self.assertEqual(client.get(url,headers={'Authorization':'Bearer bob'}).status_code,404)
             r=client.post(url+'/messages',headers=headers,json={'message':'Сочи','revision':0}).json()
             r=client.post(url+'/messages',headers=headers,json={'message':'даты','revision':r['revision']}).json()
-            self.assertEqual(len(r['options']),3)
+            for _ in range(4):
+                r=client.post(url+'/select/'+r['choices'][0]['id'],headers=headers,params={'revision':r['revision']}).json()
+            self.assertEqual(r['stage'],'review')
+            self.assertEqual(len(r['options']),1)
             self.assertEqual(client.post(url+'/messages',headers=headers,json={'message':'x','revision':0}).status_code,409)
             option=r['options'][0]['id'];revision=r['revision']
-            self.assertEqual(client.post(url+'/select/'+option,headers=headers,params={'revision':revision}).status_code,200)
             booking={'option_id':option,'revision':revision,'confirm':False,'idempotency_key':'test-key-123'}
             self.assertEqual(client.post(url+'/bookings',headers=headers,json=booking).status_code,400)
             booking['confirm']=True

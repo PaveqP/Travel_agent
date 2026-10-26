@@ -7,6 +7,18 @@ from integrations.schemas.models import Budget, Coordinates, Money, Provenance
 
 Role = Literal["transport", "stays", "experience"]
 Area = Literal["Сочи", "Адлер", "Сириус", "Красная Поляна", "Роза Хутор"]
+Stage = Literal["scenarios", "transport", "stays", "itinerary", "review", "booked"]
+
+
+class TripScenario(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    id: str = Field(min_length=1, max_length=60, pattern=r"^[a-zA-Z0-9_-]+$")
+    title: str = Field(min_length=1, max_length=100)
+    destination: Area
+    purpose: str = Field(min_length=1, max_length=500)
+    interests: list[str] = Field(default_factory=list, max_length=10)
+    tradeoff: str = Field(min_length=1, max_length=500)
+    priority: Literal["cost", "balance", "comfort", "activities"] = "balance"
 
 
 class TripConstraints(BaseModel):
@@ -91,6 +103,10 @@ class SupervisorDecision(BaseModel):
         "answer",
         "research",
         "unsupported",
+        "scenarios",
+        "choose",
+        "approve",
+        "checkout",
     ]
     reply: str = Field(default="", max_length=1200)
     research_role: Role = "experience"
@@ -100,6 +116,9 @@ class SupervisorDecision(BaseModel):
     task: str = Field(default="", max_length=1000)
     source_ids: list[str] = Field(default_factory=list, max_length=20)
     refresh: list[Role] = Field(default_factory=list, max_length=3)
+    scenarios: list[TripScenario] = Field(default_factory=list, max_length=4)
+    choice_id: str | None = Field(default=None, max_length=150)
+    confirmed: bool = False
 
 
 class Candidate(BaseModel):

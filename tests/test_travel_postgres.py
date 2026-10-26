@@ -20,7 +20,9 @@ class PostgresTests(unittest.IsolatedAsyncioTestCase):
             await saver.setup()
             graph = build_graph(decide, run, saver)
             first = await graph.ainvoke({'messages': [HumanMessage(content='Сочи')], 'calls': 0}, config)
-            self.assertEqual(first['decision']['action'], 'clarify')
+            self.assertEqual(first['stage'], 'scenarios')
+            first = await graph.ainvoke({'requested_choice': first['choices'][0]['id'], 'calls': 0}, config)
+            self.assertEqual(first['status'], 'needs_input')
         async with AsyncPostgresStore.from_conn_string(dsn) as store:
             await store.setup()
             await store.aput(('profiles', ident), 'preferences', {'interests': ['море']})
@@ -29,12 +31,13 @@ class PostgresTests(unittest.IsolatedAsyncioTestCase):
             saved = await graph.aget_state(config)
             self.assertEqual(saved.values['constraints']['origin'], 'Москва')
             second = await graph.ainvoke({'messages': [HumanMessage(content='даты')], 'calls': 0, 'attempts': []}, config)
-            self.assertEqual(len(second['options']), 3)
+            self.assertEqual(second['stage'], 'transport')
+            self.assertTrue(second['choices'])
         async with AsyncPostgresSaver.from_conn_string(dsn) as saver:
             graph = build_graph(decide, run, saver)
             saved = await graph.aget_state(config)
             self.assertEqual(saved.values['revision'], second['revision'])
-            self.assertEqual(len(saved.values['messages']), 4)
+            self.assertGreaterEqual(len(saved.values['messages']), 4)
         async with AsyncPostgresStore.from_conn_string(dsn) as store:
             profile = await store.aget(('profiles', ident), 'preferences')
             self.assertEqual(profile.value['interests'], ['море'])

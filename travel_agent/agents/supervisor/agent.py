@@ -21,6 +21,14 @@ def llm_decider(model: BaseChatModel, prompt: str):
             "constraints": state.get("constraints", {}),
             "options": option_context(state),
             "selected": state.get("selected"),
+            "stage": state.get("stage", "scenarios"),
+            "scenarios": state.get("scenarios", []),
+            "selected_scenario": state.get("selected_scenario"),
+            "selected_transport": state.get("selected_transport"),
+            "selected_stay": state.get("selected_stay"),
+            "choices": state.get("choices", []),
+            "pending_check_in": state.get("pending_check_in"),
+            "diagnostics": state.get("diagnostics", {}),
             "results": {
                 r: {"status": v["status"], "warnings": v["warnings"]}
                 for r, v in state.get("results", {}).items()

@@ -16,7 +16,7 @@ from travel_agent.graph import build_graph
 from travel_agent.prompts.loader import load_prompt
 from travel_agent.schemas import SpecialistResult, SupervisorDecision, TripDelta
 from travel_agent.tools import ALLOWED, build_tools
-from test_travel_agent import FIXTURES, TRIP, decide, run
+from test_travel_agent import agreed_state, FIXTURES, TRIP, decide, run
 
 
 class ToolModel(FakeMessagesListChatModel):
@@ -234,8 +234,8 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         graph = build_graph(planner, runner, InMemorySaver())
         result = await graph.ainvoke(
             {
-                "constraints": TRIP.model_dump(mode="json"),
-                "revision": 1,
+                **agreed_state(),
+                "results": {},
                 "calls": 1,
                 "messages": [HumanMessage(content="Plan")],
             },
@@ -259,10 +259,10 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
             )
             for role in ("transport", "stays", "experience")
         }
+        results["transport"] = agreed_state()["results"]["transport"]
         result = await graph.ainvoke(
             {
-                "constraints": TRIP.model_dump(mode="json"),
-                "revision": 1,
+                **agreed_state("review"),
                 "results": results,
                 "calls": 0,
                 "messages": [HumanMessage(content="Retry hotel search")],
@@ -270,7 +270,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
             {"configurable": {"thread_id": "retry"}},
         )
         self.assertEqual(
-            [call.args[0] for call in runner.await_args_list], ["stays", "experience"]
+            [call.args[0] for call in runner.await_args_list], ["stays"]
         )
         self.assertEqual(result["revision"], 2)
 
@@ -302,8 +302,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
         graph = build_graph(planner, runner, InMemorySaver())
         await graph.ainvoke(
             {
-                "constraints": TRIP.model_dump(mode="json"),
-                "revision": 1,
+                **agreed_state("review"),
                 "results": results,
                 "calls": 0,
                 "messages": [HumanMessage(content="Replace hotel")],
@@ -311,7 +310,7 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
             {"configurable": {"thread_id": "expired-hotel"}},
         )
         self.assertEqual(
-            [call.args[0] for call in runner.await_args_list], ["stays", "experience"]
+            [call.args[0] for call in runner.await_args_list], ["stays"]
         )
 
     async def test_repeated_runs_with_empty_and_timeout_do_not_loop(self):
@@ -328,8 +327,8 @@ class PipelineTests(unittest.IsolatedAsyncioTestCase):
             )
             result = await graph.ainvoke(
                 {
-                    "constraints": TRIP.model_dump(mode="json"),
-                    "revision": 1,
+                    **agreed_state(),
+                    "results": {},
                     "messages": [HumanMessage(content="Plan")],
                 },
                 {"configurable": {"thread_id": str(iteration)}},

@@ -69,7 +69,7 @@ async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
                 continue
             if text.startswith("/select "):
                 value = text.split(maxsplit=1)[1]
-                options = state["options"]
+                options = state.get("choices") or state["options"]
                 if not value.isdigit() or not 1 <= int(value) <= len(options):
                     print("Укажите номер из последнего списка вариантов.")
                     continue
@@ -78,9 +78,7 @@ async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
                     f"/trips/{trip_id}/select/{selected}", params={"revision": revision}
                 )
                 response.raise_for_status()
-                print(
-                    "Агент: Вариант выбран. Можно обсудить детали или выполнить /book confirm для имитации бронирования."
-                )
+                print("\nАгент:", response.json().get("answer") or "Вариант выбран.")
             elif text.startswith("/book"):
                 if text != "/book confirm":
                     print(
