@@ -1,0 +1,17 @@
+import httpx
+from langchain_openai import ChatOpenAI
+
+from travel_agent.config import Settings
+
+
+def create_model(config: Settings, client: httpx.AsyncClient) -> ChatOpenAI:
+    return ChatOpenAI(
+        model=config.model,
+        api_key=config.token.get_secret_value(),
+        base_url=config.base_url,
+        http_async_client=client,
+        max_retries=0,
+        timeout=45,
+        max_tokens=1800,
+        use_responses_api=False,
+    )

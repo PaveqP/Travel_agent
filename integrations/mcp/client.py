@@ -80,7 +80,7 @@ ROLE_METHODS = {
  'experience': {'2gis': frozenset({'search_places', 'geocode_address', 'build_route', 'calculate_distance_matrix'})},
 }
 
-async def runtime_call(role: str, provider: str, name: str, args: dict, env: dict[str, str], owned: frozenset[tuple[str, str]] = frozenset()) -> dict:
+async def _runtime_attempt(role: str, provider: str, name: str, args: dict, env: dict[str, str], owned: frozenset[tuple[str, str]] = frozenset()) -> dict:
  import jsonschema
  from mcp.shared.exceptions import McpError
  if name not in ROLE_METHODS.get(role, {}).get(provider, frozenset()):
@@ -93,7 +93,7 @@ async def runtime_call(role: str, provider: str, name: str, args: dict, env: dic
   if (role == 'stays' and product != 'hotels') or (role == 'transport' and product not in {'avia', 'rail', 'etrain'}) or (product, ident) not in owned:
    return {'status': 'forbidden'}
  try:
-  async with asyncio.timeout(35):
+  async with asyncio.timeout(30):
    async with connection(provider, env) as (session, _):
     listing = await session.list_tools()
     selected = next((t for t in listing.tools if t.name == name), None)
@@ -114,7 +114,7 @@ async def runtime_call(role: str, provider: str, name: str, args: dict, env: dic
   expected, unexpected = group.split((TimeoutError, httpx.RequestError, httpx.HTTPStatusError, McpError))
   if unexpected:
    raise unexpected
-  return {'status': 'timeout' if group.subgroup((TimeoutError, httpx.TimeoutException)) else 'network_error'}
+  return {'status': _mcp_error_status(group)}
  except (TimeoutError, httpx.TimeoutException):
   return {'status': 'timeout'}
  except httpx.HTTPStatusError as exc:
@@ -123,3 +123,27 @@ async def runtime_call(role: str, provider: str, name: str, args: dict, env: dic
   return {'status': 'network_error'}
  except (jsonschema.ValidationError, ValueError):
   return {'status': 'schema_error'}
+
+
+def _mcp_error_status(error: BaseException) -> str:
+ if isinstance(error, BaseExceptionGroup):
+  statuses = {_mcp_error_status(child) for child in error.exceptions}
+  return next((status for status in ('forbidden', 'unauthorized', 'rate_limited', 'timeout') if status in statuses), 'network_error')
+ if isinstance(error, httpx.HTTPStatusError):
+  return {401: 'unauthorized', 403: 'forbidden', 429: 'rate_limited'}.get(error.response.status_code, 'network_error')
+ return 'timeout' if isinstance(error, (TimeoutError, httpx.TimeoutException)) else 'network_error'
+
+
+async def runtime_call(role: str, provider: str, name: str, args: dict, env: dict[str, str], owned: frozenset[tuple[str, str]] = frozenset()) -> dict:
+ import logging
+ try:
+  async with asyncio.timeout(63):
+   for attempt in range(2):
+    result = await _runtime_attempt(role, provider, name, args, env, owned)
+    result['attempts'] = attempt + 1
+    logging.getLogger(__name__).info('role=%s provider=%s tool=%s attempt=%s status=%s', role, provider, name, attempt + 1, result['status'])
+    if result['status'] not in {'timeout', 'network_error'} or attempt == 1:
+     return result
+    await asyncio.sleep(0.25)
+ except TimeoutError:
+  return {'status': 'timeout', 'attempts': 2}

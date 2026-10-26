@@ -49,6 +49,7 @@ class SupervisorDecision(BaseModel):
     question: str = Field(default='', max_length=600)
     task: str = Field(default='', max_length=1000)
     source_ids: list[str] = Field(default_factory=list, max_length=20)
+    refresh: list[Role] = Field(default_factory=list, max_length=3)
 
 
 class Candidate(BaseModel):

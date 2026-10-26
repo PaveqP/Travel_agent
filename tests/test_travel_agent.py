@@ -151,7 +151,7 @@ class GraphTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(result['options']),3)
         runner.reset_mock()
         result=await graph.ainvoke({'messages':[HumanMessage(content='замени отель')],'calls':0,'attempts':[]},cfg)
-        self.assertEqual([c.args[0] for c in runner.await_args_list],['stays','experience'])
+        self.assertEqual([c.args[0] for c in runner.await_args_list],['experience'])
         self.assertTrue(all('Mirror' in o['stay']['name'] for o in result['options']))
         self.assertEqual(len(result['messages']),6)
         runner.reset_mock()
@@ -220,7 +220,8 @@ class ReactTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_specialist_limit_returns_partial_evidence(self):
         from langchain_core.language_models.fake_chat_models import FakeMessagesListChatModel
-        from travel_agent.agents import read_prompts, run_specialist
+        from travel_agent.agents.stays.agent import run as run_stays
+        from travel_agent.prompts import read_prompts
 
         class ToolModel(FakeMessagesListChatModel):
             def bind_tools(self, tools, **kwargs):
@@ -229,7 +230,7 @@ class ReactTests(unittest.IsolatedAsyncioTestCase):
         model=ToolModel(responses=[AIMessage(content='',tool_calls=[{'name':'search_hotels','args':{},'id':f'loop-{i}','type':'tool_call'}]) for i in range(8)])
         async with httpx.AsyncClient() as client:
             with patch('travel_agent.tools.runtime_call',new=AsyncMock(return_value={'status':'ok','data':FIXTURES['search_hotels']})) as network:
-                result=await run_specialist('stays',TRIP,1,'Find',model,client,{},read_prompts(),[])
+                result=await run_stays(TRIP,1,'Find',[],model=model,client=client,env={},prompt=read_prompts()['stays'])
         self.assertEqual(result.status,'partial')
         self.assertIn('agent_limit',result.warnings)
         self.assertEqual(len(result.candidates),3)
@@ -237,7 +238,8 @@ class ReactTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_missing_structured_output_keeps_only_observed_evidence(self):
         from unittest.mock import Mock
-        from travel_agent.agents import read_prompts, run_specialist
+        from travel_agent.agents.stays.agent import run as run_stays
+        from travel_agent.prompts import read_prompts
         model=Mock()
         model.with_structured_output.return_value.ainvoke=AsyncMock(return_value=None)
 
@@ -245,15 +247,15 @@ class ReactTests(unittest.IsolatedAsyncioTestCase):
             async def invoke(*args,**options):
                 search=next(t for t in kwargs['tools'] if t.name=='search_hotels')
                 await search.ainvoke({})
-                return {'messages':[]}
+                return {'messages':[], 'structured_response':output}
             return Mock(ainvoke=invoke)
 
         from travel_agent.schemas import SpecialistSelection
         for output, warning in [(None,'llm_error'),(SpecialistSelection(source_ids=[]),'empty_selection')]:
             model.with_structured_output.return_value.ainvoke=AsyncMock(return_value=output)
             async with httpx.AsyncClient() as client:
-                with patch('travel_agent.agents.create_agent',side_effect=create), patch('travel_agent.tools.runtime_call',new=AsyncMock(return_value={'status':'ok','data':FIXTURES['search_hotels']})):
-                    result=await run_specialist('stays',TRIP,1,'Find hotels',model,client,{},read_prompts(),[])
+                with patch('travel_agent.agents.react.create_agent',side_effect=create), patch('travel_agent.tools.runtime_call',new=AsyncMock(return_value={'status':'ok','data':FIXTURES['search_hotels']})):
+                    result=await run_stays(TRIP,1,'Find hotels',[],model=model,client=client,env={},prompt=read_prompts()['stays'])
             self.assertEqual(result.status,'partial')
             self.assertIn(warning,result.warnings)
             self.assertEqual(len(result.candidates),3)

@@ -12,6 +12,7 @@ class TripState(TypedDict, total=False):
     decision: dict
     calls: int
     attempts: list[str]
+    status: str
     answer: str
     bookings: dict
     selected: str | None

@@ -1,0 +1,1525 @@
+{
+  "offline_tests": {
+    "passed": 45,
+    "skipped_postgres": 1
+  },
+  "postgres_tests": {
+    "passed": 46
+  },
+  "runs": [
+    {
+      "implementation": "separated_agents_before_retry",
+      "created_at": "2026-10-26T12:28:57.561120+00:00",
+      "reported_llm_cost_usd": "0.0194462884",
+      "llm_calls": 50,
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": true,
+          "full_plan": false,
+          "hotel_preserves_transport": true,
+          "hotel_matches": true,
+          "dates_refresh": true,
+          "dates_match": true,
+          "changed_plan": false
+        },
+        {
+          "repetition": 1,
+          "clarified_without_search": true,
+          "full_plan": true,
+          "hotel_preserves_transport": true,
+          "hotel_matches": true,
+          "dates_refresh": true,
+          "dates_match": true,
+          "changed_plan": true
+        }
+      ],
+      "turns": [
+        {
+          "repetition": 0,
+          "revision": 1,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [],
+          "status": null,
+          "answer": "На какие даты планируете поездку? Укажите, пожалуйста, дату заезда и дату выезда.",
+          "results": {},
+          "options": []
+        },
+        {
+          "repetition": 0,
+          "revision": 2,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты. Показана известная часть расходов; полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "partial",
+              "tool_calls": 1,
+              "candidates": 0,
+              "warnings": [
+                "tutu:timeout"
+              ]
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 4,
+              "candidates": 22,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": null,
+              "transport": "Победа / Utair",
+              "known_subtotal": "14018.0",
+              "confirmed_total": null,
+              "activities": 5
+            },
+            {
+              "hotel": null,
+              "transport": "Победа / Utair",
+              "known_subtotal": "14018.0",
+              "confirmed_total": null,
+              "activities": 5
+            },
+            {
+              "hotel": null,
+              "transport": "Победа",
+              "known_subtotal": "15370.0",
+              "confirmed_total": null,
+              "activities": 5
+            }
+          ]
+        },
+        {
+          "repetition": 0,
+          "revision": 3,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты. Показана известная часть расходов; полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 2,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 2,
+              "candidates": 16,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": "Победа / Utair",
+              "known_subtotal": "25778.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 0,
+          "revision": 4,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-13",
+            "end": "2026-11-17",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты. Показана известная часть расходов; полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "partial",
+              "tool_calls": 1,
+              "candidates": 0,
+              "warnings": [
+                "tutu:timeout"
+              ]
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 2,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 4,
+              "candidates": 30,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": null,
+              "known_subtotal": "11760.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 1,
+          "revision": 1,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [],
+          "status": null,
+          "answer": "На какие даты планируете поездку — назовите дату заезда и дату выезда?",
+          "results": {},
+          "options": []
+        },
+        {
+          "repetition": 1,
+          "revision": 2,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты. Показана известная часть расходов; полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "partial",
+              "tool_calls": 5,
+              "candidates": 23,
+              "warnings": [
+                "weather_outside_forecast_horizon"
+              ]
+            }
+          },
+          "options": [
+            {
+              "hotel": "Отель Сочи Галерея Парк",
+              "transport": "Победа / Utair",
+              "known_subtotal": "19058.0",
+              "confirmed_total": null,
+              "activities": 5
+            },
+            {
+              "hotel": "Централ Резиденс 3* by Provence",
+              "transport": "Победа / Utair",
+              "known_subtotal": "19758.0",
+              "confirmed_total": null,
+              "activities": 5
+            },
+            {
+              "hotel": "Эльпида",
+              "transport": "Победа / Utair",
+              "known_subtotal": "21298.0",
+              "confirmed_total": null,
+              "activities": 5
+            }
+          ]
+        },
+        {
+          "repetition": 1,
+          "revision": 3,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты. Показана известная часть расходов; полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": "Победа / Utair",
+              "known_subtotal": "25778.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 1,
+          "revision": 4,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-13",
+            "end": "2026-11-17",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты. Показана известная часть расходов; полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 2,
+              "candidates": 12,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": "Победа",
+              "known_subtotal": "27278.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "implementation": "short_retry_deadline",
+      "created_at": "2026-10-26T12:36:49.429752+00:00",
+      "reported_llm_cost_usd": "0.019352614",
+      "llm_calls": 52,
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": true,
+          "full_plan": true,
+          "hotel_preserves_transport": true,
+          "hotel_matches": true,
+          "dates_refresh": true,
+          "dates_match": true,
+          "changed_plan": false
+        },
+        {
+          "repetition": 1,
+          "clarified_without_search": true,
+          "full_plan": true,
+          "hotel_preserves_transport": true,
+          "hotel_matches": true,
+          "dates_refresh": true,
+          "dates_match": true,
+          "changed_plan": true
+        }
+      ],
+      "turns": [
+        {
+          "repetition": 0,
+          "revision": 1,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [],
+          "status": null,
+          "answer": "На какие даты планируете поездку — укажите, пожалуйста, дату заезда и дату выезда.",
+          "results": {},
+          "options": []
+        },
+        {
+          "repetition": 0,
+          "revision": 2,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 3,
+              "candidates": 22,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Отель Сочи Галерея Парк",
+              "transport": "Победа / Utair",
+              "known_subtotal": "19058.0",
+              "confirmed_total": null,
+              "activities": 4
+            },
+            {
+              "hotel": "Централ Резиденс 3* by Provence",
+              "transport": "Победа / Utair",
+              "known_subtotal": "19758.0",
+              "confirmed_total": null,
+              "activities": 4
+            },
+            {
+              "hotel": "Локалита",
+              "transport": "Победа / Utair",
+              "known_subtotal": "21118.0",
+              "confirmed_total": null,
+              "activities": 4
+            }
+          ]
+        },
+        {
+          "repetition": 0,
+          "revision": 3,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 2,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": "Победа / Utair",
+              "known_subtotal": "25778.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 0,
+          "revision": 4,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-13",
+            "end": "2026-11-17",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Получен частичный план: не хватает проверенного транспорта или проживания. Можно повторить поиск недостающего компонента.",
+          "results": {
+            "transport": {
+              "status": "partial",
+              "tool_calls": 1,
+              "candidates": 0,
+              "warnings": [
+                "tutu:timeout"
+              ]
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "partial",
+              "tool_calls": 5,
+              "candidates": 26,
+              "warnings": [
+                "weather_outside_forecast_horizon"
+              ]
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": null,
+              "known_subtotal": "11760.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 1,
+          "revision": 1,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [],
+          "status": null,
+          "answer": "На какие даты планируете поездку? Укажите дату начала и окончания.",
+          "results": {},
+          "options": []
+        },
+        {
+          "repetition": 1,
+          "revision": 2,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 6,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 5,
+              "candidates": 39,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Отель Сочи Галерея Парк",
+              "transport": "Победа / Utair",
+              "known_subtotal": "20094.0",
+              "confirmed_total": null,
+              "activities": 6
+            },
+            {
+              "hotel": "Централ Резиденс 3* by Provence",
+              "transport": "Победа / Utair",
+              "known_subtotal": "20794.0",
+              "confirmed_total": null,
+              "activities": 6
+            },
+            {
+              "hotel": "Локалита",
+              "transport": "Победа / Utair",
+              "known_subtotal": "22154.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 1,
+          "revision": 3,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 2,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": "Победа / Utair",
+              "known_subtotal": "26814.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 1,
+          "revision": 4,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-13",
+            "end": "2026-11-17",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 2,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 5,
+              "candidates": 36,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": "Победа",
+              "known_subtotal": "31156.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "implementation": "longer_retry_before_quote_reuse",
+      "created_at": "2026-10-26T12:42:38.717832+00:00",
+      "reported_llm_cost_usd": "0.0077491412",
+      "llm_calls": 23,
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": true,
+          "full_plan": true,
+          "hotel_preserves_transport": true,
+          "hotel_matches": false,
+          "dates_refresh": true,
+          "dates_match": true,
+          "changed_plan": true
+        }
+      ],
+      "turns": [
+        {
+          "repetition": 0,
+          "revision": 1,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [],
+          "status": null,
+          "answer": "Уточните, пожалуйста, даты поездки: когда планируете выехать и на какой день возвращение?",
+          "results": {},
+          "options": []
+        },
+        {
+          "repetition": 0,
+          "revision": 2,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Отель Сочи Галерея Парк",
+              "transport": "Победа / Utair",
+              "known_subtotal": "20094.0",
+              "confirmed_total": null,
+              "activities": 6
+            },
+            {
+              "hotel": "Централ Резиденс 3* by Provence",
+              "transport": "Победа / Utair",
+              "known_subtotal": "20794.0",
+              "confirmed_total": null,
+              "activities": 6
+            },
+            {
+              "hotel": "Однокомнатная квартира на улице: Батумское ш., 28Ак1",
+              "transport": "Победа / Utair",
+              "known_subtotal": "23382.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 0,
+          "revision": 3,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Получен частичный план: не хватает проверенного транспорта или проживания. Можно повторить поиск недостающего компонента.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "partial",
+              "tool_calls": 1,
+              "candidates": 0,
+              "warnings": [
+                "tutu:timeout"
+              ]
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": null,
+              "transport": "Победа / Utair",
+              "known_subtotal": "15054.0",
+              "confirmed_total": null,
+              "activities": 6
+            },
+            {
+              "hotel": null,
+              "transport": "Победа / Utair",
+              "known_subtotal": "15054.0",
+              "confirmed_total": null,
+              "activities": 6
+            },
+            {
+              "hotel": null,
+              "transport": "Победа",
+              "known_subtotal": "15370.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 0,
+          "revision": 4,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-13",
+            "end": "2026-11-17",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": null,
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 2,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "partial",
+              "tool_calls": 6,
+              "candidates": 23,
+              "warnings": [
+                "2gis:schema_error",
+                "2gis:timeout",
+                "agent_limit"
+              ]
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": "Победа",
+              "known_subtotal": "28156.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "implementation": "current_quote_reuse",
+      "created_at": "2026-10-26T12:53:46.978290+00:00",
+      "reported_llm_cost_usd": "0.015775822",
+      "llm_calls": 46,
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": true,
+          "full_plan": true,
+          "hotel_preserves_transport": true,
+          "hotel_matches": true,
+          "dates_refresh": true,
+          "dates_match": true,
+          "changed_plan": true
+        },
+        {
+          "repetition": 1,
+          "clarified_without_search": true,
+          "full_plan": true,
+          "hotel_preserves_transport": true,
+          "hotel_matches": true,
+          "dates_refresh": true,
+          "dates_match": true,
+          "changed_plan": true
+        }
+      ],
+      "turns": [
+        {
+          "repetition": 0,
+          "revision": 1,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [],
+          "status": "needs_input",
+          "answer": "На какие даты планируете поездку — назовите, пожалуйста, дату заезда и дату выезда?",
+          "results": {},
+          "options": []
+        },
+        {
+          "repetition": 0,
+          "revision": 2,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": "ready",
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "partial",
+              "tool_calls": 3,
+              "candidates": 10,
+              "warnings": [
+                "tutu:schema_error"
+              ]
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "partial",
+              "tool_calls": 4,
+              "candidates": 22,
+              "warnings": [
+                "2gis:timeout"
+              ]
+            }
+          },
+          "options": [
+            {
+              "hotel": "Отель Сочи Галерея Парк",
+              "transport": "Победа / Utair",
+              "known_subtotal": "20094.0",
+              "confirmed_total": null,
+              "activities": 4
+            },
+            {
+              "hotel": "Однокомнатная квартира на улице: Батумское ш., 28Ак1",
+              "transport": "Победа / Utair",
+              "known_subtotal": "23382.0",
+              "confirmed_total": null,
+              "activities": 4
+            },
+            {
+              "hotel": "COOCOOROOZA",
+              "transport": "Победа / Utair",
+              "known_subtotal": "23654.0",
+              "confirmed_total": null,
+              "activities": 4
+            }
+          ]
+        },
+        {
+          "repetition": 0,
+          "revision": 3,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "experience"
+          ],
+          "status": "ready",
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "partial",
+              "tool_calls": 3,
+              "candidates": 10,
+              "warnings": [
+                "tutu:schema_error"
+              ]
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": "Победа / Utair",
+              "known_subtotal": "26814.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 0,
+          "revision": 4,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-13",
+            "end": "2026-11-17",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": "ready",
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "partial",
+              "tool_calls": 5,
+              "candidates": 22,
+              "warnings": [
+                "agent_limit"
+              ]
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": "Победа",
+              "known_subtotal": "28156.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 1,
+          "revision": 1,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [],
+          "status": "needs_input",
+          "answer": "На какие даты планируете поездку — назовите дату заезда и дату выезда?",
+          "results": {},
+          "options": []
+        },
+        {
+          "repetition": 1,
+          "revision": 2,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": null,
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": "ready",
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "partial",
+              "tool_calls": 7,
+              "candidates": 13,
+              "warnings": [
+                "weather_outside_forecast_horizon",
+                "agent_limit"
+              ]
+            }
+          },
+          "options": [
+            {
+              "hotel": "Отель Сочи Галерея Парк",
+              "transport": "Победа / Utair",
+              "known_subtotal": "20094.0",
+              "confirmed_total": null,
+              "activities": 6
+            },
+            {
+              "hotel": "Централ Резиденс 3* by Provence",
+              "transport": "Победа / Utair",
+              "known_subtotal": "20794.0",
+              "confirmed_total": null,
+              "activities": 6
+            },
+            {
+              "hotel": "Эльпида",
+              "transport": "Победа / Utair",
+              "known_subtotal": "22334.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 1,
+          "revision": 3,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "experience"
+          ],
+          "status": "ready",
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": "Победа / Utair",
+              "known_subtotal": "26814.0",
+              "confirmed_total": null,
+              "activities": 6
+            }
+          ]
+        },
+        {
+          "repetition": 1,
+          "revision": 4,
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-13",
+            "end": "2026-11-17",
+            "adults": 2,
+            "budget": "100000",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "море",
+              "прогулки"
+            ]
+          },
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "status": "ready",
+          "answer": "Найдены варианты транспорта и проживания. Полная стоимость и бронирование не подтверждены.",
+          "results": {
+            "transport": {
+              "status": "ok",
+              "tool_calls": 1,
+              "candidates": 10,
+              "warnings": []
+            },
+            "stays": {
+              "status": "ok",
+              "tool_calls": 3,
+              "candidates": 10,
+              "warnings": []
+            },
+            "experience": {
+              "status": "ok",
+              "tool_calls": 4,
+              "candidates": 32,
+              "warnings": []
+            }
+          },
+          "options": [
+            {
+              "hotel": "Mirror Residence",
+              "transport": "Победа",
+              "known_subtotal": "28156.0",
+              "confirmed_total": null,
+              "activities": 5
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "cost": {
+    "this_task_reported_usd": "0.0623238656",
+    "previous_task_conservative_upper_usd": "0.6747157308",
+    "session_conservative_upper_usd": "0.7370395964",
+    "authorized_session_usd": "1"
+  },
+  "conclusion": "Last two full dialogues pass; prior provider timeouts are retained. Successful sampling is not an external availability SLA. Per-role partial warnings remain visible."
+}
