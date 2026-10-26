@@ -3,11 +3,35 @@ import asyncio
 import hashlib
 import json
 import os
-from contextlib import AsyncExitStack
+import sys
+from contextlib import AsyncExitStack, contextmanager
+from collections.abc import Iterator
 from pathlib import Path
 from uuid import uuid4
 
 import httpx
+
+
+@contextmanager
+def terminal_input() -> Iterator[None]:
+    if sys.platform != "linux" or not sys.stdin.isatty():
+        yield
+        return
+    import termios
+
+    descriptor = sys.stdin.fileno()
+    attributes = termios.tcgetattr(descriptor)
+    original = attributes[0]
+    # Linux canonical erase must remove a whole UTF-8 character, not one byte.
+    utf8_flag = getattr(termios, "IUTF8", 0x4000)
+    attributes[0] |= utf8_flag
+    termios.tcsetattr(descriptor, termios.TCSANOW, attributes)
+    try:
+        yield
+    finally:
+        attributes = termios.tcgetattr(descriptor)
+        attributes[0] = (attributes[0] & ~utf8_flag) | (original & utf8_flag)
+        termios.tcsetattr(descriptor, termios.TCSANOW, attributes)
 
 
 async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
@@ -18,8 +42,14 @@ async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
     while True:
         try:
             text = (await asyncio.to_thread(input, "\nВы: ")).strip()
+            text.encode("utf-8")
         except EOFError:
             break
+        except (UnicodeDecodeError, UnicodeEncodeError):
+            print(
+                "Не удалось прочитать строку: повреждена кодировка. Введите сообщение ещё раз — оно не было отправлено."
+            )
+            continue
         if text == "/quit":
             break
         if not text:
@@ -143,7 +173,8 @@ async def main() -> None:
             response = await client.post("/trips")
             response.raise_for_status()
             trip_id = response.json()["trip_id"]
-        await dialogue(client, trip_id)
+        with terminal_input():
+            await dialogue(client, trip_id)
 
 
 if __name__ == "__main__":
