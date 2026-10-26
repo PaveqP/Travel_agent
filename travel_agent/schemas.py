@@ -260,6 +260,7 @@ class BookingRequest(BaseModel):
     revision: int = Field(ge=0)
     confirm: bool
     idempotency_key: str = Field(min_length=8, max_length=100)
+    payment_method: Literal["card", "sbp"] = "card"
 
 
 class WebEvidence(BaseModel):

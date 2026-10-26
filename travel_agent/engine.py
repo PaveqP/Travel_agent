@@ -269,6 +269,8 @@ def simulate_purchase(state: dict, request: BookingRequest) -> dict:
     if previous:
         if (previous['option_id'], previous['revision']) != (request.option_id, request.revision):
             raise ValueError('Idempotency key already used')
+        if previous.get('payment', {}).get('method', 'card') != request.payment_method:
+            raise ValueError('Idempotency key already used for a different payment method')
         return previous
     if not request.confirm:
         raise ValueError('Explicit confirmation is required for simulation')
@@ -289,6 +291,6 @@ def simulate_purchase(state: dict, request: BookingRequest) -> dict:
     return {'id': str(uuid4()), 'option_id': request.option_id, 'revision': request.revision,
             'simulated': True, 'status': 'simulated', 'paid': False, 'reserved': False,
             'items': [{'kind': c.role, 'source_id': c.id, 'name': c.name, 'price': c.price.model_dump(mode='json'), 'url': offer_card(c, trip).url, 'provider': c.source.provider, 'aggregator': offer_card(c, trip).aggregator, 'details': c.model_dump(mode='json', exclude={'source', 'price', 'url'})} for c in (option.transport, option.stay)],
-            'payment': {'simulated': True, 'status': 'succeeded', 'currency': 'RUB', 'amount': str(option.budget.known_subtotal), 'scope': 'transport_and_stay'},
+            'payment': {'simulated': True, 'status': 'succeeded', 'currency': 'RUB', 'amount': str(option.budget.known_subtotal), 'scope': 'transport_and_stay', 'method': request.payment_method},
             'missing_costs': option.budget.missing, 'itinerary': [d.model_dump(mode='json') for d in option.days],
             'message': 'Имитация покупки оформлена: билеты, проживание и маршрут сохранены в заказе. Реальные места не зарезервированы, оплата не выполнялась. Питание, трансферы, активности и сборы не оплачены.'}

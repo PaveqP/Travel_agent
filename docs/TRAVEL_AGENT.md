@@ -1,6 +1,7 @@
 # Backend AI Travel Agent
 
-FastAPI + CLI, без фронтенда. Supervisor формирует сценарии и понимает сообщения.
+FastAPI + CLI, а также [React и Telegram](WEB_AND_TELEGRAM.md) с общей PostgreSQL.
+Supervisor формирует сценарии и понимает сообщения.
 LangGraph управляет этапами и согласованиями. Transport, Stay и Experience
 выполняют ограниченный ReAct только на текущем этапе. [План и результаты
 реализации](SCENARIO_PIPELINE.md).

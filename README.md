@@ -1,3 +1,20 @@
+# Веб-приложение и Telegram
+
+React-интерфейс **О! рядом** и бот
+[@ostrovok_helper_ryadom_bot](https://t.me/ostrovok_helper_ryadom_bot) используют
+один FastAPI, LangGraph и PostgreSQL: профиль, история, пошаговый выбор,
+имитация оплаты, маршрутный PDF и сопровождение.
+[Запуск и документация](docs/WEB_AND_TELEGRAM.md).
+
+```bash
+cd frontend && npm ci && npm run build && cd ..
+.venv/bin/python scripts/serve_web.py --local-postgres --telegram
+```
+
+Токен бота вводится скрыто; `.env` не меняется. Для существующей БД используйте
+`TRAVEL_DATABASE_URL` без `--local-postgres`. Сайт открывается на
+[localhost:8000](http://127.0.0.1:8000).
+
 Текущая оркестрация: сценарий → транспорт → проживание → программа → корзина → имитированная покупка. [План и результаты изменений](docs/SCENARIO_PIPELINE.md).
 
 Проверить диалог как пользователь: `python chat.py` — один процесс, без отдельного сервера, только пользовательские ответы; поездка сохраняется локально. [Подробная инструкция](docs/TRAVEL_AGENT.md).

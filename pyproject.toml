@@ -19,6 +19,8 @@ dependencies = [
   "psycopg[binary,pool]==3.3.6",
   "fastapi==0.162.0",
   "uvicorn==0.54.0",
+  "reportlab==5.1.0",
+  "pillow==13.0.0",
 ]
 
 [build-system]
@@ -29,4 +31,4 @@ build-backend = "setuptools.build_meta"
 include = ["travel_agent*", "integrations*"]
 
 [tool.setuptools.package-data]
-travel_agent = ["prompts/*.md"]
+travel_agent = ["prompts/*.md", "assets/*.ttf", "assets/OFL.txt"]

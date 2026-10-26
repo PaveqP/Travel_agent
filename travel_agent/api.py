@@ -9,8 +9,8 @@ from functools import partial
 from uuid import uuid4
 
 import httpx
-from fastapi import Depends, FastAPI, Header, HTTPException
-from langchain_core.messages import HumanMessage
+from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
 from langgraph.checkpoint.postgres.aio import AsyncPostgresSaver
@@ -40,7 +40,10 @@ def create_app(
     store=None,
     tokens: tuple[str, ...] = (),
     local_database: str | None = None,
+    portal_database_url: str | None = None,
 ) -> FastAPI:
+    if portal_database_url and local_database:
+        raise ValueError("The web and Telegram application requires PostgreSQL for all storage")
     locks: dict[str, asyncio.Lock] = {}
     profile_lock = asyncio.Lock()
 
@@ -48,6 +51,15 @@ def create_app(
     async def lifespan(app: FastAPI):
         async with AsyncExitStack() as stack:
             app.state.profile_db = None
+            app.state.accounts = None
+            if portal_database_url:
+                from travel_agent.accounts import Accounts
+                from psycopg_pool import AsyncConnectionPool
+
+                pool = await stack.enter_async_context(AsyncConnectionPool(portal_database_url, open=False, kwargs={"autocommit": True}))
+                await pool.wait(timeout=15)
+                app.state.accounts = Accounts(pool)
+                await app.state.accounts.setup()
             if graph is not None:
                 app.state.graph = graph
                 app.state.store = store or InMemoryStore()
@@ -56,9 +68,10 @@ def create_app(
             else:
                 env = environment()
                 config = settings(env)
-                if not config.api_token:
+                env.pop("TELEGRAM_BOT_TOKEN", None)
+                if not config.api_token and not portal_database_url:
                     raise RuntimeError("Set TRAVEL_API_TOKEN before starting the API")
-                app.state.tokens = tuple(config.api_token.get_secret_value().split(","))
+                app.state.tokens = tuple(config.api_token.get_secret_value().split(",")) if config.api_token else ()
                 client = await stack.enter_async_context(
                     httpx.AsyncClient(timeout=35, follow_redirects=False)
                 )
@@ -76,8 +89,8 @@ def create_app(
                             await app.state.store.aput(('profiles', user_id), 'preferences', {'interests': json.loads(interests)})
                     app.state.profile_db = db
                     app.state.persistent = True
-                elif config.database_url:
-                    dsn = config.database_url.get_secret_value()
+                elif config.database_url or portal_database_url:
+                    dsn = portal_database_url or config.database_url.get_secret_value()
                     saver = await stack.enter_async_context(
                         AsyncPostgresSaver.from_conn_string(dsn)
                     )
@@ -128,12 +141,31 @@ def create_app(
                         prompt=prompts["research"],
                     ),
                 )
+            if portal_database_url:
+                from travel_agent.telegram import TelegramBot
+
+                bot_token = environment().get("TELEGRAM_BOT_TOKEN")
+                app.state.bot = None
+                if bot_token:
+                    telegram_client = await stack.enter_async_context(httpx.AsyncClient(timeout=40, follow_redirects=False))
+                    app.state.bot = TelegramBot(app, telegram_client, bot_token)
+                    task = asyncio.create_task(app.state.bot.poll())
+                    stack.push_async_callback(app.state.bot.stop, task)
             yield
 
     app = FastAPI(title="Greater Sochi Travel Agent", lifespan=lifespan)
 
-    async def owner(authorization: str = Header(default="")) -> str:
+    async def owner(request: Request, authorization: str = Header(default="")) -> str:
         supplied = authorization.removeprefix("Bearer ")
+        if app.state.accounts is not None:
+            session = supplied or request.cookies.get("travel_session", "")
+            account = await app.state.accounts.authenticate(session) if session else None
+            if account:
+                if not supplied and request.method not in ("GET", "HEAD", "OPTIONS"):
+                    origin = request.headers.get("origin")
+                    if request.headers.get("sec-fetch-site") == "cross-site" or origin and origin != str(request.base_url).rstrip("/"):
+                        raise HTTPException(403, "Запрос с другого сайта запрещён")
+                return account
         if not any(
             hmac.compare_digest(supplied, token) for token in app.state.tokens if token
         ):
@@ -147,12 +179,16 @@ def create_app(
         }
 
     async def require_trip(user: str, trip_id: str):
+        if app.state.accounts is not None and await app.state.accounts.account(user):
+            if not await app.state.accounts.owns(user, trip_id):
+                raise HTTPException(404, "Trip not found")
+            return
         entry = await app.state.store.aget(("trips", user), trip_id)
         if entry is None:
             raise HTTPException(404, "Trip not found")
 
     def view(values: dict) -> dict:
-        return {
+        result = {
             k: values.get(k, default)
             for k, default in (
                 ("status", "needs_input"),
@@ -178,6 +214,15 @@ def create_app(
                 ("receipt", {}),
             )
         }
+        result["messages"] = [
+            {"role": "user" if isinstance(m, HumanMessage) else "assistant", "text": m.content}
+            for m in values.get("messages", []) if isinstance(m, (HumanMessage, AIMessage)) and isinstance(m.content, str) and m.content
+        ]
+        return result
+
+    async def sync_trip(user: str, trip_id: str, values: dict) -> None:
+        if app.state.accounts is not None and await app.state.accounts.account(user):
+            await app.state.accounts.sync_trip(user, trip_id, view(values))
 
     @app.get("/health")
     async def health():
@@ -191,13 +236,16 @@ def create_app(
             trip_id,
             {"created_at": datetime.now(timezone.utc).isoformat()},
         )
+        await sync_trip(user, trip_id, {})
         return {"trip_id": trip_id, "revision": 0}
 
     @app.get("/trips/{trip_id}")
     async def read_trip(trip_id: str, user: str = Depends(owner)):
         await require_trip(user, trip_id)
-        snapshot = await app.state.graph.aget_state(config_for(user, trip_id))
-        return view(snapshot.values)
+        async with locks.setdefault(user + ":" + trip_id, asyncio.Lock()):
+            snapshot = await app.state.graph.aget_state(config_for(user, trip_id))
+            await sync_trip(user, trip_id, snapshot.values)
+            return view(snapshot.values)
 
     @app.post("/trips/{trip_id}/messages")
     async def message(
@@ -216,11 +264,24 @@ def create_app(
                 "requested_choice": None,
                 "profile_update": None,
             }
+            if portal_database_url:
+                from travel_agent.support import support_reply
+
+                reply = support_reply(request.message, snapshot.values)
+                if reply:
+                    await app.state.graph.aupdate_state(config, {"messages": [HumanMessage(content=request.message), AIMessage(content=reply)], "answer": reply})
+                    updated = await app.state.graph.aget_state(config)
+                    await sync_trip(user, trip_id, updated.values)
+                    return view(updated.values)
             if not snapshot.values:
                 profile = await app.state.store.aget(("profiles", user), "preferences")
                 initial["constraints"] = (
                     {"interests": profile.value["interests"]} if profile else {}
                 )
+                if app.state.accounts is not None:
+                    account = await app.state.accounts.account(user)
+                    if account and account.get("city"):
+                        initial["constraints"]["origin"] = account["city"]
             try:
                 async with asyncio.timeout(420):
                     result = await app.state.graph.ainvoke(initial, config)
@@ -231,6 +292,7 @@ def create_app(
                 ) from None
             if result.get("profile_update") is not None:
                 await save_profile(user, result["profile_update"])
+            await sync_trip(user, trip_id, result)
             return view(result)
 
     @app.post("/trips/{trip_id}/select/{option_id}")
@@ -249,6 +311,7 @@ def create_app(
                         result = await app.state.graph.ainvoke({"requested_choice": option_id, "calls": 0, "messages": [HumanMessage(content="/select " + option_id)]}, config)
                 except TimeoutError:
                     raise HTTPException(504, "Stage deadline exceeded; read current trip state") from None
+                await sync_trip(user, trip_id, result)
                 return view(result)
             if snapshot.values.get("stage"):
                 raise HTTPException(409, "Unknown choice for the current stage")
@@ -257,6 +320,7 @@ def create_app(
             ]:
                 raise HTTPException(409, "Unknown option or stale revision")
             await app.state.graph.aupdate_state(config, {"selected": option_id})
+            await sync_trip(user, trip_id, {**snapshot.values, "selected": option_id})
         return {"selected": option_id, "revision": revision}
 
     @app.post("/trips/{trip_id}/bookings")
@@ -276,6 +340,8 @@ def create_app(
                     "receipt": booking, "stage": "booked", "status": "booked", "choices": [],
                     "answer": booking["message"], "plan_answer": booking["message"],
                 })
+            updated = await app.state.graph.aget_state(config)
+            await sync_trip(user, trip_id, updated.values)
             return booking
 
     async def save_profile(user: str, interests: list[str]) -> None:
@@ -287,6 +353,12 @@ def create_app(
                 )
                 await app.state.profile_db.commit()
             await app.state.store.aput(("profiles", user), "preferences", {"interests": interests})
+            if app.state.accounts is not None:
+                from travel_agent.accounts import AccountProfile
+
+                account = await app.state.accounts.account(user)
+                if account:
+                    await app.state.accounts.update(user, AccountProfile(name=account["name"], phone=account["phone"], city=account["city"], interests=interests))
 
     @app.get("/profile")
     async def read_profile(user: str = Depends(owner)):
@@ -300,6 +372,10 @@ def create_app(
         await save_profile(user, interests)
         return {"interests": interests}
 
+    if portal_database_url:
+        from travel_agent.web import mount_portal
+
+        mount_portal(app, owner, require_trip, config_for, view, sync_trip, save_profile, locks)
     return app
 
 

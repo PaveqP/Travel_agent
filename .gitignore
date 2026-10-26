@@ -23,3 +23,7 @@ build/
 dist/
 
 .travel-agent/
+node_modules/
+frontend/dist/
+output/
+tmp/
