@@ -46,6 +46,14 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
     lines.append(
         f"{trip.get('origin', '')} → {trip.get('destination', 'Сочи')}, {start} — {end}; взрослых: {trip.get('adults', '')}."
     )
+    if state.get("diagnostics", {}).get("reasons"):
+        lines.append(state.get("answer", ""))
+    if trip.get("budget"):
+        from travel_agent.schemas import TripConstraints
+
+        constraints = TripConstraints.model_validate(trip)
+        basis = "на человека" if constraints.budget_basis == "person" else "на группу"
+        lines.append(f"Бюджет: {constraints.budget} ₽ {basis}; предел группы {constraints.party_budget} ₽.")
     for index, option in enumerate(state.get("options", []), 1):
         stay, flight = option.get("stay"), option.get("transport")
         lines.append(
@@ -115,6 +123,8 @@ def llm_presenter(model, prompt: str):
             if planning and state.get("options")
             else state.get("answer", "")
         )
+        if planning and (not state.get("options") or state.get("diagnostics", {}).get("reasons")):
+            return fallback
         if (
             not planning
             and state.get("decision", {}).get("action") == "research"

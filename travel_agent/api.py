@@ -155,6 +155,7 @@ def create_app(
                 ("research", {}),
                 ("selected", None),
                 ("bookings", {}),
+                ("diagnostics", {}),
             )
         }
 

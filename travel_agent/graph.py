@@ -9,7 +9,7 @@ from langgraph.graph import END, START, StateGraph
 from openai import APIError
 from pydantic import ValidationError
 
-from travel_agent.engine import apply_delta, compose, usable
+from travel_agent.engine import apply_delta, compose, diagnose, usable
 from travel_agent.schemas import (
     Candidate,
     ResearchResult,
@@ -50,14 +50,13 @@ async def supervise(state: TripState, decide) -> dict:
             and decision.action not in ("answer", "research")
             else (current, set())
         )
-    except (ValidationError, OutputParserException, APIError, TimeoutError):
+    except (ValidationError, ValueError, OutputParserException, APIError, TimeoutError) as exc:
+        logging.getLogger(__name__).warning("supervisor outcome=%s", type(exc).__name__)
         if state.get("calls", 0):
             return {"decision": {"action": "compose"}, "status": "partial"}
         return {
             "decision": {"action": "clarify"},
             "status": "error",
-            "options": [],
-            "selected": None,
             "answer": "Не удалось обработать новое сообщение. Ограничения сохранены; повторите запрос.",
         }
     if decision.action in ("answer", "research"):
@@ -195,8 +194,10 @@ async def specialist(state: TripState, run, config: RunnableConfig) -> dict:
 
 
 def planning(state: TripState) -> dict:
+    trip = TripConstraints.model_validate(state.get("constraints", {}))
+    diagnostics = diagnose(trip, all_candidates(state))
     options = compose(
-        TripConstraints.model_validate(state.get("constraints", {})),
+        trip,
         all_candidates(state),
         state.get("revision", 0),
         preferred_stays=state.get("results", {})
@@ -212,9 +213,12 @@ def planning(state: TripState) -> dict:
         answer = "Получен частичный план: не хватает проверенного транспорта или проживания. Можно повторить поиск недостающего компонента."
     else:
         answer = "Не удалось получить достаточно проверенных предложений. Можно попробовать другие даты или повторить поиск позже."
+    if 'arrival_stay_mismatch' in diagnostics.reasons:
+        answer = f"Билеты и отели найдены, но даты прилёта и проживания не совпадают. Возможное заселение: {diagnostics.suggested_check_in:%d.%m.%Y}. Согласуйте дату заселения или выберите другой перелёт; найденное проживание сохранено."
     return {
         "options": [o.model_dump(mode="json") for o in options],
         "answer": answer,
+        "diagnostics": diagnostics.model_dump(mode="json"),
         "status": "ready" if complete else ("partial" if options else "unavailable"),
     }
 

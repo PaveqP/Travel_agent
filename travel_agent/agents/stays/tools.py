@@ -28,8 +28,8 @@ def build_tools(
             "search_hotels",
             {
                 "city_name": trip.destination,
-                "check_in": str(trip.start),
-                "check_out": str(trip.end),
+                "check_in": str(trip.stay_start),
+                "check_out": str(trip.stay_end),
                 "adults": trip.adults,
                 "page_size": 10,
             },
@@ -45,8 +45,8 @@ def build_tools(
             {
                 "product_type": "hotels",
                 "hotel_id": source_id.removeprefix("hotel:"),
-                "check_in": str(trip.start),
-                "check_out": str(trip.end),
+                "check_in": str(trip.stay_start),
+                "check_out": str(trip.stay_end),
                 "adults": trip.adults,
                 "view": "rules",
             },

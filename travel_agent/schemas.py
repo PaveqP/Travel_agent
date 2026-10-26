@@ -15,8 +15,11 @@ class TripConstraints(BaseModel):
     destination: Area = "Сочи"
     start: date | None = None
     end: date | None = None
+    check_in: date | None = None
+    check_out: date | None = None
     adults: int | None = Field(default=None, ge=1, le=6)
     budget: Decimal | None = Field(default=None, gt=0)
+    budget_basis: Literal["party", "person"] = "party"
     purpose: str | None = Field(default=None, min_length=1, max_length=500)
     hotel: str | None = Field(default=None, max_length=200)
     interests: list[str] = Field(default_factory=list, max_length=10)
@@ -25,7 +28,27 @@ class TripConstraints(BaseModel):
     def dates(self):
         if self.start and self.end and not 0 < (self.end - self.start).days <= 30:
             raise ValueError("Trip must last 1–30 nights")
+        if self.stay_start and self.stay_end and self.stay_start >= self.stay_end:
+            raise ValueError("Check-out must follow check-in")
+        if self.check_in and self.start and self.check_in < self.start:
+            raise ValueError("Check-in precedes the trip")
+        if self.check_out and self.end and self.check_out > self.end:
+            raise ValueError("Check-out follows the trip")
         return self
+
+    @property
+    def stay_start(self) -> date | None:
+        return self.check_in or self.start
+
+    @property
+    def stay_end(self) -> date | None:
+        return self.check_out or self.end
+
+    @property
+    def party_budget(self) -> Decimal | None:
+        if self.budget is None or self.budget_basis == "person" and self.adults is None:
+            return None
+        return self.budget * self.adults if self.budget_basis == "person" else self.budget
 
     def missing(self) -> list[str]:
         return [
@@ -39,11 +62,21 @@ class TripDelta(BaseModel):
     destination: Area | None = None
     start: date | None = None
     end: date | None = None
+    check_in: date | None = None
+    check_out: date | None = None
     adults: int | None = Field(default=None, ge=1, le=6)
     budget: Decimal | None = Field(default=None, gt=0)
+    budget_basis: Literal["party", "person"] | None = None
     purpose: str | None = Field(default=None, min_length=1, max_length=500)
     hotel: str | None = Field(default=None, max_length=200)
     interests: list[str] | None = Field(default=None, max_length=10)
+    clear: list[Literal["hotel", "budget", "purpose", "check_in", "check_out"]] = Field(default_factory=list, max_length=5)
+
+    @model_validator(mode="after")
+    def distinct_changes(self):
+        if any(getattr(self, name) is not None for name in self.clear):
+            raise ValueError("Cannot set and clear the same constraint")
+        return self
 
 
 class SupervisorDecision(BaseModel):
@@ -122,6 +155,14 @@ class TripOption(BaseModel):
     budget: Budget
     days: list[ItineraryDay]
     warnings: list[str]
+
+
+class PlanDiagnostics(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    received: dict[Role, int]
+    eligible: dict[Role, int]
+    reasons: list[str] = Field(default_factory=list)
+    suggested_check_in: date | None = None
 
 
 class MessageRequest(BaseModel):

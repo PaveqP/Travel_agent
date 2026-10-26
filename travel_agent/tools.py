@@ -75,8 +75,8 @@ def normalize(
     result = []
     if method == "search_hotels":
         stay = data.get("stay", {})
-        if stay.get("check_in") != str(trip.start) or stay.get("check_out") != str(
-            trip.end
+        if stay.get("check_in") != str(trip.stay_start) or stay.get("check_out") != str(
+            trip.stay_end
         ):
             raise ValueError("Stay dates/party mismatch")
         for row in data.get("hotels", []):
@@ -99,8 +99,8 @@ def normalize(
                     coordinates=coordinates,
                     area=area_of(coordinates),
                     source=source,
-                    start=trip.start,
-                    end=trip.end,
+                    start=trip.stay_start,
+                    end=trip.stay_end,
                     adults=trip.adults,
                     price=Money(**offer["price"], basis="room_stay"),
                     url=offer.get("checkout_url"),

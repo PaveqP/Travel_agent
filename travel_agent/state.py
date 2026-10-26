@@ -19,3 +19,4 @@ class TripState(TypedDict, total=False):
 
     research: dict
     plan_answer: str
+    diagnostics: dict
