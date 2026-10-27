@@ -1,7 +1,9 @@
 import argparse
 import asyncio
 import json
+import logging
 import sys
+import time
 from functools import partial
 from datetime import datetime, timezone
 from decimal import Decimal
@@ -10,7 +12,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import httpx
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.checkpoint.memory import InMemorySaver
 
 from travel_agent.agents.model import create_model
@@ -19,7 +21,7 @@ from travel_agent.agents.research import research
 from travel_agent.agents.transport.agent import run as run_transport
 from travel_agent.agents.stays.agent import run as run_stays
 from travel_agent.agents.experience.agent import run as run_experience
-from travel_agent.agents.supervisor.agent import llm_decider
+from travel_agent.agents.supervisor.agent import llm_decider, llm_planner
 from travel_agent.prompts import read_prompts
 from travel_agent.config import environment, settings
 from travel_agent.graph import build_graph
@@ -29,6 +31,10 @@ async def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--budget-usd", required=True, type=Decimal)
     parser.add_argument("--output", default="/tmp/travel-live.json")
+    parser.add_argument("--ski", action="store_true")
+    parser.add_argument("--resume")
+    parser.add_argument("--changes-only", action="store_true")
+    parser.add_argument("--autonomous", action="store_true")
     parser.add_argument("--extended", action="store_true")
     parser.add_argument("--dialogue", action="store_true")
     parser.add_argument("--mixed", action="store_true")
@@ -86,6 +92,8 @@ async def main() -> None:
                 spent += reserve
             save_budget()
 
+    logging.basicConfig(level=logging.WARNING)
+    logging.getLogger("travel_agent.tools").setLevel(logging.INFO)
     env = environment()
     config = settings(env)
     results = []
@@ -108,10 +116,11 @@ async def main() -> None:
                 revision,
                 task,
                 previous,
-                model=create_model(config, client),
+                model=create_model(config, client, max_tokens=2800, timeout=20),
                 client=client,
                 env=env,
                 prompt=prompts[role],
+                autonomous=args.autonomous, deadline=65,
             )
             role_results.append(result.model_dump(mode="json"))
             save_budget()
@@ -130,7 +139,7 @@ async def main() -> None:
             )
             return result
 
-        decide = llm_decider(model, prompts["supervisor"])
+        decide = llm_planner(create_model(config, client, max_tokens=2600, timeout=20), prompts["planner"]) if args.autonomous else llm_decider(model, prompts["supervisor"])
 
         async def trace_decision(state):
             decision = await decide(state)
@@ -154,10 +163,11 @@ async def main() -> None:
 
         graph = build_graph(
             trace_decision,
-            run,
+            ({r: partial(run, r) for r in runners} if args.autonomous else run),
             InMemorySaver(),
+            autonomous=args.autonomous,
             present=llm_presenter(
-                create_model(config, client, max_tokens=4096), prompts["response"]
+                create_model(config, client, max_tokens=3000, timeout=20), prompts["response"]
             ),
             research=partial(
                 research,
@@ -188,13 +198,37 @@ async def main() -> None:
                 "Замени отель на Mirror Residence, билеты оставь прежними.",
                 "Сдвинь поездку на 13–17 ноября 2026 года, оставь Mirror Residence.",
             ]
+        if args.ski:
+            messages = [
+                'Хочу с девушкой на горнолыжку на неделю в декарбе',
+                'планируем вызжать с Питера',
+                'а есть вариант проживания максимально близкий к горнолыжному склону, к подъемникам, желательно с видом на горы, и хотелось бы поехать с 10 числа, подбери лучший вариант',
+                'зачем ты мне дал рестораны, если мне необходимо подобрать ближайший отель к горнолыжному курорту с видом на горы, рассматривай даты переезда в диапазоне с 10 по 25 декабря',
+            ]
+        if args.resume and not args.ski:
+            messages = [
+                'Сколько стоят билеты и проживание в первом варианте на одного человека? Ничего не меняй.',
+                'Есть ли бассейн у отеля из первого варианта? Проверь в интернете, поездку не меняй.',
+                'Замени отель на Mirror Residence, билеты оставь прежними.',
+                'Сдвинь поездку на 13–17 ноября 2026 года, оставь Mirror Residence.',
+            ]
+            if args.changes_only:
+                messages = messages[2:]
+        if args.resume and args.ski:
+            messages = messages[-1:]
         for repetition in range(args.repeat):
             cfg = {
                 "configurable": {"thread_id": f"live-smoke-{repetition}"},
                 "recursion_limit": 32,
             }
+            if args.resume:
+                saved = json.loads(Path(args.resume).read_text())['results'][2 if args.ski else 1]
+                seed = {k: v for k, v in saved.items() if k in ('constraints', 'revision', 'decision', 'results', 'options', 'answer', 'status', 'stage', 'choices', 'focus', 'cards', 'selected_transport', 'selected_stay') and v is not None}
+                seed.update(autonomous=True, repair_decision=False, messages=[HumanMessage(content='Спланируй отдых у моря и в горах'), AIMessage(content=saved['answer'])])
+                await graph.aupdate_state(cfg, seed)
             for message in messages:
                 before = len(role_results)
+                started = time.monotonic()
                 result = await graph.ainvoke(
                     {
                         "messages": [HumanMessage(content=message)],
@@ -206,7 +240,8 @@ async def main() -> None:
                 transitions = []
                 for _ in range(8):
                     if (
-                        result.get("stage")
+                        args.autonomous
+                        or result.get("stage")
                         not in ("scenarios", "transport", "stays", "itinerary")
                         or not result.get("choices")
                         or result.get("pending_check_in")
@@ -230,6 +265,8 @@ async def main() -> None:
                     k: result.get(k)
                     for k in [
                         "constraints",
+                        "focus",
+                        "cards",
                         "revision",
                         "decision",
                         "results",
@@ -238,11 +275,14 @@ async def main() -> None:
                         "status",
                         "stage",
                         "choices",
+                        "feedback",
+                        "selected",
                         "selected_transport",
                         "selected_stay",
                     ]
                 }
                 record.update(
+                    seconds=round(time.monotonic() - started, 2),
                     repetition=repetition,
                     message=message,
                     transitions=transitions,
@@ -282,6 +322,41 @@ async def main() -> None:
         checks = []
         for repetition in range(args.repeat):
             turns = [r for r in results if r["repetition"] == repetition]
+            if args.ski and args.resume:
+                last = turns[-1]
+                checks.append({'repetition': repetition, 'focus_stays': last.get('focus') == 'stays',
+                    'only_hotel_search': set(last['delegated']) <= {'stays'},
+                    'window': last['constraints']['date_from'] == '2026-12-10' and last['constraints']['date_to'] == '2026-12-25',
+                    'preferences': set(last['constraints']['stay_preferences']) == {'near_lift', 'mountain_view'},
+                    'real_hotel_cards': bool(last.get('cards'))})
+                continue
+            if args.ski:
+                last = turns[-1]
+                checks.append({
+                    'repetition': repetition,
+                    'clarify_origin_without_search': not turns[0]['delegated'],
+                    'ski_intent_persisted': all(r['constraints']['holiday_type'] == 'ski' for r in turns),
+                    'hotel_focus': all(r.get('focus') == 'stays' for r in turns[2:]),
+                    'no_restaurant_search_for_hotel': all(set(r['delegated']) <= {'stays'} for r in turns[2:]),
+                    'move_keeps_end': turns[2]['constraints']['start'] == '2026-12-10' and bool(turns[2]['constraints']['end']),
+                    'range_keeps_week': last['constraints']['date_from'] == '2026-12-10' and last['constraints']['date_to'] == '2026-12-25' and bool(last['constraints']['nights'] or last['constraints']['duration_days']),
+                    'preferences_persisted': set(last['constraints']['stay_preferences']) == {'near_lift', 'mountain_view'},
+                    'hotel_offers': bool(last.get('cards')),
+                })
+                continue
+            if args.resume:
+                hotel, dates = turns[-2:]
+                selected_hotel = next((o for o in hotel['options'] if o['id'] == hotel.get('selected') or o['stay']['id'] == hotel.get('selected_stay')), None)
+                matches = 'mirror' in selected_hotel['stay']['name'].casefold() if selected_hotel else bool(hotel['options']) and all('mirror' in o['stay']['name'].casefold() for o in hotel['options'])
+                checks.append({
+                    'repetition': repetition,
+                    'answer_without_search': args.changes_only or not turns[0]['delegated'] and turns[0]['decision']['action'] == 'answer',
+                    'research_without_replanning': args.changes_only or not turns[1]['delegated'] and turns[1]['decision']['action'] == 'research' and turns[1]['options'] == turns[0]['options'],
+                    'hotel_preserves_transport': 'transport' not in hotel['delegated'] and hotel['results']['transport'] == (seed['results']['transport'] if args.changes_only else turns[0]['results']['transport']),
+                    'hotel_matches': matches,
+                    'dates_refresh': set(dates['delegated']) == {'transport', 'stays', 'experience'} and bool(dates['options']),
+                })
+                continue
             checks.append(
                 {
                     "repetition": repetition,
@@ -294,7 +369,7 @@ async def main() -> None:
             if args.mixed:
                 areas = {
                     c.get("area")
-                    for option in turns[1]["options"]
+                    for option in turns[1]["options"] or []
                     for day in option["days"]
                     for c in day["candidates"]
                 }
@@ -304,8 +379,8 @@ async def main() -> None:
                 )
             if args.dialogue:
                 checks[-1].update(
-                    scenario_chosen_before_search=bool(turns[0]["transitions"])
-                    and turns[0]["transitions"][0]["stage"] == "scenarios",
+                    scenario_chosen_before_search=args.autonomous or bool(turns[0]["transitions"])
+                    and (args.autonomous or turns[0]["transitions"][0]["stage"] == "scenarios"),
                     natural_answer="Билеты и проживание:" in turns[1]["answer"]
                     and "known_subtotal" not in turns[1]["answer"],
                     comparison_without_search=not turns[2]["delegated"]
@@ -323,10 +398,8 @@ async def main() -> None:
                     and (turns[1]["results"] or {}).get("transport")
                     == (hotel_turn["results"] or {}).get("transport"),
                     hotel_matches=bool(hotel_turn["options"])
-                    and all(
-                        option["stay"] and "mirror" in option["stay"]["name"].casefold()
-                        for option in hotel_turn["options"]
-                    ),
+                    and (any(option['stay'] and option['stay']['id'] == hotel_turn.get('selected_stay') and 'mirror' in option['stay']['name'].casefold() for option in hotel_turn['options'])
+                         or all(option['stay'] and 'mirror' in option['stay']['name'].casefold() for option in hotel_turn['options'])),
                     dates_refresh=set(dates_turn["delegated"])
                     == {"transport", "stays", "experience"},
                     dates_match=dates_turn["constraints"]["start"] == "2026-11-13"

@@ -166,6 +166,8 @@ def mount_portal(app: FastAPI, owner, require_trip, config_for, view, sync_trip,
         config = config_for(user, trip_id)
         async with locks.setdefault(user + ":" + trip_id, asyncio.Lock()):
             state = (await app.state.graph.aget_state(config)).values
+            if state.get('autonomous'):
+                raise HTTPException(409, 'Измените пожелания в чате: обновятся только зависимые компоненты поездки.')
             stages = ("scenarios", "transport", "stays", "itinerary", "review", "booked")
             if data.revision != state.get("revision", 0):
                 raise HTTPException(409, "План изменился. Обновите поездку.")

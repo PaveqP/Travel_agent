@@ -12,7 +12,7 @@ from pydantic import ValidationError
 from travel_agent.engine import apply_delta, compose, diagnose, simulate_purchase
 from travel_agent.graph import supervise
 from travel_agent.graph import build_graph
-from travel_agent.schemas import BookingRequest, SpecialistResult, SupervisorDecision, TripDelta, TripScenario
+from travel_agent.schemas import BookingRequest, SpecialistResult, SupervisorDecision, TripDelta, TripScenario, TurnPlan
 from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
@@ -261,9 +261,9 @@ class ProfileTests(unittest.TestCase):
         bob = {"Authorization": "Bearer bob"}
         async def decide(state):
             if state["messages"][-1].content == "Запомни прогулки":
-                return SupervisorDecision(action="remember", profile_interests=["прогулки"])
-            return SupervisorDecision(action="chat", reply="Привет!")
-        with tempfile.TemporaryDirectory() as directory, patch("travel_agent.api.environment", return_value=env), patch("travel_agent.api.llm_decider", return_value=decide):
+                return TurnPlan(action="remember", profile_interests=["прогулки"])
+            return TurnPlan(action="chat", reply="Привет!")
+        with tempfile.TemporaryDirectory() as directory, patch("travel_agent.api.environment", return_value=env), patch("travel_agent.api.llm_planner", return_value=decide):
             path = str(Path(directory) / "profiles.sqlite")
             with TestClient(create_app(local_database=path)) as api:
                 trip = api.post("/trips", headers=alice).json()["trip_id"]

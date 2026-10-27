@@ -29,8 +29,9 @@ def build_tools(
     mcp,
     rest,
     center: Coordinates | None = None,
+    *, autonomous: bool = False,
 ) -> list[BaseTool]:
-    lat, lon = (center.lat, center.lon) if center else CENTERS[trip.destination]
+    lat, lon = (center.lat, center.lon) if center else CENTERS["Красная Поляна" if trip.holiday_type == "ski" else trip.destination]
 
     @tool
     async def search_places(
@@ -71,13 +72,14 @@ def build_tools(
         )
 
     @tool
-    async def geoapify_places() -> dict:
+    async def geoapify_places(area: Area | None = None) -> dict:
         """Search nearby sightseeing catalog with Geoapify."""
+        search_lat, search_lon = CENTERS[area] if area else (lat, lon)
         return await rest(
             "geoapify_places",
             "geoapify",
             "GEOAPIFY_API_KEY",
-            lambda: geoapify.places(client, env.get("GEOAPIFY_API_KEY", ""), lat, lon),
+            lambda: geoapify.places(client, env.get("GEOAPIFY_API_KEY", ""), search_lat, search_lon),
         )
 
     @tool

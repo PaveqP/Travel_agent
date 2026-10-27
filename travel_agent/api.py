@@ -10,6 +10,7 @@ from uuid import uuid4
 
 import httpx
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi.responses import StreamingResponse
 from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
@@ -20,7 +21,7 @@ from langgraph.store.postgres.aio import AsyncPostgresStore
 from travel_agent.agents.model import create_model
 from travel_agent.agents.research import research
 from travel_agent.agents.supervisor.response import llm_presenter
-from travel_agent.agents.supervisor.agent import llm_decider
+from travel_agent.agents.supervisor.agent import llm_decider, llm_planner
 from travel_agent.agents.transport.agent import run as run_transport
 from travel_agent.agents.stays.agent import run as run_stays
 from travel_agent.agents.experience.agent import run as run_experience
@@ -41,11 +42,15 @@ def create_app(
     tokens: tuple[str, ...] = (),
     local_database: str | None = None,
     portal_database_url: str | None = None,
+    autonomous: bool = True,
 ) -> FastAPI:
     if portal_database_url and local_database:
         raise ValueError("The web and Telegram application requires PostgreSQL for all storage")
     locks: dict[str, asyncio.Lock] = {}
     profile_lock = asyncio.Lock()
+    run_progress: dict[str, dict] = {}
+    if graph is not None:
+        autonomous = 'delegate' in graph.nodes
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
@@ -106,7 +111,7 @@ def create_app(
                     app.state.persistent = False
                 prompts = read_prompts()
                 models = {
-                    role: create_model(config, client)
+                    role: create_model(config, client, max_tokens=2800, timeout=20)
                     for role in ("transport", "stays", "experience")
                 }
                 runners = {
@@ -116,7 +121,8 @@ def create_app(
                         client=client,
                         env=env,
                         prompt=prompts[role],
-                        deadline=config.deadline,
+                        deadline=min(config.deadline, 65),
+                        autonomous=autonomous,
                     )
                     for role, run in (
                         ("transport", run_transport),
@@ -124,13 +130,13 @@ def create_app(
                         ("experience", run_experience),
                     )
                 }
-                supervisor_model = create_model(config, client, max_tokens=4096)
+                supervisor_model = create_model(config, client, max_tokens=2600, timeout=20)
                 app.state.graph = build_graph(
-                    llm_decider(supervisor_model, prompts["supervisor"]),
+                    (llm_planner(supervisor_model, prompts["planner"]) if autonomous else llm_decider(supervisor_model, prompts["supervisor"])),
                     runners,
                     saver,
                     present=llm_presenter(
-                        create_model(config, client, max_tokens=4096),
+                        create_model(config, client, max_tokens=3000, timeout=20),
                         prompts["response"],
                     ),
                     research=partial(
@@ -140,6 +146,7 @@ def create_app(
                         env=env,
                         prompt=prompts["research"],
                     ),
+                    autonomous=autonomous,
                 )
             if portal_database_url:
                 from travel_agent.telegram import TelegramBot
@@ -191,6 +198,9 @@ def create_app(
         result = {
             k: values.get(k, default)
             for k, default in (
+                ("autonomous", autonomous),
+                ("focus", None),
+                ("feedback", []),
                 ("status", "needs_input"),
                 ("constraints", {}),
                 ("revision", 0),
@@ -242,10 +252,26 @@ def create_app(
     @app.get("/trips/{trip_id}")
     async def read_trip(trip_id: str, user: str = Depends(owner)):
         await require_trip(user, trip_id)
-        async with locks.setdefault(user + ":" + trip_id, asyncio.Lock()):
-            snapshot = await app.state.graph.aget_state(config_for(user, trip_id))
-            await sync_trip(user, trip_id, snapshot.values)
-            return view(snapshot.values)
+        snapshot = await app.state.graph.aget_state(config_for(user, trip_id))
+        return view(snapshot.values)
+
+    @app.get('/trips/{trip_id}/status')
+    async def read_status(trip_id: str, user: str = Depends(owner)):
+        await require_trip(user, trip_id)
+        return run_progress.get(user + ':' + trip_id, {'status': 'idle', 'label': '', 'sequence': 0})
+
+    @app.get('/trips/{trip_id}/events')
+    async def events(trip_id: str, request: Request, user: str = Depends(owner)):
+        await require_trip(user, trip_id)
+        async def stream():
+            previous = None
+            while not await request.is_disconnected():
+                current = run_progress.get(user + ':' + trip_id, {'status': 'idle', 'label': '', 'sequence': 0})
+                if current != previous:
+                    yield 'data: ' + json.dumps(current, ensure_ascii=False) + '\n\n'
+                    previous = current
+                await asyncio.sleep(0.2)
+        return StreamingResponse(stream(), media_type='text/event-stream', headers={'Cache-Control': 'no-cache', 'X-Accel-Buffering': 'no'})
 
     @app.post("/trips/{trip_id}/messages")
     async def message(
@@ -263,6 +289,7 @@ def create_app(
                 "attempts": [],
                 "requested_choice": None,
                 "profile_update": None,
+                "repair_decision": False,
             }
             if portal_database_url:
                 from travel_agent.support import support_reply
@@ -282,14 +309,29 @@ def create_app(
                     account = await app.state.accounts.account(user)
                     if account and account.get("city"):
                         initial["constraints"]["origin"] = account["city"]
+            progress_key = user + ':' + trip_id
+            run_id = str(uuid4())
+            run_progress[progress_key] = {'run_id': run_id, 'status': 'running', 'sequence': 1, 'label': 'Запрос принят, планирую работу', 'previews': {}}
             try:
-                async with asyncio.timeout(420):
-                    result = await app.state.graph.ainvoke(initial, config)
+                async with asyncio.timeout(180 if autonomous else 420):
+                    if autonomous:
+                        async for kind, event in app.state.graph.astream(initial, config, stream_mode=['custom', 'updates']):
+                            if kind == 'custom' and isinstance(event, dict) and event.get('label'):
+                                current = run_progress[progress_key]
+                                previews = {**current.get('previews', {})}
+                                if event.get('preview'):
+                                    previews[event['role']] = event['preview']
+                                run_progress[progress_key] = {**current, 'sequence': current['sequence'] + 1, 'label': event['label'], 'previews': previews}
+                        result = (await app.state.graph.aget_state(config)).values
+                    else:
+                        result = await app.state.graph.ainvoke(initial, config)
             except TimeoutError:
-                raise HTTPException(
-                    504,
-                    "Turn deadline exceeded; read current trip state before retrying",
-                ) from None
+                run_progress[progress_key] = {**run_progress[progress_key], 'status': 'timeout', 'label': 'Поиск занял слишком долго; сохранённые результаты доступны'}
+                raise HTTPException(504, 'Turn deadline exceeded; read current trip state before retrying') from None
+            finally:
+                if run_progress[progress_key]['status'] == 'running':
+                    run_progress[progress_key] = {**run_progress[progress_key], 'status': 'stopped', 'label': 'Обработка завершена'}
+            run_progress[progress_key] = {**run_progress[progress_key], 'status': 'finished', 'label': 'Ответ готов'}
             if result.get("profile_update") is not None:
                 await save_profile(user, result["profile_update"])
             await sync_trip(user, trip_id, result)

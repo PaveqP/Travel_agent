@@ -50,6 +50,7 @@ async def research(state, *, models, client, env, prompt) -> ResearchResult:
         warnings,
         {"tools": 0},
         web_evidence=sources,
+        autonomous=bool(state.get("autonomous")),
     )
     tools = [
         t

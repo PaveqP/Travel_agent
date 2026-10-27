@@ -287,7 +287,10 @@ def checkout(state: TripState) -> dict:
             'stage': 'booked', 'status': 'booked', 'choices': [], 'answer': booking['message'], 'plan_answer': booking['message']}
 
 
-def build_graph(decide, run, checkpointer, present=None, research=None):
+def build_graph(decide, run, checkpointer, present=None, research=None, *, autonomous: bool = False):
+    if autonomous:
+        from travel_agent.planning import build_planning_graph
+        return build_planning_graph(decide, run, checkpointer, present, research)
     workflow = StateGraph(TripState)
     workflow.add_node('supervisor', partial(supervise, decide=decide))
     if not isinstance(run, dict):

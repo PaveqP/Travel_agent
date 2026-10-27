@@ -1,7 +1,7 @@
 import json
 from datetime import date
 
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from langchain_core.language_models import BaseChatModel
 from langchain_core.exceptions import OutputParserException
 from pydantic import ValidationError
@@ -135,3 +135,53 @@ def llm_decider(model: BaseChatModel, prompt: str):
         raise OutputParserException("Supervisor structured output unavailable")
 
     return decide
+
+
+def llm_planner(model: BaseChatModel, prompt: str):
+    from travel_agent.schemas import TurnPlan, RepairPlan
+
+    structured = model.with_structured_output(TurnPlan, method='function_calling')
+    extraction = model.with_structured_output(TripDelta, method='function_calling')
+    extraction_prompt = load_prompt('request')
+    repair_model = model.with_structured_output(RepairPlan, method='function_calling')
+
+    async def plan(state: TripState) -> TurnPlan:
+        options = option_context(state)
+        context = {
+            'today': str(date.today()), 'constraints': state.get('constraints', {}),
+            'phase': 'repair' if state.get('repair_decision') else 'user_turn',
+            'feedback': state.get('feedback', []), 'options': options[:5],
+            'selected': state.get('selected'), 'focus': state.get('focus'),
+            'results': {role: {'status': row['status'], 'warnings': row.get('warnings', []),
+                'candidates': [{'id': c['id'], 'name': c['name'], 'start': c.get('start'), 'end': c.get('end'), 'area': c.get('area')} for c in row.get('candidates', [])[:12]]}
+                for role, row in state.get('results', {}).items()},
+        }
+        messages = [SystemMessage(content=prompt), HumanMessage(content=json.dumps(context, ensure_ascii=False)), *[AIMessage(content=m.content[:500]) if isinstance(m, AIMessage) and isinstance(m.content, str) else m for m in state.get('messages', [])[-6:]]]
+        if state.get('repair_decision'):
+            repair = RepairPlan.model_validate(await repair_model.ainvoke(messages))
+            return TurnPlan(action='plan', tasks=repair.tasks, reply=repair.reply)
+        for attempt in range(2):
+            try:
+                decision = TurnPlan.model_validate(await structured.ainvoke(messages))
+                break
+            except (ValidationError, OutputParserException) as exc:
+                if attempt:
+                    raise
+                errors = [(e['loc'], e['type']) for e in exc.errors(include_input=False, include_url=False)] if isinstance(exc, ValidationError) else ['output_format']
+                messages.insert(1, HumanMessage(content=json.dumps({'validation_errors': errors, 'patch_extracted_separately': True})))
+        if not state.get('repair_decision') and (decision.action in ('plan', 'clarify') or decision.action == 'select' and decision.patch.model_dump(exclude_none=True, exclude={'clear'})):
+            latest = next((m for m in reversed(state.get('messages', [])) if isinstance(m, HumanMessage)), HumanMessage(content=''))
+            extraction_messages = [SystemMessage(content=extraction_prompt), HumanMessage(content=json.dumps({'today': context['today'], 'constraints': context['constraints']}, ensure_ascii=False)), latest]
+            for attempt in range(2):
+                try:
+                    delta = TripDelta.model_validate(await extraction.ainvoke(extraction_messages))
+                    break
+                except (ValidationError, OutputParserException) as exc:
+                    if attempt:
+                        raise
+                    errors = [(e['loc'], e['type']) for e in exc.errors(include_input=False, include_url=False)] if isinstance(exc, ValidationError) else ['output_format']
+                    extraction_messages.insert(1, HumanMessage(content=json.dumps({'validation_errors': errors})))
+            decision.patch = delta
+        return decision
+
+    return plan

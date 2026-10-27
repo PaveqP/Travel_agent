@@ -1,0 +1,223 @@
+{
+  "checked_at": "2026-10-27T23:09:04.698998+00:00",
+  "mode": "Real read-only LLM/MCP/REST calls; mock booking uses actual unexpired quotes and local ASGI API only",
+  "offline": {
+    "tests": 149,
+    "default_passed": 143,
+    "default_skipped_postgres": 6,
+    "postgres_mode": "All tests including autonomous checkpoint reopening; see documentation",
+    "postgres_passed": 149
+  },
+  "live": {
+    "clarification": {
+      "seconds": 4.79,
+      "no_search": true
+    },
+    "full_plan": {
+      "seconds": 59.1,
+      "status": "ready",
+      "options": 5,
+      "feedback": [],
+      "known_group_totals_rub": [
+        "43657.0",
+        "50371.0",
+        "65396.0",
+        "31846.0",
+        "36896.0"
+      ],
+      "full_price_confirmed": false,
+      "program": [
+        {
+          "date": "2026-11-12",
+          "places": []
+        },
+        {
+          "date": "2026-11-13",
+          "places": [
+            {
+              "name": "Ривьера, парк культуры и отдыха",
+              "area": "Сочи"
+            },
+            {
+              "name": "Сочинский национальный парк, Дендрарий",
+              "area": "Сочи"
+            },
+            {
+              "name": "Мидийное место, ресторан",
+              "area": "Сочи"
+            }
+          ]
+        },
+        {
+          "date": "2026-11-14",
+          "places": [
+            {
+              "name": "Реликтовый лес, гондольный подъёмник",
+              "area": "Красная Поляна"
+            },
+            {
+              "name": "Pro.Хинкали by Novikov, ресторан грузинской кухни",
+              "area": "Красная Поляна"
+            }
+          ]
+        },
+        {
+          "date": "2026-11-15",
+          "places": [
+            {
+              "name": "Снежная Звезда, кресельный подъёмник",
+              "area": "Красная Поляна"
+            },
+            {
+              "name": "Сыроварня, ресторан",
+              "area": "Красная Поляна"
+            }
+          ]
+        },
+        {
+          "date": "2026-11-16",
+          "places": [
+            {
+              "name": "Зимний театр",
+              "area": "Сочи"
+            },
+            {
+              "name": "Сочинский государственный цирк",
+              "area": "Сочи"
+            },
+            {
+              "name": "Lino, итальянское бистро",
+              "area": "Сочи"
+            }
+          ]
+        },
+        {
+          "date": "2026-11-17",
+          "places": []
+        }
+      ]
+    },
+    "price_question": {
+      "seconds": 7.51,
+      "no_search": true,
+      "revision_unchanged": true
+    },
+    "hotel_pool_research": {
+      "seconds": 26.56,
+      "tools_observed": [
+        "Tutu get_offer_details(hotels)",
+        "Tavily Search",
+        "Tavily Extract"
+      ],
+      "options_unchanged": true,
+      "no_replanning": true,
+      "answer_excerpt": "Поездку не меняю. Короткий ответ: подтверждённого бассейна у Отеля Ac Hotel в найденных сведениях нет — данные расходятся.\n\nЧто именно видно:\n— В сведениях «Туту: Отель Ac Hotel» (это данные MCP-поставщика, не веб-поиск) в перечне удобств бассейн не указан: там есть спа, сауна, салон красоты, ресторан, Wi-Fi, но отдельной позиции «бассейн» нет. При этом фрагмент описания обрезан, так что это отсутствие упоминания, а не доказательство, что бассейн"
+    },
+    "replace_existing_hotel": {
+      "seconds": 3.27,
+      "selected_hotel": "Mirror Residence",
+      "transport_results_unchanged": true,
+      "transport_not_rerun": true
+    },
+    "shift_dates": {
+      "seconds": 105.41,
+      "start": "2026-11-13",
+      "end": "2026-11-17",
+      "roles_rerun": [
+        "experience",
+        "stays",
+        "transport"
+      ],
+      "options": 1,
+      "hotels": [
+        "Mirror Residence"
+      ]
+    },
+    "rail": {
+      "real_round_trip_quotes": 6,
+      "example": {
+        "name": "ЖД: ФПК / ГРАНД",
+        "price": {
+          "amount": "17769.66",
+          "currency": "RUB",
+          "basis": "party",
+          "taxes_included": null
+        },
+        "adults": 2,
+        "start": "2026-11-12",
+        "end": "2026-11-17",
+        "arrival_at": "2026-11-14T04:35:00+03:00",
+        "return_departure_at": "2026-11-17T03:24:00+03:00",
+        "legs": [
+          {
+            "mode": "rail",
+            "origin": "Москва",
+            "destination": "Сочи",
+            "departure_at": "2026-11-12T19:50:00+03:00",
+            "arrival_at": "2026-11-14T04:35:00+03:00"
+          },
+          {
+            "mode": "rail",
+            "origin": "Сочи",
+            "destination": "Москва",
+            "departure_at": "2026-11-17T03:24:00+03:00",
+            "arrival_at": "2026-11-18T14:44:00+03:00"
+          }
+        ]
+      }
+    },
+    "mock_booking": {
+      "selected_status": 200,
+      "booking_status": 200,
+      "idempotent": true,
+      "simulated": true,
+      "paid": false,
+      "reserved": false
+    },
+    "latest_extended_repeat": {
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": true,
+          "full_plan": true,
+          "scheduled_coast_and_mountains": true,
+          "hotel_preserves_transport": true,
+          "hotel_matches": false,
+          "dates_refresh": true,
+          "dates_match": true,
+          "changed_plan": true
+        }
+      ],
+      "all_checks_passed": false,
+      "turn_seconds": [
+        4.81,
+        91.55,
+        109.84,
+        95.08
+      ],
+      "statuses": [
+        "needs_input",
+        "partial",
+        "partial",
+        "partial"
+      ]
+    }
+  },
+  "llm_budget": {
+    "reported_usd": "0.2599156398",
+    "unsettled_reserve_usd": "0.323492",
+    "authorized_limit_usd": "3",
+    "notes": "LLM-only counters for this implementation; earlier audit and Tavily credits are separate. Canceled requests retain conservative reserves; .env unchanged."
+  },
+  "frontend": {
+    "format_tests": 4,
+    "jsx_parse": "passed",
+    "production_build": "Not verified: npm registry ETIMEDOUT for existing locked dependencies"
+  },
+  "limitations": [
+    "Repeated live runs can return partial plans due to provider timeouts and schema errors; not every run passes all acceptance checks.",
+    "One hotel base; adults only; Greater Sochi only.",
+    "Local transport, meals, activity fees and unverified luggage are not confirmed costs.",
+    "Read-only search never confirms actual payment or reservation."
+  ]
+}

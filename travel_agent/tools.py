@@ -96,6 +96,7 @@ def normalize(
             result.append(
                 Candidate(
                     id="hotel:" + row["hotel_id"],
+                    provider_id=row["hotel_id"],
                     role="stays",
                     name=row["name"],
                     stars=row.get("stars"), rating=row.get("rating"),
@@ -156,6 +157,8 @@ def normalize(
                     origin=trip.origin,
                     destination="AER",
                     arrival_at=arrival,
+                    baggage_included=row.get('baggage_included') if isinstance(row.get('baggage_included'), bool) else None,
+                    sports_equipment_included=row.get('sports_equipment_included') if isinstance(row.get('sports_equipment_included'), bool) else None,
                     departure_at=departure,
                     duration_minutes=legs[0].get("duration_min"),
                     transfers=len(legs[0]["segments"]) - 1 if legs[0].get("segments") else None,
@@ -280,6 +283,7 @@ def build_tools(
     counts: dict[str, int],
     center: Coordinates | None = None,
     web_evidence: list[WebEvidence] | None = None,
+    autonomous: bool = False,
 ):
     key_names = {
         "transport": ("TRAVELPAYOUTS_TOKEN", "YANDEX_RASP_API_KEY", "TAVILY_API_KEY"),
@@ -295,7 +299,7 @@ def build_tools(
     env = {key: env[key] for key in key_names[role] if key in env}
     urls: set[str] = set()
     owned: set[tuple[str, str]] = {
-        ('hotels', c.id.removeprefix('hotel:')) for c in evidence.values()
+        ('hotels', c.provider_id or c.id.removeprefix('hotel:')) for c in evidence.values()
         if role == 'stays' and c.role == 'stays' and c.id.startswith('hotel:')
         and c.source.provider == 'tutu' and (c.start, c.end, c.adults) == (trip.stay_start, trip.stay_end, trip.adults)
     }
@@ -305,14 +309,14 @@ def build_tools(
     async def execute(name: str, provider: str, operation, method: str = "", query_trip: TripConstraints | None = None) -> dict:
         if name not in ALLOWED[role]:
             return {"status": "forbidden"}
-        if counts["tools"] >= 8:
+        if counts["tools"] >= (6 if autonomous else 8):
             warnings.append("tool_limit")
             return {"status": "cost_guard"}
         counts["tools"] += 1
         started = time.monotonic()
         status = "ok"
         try:
-            async with asyncio.timeout(12 if method == "build_route" else 65 if provider in ("tutu", "2gis") else 40):
+            async with asyncio.timeout(12 if method == "build_route" else 20 if autonomous else 65 if provider in ("tutu", "2gis") else 40):
                 response = await operation()
             if isinstance(response, httpx.Response):
                 response.raise_for_status()
@@ -335,10 +339,13 @@ def build_tools(
                 verified = {c.id for c in candidates}
                 flight_details.update({row['offer_id']: row for row in data.get('offers', []) if 'avia:' + row['offer_id'] in verified})
             for candidate in candidates:
+                if autonomous and candidate.role == 'stays':
+                    quote = sha256(f'{candidate.start}:{candidate.end}:{candidate.adults}'.encode()).hexdigest()[:10]
+                    candidate.id += '@' + quote
                 evidence[candidate.id] = candidate
                 if provider == "tutu":
                     product, ident = candidate.id.split(":", 1)
-                    owned.add(("hotels" if product == "hotel" else product, ident))
+                    owned.add(("hotels" if product == "hotel" else product, candidate.provider_id or ident))
             if candidates:
                 return {
                     "status": "ok",
@@ -347,7 +354,7 @@ def build_tools(
                             mode="json",
                             include={
                                 "id",
-                                "name",
+                                "name", "transport_mode", "baggage_included", "sports_equipment_included",
                                 "stars", "rating", "review_count", "address", "description",
                                 "price",
                                 "area",
@@ -377,9 +384,9 @@ def build_tools(
                         'warning': 'Schedule context only; not a validated round-trip quote'}
             if provider == 'tutu' and method == 'get_offer_details' and web_evidence is not None:
                 hotel = data.get('hotel', {})
-                details = {'hotel': {k: hotel[k] for k in ('name', 'stars', 'rating', 'address', 'amenities', 'amenity_groups', 'review_summary', 'policies') if k in hotel},
+                details = {'hotel': {k: hotel[k] for k in ('name', 'description', 'stars', 'rating', 'address', 'location', 'amenities', 'amenity_groups', 'review_summary', 'policies') if k in hotel},
                            'rooms': [{k: room[k] for k in ('room_name', 'room_amenities', 'max_occupancy') if k in room} for room in data.get('rooms', [])[:2]]}
-                candidate = next((c for c in evidence.values() if c.id == 'hotel:' + str(hotel.get('hotel_id') or hotel.get('id') or '')), None)
+                candidate = next((c for c in evidence.values() if (c.provider_id or c.id.removeprefix('hotel:')) == str(hotel.get('hotel_id') or hotel.get('id') or '')), None)
                 if candidate is None and len(evidence) == 1:
                     candidate = next(iter(evidence.values()))
                 if candidate is not None and details['hotel']:
@@ -457,6 +464,8 @@ def build_tools(
         if key in responses:
             return responses[key]
         query_trip = None
+        if method == 'search_hotels':
+            query_trip = TripConstraints.model_validate({**trip.model_dump(), 'start': args['check_in'], 'end': args['check_out'], 'check_in': args['check_in'], 'check_out': args['check_out']})
         if method == "search_avia":
             query_trip = TripConstraints.model_validate({**trip.model_dump(), "start": args["departure_date"], "end": args["return_date"], "check_in": None, "check_out": None})
         result = await execute(
@@ -543,7 +552,7 @@ def build_tools(
         "stays": stay_tools,
         "experience": experience_tools,
     }
-    selected = builders[role](trip, client, env, evidence, mcp, rest, center)
+    selected = builders[role](trip, client, env, evidence, mcp, rest, center, autonomous=autonomous)
     selected += [tavily_search, tavily_extract]
     if {t.name for t in selected} != ALLOWED[role]:
         raise ValueError("Role tool registry does not match allowlist")

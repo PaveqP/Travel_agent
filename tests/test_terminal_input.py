@@ -126,14 +126,14 @@ asyncio.run(main())
 import json, runpy, sys, tempfile
 from pathlib import Path
 from unittest.mock import patch
-from travel_agent.schemas import SupervisorDecision
+from travel_agent.schemas import TurnPlan as SupervisorDecision
 received = []
 async def decide(state):
     received.append(state['messages'][-1].content)
     return SupervisorDecision(action='chat', reply='Привет! Я помощник по поездкам в Сочи.')
 env = {'MODEL': 'offline-model', 'TOKEN': 'offline-token', 'BASE_URL': 'https://example.invalid/v1', 'TRAVEL_API_TOKEN': 'pty-test'}
 with tempfile.TemporaryDirectory() as directory:
-    with patch('travel_agent.api.llm_decider', return_value=decide), patch('travel_agent.api.environment', return_value=env), patch('travel_agent.config.environment', return_value=env), patch('travel_agent.__main__.Path', side_effect=lambda value: Path(directory) / value):
+    with patch('travel_agent.api.llm_planner', return_value=decide), patch('travel_agent.api.environment', return_value=env), patch('travel_agent.config.environment', return_value=env), patch('travel_agent.__main__.Path', side_effect=lambda value: Path(directory) / value):
         sys.argv = ['chat.py', '--new']
         runpy.run_path('chat.py', run_name='__main__')
 print('RECEIVED=' + json.dumps(received, ensure_ascii=False))

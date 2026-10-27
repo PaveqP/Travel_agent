@@ -492,7 +492,7 @@ function Home({ value, setValue, send, busy, user }) {
   );
 }
 
-function Chat({ state, value, setValue, send, busy, newTrip }) {
+function Chat({ state, value, setValue, send, busy, newTrip, runStatus }) {
   const bottom = useRef(null);
   useEffect(() => {
     bottom.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -544,7 +544,7 @@ function Chat({ state, value, setValue, send, busy, newTrip }) {
             <span />
             <span />
             <span />
-            <small>Подбираю варианты</small>
+            <small>{runStatus?.label || "Планирую поиск"}</small>
           </div>
         )}
         <div ref={bottom} />
@@ -894,7 +894,7 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
               </p>
               {(item.arrival_at || item.details?.arrival_at) && (
                 <p>
-                  Прилёт: {date(item.arrival_at || item.details.arrival_at)} ·{" "}
+                  Прибытие: {date(item.arrival_at || item.details.arrival_at)} ·{" "}
                   {time(item.arrival_at || item.details.arrival_at)}
                 </p>
               )}
@@ -1009,6 +1009,7 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
 }
 
 function Planner({
+  runStatus,
   state,
   tripId,
   busy,
@@ -1037,7 +1038,7 @@ function Planner({
   ];
   return (
     <section className="planner">
-      <nav className="stepper" aria-label="Шаги поездки">
+      {!state?.autonomous && <nav className="stepper" aria-label="Шаги поездки">
         {stageNames.slice(0, 5).map((name, i) => (
           <button
             disabled={busy || i >= index}
@@ -1049,16 +1050,16 @@ function Planner({
             <small>{name}</small>
           </button>
         ))}
-      </nav>
+      </nav>}
       <div className="planner-head">
         <div>
           <div className="eyebrow">
-            {index === 5 ? "ВАША ПОЕЗДКА" : `ШАГ ${index + 1} ИЗ 5`}
+            {state?.autonomous ? "ВАША ПОЕЗДКА" : index === 5 ? "ВАША ПОЕЗДКА" : `ШАГ ${index + 1} ИЗ 5`}
           </div>
           <h1>{titles[index]}</h1>
           <p>{descriptions[index]}</p>
         </div>
-        {index > 0 && (
+        {index > 0 && !state?.autonomous && (
           <button
             className="text-button"
             disabled={busy}
@@ -1109,7 +1110,21 @@ function Planner({
           <span>{state.notice}</span>
         </div>
       )}
-      {index < 3 ? (
+      {state?.autonomous && !state.selected && state.options?.length ? (
+        <div className="choices-grid offers-grid">
+          {state.options.map((option, i) => <article className="choice-card" key={option.id}>
+            <div className="choice-content">
+              <span className="choice-kicker">ВАРИАНТ {i + 1}</span>
+              <h3>{option.stay?.name}</h3>
+              <p>{option.transport?.transport_mode === 'rail' ? 'Поезд' : 'Перелёт'}: {option.transport?.name}</p>
+              <p>{date(option.stay?.start)} — {date(option.stay?.end)} · {option.stay?.area}</p>
+              <strong className="price">{money(option.budget.known_subtotal)}</strong>
+              <p className="small muted">Известная сумма за группу. Полная стоимость неизвестна.</p>
+              <button className="primary" disabled={busy} onClick={() => choose(option.id)}>Выбрать вариант {i + 1}</button>
+            </div>
+          </article>)}
+        </div>
+      ) : index < 3 ? (
         <div
           className={`choices-grid ${index === 0 ? "scenarios-grid" : "offers-grid"}`}
         >
@@ -1170,12 +1185,11 @@ function Planner({
           <div className="search-orbit">
             <Plane size={28} />
           </div>
-          <h3>Ищем ваше «вот оно»</h3>
+          <h3>{runStatus?.label || "Планирую поиск"}</h3>
           <p>
-            Проверяем источники и собираем детали.
-            <br />
-            Иногда на это нужно несколько минут.
+            Независимые поиски выполняются параллельно. Покажем проверенные варианты.
           </p>
+          {Object.entries(runStatus?.previews || {}).map(([role, cards]) => <p key={role}>Предварительно найдено: {cards.map(c => c.title).join('; ')}. Совместимость проверяется.</p>)}
           <div className="shimmer-line" />
         </div>
       )}
@@ -1902,6 +1916,7 @@ function App() {
   const [progress, setProgress] = useState(null);
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);
+  const [runStatus, setRunStatus] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -1909,6 +1924,15 @@ function App() {
   const [mobileChat, setMobileChat] = useState(false);
   const [mobileNav, setMobileNav] = useState(false);
   const [page, tripId] = route.split("/");
+  useEffect(() => {
+    setRunStatus(null);
+    if (!busy || !tripId) return;
+    const source = new EventSource(`/trips/${tripId}/events`);
+    source.onmessage = (event) => {
+      try { setRunStatus(JSON.parse(event.data)); } catch { source.close(); }
+    };
+    return () => source.close();
+  }, [busy, tripId]);
   const operation = useRef(false);
   const navigate = (page, id) => {
     window.location.hash = page + (id ? "/" + id : "");
@@ -2216,6 +2240,7 @@ function App() {
               className={`workspace ${mobileChat ? "show-chat" : "show-plan"}`}
             >
               <Chat
+                runStatus={runStatus}
                 state={state}
                 value={value}
                 setValue={setValue}
@@ -2230,6 +2255,7 @@ function App() {
                 </div>
               ) : state ? (
                 <Planner
+                  runStatus={runStatus}
                   state={state}
                   tripId={tripId}
                   busy={busy}

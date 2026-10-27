@@ -39,9 +39,18 @@ class TripConstraints(BaseModel):
     adults: int | None = Field(default=None, ge=1, le=6)
     budget: Decimal | None = Field(default=None, gt=0)
     budget_basis: Literal["party", "person"] = "party"
-    purpose: str | None = Field(default=None, min_length=1, max_length=500)
+    purpose: str | None = Field(default=None, min_length=1, max_length=500, description="Цель из сообщения пользователя: отдых, море, горы и т.д.; обязательно заполни, если описана")
     hotel: str | None = Field(default=None, max_length=200)
     interests: list[str] = Field(default_factory=list, max_length=10)
+    holiday_type: Literal['general', 'ski', 'mixed'] = 'general'
+    stay_preferences: list[Literal['near_lift', 'mountain_view']] = Field(default_factory=list, max_length=2)
+    option_limit: int = Field(default=5, ge=1, le=5)
+    mountain_days: int | None = Field(default=None, ge=0, le=25)
+    transport_modes: list[Literal['avia', 'rail']] = Field(default_factory=list, max_length=2)
+    baggage: Literal['any', 'required', 'cabin_only'] = 'any'
+    ski_equipment: Literal['unknown', 'own', 'rent'] = 'unknown'
+    min_hotel_stars: int | None = Field(default=None, ge=1, le=5, description="Только явно названное минимальное число звёзд; хороший отель не означает автоматически 4")
+    min_hotel_rating: Decimal | None = Field(default=None, ge=0, le=10, description="Только явно указанный числовой минимальный рейтинг")
 
     @model_validator(mode="after")
     def dates(self):
@@ -97,10 +106,19 @@ class TripDelta(BaseModel):
     adults: int | None = Field(default=None, ge=1, le=6)
     budget: Decimal | None = Field(default=None, gt=0)
     budget_basis: Literal["party", "person"] | None = None
-    purpose: str | None = Field(default=None, min_length=1, max_length=500)
+    purpose: str | None = Field(default=None, min_length=1, max_length=500, description="Цель из сообщения пользователя: отдых, море, горы и т.д.; обязательно заполни, если описана")
     hotel: str | None = Field(default=None, max_length=200)
     interests: list[str] | None = Field(default=None, max_length=10)
-    clear: list[Literal["hotel", "budget", "purpose", "start", "end", "check_in", "check_out", "travel_month", "duration_days", "nights", "date_from", "date_to"]] = Field(default_factory=list, max_length=12)
+    holiday_type: Literal['general', 'ski', 'mixed'] | None = None
+    stay_preferences: list[Literal['near_lift', 'mountain_view']] | None = Field(default=None, max_length=2)
+    option_limit: int | None = Field(default=None, ge=1, le=5)
+    mountain_days: int | None = Field(default=None, ge=0, le=25)
+    transport_modes: list[Literal['avia', 'rail']] | None = Field(default=None, max_length=2)
+    baggage: Literal['any', 'required', 'cabin_only'] | None = None
+    ski_equipment: Literal['unknown', 'own', 'rent'] | None = None
+    min_hotel_stars: int | None = Field(default=None, ge=1, le=5, description="Только явно названное минимальное число звёзд; хороший отель не означает автоматически 4")
+    min_hotel_rating: Decimal | None = Field(default=None, ge=0, le=10, description="Только явно указанный числовой минимальный рейтинг")
+    clear: list[Literal["hotel", "budget", "purpose", "start", "end", "check_in", "check_out", "travel_month", "duration_days", "nights", "date_from", "date_to", "min_hotel_stars", "min_hotel_rating", "mountain_days"]] = Field(default_factory=list, max_length=12)
 
     @model_validator(mode="after")
     def distinct_changes(self):
@@ -150,11 +168,74 @@ class SupervisorDecision(BaseModel):
         return self
 
 
+class TransportLeg(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    mode: Literal['avia', 'rail']
+    origin: str
+    destination: str
+    departure_at: datetime
+    arrival_at: datetime
+
+
+class ProposedDay(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    date: date
+    source_ids: list[str] = Field(default_factory=list, max_length=4)
+    purpose: str = Field(default='', max_length=200)
+
+
+class AgentTask(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    role: Role
+    goal: str = Field(min_length=1, max_length=1200)
+    depends_on: list[Role] = Field(default_factory=list, max_length=2)
+
+
+class RepairPlan(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    tasks: list[AgentTask] = Field(max_length=3, description='Адресные задачи по feedback; при исправимых пробелах обязательно делегируй нужной роли')
+    reply: str = Field(default='', max_length=1000)
+
+
+class TurnPlan(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    focus: Literal['trip', 'stays'] | None = None
+    action: Literal['plan', 'chat', 'clarify', 'answer', 'research', 'select', 'checkout', 'remember', 'unsupported']
+    patch: TripDelta = Field(default_factory=TripDelta)
+    tasks: list[AgentTask] = Field(default_factory=list, max_length=3)
+    reply: str = Field(default='', max_length=1000)
+    source_ids: list[str] = Field(default_factory=list, max_length=10)
+    research_role: Role = 'experience'
+    option_id: str | None = None
+    confirmed: bool = False
+    profile_interests: list[Annotated[str, Field(min_length=1, max_length=100, pattern=r"\S")]] | None = Field(default=None, max_length=10)
+
+    @model_validator(mode='after')
+    def dependencies(self):
+        roles = {t.role for t in self.tasks}
+        if len(roles) != len(self.tasks):
+            raise ValueError('One task per role per round')
+        done = set()
+        for _ in self.tasks:
+            done.update(t.role for t in self.tasks if (set(t.depends_on) & roles) <= done)
+        if any(t.role in t.depends_on for t in self.tasks) or len(done) != len(roles):
+            raise ValueError('Task dependencies must be acyclic')
+        return self
+
+
+class PlanFeedback(BaseModel):
+    model_config = ConfigDict(extra='forbid')
+    role: Role
+    code: str
+    detail: str = Field(max_length=800)
+
+
 class Candidate(BaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     role: Role
     name: str
+    provider_id: str | None = None
     source: Provenance
     price: Money | None = None
     stars: int | None = Field(default=None, ge=0, le=5)
@@ -175,11 +256,27 @@ class Candidate(BaseModel):
     return_departure_at: datetime | None = None
     url: str | None = None
     description: str = Field(default="", max_length=1000)
+    transport_mode: Literal['avia', 'rail'] = 'avia'
+    legs: list[TransportLeg] = Field(default_factory=list, max_length=4)
+    baggage_included: bool | None = None
+    sports_equipment_included: bool | None = None
 
 
 class SpecialistSelection(BaseModel):
     model_config = ConfigDict(extra="forbid")
     source_ids: list[str] = Field(default_factory=list, max_length=20)
+    days: list[ProposedDay] = Field(default_factory=list, max_length=31)
+    assumptions: list[str] = Field(default_factory=list, max_length=5)
+    gaps: list[str] = Field(default_factory=list, max_length=5)
+
+
+class WebEvidence(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    url: str
+    title: str = Field(max_length=200)
+    text: str = Field(max_length=2000)
+    retrieved_at: datetime
+
 
 
 class SpecialistResult(BaseModel):
@@ -189,8 +286,12 @@ class SpecialistResult(BaseModel):
     status: Literal["ok", "partial", "empty"]
     candidates: list[Candidate] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
+    sources: list[WebEvidence] = Field(default_factory=list, max_length=20)
     tool_calls: int = 0
     selected_ids: list[str] = Field(default_factory=list, max_length=20)
+    days: list[ProposedDay] = Field(default_factory=list, max_length=31)
+    assumptions: list[str] = Field(default_factory=list, max_length=5)
+    gaps: list[str] = Field(default_factory=list, max_length=5)
 
 
 class ItineraryDay(BaseModel):
@@ -267,12 +368,6 @@ class BookingRequest(BaseModel):
     payment_method: Literal["card", "sbp"] = "card"
 
 
-class WebEvidence(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-    url: str
-    title: str = Field(max_length=200)
-    text: str = Field(max_length=2000)
-    retrieved_at: datetime
 
 
 class ResearchResult(BaseModel):

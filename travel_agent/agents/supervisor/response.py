@@ -1,9 +1,10 @@
 import json
+import logging
 from datetime import date, datetime, timezone
 from decimal import Decimal
 
 from langchain_core.exceptions import OutputParserException
-from langchain_core.messages import HumanMessage, SystemMessage
+from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
 from openai import APIError
 from pydantic import ValidationError
 
@@ -114,7 +115,8 @@ def render_stage(state: dict) -> str:
 def option_context(state: dict) -> list[dict]:
     return [
         {
-            **{k: o[k] for k in ("id", "transport", "stay", "budget", "warnings")},
+            **{k: o[k] for k in ("id", "budget", "warnings")},
+            **{role: {k: value for k, value in (o.get(role) or {}).items() if k in ('id', 'name', 'area', 'price', 'start', 'end', 'arrival_at', 'return_departure_at', 'transport_mode', 'stars', 'rating', 'baggage_included')} for role in ('transport', 'stay')},
             "days": [
                 {
                     "date": d["date"],
@@ -144,6 +146,9 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
         if trip.get("end")
         else "дата не указана"
     )
+    if not trip.get('start') or not trip.get('end'):
+        if trip.get('travel_month'):
+            start, end = 'поиск в месяце ' + trip['travel_month'], 'даты каждого варианта ниже'
     lines.append(
         f"{trip.get('origin', '')} → {trip.get('destination', 'Сочи')}, {start} — {end}; взрослых: {trip.get('adults', '')}."
     )
@@ -161,16 +166,18 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
             f"\n{index}. {stay['name'] if stay else 'Проживание пока не найдено'}"
             + (f" — {stay.get('area') or 'район не определён'}" if stay else "")
         )
+        if stay:
+            lines.append('Проживание: ' + stay['start'] + ' — ' + stay['end'] + '.')
         if flight:
+            lines.append('Поездка: ' + flight['start'] + ' — ' + flight['end'] + '.')
             arrival = datetime.fromisoformat(flight["arrival_at"]).strftime(
                 "%d.%m в %H:%M"
             )
             departure = datetime.fromisoformat(flight["return_departure_at"]).strftime(
                 "%d.%m в %H:%M"
             )
-            lines.append(
-                f"Перелёт: {flight['name']}; прилёт {arrival}, обратный вылет {departure} (местное время)."
-            )
+            label = 'Поезд' if flight.get('transport_mode') == 'rail' else 'Перелёт'
+            lines.append(f"{label}: {flight['name']}; прибытие {arrival}, отправление обратно {departure} (местное время).")
         amount = (
             f"{Decimal(option['budget']['known_subtotal']):,.2f}".rstrip("0")
             .rstrip(".")
@@ -185,8 +192,14 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
         if option["id"] in comments:
             comment = comments[option["id"]]
             lines.append(f"Подойдёт: {comment.benefit}\nКомпромисс: {comment.tradeoff}")
+        lines.extend(w for w in option['warnings'] if any(term in w for term in ('багаж', 'снаряжения', 'Горных дней')))
         if any("превышает бюджет" in w for w in option["warnings"]):
             lines.append("Известная сумма уже превышает ваш бюджет.")
+    if state.get('options'):
+        mountain_days = sum(any(c.get('area') == 'Красная Поляна' for c in d['candidates']) for d in state['options'][0].get('days', []))
+        lines.append(f'\nПрограмма первого варианта (горных дней: {mountain_days}):')
+        for day in state['options'][0].get('days', []):
+            lines.append(day['date'] + ': ' + (', '.join(c['name'] for c in day['candidates']) or 'дорога / свободное время') + '.')
     if len(state.get("options", [])) < 5:
         lines.append(
             "\nПоказываю столько различных вариантов, сколько удалось проверить; до пяти."
@@ -200,19 +213,55 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
     return "\n".join(lines)
 
 
+def stay_cards(state: dict) -> list[dict]:
+    from travel_agent.schemas import Candidate, TripConstraints
+    from travel_agent.engine import offer_card, search_dates, usable
+
+    trip = TripConstraints.model_validate(state.get('constraints', {}))
+    now = datetime.now(timezone.utc)
+    pairs = search_dates(trip)
+    lower, upper = min((p[0] for p in pairs), default=trip.start), max((p[1] for p in pairs), default=trip.end)
+    result = state.get('results', {}).get('stays', {})
+    preferred = {ident: index for index, ident in enumerate(result.get('selected_ids', []))}
+    candidates = [Candidate.model_validate(c) for c in result.get('candidates', [])]
+    duration = trip.nights or (trip.duration_days - 1 if trip.duration_days else None)
+    candidates = [c for c in candidates if (not duration or c.start and c.end and (c.end - c.start).days == duration) and c.role == 'stays' and c.start and c.end and lower and upper and lower <= c.start < c.end <= upper
+                  and usable(c, trip.model_copy(update={'start': c.start, 'end': c.end, 'check_in': c.start, 'check_out': c.end}), now)
+                  and (trip.holiday_type != 'ski' or c.area == 'Красная Поляна')]
+    candidates.sort(key=lambda c: (preferred.get(c.id, 100), c.price.amount))
+    return [offer_card(c, trip).model_dump(mode='json') for c in candidates[:trip.option_limit]]
+
+
+def render_stays(state: dict, response: UserResponse | None = None) -> str:
+    cards = stay_cards(state)
+    if not cards:
+        return (response.text + '\n\n' if response else '') + 'Не удалось подтвердить тариф подходящего отеля на выбранные даты. Можно расширить диапазон или повторить поиск отелей.'
+    comments = {o.option_id: o for o in response.options} if response else {}
+    lines = [response.text if response else 'Вот найденные варианты проживания по вашим условиям:']
+    for index, card in enumerate(cards, 1):
+        lines.append('\n' + render_card(card, index))
+        comment = comments.get(card['id'])
+        if comment:
+            lines.append('Подойдёт: ' + comment.benefit + '\nЧто проверить: ' + comment.tradeoff)
+    lines.append('Поисковый тариф не подтверждает резерв. Близость к подъёмнику и вид из конкретного номера считаются подтверждёнными только при наличии сведений источника; цена с видом может отличаться.')
+    return '\n'.join(lines)
+
+
 def llm_presenter(model, prompt: str):
     structured = model.with_structured_output(UserResponse, method="function_calling")
 
     async def present(state: dict) -> str:
         planning = state.get("decision", {}).get("action") == "compose"
-        research = state.get("research", {})
+        stays_only = planning and state.get("focus") == "stays"
+        research = {"sources": state.get("results", {}).get("stays", {}).get("sources", [])} if stays_only else state.get("research", {})
         sources = research.get("sources", [])
         context = {
-            "phase": "present_options" if planning else "answer_question",
+            "phase": "compare_stays" if stays_only else "present_options" if planning else "answer_question",
+            "stays": stay_cards(state) if state.get("focus") == "stays" else [],
             "now": datetime.now(timezone.utc).isoformat(),
             "constraints": state.get("constraints", {}),
             "results": {
-                role: {"status": row["status"], "warnings": row.get("warnings", [])}
+                role: {"status": row["status"], "warnings": row.get("warnings", []), "assumptions": row.get("assumptions", []), "gaps": row.get("gaps", [])}
                 for role, row in state.get("results", {}).items()
             },
             "options": option_context(state),
@@ -222,12 +271,13 @@ def llm_presenter(model, prompt: str):
             "receipt": state.get("receipt", {}),
             "research": research,
         }
-        fallback = (
-            render_options(state)
-            if planning and state.get("options")
-            else state.get("answer", "")
-        )
-        if planning and (not state.get("options") or state.get("diagnostics", {}).get("reasons")):
+        if stays_only:
+            fallback = render_stays(state)
+        elif planning:
+            fallback = render_options(state) if state.get('options') else state.get('answer', '')
+        else:
+            fallback = 'Не удалось подготовить ответ на этот вопрос. Поездка сохранена; уточните вопрос или повторите сообщение.' if state.get('autonomous') else state.get('answer', '')
+        if planning and not stays_only and (not state.get("options") or state.get("diagnostics", {}).get("reasons")):
             return fallback
         if (
             not planning
@@ -241,11 +291,11 @@ def llm_presenter(model, prompt: str):
                     [
                         SystemMessage(content=prompt),
                         HumanMessage(content=json.dumps(context, ensure_ascii=False)),
-                        *state.get("messages", [])[-8:],
+                        *[AIMessage(content=m.content[:500]) if isinstance(m, AIMessage) and isinstance(m.content, str) else m for m in state.get("messages", [])[-8:]],
                     ]
                 )
             )
-            allowed = {o["id"] for o in state.get("options", [])}
+            allowed = {c["id"] for c in stay_cards(state)} if stays_only else {o["id"] for o in state.get("options", [])}
             if any(o.option_id not in allowed for o in result.options):
                 return fallback
             if planning and {o.option_id for o in result.options} != allowed:
@@ -256,12 +306,13 @@ def llm_presenter(model, prompt: str):
             if sources and not result.source_urls:
                 return fallback
             answer = (
-                render_options(state, result) if planning and allowed else result.text
+                render_stays(state, result) if stays_only else render_options(state, result) if planning and allowed else result.text
             )
             if result.source_urls:
                 answer += "\n\nИсточники:\n" + "\n".join(result.source_urls)
             return answer
-        except (APIError, TimeoutError, ValidationError, OutputParserException):
+        except (APIError, TimeoutError, ValidationError, OutputParserException) as exc:
+            logging.getLogger(__name__).warning('presenter outcome=%s', type(exc).__name__)
             return fallback
 
     return present

@@ -16,6 +16,7 @@ async def run(
     env: dict[str, str],
     prompt: str,
     deadline: int = 90,
+    autonomous: bool = False,
 ) -> SpecialistResult:
     return await run_react(
         "transport",
@@ -29,4 +30,6 @@ async def run(
         primary="search_flights",
         fallback="cached_flights",
         deadline=deadline,
+        autonomous=autonomous,
+        previous=previous,
     )

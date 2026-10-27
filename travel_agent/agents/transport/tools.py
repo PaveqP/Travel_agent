@@ -1,12 +1,15 @@
 import asyncio
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
+from decimal import Decimal
+from hashlib import sha256
+from itertools import product
 from typing import Literal
 
 import httpx
 from langchain_core.tools import BaseTool, tool
 
-from integrations.schemas.models import Coordinates
-from travel_agent.schemas import Candidate, TripConstraints
+from integrations.schemas.models import Coordinates, Money, Provenance
+from travel_agent.schemas import Candidate, TripConstraints, TransportLeg
 from integrations.providers import travelpayouts, yandex_rasp
 from travel_agent.engine import search_dates, transport_matches
 
@@ -32,11 +35,18 @@ def build_tools(
     mcp,
     rest,
     center: Coordinates | None = None,
+    *, autonomous: bool = False,
 ) -> list[BaseTool]:
     @tool
-    async def search_flights() -> dict:
+    async def search_flights(departure_date: date | None = None, return_date: date | None = None, direct_only: bool | None = None) -> dict:
         """Search the user's dates, then bounded nearby dates; explicit windows sample up to six date pairs."""
-        pairs = search_dates(trip)[:6]
+        allowed = search_dates(trip)
+        if departure_date is not None or return_date is not None:
+            if (departure_date, return_date) not in allowed:
+                return {'status': 'forbidden', 'reason': 'Dates outside the agreed search window'}
+            pairs = [(departure_date, return_date)]
+        else:
+            pairs = allowed[:1 if autonomous else 6]
         if not pairs:
             return {"status": "empty", "candidates": []}
         semaphore = asyncio.Semaphore(2)
@@ -50,7 +60,7 @@ def build_tools(
                         return await mcp("search_flights", "tutu", "search_avia", {
                             "origin": trip.origin, "destination": "AER", "departure_date": str(start),
                             "return_date": str(end), "adults": trip.adults, "page_size": 10,
-                            "sort": "price_asc", "direct_only": trip.direct_only})
+                            "sort": "price_asc", "direct_only": trip.direct_only or bool(direct_only)})
                 except TimeoutError:
                     return {"status": "timeout"}
 
@@ -69,18 +79,37 @@ def build_tools(
 
     @tool
     async def search_trains(mode: Literal["rail", "etrain"] = "rail") -> dict:
-        """Search outbound rail schedules; not a complete round-trip quote."""
-        return await mcp(
-            "search_trains",
-            "tutu",
-            "search_" + mode,
-            {
-                "origin": trip.origin,
-                "destination": "Сочи",
-                "departure_date": str(trip.start),
-                "page_size": 10,
-            },
-        )
+        """In autonomous mode compare round-trip rail fares for the party; staged mode returns outbound schedules."""
+        if not autonomous or mode == 'etrain':
+            return await mcp(
+                "search_trains",
+                "tutu",
+                "search_" + mode,
+                {
+                    "origin": trip.origin,
+                    "destination": "Сочи",
+                    "departure_date": str(trip.start),
+                    "page_size": 10,
+                },
+            )
+        pairs = search_dates(trip)
+        if not pairs:
+            return {'status': 'schema_error'}
+        start, end = pairs[0]
+        outbound, inbound = await asyncio.gather(*(
+            mcp('search_trains', 'tutu', 'search_rail', {'origin': origin, 'destination': destination,
+                'departure_date': str(day), 'passengers': trip.adults, 'page_size': 5, 'direct_only': trip.direct_only})
+            for origin, destination, day in ((trip.origin, 'Сочи', start), ('Сочи', trip.origin, end))
+        ))
+        if any(r['status'] not in ('ok', 'empty') for r in (outbound, inbound)):
+            return {'status': next(r['status'] for r in (outbound, inbound) if r['status'] not in ('ok', 'empty'))}
+        data_out, data_back = outbound.get('context', {}), inbound.get('context', {})
+        try:
+            rows = rail_candidates(data_out, data_back, trip, start, end)
+        except (KeyError, TypeError, ValueError):
+            return {'status': 'schema_error'}
+        evidence.update({c.id: c for c in rows})
+        return {'status': 'ok' if rows else 'empty', 'candidates': [c.model_dump(mode='json') for c in rows]}
 
     @tool
     async def transport_details(source_id: str) -> dict:
@@ -146,3 +175,36 @@ def build_tools(
         yandex_schedule,
         cached_flights,
     ]
+
+
+def rail_candidates(outbound: dict, inbound: dict, trip: TripConstraints, start: date, end: date) -> list[Candidate]:
+    for data in (outbound, inbound):
+        pricing = data.get('meta', {}).get('pricing', {})
+        if pricing.get('basis') != 'per_seat' or pricing.get('passengers') != trip.adults:
+            raise ValueError('Rail pricing must explicitly state per-seat basis and party size')
+    out_from, out_to = outbound['meta']['from'], outbound['meta']['to']
+    back_from, back_to = inbound['meta']['from'], inbound['meta']['to']
+    if out_to.get('name', '').casefold() != 'сочи' or back_from.get('name', '').casefold() != 'сочи' or out_to.get('geo_id') != back_from.get('geo_id') or out_from.get('geo_id') != back_to.get('geo_id'):
+        raise ValueError('Rail route endpoints do not match a return trip to Sochi')
+    now = datetime.now(timezone.utc)
+    source = Provenance(provider='tutu', source_url='https://mcp.tutu.ru/mcp', retrieved_at=now,
+                        expires_at=now + timedelta(minutes=10), evidence='live')
+    result = []
+    for out, back in product(outbound.get('offers', [])[:3], inbound.get('offers', [])[:3]):
+        depart, arrival, returning, home = [datetime.fromisoformat(value) for value in (out['departure_at'], out['arrival_at'], back['departure_at'], back['arrival_at'])]
+        if any(value.tzinfo is None for value in (depart, arrival, returning, home)) or depart.date() != start or returning.date() != end or not depart < arrival < returning < home:
+            continue
+        if out['price']['currency'] != 'RUB' or back['price']['currency'] != 'RUB':
+            continue
+        amount = (Decimal(str(out['price']['amount'])) + Decimal(str(back['price']['amount']))) * trip.adults
+        ident = sha256((out['offer_id'] + ':' + back['offer_id']).encode()).hexdigest()[:24]
+        result.append(Candidate(id='rail:' + ident, role='transport', transport_mode='rail',
+            name='ЖД: ' + ' / '.join(dict.fromkeys([*out.get('carriers', []), *back.get('carriers', [])])),
+            source=source, price=Money(amount=amount, currency='RUB', basis='party'), start=start, end=end,
+            adults=trip.adults, origin=trip.origin, destination='Сочи', departure_at=depart, arrival_at=arrival,
+            return_departure_at=returning, duration_minutes=int((arrival-depart).total_seconds()/60),
+            transfers=max(out.get('segments_count', 1)-1, back.get('segments_count', 1)-1),
+            legs=[TransportLeg(mode='rail', origin=trip.origin, destination='Сочи', departure_at=depart, arrival_at=arrival),
+                  TransportLeg(mode='rail', origin='Сочи', destination=trip.origin, departure_at=returning, arrival_at=home)],
+            url=out.get('search_results_url'), description='Туда и обратно. Сумма рассчитана по тарифам за одно место для всей группы; наличие мест и итоговая цена перед покупкой требуют проверки.'))
+    return result[:6]

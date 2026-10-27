@@ -16,6 +16,7 @@ async def run(
     env: dict[str, str],
     prompt: str,
     deadline: int = 90,
+    autonomous: bool = False,
 ) -> SpecialistResult:
     return await run_react(
         "stays",
@@ -28,4 +29,6 @@ async def run(
         prompt,
         primary="search_hotels",
         deadline=deadline,
+        autonomous=autonomous,
+        previous=previous,
     )

@@ -18,6 +18,7 @@ async def run(
     env: dict[str, str],
     prompt: str,
     deadline: int = 90,
+    autonomous: bool = False,
 ) -> SpecialistResult:
     stays = [
         c
@@ -38,4 +39,6 @@ async def run(
         fallback="geoapify_places",
         center=chosen.coordinates if chosen else None,
         deadline=deadline,
+        autonomous=autonomous,
+        previous=previous,
     )
