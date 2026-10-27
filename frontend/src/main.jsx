@@ -21,7 +21,6 @@ import {
   Send,
   MessageCircle,
   Compass,
-  Clock3,
   History,
   CircleUserRound,
   LogOut,
@@ -54,6 +53,8 @@ import {
   party,
   safeUrl,
   currentOption,
+  tripParts,
+  tripMapPoints,
   tripStatus,
 } from "./format";
 import "./styles.css";
@@ -314,8 +315,8 @@ function Composer({ value, setValue, send, busy, compact = false }) {
         aria-label="Сообщение ассистенту"
         placeholder={
           compact
-            ? "Спросите или измените пожелания…"
-            : "Хочу к морю на неделю. Вдвоём, из Москвы, без суеты…"
+            ? "Что изменим? Например, отель поближе к морю…"
+            : "Хочу в Сочи на пять ночей, вдвоём из Москвы. Море и один день в горах…"
         }
         disabled={busy}
         onKeyDown={(e) => {
@@ -351,218 +352,671 @@ function Composer({ value, setValue, send, busy, compact = false }) {
   );
 }
 
-function Home({ value, setValue, send, busy, user }) {
+function TripMap({ state, preview = false }) {
+  const [active, setActive] = useState(null);
+  const points = tripMapPoints(state);
+  const selected = points.find((point) => point.id === active);
+  const visible = points.filter(
+    (point, index) =>
+      points.findIndex(
+        (other) =>
+          Math.abs(other.x - point.x) < 1 && Math.abs(other.y - point.y) < 1,
+      ) === index,
+  );
   return (
-    <>
-      <section className="hero">
-        <div className="hero-copy">
-          <div className="eyebrow">
-            <span className="live-dot" /> ВАШ ЛИЧНЫЙ ПОМОЩНИК В ПУТЕШЕСТВИЯХ
-          </div>
-          <h1>
-            Весь отпуск.
-            <br />
-            <span>В одном разговоре.</span>
-            <span className="hand-star">✳</span>
-          </h1>
-          <p className="hero-description">
-            Просто расскажите, куда зовёт настроение.
-            <br />
-            Билеты, отель и впечатления — соберём всё вместе.
-          </p>
-          <Composer value={value} setValue={setValue} send={send} busy={busy} />
-          <div className="hero-hints">
-            <span>Начнём с идеи?</span>
-            <button
-              onClick={() =>
-                setValue(
-                  "Хочу в Большой Сочи, пока не определился с датами. Предложи идеи для поездки",
-                )
-              }
-            >
-              <Sun size={14} /> Хочу к морю
-            </button>
-            <button onClick={() => setValue(inspiration[1].text)}>
-              <Mountain size={14} /> Тянет в горы
-            </button>
-          </div>
+    <section
+      className={`trip-map ${preview ? "map-preview" : ""}`}
+      aria-label="Карта Большого Сочи"
+    >
+      <div className="map-caption">
+        <span className="map-icon">
+          <Route size={17} />
+        </span>
+        <div>
+          <strong>
+            {preview
+              ? "Море. Горы. И всё между ними."
+              : "Ваша поездка на карте"}
+          </strong>
+          <span>
+            {preview
+              ? "Большой Сочи — маленький мир для большого отдыха"
+              : "Жильё и впечатления в одном взгляде"}
+          </span>
         </div>
-        <div
-          className="hero-visual"
-          aria-label="Вдохновение для поездки в Большой Сочи"
+        <span className="map-region">БОЛЬШОЙ СОЧИ</span>
+      </div>
+      <div className="map-canvas">
+        <svg
+          viewBox="0 0 900 470"
+          role="img"
+          aria-label="Схема побережья: Сочи, Адлер, Сириус и Красная Поляна"
         >
-          <div className="photo-main">
-            <img src="/images/sea.jpg" alt="Морское побережье Сочи" />
-            <div className="photo-shade" />
-            <span className="photo-label">
-              <MapPin size={15} /> Большой Сочи
-            </span>
-            <div className="photo-caption">
-              Ближе к морю.
-              <br />
-              Ближе к себе.
-            </div>
-            <div className="photo-number">01 / 03</div>
-          </div>
-          <div className="photo-secondary">
-            <img src="/images/mountains.jpg" alt="Горы Розы Хутор" />
-            <span>
-              <Mountain size={15} /> А может, в горы?
-            </span>
-          </div>
-          <div className="glass-ticket">
-            <span className="glass-icon">
-              <Sparkles size={22} />
-            </span>
-            <div>
-              <strong>Хороший план — уже отдых</strong>
-              <span>Всё важное в одном месте</span>
-            </div>
-            <span className="glass-check">
-              <Check size={16} />
-            </span>
-          </div>
-          <div className="orbit orbit-one" />
-          <div className="orbit orbit-two" />
-          <span className="sun-sticker">✺</span>
-        </div>
-      </section>
-      <section className="inspiration">
-        <div className="section-heading">
-          <div>
-            <div className="eyebrow">СТОЛЬКО ВСЕГО РЯДОМ</div>
-            <h2>Какой отдых — ваш?</h2>
-          </div>
-          <span className="muted">Одна поездка. Много возможностей.</span>
-        </div>
-        <div className="inspiration-grid">
-          {inspiration.map((item) => (
-            <button
-              className="inspire-card"
-              key={item.title}
-              onClick={() => {
-                setValue(item.text);
-                window.scrollTo({ top: 0, behavior: "smooth" });
+          <defs>
+            <linearGradient id="map-sea" x2="0.7" y2="1">
+              <stop stopColor="#c6e8e9" />
+              <stop offset="1" stopColor="#9bced9" />
+            </linearGradient>
+            <pattern
+              id="map-grid"
+              width="36"
+              height="36"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M36 0H0V36"
+                fill="none"
+                stroke="#fff"
+                strokeOpacity=".13"
+              />
+            </pattern>
+          </defs>
+          <rect width="900" height="470" fill="#eef1e7" />
+          <path
+            d="M-40 145C150 160 230 238 350 302S450 360 500 405S740 495 940 510V500H-40Z"
+            fill="url(#map-sea)"
+          />
+          <rect width="900" height="470" fill="url(#map-grid)" />
+          <g fill="none" stroke="#dce4d6" strokeWidth="1.5">
+            <path d="M260-30Q330 110 930 180M300-40Q370 110 940 210M340-40Q410 110 940 240M380-40Q450 110 940 270M420-40Q490 110 940 300M460-40Q530 110 940 330" />
+            <path
+              d="M-40 145C150 160 230 238 350 302S450 360 500 405S740 495 940 510"
+              stroke="#fffdf5"
+              strokeWidth="10"
+            />
+          </g>
+          <g fill="#dfe7d8">
+            <path d="m550 115 43-52 43 52z" />
+            <path d="m735 84 49-60 49 60z" />
+            <path d="m775 268 56-68 56 68z" />
+            <path d="m460 167 34-42 34 42z" />
+          </g>
+          <g fill="#6f887c" fontSize="17" fontWeight="650" fontFamily="inherit">
+            <text x="172" y="195">
+              Сочи
+            </text>
+            <text x="365" y="341">
+              Адлер
+            </text>
+            <text x="506" y="429">
+              Сириус
+            </text>
+            <text x="652" y="127">
+              Красная Поляна
+            </text>
+          </g>
+          <text
+            x="95"
+            y="330"
+            transform="rotate(24 95 330)"
+            fill="#70a6b6"
+            fontSize="17"
+            letterSpacing="6"
+            fontFamily="inherit"
+          >
+            ЧЁРНОЕ МОРЕ
+          </text>
+          <g fill="#fff" stroke="#96ada0" strokeWidth="2">
+            <circle cx="220" cy="215" r="4" />
+            <circle cx="420" cy="368" r="4" />
+            <circle cx="490" cy="397" r="4" />
+            <circle cx="700" cy="150" r="4" />
+          </g>
+          {visible.length > 1 && (
+            <polyline
+              points={visible.map((point) => `${point.x},${point.y}`).join(" ")}
+              fill="none"
+              stroke="#2465e8"
+              strokeWidth="3"
+              strokeDasharray="7 6"
+              strokeLinecap="round"
+            />
+          )}
+          {visible.map((point) => (
+            <g
+              key={point.id}
+              className="map-pin"
+              role="button"
+              tabIndex={0}
+              aria-label={point.name}
+              onClick={() => setActive(point.id)}
+              onKeyDown={(event) => {
+                if (["Enter", " "].includes(event.key)) {
+                  event.preventDefault();
+                  setActive(point.id);
+                }
               }}
             >
-              <img src={`/images/${item.image}.jpg`} alt="" />
-              <div className="inspire-shade" />
-              <span className="inspire-icon">
-                <Icon of={item.icon} />
-              </span>
-              <div>
-                <h3>{item.title}</h3>
-                <p>{item.place}</p>
-              </div>
-              <span className="inspire-arrow">
-                <ArrowUpRight size={21} />
-              </span>
-            </button>
+              <circle
+                cx={point.x}
+                cy={point.y}
+                r="18"
+                fill="#2365e8"
+                fillOpacity=".12"
+              />
+              <circle
+                cx={point.x}
+                cy={point.y}
+                r="9"
+                fill="#2365e8"
+                stroke="white"
+                strokeWidth="4"
+              />
+            </g>
           ))}
-        </div>
-      </section>
-      <div className="value-strip">
-        <div>
-          <ShieldCheck />
-          <span>
-            <strong>Вы решаете на каждом шаге</strong>Любой выбор можно обсудить
-            и изменить
-          </span>
-        </div>
-        <div>
-          <Route />
-          <span>
-            <strong>От первой идеи до возвращения</strong>Маршрут, документы и
-            помощь под рукой
-          </span>
-        </div>
-        <div>
-          <Send />
-          <span>
-            <strong>Удобнее в Telegram?</strong>
-            <a href={TELEGRAM} target="_blank" rel="noreferrer">
-              Продолжим там <ArrowUpRight size={13} />
-            </a>
-          </span>
-        </div>
+        </svg>
+        {preview && (
+          <div className="map-postcards">
+            <span>
+              <img src="/images/sea.jpg" alt="Побережье Большого Сочи" />
+              <span>
+                <Waves size={14} /> Жить у моря
+              </span>
+            </span>
+            <span>
+              <img src="/images/mountains.jpg" alt="Горы Красной Поляны" />
+              <span>
+                <Mountain size={14} /> Сбежать в горы
+              </span>
+            </span>
+          </div>
+        )}
+        {selected && (
+          <div className="map-popover">
+            <Icon
+              of={
+                selected.kind === "transport"
+                  ? Plane
+                  : selected.kind === "stay"
+                    ? Building2
+                    : MapPin
+              }
+              size={17}
+            />
+            <span>
+              <strong>{selected.name}</strong>
+              <small>
+                {selected.approximate
+                  ? `Примерно · район: ${selected.area || "Большой Сочи"}`
+                  : "По координатам источника"}
+              </small>
+            </span>
+            <button
+              className="icon-button"
+              aria-label="Закрыть точку"
+              onClick={() => setActive(null)}
+            >
+              <X size={15} />
+            </button>
+          </div>
+        )}
+        <span className="map-footnote">
+          {preview ? "СХЕМА РЕГИОНА" : "СХЕМА ПОЕЗДКИ · БЕЗ РАСЧЁТА ПЕРЕЕЗДОВ"}
+        </span>
       </div>
-      <div className="demo-note">
-        MVP сервиса · Планируем Большой Сочи · Оплата и бронирование имитируются
-      </div>
+      {!preview && (
+        <div className="map-places">
+          {points.length ? (
+            points.map((point) => (
+              <button
+                className={active === point.id ? "active" : ""}
+                key={point.id}
+                onClick={() => setActive(point.id)}
+              >
+                <Icon
+                  of={
+                    point.kind === "transport"
+                      ? Plane
+                      : point.kind === "stay"
+                        ? Building2
+                        : MapPin
+                  }
+                  size={14}
+                />
+                <span>
+                  {point.name}
+                  {point.approximate && <small> · район</small>}
+                </span>
+              </button>
+            ))
+          ) : (
+            <span>
+              Точки появятся, когда у выбранных мест будут координаты или район.
+            </span>
+          )}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function Sidebar({
+  account,
+  state,
+  trips,
+  tripId,
+  page,
+  navigate,
+  newTrip,
+  auth,
+  busy,
+  open,
+  close,
+}) {
+  const [mobile, setMobile] = useState(
+    () => window.matchMedia("(max-width: 760px)").matches,
+  );
+  const sidebar = useRef(null);
+  useEffect(() => {
+    const query = window.matchMedia("(max-width: 760px)");
+    const update = () => {
+      setMobile(query.matches);
+      if (!query.matches) close();
+    };
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    if (!open || !mobile) return;
+    sidebar.current?.querySelector(".sidebar-close")?.focus();
+    const escape = (event) => {
+      if (event.key === "Escape") close();
+    };
+    window.addEventListener("keydown", escape);
+    return () => {
+      window.removeEventListener("keydown", escape);
+      document.querySelector(".sidebar-toggle")?.focus();
+    };
+  }, [open, mobile]);
+  const { transport, stay, days, total } = tripParts(state);
+  const activeTrip = trips.find((trip) => trip.trip_id === tripId);
+  const tracked =
+    activeTrip?.state.stage === "booked"
+      ? activeTrip
+      : trips.find((trip) => trip.state.stage === "booked");
+  const artifacts = [
+    [Plane, "Билеты", transport?.name, transport?.price, "transport"],
+    [Building2, "Проживание", stay?.name, stay?.price, "stays"],
+    [
+      Route,
+      "Программа",
+      days.length ? `${days.length} дней · ваш маршрут` : null,
+      null,
+      "itinerary",
+    ],
+    [Wallet, "Бюджет", total != null ? money(total) : null, null, "budget"],
+  ].filter((item) => item[2]);
+  return (
+    <>
+      {open && (
+        <button
+          className="sidebar-backdrop"
+          aria-label="Закрыть меню"
+          onClick={close}
+        />
+      )}
+      <aside
+        ref={sidebar}
+        inert={mobile && !open ? true : undefined}
+        className={`app-sidebar ${open ? "is-open" : ""}`}
+        aria-label="Основное меню"
+      >
+        <div className="sidebar-brand">
+          <span onClick={close}>
+            <Brand />
+          </span>
+          <button
+            className="sidebar-close icon-button"
+            aria-label="Закрыть меню"
+            onClick={close}
+          >
+            <X size={21} />
+          </button>
+        </div>
+        <button className="new-trip-button" onClick={newTrip} disabled={busy}>
+          <Plus size={18} /> Новая поездка <span>↗</span>
+        </button>
+        <nav className="sidebar-nav">
+          <button
+            className={page === "plan" ? "active" : ""}
+            onClick={() => navigate("plan", tripId)}
+          >
+            <MessageCircle size={18} /> Диалог с агентом
+          </button>
+          <button
+            className={["trips", "trip"].includes(page) ? "active" : ""}
+            onClick={() => navigate("trips")}
+          >
+            <History size={18} /> Мои поездки
+            {trips.length > 0 && <small>{trips.length}</small>}
+          </button>
+          <button
+            className={page === "track" ? "active" : ""}
+            onClick={() =>
+              navigate(tracked ? "track" : "trips", tracked?.trip_id)
+            }
+          >
+            <Compass size={18} /> В пути
+          </button>
+        </nav>
+        <div className="sidebar-scroll">
+          <div className="sidebar-section-title">
+            МОИ ПЛАНЫ{" "}
+            <span>
+              {trips.length ? String(trips.length).padStart(2, "0") : ""}
+            </span>
+          </div>
+          {trips.length ? (
+            <div className="recent-trips">
+              {trips.slice(0, 5).map((trip) => (
+                <button
+                  key={trip.trip_id}
+                  className={trip.trip_id === tripId ? "active" : ""}
+                  onClick={() => navigate("plan", trip.trip_id)}
+                >
+                  <span className="recent-trip-icon">
+                    <Icon
+                      of={
+                        /Полян|Хутор/.test(trip.state.constraints?.destination)
+                          ? Mountain
+                          : Waves
+                      }
+                      size={17}
+                    />
+                  </span>
+                  <span>
+                    <strong>
+                      {trip.state.constraints?.destination || "Новая поездка"}
+                    </strong>
+                    <small>
+                      {trip.state.constraints?.start
+                        ? `${date(trip.state.constraints.start)} — ${date(trip.state.constraints.end)}`
+                        : "Детали уточняются"}{" "}
+                      · {tripStatus(trip.state)}
+                    </small>
+                  </span>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="sidebar-empty">
+              Здесь будут ваши поездки.
+              <br />К ним всегда можно вернуться.
+            </p>
+          )}
+          <div className="sidebar-section-title">
+            В ВАШЕЙ ПОЕЗДКЕ <Luggage size={13} />
+          </div>
+          {artifacts.length ? (
+            <div className="saved-artifacts">
+              {artifacts.map(([Component, label, name, price, key]) => (
+                <button key={key} onClick={() => navigate("trip", tripId)}>
+                  <span className={`artifact-icon artifact-${key}`}>
+                    <Component size={18} />
+                  </span>
+                  <span>
+                    <small>{label}</small>
+                    <strong>{name}</strong>
+                    {price && (
+                      <small>
+                        {money(price.amount, price.currency)} ·{" "}
+                        {basis(price.basis)}
+                      </small>
+                    )}
+                  </span>
+                  <Check size={13} />
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="sidebar-artifact-empty">
+              <span>
+                <Plane size={17} />
+                <Building2 size={17} />
+                <Route size={17} />
+              </span>
+              <p>
+                Билеты, отель и маршрут
+                <br />
+                сохранятся здесь по мере выбора.
+              </p>
+            </div>
+          )}
+        </div>
+        <div className="sidebar-bottom">
+          <button
+            className="sidebar-help"
+            onClick={() => navigate("support", tripId)}
+          >
+            <LifeBuoy size={17} /> Помощь в пути <ArrowUpRight size={14} />
+          </button>
+          <TelegramLink className="sidebar-telegram">
+            Продолжить в Telegram
+          </TelegramLink>
+          <button
+            className="sidebar-account"
+            onClick={() => (account ? navigate("profile") : auth())}
+          >
+            <span className="account-avatar">
+              {account?.name?.[0] || <CircleUserRound size={20} />}
+            </span>
+            <span>
+              <strong>{account?.name || "Личный кабинет"}</strong>
+              <small>
+                {account ? "Профиль и настройки" : "Войти и сохранить поездку"}
+              </small>
+            </span>
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      </aside>
     </>
   );
 }
 
-function Chat({ state, value, setValue, send, busy, newTrip }) {
-  const bottom = useRef(null);
+function Conversation({
+  state,
+  value,
+  setValue,
+  send,
+  busy,
+  loading,
+  tripId,
+  pendingMessage,
+  choose,
+  back,
+  pay,
+  navigate,
+  download,
+}) {
+  const latest = useRef(null);
+  const thinking = useRef(null);
+  const scroll = useRef(null);
+  const composer = useRef(null);
+  const messages = state?.messages || [];
+  const lastAssistant = messages.findLastIndex(
+    (message) => message.role === "assistant",
+  );
+  const hasConversation = messages.length > 0 || pendingMessage || busy;
+  const unavailable = tripId && !state && !busy && !loading;
   useEffect(() => {
-    bottom.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, [state?.messages?.length, busy]);
+    const target = busy ? thinking.current : latest.current;
+    const container = scroll.current;
+    if (hasConversation && target && container) {
+      container.scrollTo({
+        top:
+          container.scrollTop +
+          target.getBoundingClientRect().top -
+          container.getBoundingClientRect().top -
+          24,
+        behavior: "instant",
+      });
+    }
+  }, [messages.length, busy, tripId]);
+  const prompt = (text) => {
+    setValue(text);
+    composer.current?.querySelector("textarea")?.focus();
+  };
+  const recommendations = state && (
+    <Planner
+      state={state}
+      tripId={tripId}
+      busy={busy}
+      choose={choose}
+      back={back}
+      pay={pay}
+      navigate={navigate}
+      download={download}
+    />
+  );
   return (
-    <aside className="chat-panel">
-      <div className="chat-heading">
-        <span className="assistant-avatar">
-          <Sparkles size={21} />
-        </span>
-        <div>
-          <strong>Ваш О! помощник</strong>
-          <span>
-            <i /> Рядом на каждом шаге
-          </span>
-        </div>
-        <button
-          onClick={newTrip}
-          className="icon-button"
-          title="Новая поездка"
-          aria-label="Новая поездка"
+    <div className="conversation-shell">
+      <div className="conversation-scroll" ref={scroll}>
+        <div
+          className={`conversation-content ${hasConversation ? "has-conversation" : ""}`}
         >
-          <Plus size={19} />
-        </button>
-      </div>
-      <div className="chat-messages">
-        <div className="chat-day">Планируем хорошее</div>
-        <div className="message assistant">
-          <span className="message-label">О! рядом</span>
-          <p>
-            Привет! Расскажите о поездке мечты — я помогу превратить её в
-            понятный план. Всё можно обсудить и поменять.
-          </p>
+          {!hasConversation && !loading && !unavailable && (
+            <section className="conversation-intro">
+              <span className="intro-eyebrow">
+                <span /> О!ДИН ЗАПРОС — ЦЕЛАЯ ПОЕЗДКА
+              </span>
+              <h1>
+                Ваш отпуск начинается
+                <br />с <span>«хочу».</span>
+                <Sparkles size={31} />
+              </h1>
+              <p>
+                Расскажите, как хотите отдохнуть. Ваш агент соберёт
+                <br className="desktop-break" /> билеты, отель и впечатления в
+                одном разговоре.
+              </p>
+              <TripMap preview />
+              <div className="starter-prompts">
+                {inspiration.map((item) => (
+                  <button key={item.image} onClick={() => prompt(item.text)}>
+                    <Icon of={item.icon} size={16} />
+                    <span>{item.title}</span>
+                    <ArrowUpRight size={14} />
+                  </button>
+                ))}
+              </div>
+            </section>
+          )}
+          {unavailable && (
+            <div className="empty-state">
+              <Luggage size={30} />
+              <h3>Не удалось открыть поездку</h3>
+              <p>Вернитесь к сохранённым планам или начните новый разговор.</p>
+              <a className="primary" href="#trips">
+                К моим поездкам
+              </a>
+            </div>
+          )}
+          {loading ? (
+            <div className="page-loading">
+              <LoaderCircle className="spin" />
+              Открываем ваш разговор…
+            </div>
+          ) : (
+            <>
+              {hasConversation && (
+                <div className="conversation-start">
+                  <span>ОДИН РАЗГОВОР. ВАША ПОЕЗДКА ЦЕЛИКОМ.</span>
+                </div>
+              )}
+              {messages.map((message, index) => (
+                <div
+                  className={`conversation-message ${message.role}`}
+                  key={index}
+                  ref={index === lastAssistant ? latest : null}
+                >
+                  {message.role === "assistant" && (
+                    <span className="agent-mark">О!</span>
+                  )}
+                  <div className="conversation-message-body">
+                    {message.role === "assistant" && (
+                      <div className="agent-label">
+                        О! рядом <span>ваш агент путешествий</span>
+                      </div>
+                    )}
+                    <p>
+                      {message.role === "user" &&
+                      message.text.startsWith("/select ")
+                        ? "Выбираю этот вариант"
+                        : message.text}
+                    </p>
+                    {index === lastAssistant && !busy && recommendations}
+                  </div>
+                </div>
+              ))}
+              {pendingMessage && (
+                <div className="conversation-message user">
+                  <div className="conversation-message-body">
+                    <p>{pendingMessage}</p>
+                  </div>
+                </div>
+              )}
+              <div ref={thinking} className="latest-response">
+                {busy && (
+                  <div className="conversation-message assistant">
+                    <span className="agent-mark">О!</span>
+                    <div className="conversation-message-body">
+                      <div className="agent-label">
+                        О! рядом <span>забочусь о деталях</span>
+                      </div>
+                      <div className="agent-thinking">
+                        <LoaderCircle size={16} className="spin" />
+                        <span>Собираю вашу поездку…</span>
+                      </div>
+                      <p className="thinking-note">
+                        Сравниваю источники и проверяю варианты. Это может
+                        занять несколько минут.
+                      </p>
+                    </div>
+                  </div>
+                )}
+                {!busy &&
+                  lastAssistant < 0 &&
+                  hasConversation &&
+                  recommendations}
+              </div>
+              {state && !busy && hasConversation && (
+                <div className="conversation-suggestions">
+                  {[
+                    "Хочу отель поближе к морю",
+                    "Найди вариант подешевле",
+                    "Больше времени на отдых",
+                  ].map((text) => (
+                    <button key={text} onClick={() => prompt(text)}>
+                      {text}
+                      <Plus size={12} />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
         </div>
-        {state?.messages?.map((m, i) => (
-          <div className={`message ${m.role}`} key={i}>
-            {m.role === "assistant" && (
-              <span className="message-label">О! рядом</span>
-            )}
-            <p>
-              {m.role === "user" && m.text.startsWith("/select ")
-                ? "Выбираю этот вариант"
-                : m.text}
-            </p>
-          </div>
-        ))}
-        {busy && (
-          <div className="message assistant thinking">
-            <span />
-            <span />
-            <span />
-            <small>Подбираю варианты</small>
-          </div>
-        )}
-        <div ref={bottom} />
       </div>
-      <div className="chat-compose">
-        <Composer
-          compact
-          value={value}
-          setValue={setValue}
-          send={send}
-          busy={busy}
-        />
-        <span className="chat-disclaimer">
-          Ассистент может ошибаться. Проверяйте важные детали.
-        </span>
+      <div className="conversation-composer" ref={composer}>
+        <div className="composer-inner">
+          <Composer
+            value={value}
+            setValue={setValue}
+            send={send}
+            busy={busy || loading || !!unavailable}
+            compact={!!hasConversation}
+          />
+          <div className="composer-footnote">
+            <span>
+              <LockKeyhole size={11} /> Всё выбранное сохраняется в вашей
+              поездке
+            </span>
+            <span>Бронирование и оплата — имитация</span>
+          </div>
+        </div>
       </div>
-    </aside>
+    </div>
   );
 }
 
@@ -649,7 +1103,7 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
               <ArrowRight size={16} />
             </button>
             <span className="small muted">
-              Цены проверим на следующих шагах
+              Стоимость уточним при подборе билетов и отеля
             </span>
           </div>
         </>
@@ -657,7 +1111,15 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
         <div className="choice-content">
           <div className="choice-top">
             <span className="provider-icon">
-              <Icon of={stage === "transport" ? (candidate?.transport_mode === "avia" ? Plane : Route) : Building2} />
+              <Icon
+                of={
+                  stage === "transport"
+                    ? candidate?.transport_mode === "avia"
+                      ? Plane
+                      : Route
+                    : Building2
+                }
+              />
             </span>
             <div>
               <span className="choice-kicker">
@@ -697,7 +1159,11 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
               </div>
               <div>
                 <strong>{time(dates.arrival_at)}</strong>
-                <span>{candidate?.destination || state.constraints?.destination || "Сочи"}</span>
+                <span>
+                  {candidate?.destination ||
+                    state.constraints?.destination ||
+                    "Сочи"}
+                </span>
                 <small>{date(dates.arrival_at || dates.start)}</small>
               </div>
             </div>
@@ -708,7 +1174,10 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
               {date(dates.start)} — {date(dates.end)}
               <span>
                 <Users size={16} />
-                {party(candidate?.adults ?? state.constraints?.adults, candidate?.children_ages ?? state.constraints?.children_ages)}
+                {party(
+                  candidate?.adults ?? state.constraints?.adults,
+                  candidate?.children_ages ?? state.constraints?.children_ages,
+                )}
               </span>
             </div>
           )}
@@ -728,7 +1197,9 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
           </div>
           <div className="choice-footer">
             <div>
-              <strong className="price">{money(price?.amount, price?.currency)}</strong>
+              <strong className="price">
+                {money(price?.amount, price?.currency)}
+              </strong>
               <span className="small muted">
                 {basis(price?.basis)} · {price?.currency || "RUB"}
               </span>
@@ -820,23 +1291,25 @@ function DayPlan({ days = [], completed, toggle }) {
 }
 
 function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
-  const option = currentOption(state);
   const receipt = state.stage === "booked" ? state.receipt : null;
   const c = state.constraints || {};
+  const parts = tripParts(state);
   const items =
     receipt?.items ||
-    [option?.transport, option?.stay]
+    [parts.transport, parts.stay]
       .filter(Boolean)
       .map((i) => ({ ...i, kind: i.role }));
-  const days = receipt?.itinerary || option?.days || [];
-  const total = receipt?.payment?.amount ?? option?.budget?.known_subtotal;
+  const days = parts.days;
+  const total = parts.total;
   const componentCost = (item) =>
     item?.price?.amount == null ||
     (item.price.currency && item.price.currency !== "RUB") ||
     !["party", "room_stay", "person", "ticket"].includes(item.price.basis)
       ? 0
       : Number(item.price.amount) *
-        (["person", "ticket"].includes(item.price.basis) ? (c.adults || 0) + (c.children_ages?.length || 0) || 1 : 1);
+        (["person", "ticket"].includes(item.price.basis)
+          ? (c.adults || 0) + (c.children_ages?.length || 0) || 1
+          : 1);
   const transportCost = componentCost(
     items.find((i) => i.kind === "transport"),
   );
@@ -854,8 +1327,8 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
           </span>
           <h2>{receipt ? "Ваш Сочи ждёт" : "Ваша поездка, целиком"}</h2>
           <p>
-            {date(c.start)} — {date(c.end)} · {party(c.adults, c.children_ages)} ·{" "}
-            {c.origin || "Город уточняется"}
+            {date(c.start)} — {date(c.end)} · {party(c.adults, c.children_ages)}{" "}
+            · {c.origin || "Город уточняется"}
           </p>
         </div>
       </div>
@@ -868,6 +1341,7 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
           </span>
         </div>
       )}
+      <TripMap state={state} />
       <div className="summary-items">
         {items.map((item, i) => (
           <details className="summary-component" key={i}>
@@ -892,7 +1366,8 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
                   "Подробности уточняйте у поставщика."}
               </p>
               <p>
-                {money(item.price?.amount, item.price?.currency)} · {basis(item.price?.basis)}
+                {money(item.price?.amount, item.price?.currency)} ·{" "}
+                {basis(item.price?.basis)}
               </p>
               {(item.arrival_at || item.details?.arrival_at) && (
                 <p>
@@ -964,15 +1439,22 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
         ) : (
           state.stage === "review" && (
             <button className="primary" onClick={pay}>
-              <CreditCard size={17} />К оплате
+              <CreditCard size={17} />
+              Забронировать поездку
             </button>
           )
         )}
       </div>
       {expanded && (
         <>
-          <h2 className="subheading">Ваша программа</h2>
-          <DayPlan days={days} />
+          <details className="itinerary-details">
+            <summary>
+              <Route size={17} />
+              Программа по дням<span>{days.length} дней</span>
+              <ChevronDown size={16} />
+            </summary>
+            <DayPlan days={days} />
+          </details>
           {state.bookings &&
             Object.values(state.bookings).some((b) => b.id !== receipt?.id) && (
               <details className="past-orders">
@@ -1020,102 +1502,65 @@ function Planner({
   navigate,
   download,
 }) {
-  const index = stages.indexOf(state?.stage || "scenarios");
-  const titles = [
-    "Сначала — настроение",
-    "Как доберёмся?",
-    "Где будем просыпаться?",
-    "Дни, которые запомнятся",
-    "Осталось проверить детали",
-    "Всё важное — с вами",
-  ];
-  const descriptions = [
-    "Выберите то, что откликается. Детали соберём дальше.",
-    "Сравните варианты и выберите удобный. Отель подберём следующим.",
-    "Ваше место силы на время поездки.",
-    "Места рядом с вашим отелем и время просто пожить.",
-    "Билеты, проживание и программа в одном плане.",
-    "Маршрут, детали заказа и помощь в пути.",
-  ];
+  const stage = state.stage || "scenarios";
+  const index = stages.indexOf(stage);
+  const titles = {
+    scenarios: "Какой отдых вам ближе?",
+    transport: "Как доберёмся",
+    stays: "Ваше место у моря. Или в горах.",
+    itinerary: "Дни, которые запомнятся",
+    review: "Ваша поездка сложилась",
+    booked: "Всё важное — с вами",
+  };
+  const c = state.constraints || {};
+  const parts = tripParts(state);
   return (
-    <section className="planner">
-      <nav className="stepper" aria-label="Шаги поездки">
-        {stageNames.slice(0, 5).map((name, i) => (
-          <button
-            disabled={busy || i >= index}
-            className={`${i < index ? "done" : ""} ${i === index ? "current" : ""}`}
-            key={name}
-            onClick={() => back(stages[i])}
-          >
-            <span>{i < index ? <Check size={13} /> : i + 1}</span>
-            <small>{name}</small>
-          </button>
-        ))}
-      </nav>
-      <div className="planner-head">
-        <div>
-          <div className="eyebrow">
-            {index === 5 ? "ВАША ПОЕЗДКА" : `ШАГ ${index + 1} ИЗ 5`}
-          </div>
-          <h1>{titles[index]}</h1>
-          <p>{descriptions[index]}</p>
+    <section className="agent-recommendations" aria-label="Предложения агента">
+      {index < 4 && (
+        <div className="recommendation-heading">
+          <h2>{titles[stage]}</h2>
+          <span>{stage === "booked" ? "Сохранено" : "Под ваш запрос"}</span>
         </div>
-        {index > 0 && (
-          <button
-            className="text-button"
-            disabled={busy}
-            onClick={() => back(stages[index - 1])}
-          >
-            <ArrowLeft size={15} />
-            Назад
-          </button>
-        )}
-      </div>
-      {state?.constraints?.start && (
+      )}
+      {c.start && index < 4 && (
         <div className="trip-pills">
           <span>
-            <MapPin size={14} />
-            {state.constraints.destination}
+            <CalendarDays size={13} />
+            {date(c.start)} — {date(c.end)}
           </span>
           <span>
-            <CalendarDays size={14} />
-            {date(state.constraints.start)} — {date(state.constraints.end)}
+            <Users size={13} />
+            {party(c.adults, c.children_ages)}
           </span>
-          <span>
-            <Users size={14} />
-            {party(state.constraints.adults, state.constraints.children_ages)}
-          </span>
-          {state.constraints.budget && (
+          {c.budget && (
             <span>
-              <Wallet size={14} />
-              до {money(state.constraints.budget)}{" "}
-              {state.constraints.budget_basis === "person"
-                ? "/ чел."
-                : "на всех"}
+              <Wallet size={13} />
+              до {money(c.budget)}{" "}
+              {c.budget_basis === "person" ? "/ чел." : "на всех"}
             </span>
           )}
         </div>
       )}
-      {state?.pending_check_in && (
+      {state.pending_check_in && (
         <div className="notice warning">
-          <CalendarDays size={20} />
+          <CalendarDays size={18} />
           <span>
-            Прибытие {date(state.pending_check_in)}. Обсудите с ассистентом новую
+            Прибытие {date(state.pending_check_in)}. Обсудите с агентом новую
             дату заселения и подтвердите её в чате.
           </span>
         </div>
       )}
-      {state?.notice && (
+      {state.notice && (
         <div className="notice">
-          <LifeBuoy size={19} />
+          <LifeBuoy size={18} />
           <span>{state.notice}</span>
         </div>
       )}
       {index < 3 ? (
         <div
-          className={`choices-grid ${index === 0 ? "scenarios-grid" : "offers-grid"}`}
+          className={`choices-grid ${stage === "scenarios" ? "scenarios-grid" : "offers-grid"}`}
         >
-          {state?.choices?.map((choice, i) => (
+          {state.choices?.map((choice, i) => (
             <ChoiceCard
               key={choice.id}
               choice={choice}
@@ -1126,18 +1571,26 @@ function Planner({
             />
           ))}
         </div>
-      ) : index === 3 ? (
+      ) : stage === "itinerary" ? (
         <>
-          <DayPlan days={currentOption(state)?.days || []} />
-          {state.choices?.map((c) => (
+          <TripMap state={state} />
+          <details className="itinerary-details">
+            <summary>
+              <Route size={17} />
+              Программа по дням<span>{parts.days.length} дней</span>
+              <ChevronDown size={16} />
+            </summary>
+            <DayPlan days={parts.days} />
+          </details>
+          {state.choices?.map((choice) => (
             <button
-              key={c.id}
+              key={choice.id}
               className="primary approve-program"
               disabled={busy}
-              onClick={() => choose(c.id)}
+              onClick={() => choose(choice.id)}
             >
-              Программа мне подходит
-              <ArrowRight size={18} />
+              Мне подходит, собери поездку
+              <ArrowRight size={17} />
             </button>
           ))}
         </>
@@ -1151,40 +1604,47 @@ function Planner({
           expanded
         />
       )}
-      {index < 4 && !state?.choices?.length && !busy && (
-        <div className="empty-state">
-          <span className="empty-icon">
-            <MessageCircle size={33} />
+      {index < 4 && !state.choices?.length && (
+        <div className="agent-empty">
+          <MessageCircle size={17} />
+          <span>
+            {state.status === "error"
+              ? "Поиск не завершился. Напишите агенту, чтобы попробовать ещё раз."
+              : "Продолжим в разговоре — уточните пожелания, и я подберу варианты."}
           </span>
-          <h3>
-            {state?.status === "error"
-              ? "Попробуем ещё раз"
-              : "Хорошая поездка начинается с деталей"}
-          </h3>
-          <p>
-            {state?.answer ||
-              "Расскажите ассистенту о вашем отдыхе. Варианты появятся здесь, шаг за шагом."}
-          </p>
         </div>
       )}
-      {busy && (
-        <div className="searching">
-          <div className="search-orbit">
-            <Plane size={28} />
+      {index > 0 && stage !== "booked" && (
+        <details className="edit-trip">
+          <summary>
+            <SlidersHorizontal size={14} />
+            Изменить выбранное
+          </summary>
+          <p>При новом выборе связанные предложения будут подобраны заново.</p>
+          <div>
+            {stages
+              .slice(0, index)
+              .filter((item) => item !== "review")
+              .map((item) => (
+                <button
+                  className="secondary"
+                  key={item}
+                  disabled={busy}
+                  onClick={() => back(item)}
+                >
+                  {
+                    {
+                      scenarios: "Идея поездки",
+                      transport: "Билеты",
+                      stays: "Отель",
+                      itinerary: "Программа",
+                    }[item]
+                  }
+                </button>
+              ))}
           </div>
-          <h3>Ищем ваше «вот оно»</h3>
-          <p>
-            Проверяем источники и собираем детали.
-            <br />
-            Иногда на это нужно несколько минут.
-          </p>
-          <div className="shimmer-line" />
-        </div>
+        </details>
       )}
-      <div className="planner-bottom">
-        <ShieldCheck size={15} />
-        Выбор за вами. Бронирование и оплата — имитация.
-      </div>
     </section>
   );
 }
@@ -1799,6 +2259,7 @@ function Tracking({
   }
   return (
     <div className="page narrow-page">
+      <TripMap state={state} />
       <div className="tracking-banner">
         <div>
           <span className="eyebrow">{tripStatus(state).toUpperCase()}</span>
@@ -1908,15 +2369,18 @@ function App() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [payment, setPayment] = useState(false);
-  const [mobileChat, setMobileChat] = useState(false);
+  const [pendingMessage, setPendingMessage] = useState(null);
   const [mobileNav, setMobileNav] = useState(false);
   const [page, tripId] = route.split("/");
   const operation = useRef(false);
+  const main = useRef(null);
   const navigate = (page, id) => {
     window.location.hash = page + (id ? "/" + id : "");
     setMobileNav(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
   };
+  useEffect(() => {
+    main.current?.scrollTo({ top: 0, behavior: "instant" });
+  }, [route]);
   useEffect(() => {
     const update = () => setRoute(window.location.hash.slice(1) || "plan");
     window.addEventListener("hashchange", update);
@@ -1973,6 +2437,7 @@ function App() {
     let active = true;
     setState(null);
     setProgress(null);
+    setLoading(false);
     if (!tripId || !account) return;
     setLoading(true);
     api(`/trips/${tripId}`)
@@ -2037,10 +2502,12 @@ function App() {
       return;
     }
     const text = value.trim();
+    setPendingMessage({ tripId, text });
     await mutate(async () => {
       let id = tripId;
       if (!id) {
         id = (await api("/trips", { method: "POST" })).trip_id;
+        setPendingMessage({ tripId: id, text });
         navigate("plan", id);
       }
       const current =
@@ -2052,11 +2519,11 @@ function App() {
       });
       if (window.location.hash.slice(1) === startRoute) {
         setState(next);
-        setMobileChat(next.status === "needs_input" && !next.choices?.length);
       }
       setValue("");
       await reloadTrips();
     });
+    setPendingMessage(null);
   }
   const choose = (id) =>
     mutate(async () => {
@@ -2066,7 +2533,6 @@ function App() {
       );
       if (window.location.hash.slice(1) === "plan/" + tripId) {
         setState(next);
-        setMobileChat(next.status === "needs_input" && !next.choices?.length);
       }
       await reloadTrips();
     });
@@ -2115,7 +2581,6 @@ function App() {
   const discuss = (text) => {
     setValue(text);
     navigate("plan", tripId);
-    setMobileChat(true);
   };
   const logout = () =>
     run(async () => {
@@ -2124,228 +2589,204 @@ function App() {
       setState(null);
       navigate("plan");
     });
-  const planning = page === "plan" && !!tripId && !!account;
+  const planning = page === "plan";
+  const newTrip = () => {
+    setValue("");
+    navigate("plan");
+  };
+  const pageTitle =
+    {
+      trips: "Мои поездки",
+      trip: "Ваша поездка",
+      track: "В пути",
+      profile: "Личный кабинет",
+      support: "Помощь в пути",
+    }[page] || "Новая поездка";
   return (
-    <>
-      <header className="header">
-        <div className="header-inner">
-          <Brand />
-          <nav className={mobileNav ? "nav mobile-open" : "nav"}>
-            <a className={page === "plan" ? "active" : ""} href="#plan">
-              <Sparkles size={16} />
-              Спланировать
-            </a>
-            <a
-              className={
-                page === "trips" || page === "trip" || page === "track"
-                  ? "active"
-                  : ""
-              }
-              href="#trips"
-            >
-              Мои поездки
-            </a>
-            <a
-              className={page === "support" ? "active" : ""}
-              href={tripId ? `#support/${tripId}` : "#support"}
-            >
-              Помощь в пути
-            </a>
-          </nav>
-          <div className="header-actions">
-            <TelegramLink className="telegram-link" />
+    <div className="app-shell">
+      <Sidebar
+        account={account}
+        state={state}
+        trips={trips}
+        tripId={tripId}
+        page={page}
+        navigate={navigate}
+        newTrip={newTrip}
+        auth={() => setAuth(true)}
+        busy={busy}
+        open={mobileNav}
+        close={() => setMobileNav(false)}
+      />
+      <div className="app-main" inert={mobileNav ? true : undefined}>
+        <header className="app-topbar">
+          <div className="topbar-title">
             <button
-              className="account-button"
+              className="sidebar-toggle icon-button"
+              aria-label="Открыть меню"
+              aria-expanded={mobileNav}
+              onClick={() => setMobileNav(!mobileNav)}
+            >
+              <Menu size={21} />
+            </button>
+            <span>
+              <strong>
+                {planning && tripId
+                  ? state?.constraints?.destination || "Ваша поездка"
+                  : pageTitle}
+              </strong>
+              <small>
+                {planning
+                  ? "Один запрос · один общий план"
+                  : "О! рядом · ваш агент путешествий"}
+              </small>
+            </span>
+            {planning && (
+              <span className="topbar-status">
+                <span />
+                {state?.stage === "booked"
+                  ? tripStatus(state)
+                  : "Планируем вместе"}
+              </span>
+            )}
+          </div>
+          <div className="topbar-actions">
+            {planning && tripId && (
+              <button
+                className="topbar-trip"
+                onClick={() => navigate("trip", tripId)}
+              >
+                <Luggage size={15} />
+                Вся поездка
+                <ArrowUpRight size={14} />
+              </button>
+            )}
+            <button
+              className="topbar-avatar"
+              aria-label={account ? "Личный кабинет" : "Войти"}
               onClick={() => (account ? navigate("profile") : setAuth(true))}
             >
-              <CircleUserRound size={19} />
-              <span>{account?.name || "Войти"}</span>
-            </button>
-            <button
-              className="mobile-menu icon-button"
-              onClick={() => setMobileNav(!mobileNav)}
-              aria-label="Открыть меню"
-            >
-              <Menu size={22} />
+              {account?.name?.[0] || <CircleUserRound size={20} />}
             </button>
           </div>
-        </div>
-      </header>
-      <main className={planning ? "workspace-main" : "main"}>
-        {page === "login" ? (
-          <div className="page-loading">
-            <LoaderCircle className="spin" />
-            Открываем ваши поездки…
-          </div>
-        ) : planning ? (
-          <>
-            <div className="workspace-top">
-              <a href="#trips">
-                <ArrowLeft size={14} />
-                Мои поездки
-              </a>
-              <span>
-                <MapPin size={13} />
-                {state?.constraints?.destination || "Большой Сочи"}
-              </span>
-              <button
-                className="text-button"
-                disabled={busy}
-                onClick={() =>
-                  run(async () => setState(await api(`/trips/${tripId}`)))
-                }
-              >
-                Обновить поездку
-              </button>
+        </header>
+        <main
+          ref={main}
+          className={planning ? "conversation-main" : "service-main"}
+        >
+          {page === "login" ? (
+            <div className="page-loading">
+              <LoaderCircle className="spin" />
+              Открываем ваши поездки…
             </div>
-            <div className="mobile-switch">
-              <button
-                className={mobileChat ? "active" : ""}
-                onClick={() => setMobileChat(true)}
-              >
-                <MessageCircle size={16} />
-                Диалог
-              </button>
-              <button
-                className={!mobileChat ? "active" : ""}
-                onClick={() => setMobileChat(false)}
-              >
-                <Route size={16} />
-                План поездки
-              </button>
-            </div>
-            <div
-              className={`workspace ${mobileChat ? "show-chat" : "show-plan"}`}
-            >
-              <Chat
+          ) : planning ? (
+            tripId && !account && authChecked ? (
+              <AccountRequired auth={() => setAuth(true)} />
+            ) : (
+              <Conversation
                 state={state}
                 value={value}
                 setValue={setValue}
                 send={send}
                 busy={busy}
-                newTrip={() => navigate("plan")}
-              />
-              {loading ? (
-                <div className="page-loading">
-                  <LoaderCircle className="spin" />
-                  Возвращаемся к вашей поездке…
-                </div>
-              ) : state ? (
-                <Planner
-                  state={state}
-                  tripId={tripId}
-                  busy={busy}
-                  choose={(id) => {
-                    setMobileChat(false);
-                    choose(id);
-                  }}
-                  back={back}
-                  pay={() => setPayment(true)}
-                  navigate={navigate}
-                  download={download}
-                />
-              ) : (
-                <div className="empty-state">
-                  <h3>Не удалось открыть поездку</h3>
-                  <a href="#trips">К моим поездкам</a>
-                </div>
-              )}
-            </div>
-          </>
-        ) : page === "trips" ? (
-          <Trips
-            account={account}
-            auth={() => setAuth(true)}
-            trips={trips}
-            navigate={navigate}
-            run={run}
-            reload={reloadTrips}
-          />
-        ) : page === "profile" ? (
-          <Profile
-            account={account}
-            setAccount={(data) => {
-              setAccount(data);
-              setSuccess(data ? "Изменения сохранены" : "Аккаунт удалён");
-            }}
-            run={run}
-            auth={() => setAuth(true)}
-            logout={logout}
-          />
-        ) : page === "support" ? (
-          <Support
-            guides={guides}
-            tripId={tripId}
-            run={run}
-            discuss={discuss}
-          />
-        ) : ["trip", "track"].includes(page) && tripId ? (
-          !account && authChecked ? (
-            <AccountRequired auth={() => setAuth(true)} />
-          ) : loading || !authChecked ? (
-            <div className="page-loading">
-              <LoaderCircle className="spin" />
-              Открываем путешествие…
-            </div>
-          ) : !state ? (
-            <div className="empty-state">
-              <h3>Не удалось открыть поездку</h3>
-              <a className="primary" href="#trips">
-                К моим поездкам
-              </a>
-            </div>
-          ) : page === "track" ? (
-            <Tracking
-              state={state}
-              tripId={tripId}
-              progress={progress}
-              setProgress={setProgress}
-              run={run}
-              discuss={discuss}
-              download={download}
-            />
-          ) : (
-            <div className="page summary-page">
-              <div className="summary-page-top">
-                <a className="text-button" href="#trips">
-                  <ArrowLeft size={15} />
-                  Мои поездки
-                </a>
-                <button
-                  className="text-button"
-                  onClick={() => navigate("plan", tripId)}
-                >
-                  <MessageCircle size={16} />
-                  Обсудить с ассистентом
-                </button>
-              </div>
-              <Summary
-                state={state}
+                loading={loading || (!!tripId && !authChecked)}
                 tripId={tripId}
+                pendingMessage={
+                  pendingMessage?.tripId === tripId ? pendingMessage?.text : ""
+                }
+                choose={choose}
+                back={back}
                 pay={() => setPayment(true)}
                 navigate={navigate}
                 download={download}
-                expanded
               />
-            </div>
-          )
-        ) : (
-          <Home
-            value={value}
-            setValue={setValue}
-            send={send}
-            busy={busy}
-            user={account}
-          />
-        )}
-      </main>
-      {!planning && (
-        <footer>
-          <Brand />
-          <span>Хорошие путешествия начинаются с разговора.</span>
-          <TelegramLink className="footer-telegram" />
-        </footer>
-      )}
+            )
+          ) : page === "trips" ? (
+            <Trips
+              account={account}
+              auth={() => setAuth(true)}
+              trips={trips}
+              navigate={navigate}
+              run={run}
+              reload={reloadTrips}
+            />
+          ) : page === "profile" ? (
+            <Profile
+              account={account}
+              setAccount={(data) => {
+                setAccount(data);
+                setSuccess(data ? "Изменения сохранены" : "Аккаунт удалён");
+              }}
+              run={run}
+              auth={() => setAuth(true)}
+              logout={logout}
+            />
+          ) : page === "support" ? (
+            <Support
+              guides={guides}
+              tripId={tripId}
+              run={run}
+              discuss={discuss}
+            />
+          ) : ["trip", "track"].includes(page) && tripId ? (
+            !account && authChecked ? (
+              <AccountRequired auth={() => setAuth(true)} />
+            ) : loading || !authChecked ? (
+              <div className="page-loading">
+                <LoaderCircle className="spin" />
+                Открываем путешествие…
+              </div>
+            ) : !state ? (
+              <div className="empty-state">
+                <h3>Не удалось открыть поездку</h3>
+                <a className="primary" href="#trips">
+                  К моим поездкам
+                </a>
+              </div>
+            ) : page === "track" ? (
+              <Tracking
+                state={state}
+                tripId={tripId}
+                progress={progress}
+                setProgress={setProgress}
+                run={run}
+                discuss={discuss}
+                download={download}
+              />
+            ) : (
+              <div className="page summary-page">
+                <div className="summary-page-top">
+                  <a className="text-button" href="#trips">
+                    <ArrowLeft size={15} />
+                    Мои поездки
+                  </a>
+                  <button
+                    className="text-button"
+                    onClick={() => navigate("plan", tripId)}
+                  >
+                    <MessageCircle size={16} />
+                    Обсудить с ассистентом
+                  </button>
+                </div>
+                <Summary
+                  state={state}
+                  tripId={tripId}
+                  pay={() => setPayment(true)}
+                  navigate={navigate}
+                  download={download}
+                  expanded
+                />
+              </div>
+            )
+          ) : (
+            <Conversation
+              value={value}
+              setValue={setValue}
+              send={send}
+              busy={busy}
+            />
+          )}
+        </main>
+      </div>
       {auth && (
         <Auth
           close={() => setAuth(false)}
@@ -2383,7 +2824,7 @@ function App() {
           </button>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
