@@ -7,13 +7,17 @@ React-интерфейс **О! рядом** и бот
 [Запуск и документация](docs/WEB_AND_TELEGRAM.md).
 
 ```bash
-cd frontend && npm ci && npm run build && cd ..
-.venv/bin/python scripts/serve_web.py --local-postgres --telegram
+docker compose up
 ```
 
-Токен бота вводится скрыто; `.env` не меняется. Для существующей БД используйте
-`TRAVEL_DATABASE_URL` без `--local-postgres`. Сайт открывается на
-[localhost:8000](http://127.0.0.1:8000).
+В корневом `.env` нужны `MODEL`, `TOKEN`, `BASE_URL`,
+`TRAVEL_POSTGRES_PASSWORD`, `TELEGRAM_BOT_TOKEN` (имена есть в `.env.example`).
+Compose поднимает PostgreSQL, backend с API, агентами и Telegram-ботом, а также
+отдельный `frontend` с React и nginx. Сайт: [localhost:8000](http://127.0.0.1:8000).
+После изменения кода: `docker compose up --build`. Запуск без Docker
+и подробности конфигурации описаны в [документации](docs/WEB_AND_TELEGRAM.md).
+
+Фронтенд можно пересобрать отдельно: `docker compose up -d --build frontend`.
 
 Текущая оркестрация: сценарий → транспорт → проживание → программа → корзина → имитированная покупка. [План и результаты изменений](docs/SCENARIO_PIPELINE.md).
 

@@ -1,0 +1,11 @@
+**
+!Dockerfile
+!requirements.lock.txt
+!integrations/
+!integrations/**
+!travel_agent/
+!travel_agent/**
+**/__pycache__/
+**/*.py[cod]
+**/.env
+**/.env.*

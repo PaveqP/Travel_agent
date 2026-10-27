@@ -7,6 +7,81 @@
 
 ## Запуск
 
+### Docker Compose
+
+В корневом `.env` заполните `MODEL`, `TOKEN`, `BASE_URL`,
+`TRAVEL_POSTGRES_PASSWORD` и `TELEGRAM_BOT_TOKEN`. Все ключи провайдеров также
+берутся из этого файла. Пароль существующего PostgreSQL volume должен совпадать
+с первоначальным: изменение переменной не меняет пароль уже созданной БД.
+
+```bash
+docker compose up
+```
+
+При первом запуске Compose собирает два образа. Корневой `Dockerfile` устанавливает
+`requirements.lock.txt` и копирует backend, prompts и шрифты PDF.
+`frontend/Dockerfile` устанавливает `frontend/package-lock.json`, собирает React
+и копирует статику в nginx. `.env`, Git, локальные зависимости, отчёты и тесты
+backend исключены из контекстов сборки. Секреты передаются только backend при
+запуске через корневой `.env`; у `frontend` нет доступа к этому файлу.
+
+Запускаются три сервиса:
+
+| Сервис | Что запускается |
+|---|---|
+| `postgres` | PostgreSQL 17, volume `travel_postgres`, проверка готовности |
+| `app` | Один процесс FastAPI, Supervisor и три агента, polling Telegram |
+| `frontend` | Собранный React и nginx; Dockerfile и конфигурация nginx находятся в `frontend/` |
+
+`app` ждёт здоровую PostgreSQL. Таблицы аккаунтов и LangGraph создаются при старте.
+В контейнере адрес БД собирается для хоста `postgres`, порта `5432`, пользователя
+и БД `travel`; пароль из `TRAVEL_POSTGRES_PASSWORD` экранируется для URL.
+Значение `TRAVEL_DATABASE_URL` для запуска с хоста не перенаправит контейнер на
+`localhost`. Проверка здоровья приложения требует постоянную БД и готового бота;
+неверный токен или существующий webhook видны как `unhealthy` и в логах `app`.
+
+`frontend` ждёт здоровый `app`. Nginx раздаёт React, проксирует `/api`, `/trips`,
+`/profile`, `/health`, `/docs`, `/redoc`, `/openapi.json` на `app:8000`, сохраняет
+публичный Host и query string. Таймаут ответа API — 450 секунд для длительных
+ходов агентов. API и сайт работают на одном origin; cookie-сессии и проверка
+Origin сохраняются. Адрес backend повторно разрешается через Docker DNS после
+пересоздания контейнера. Файлы `/assets` кешируются, HTML не кешируется.
+
+Сайт и API: [localhost:8000](http://127.0.0.1:8000), Swagger — `/docs`.
+Порт `8000` публикует `frontend`; `app:8000` доступен внутри Compose-сети.
+PostgreSQL доступна с хоста на `127.0.0.1:55432`. При публичном размещении задайте
+`TRAVEL_PUBLIC_URL` для ссылок из бота и настройте HTTPS перед приложением.
+По умолчанию порты опубликованы только на loopback.
+
+```bash
+docker compose up -d --wait
+docker compose logs -f app
+docker compose logs -f frontend
+docker compose down
+```
+
+`down` сохраняет данные в volume. После правок кода используйте
+`docker compose up --build`. Для остановки в foreground достаточно Ctrl+C.
+Пересобрать только UI: `docker compose up -d --build frontend`.
+Перезапустить nginx: `docker compose restart frontend`.
+Отдельный локальный сервер или второй экземпляр polling того же бота следует
+остановить перед запуском, чтобы освободить порт и обработку Telegram.
+
+Если существующая БД отвечает `password authentication failed`, укажите в `.env`
+прежний пароль. Если пароль намеренно меняется, сохраните volume и смените пароль
+роли через интерактивный psql, затем повторите запуск:
+
+```bash
+docker compose up -d postgres
+docker compose exec postgres psql -U travel -d travel
+```
+
+В psql выполните `\password travel`, введите новый пароль из `.env` в скрытых
+приглашениях и выйдите командой `\q`. Затем `docker compose up -d --wait`.
+Данные при такой смене пароля сохраняются.
+
+### Без контейнера приложения
+
 ```bash
 uv pip sync requirements.lock.txt
 cd frontend
@@ -16,12 +91,13 @@ cd ..
 .venv/bin/python scripts/serve_web.py --local-postgres --telegram
 ```
 
-Последняя команда запускает существующий сервис `postgres` из `compose.yaml`,
+Последняя команда запускает только сервис `postgres` из `compose.yaml`,
 ожидает готовности и запускает веб и бот в одном процессе. При первом запуске
 создаёт случайный пароль PostgreSQL. При повторном использует пароль именно
 контейнера `flinters-postgres-1`; существующий volume без контейнера требует
 передать его прежний `TRAVEL_POSTGRES_PASSWORD`. Пароли не печатаются.
-Без `--telegram` запускается только сайт. Сайт: [localhost:8000](http://127.0.0.1:8000).
+Без `--telegram` приложение использует `TELEGRAM_BOT_TOKEN` из окружения или `.env`,
+если он заполнен; иначе запускается только сайт.
 
 Токен бота вводится скрыто и живёт только в окружении процесса. Не помещайте
 его в React, Git, URL запуска или документацию. `.env` команда не изменяет.
@@ -180,6 +256,12 @@ Telegram-связку, одноразовый вход и устаревшие �
 Проверено при реализации: сборка, frontend-тесты, PostgreSQL-тесты, браузерный
 путь на тестовой PostgreSQL, визуальный рендер PDF с кириллицей. Live-поиск
 LLM/поставщиков не запускался ради проверки интерфейса.
+
+Docker-проверка: собраны отдельные образы API и frontend, проверен `nginx -t`.
+В отдельном Compose-проекте все три сервиса прошли healthcheck; через nginx
+проверены статика, cookie-авторизация, Origin, query string и сохранение профиля,
+истории и сессии после перезапуска PostgreSQL и приложений. Проверка использовала
+шаблон письма без LLM-запросов; тестовые аккаунт, контейнеры и volume удалены.
 
 ## Визуальные материалы
 

@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:17-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_USER: travel
       POSTGRES_PASSWORD: ${TRAVEL_POSTGRES_PASSWORD:?Set TRAVEL_POSTGRES_PASSWORD}
@@ -9,5 +10,61 @@ services:
       - "127.0.0.1:55432:5432"
     volumes:
       - travel_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+  app:
+    build: .
+    restart: unless-stopped
+    init: true
+    env_file:
+      - .env
+    environment:
+      MODEL: ${MODEL:?Set MODEL in the root .env}
+      TOKEN: ${TOKEN:?Set TOKEN in the root .env}
+      BASE_URL: ${BASE_URL:?Set BASE_URL in the root .env}
+      TRAVEL_POSTGRES_HOST: postgres
+      TRAVEL_POSTGRES_PASSWORD: ${TRAVEL_POSTGRES_PASSWORD:?Set TRAVEL_POSTGRES_PASSWORD in the root .env}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TRAVEL_PUBLIC_URL: ${TRAVEL_PUBLIC_URL:-http://127.0.0.1:8000}
+    expose:
+      - "8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+        restart: true
+    stop_grace_period: 30s
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import json, urllib.request;
+          assert json.load(urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5))['persistent'];
+          assert json.load(urllib.request.urlopen('http://127.0.0.1:8000/api/config', timeout=5))['telegram_configured']
+      interval: 15s
+      timeout: 12s
+      retries: 4
+      start_period: 30s
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8000:80"
+    depends_on:
+      app:
+        condition: service_healthy
+        restart: true
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 15s
+      timeout: 5s
+      retries: 4
+      start_period: 5s
 volumes:
   travel_postgres:

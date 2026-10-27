@@ -1,6 +1,7 @@
 import asyncio
 import time
 from pathlib import Path
+from urllib.parse import quote
 
 from fastapi import Depends, FastAPI, HTTPException, Request, Response
 from fastapi.staticfiles import StaticFiles
@@ -240,7 +241,13 @@ def mount_portal(app: FastAPI, owner, require_trip, config_for, view, sync_trip,
 def create_web_app() -> FastAPI:
     from travel_agent.api import create_app
 
-    dsn = environment().get("TRAVEL_DATABASE_URL")
+    env = environment()
+    dsn = env.get("TRAVEL_DATABASE_URL")
+    if env.get("TRAVEL_POSTGRES_HOST"):
+        if not env.get("TRAVEL_POSTGRES_PASSWORD"):
+            raise RuntimeError("Set TRAVEL_POSTGRES_PASSWORD for the container's PostgreSQL database")
+        password = quote(env["TRAVEL_POSTGRES_PASSWORD"], safe="")
+        dsn = f"postgresql://travel:{password}@{env['TRAVEL_POSTGRES_HOST']}:5432/travel"
     if not dsn or not dsn.startswith(("postgresql://", "postgres://")):
         raise RuntimeError("Set TRAVEL_DATABASE_URL to the project's PostgreSQL database before starting the web application")
     return create_app(portal_database_url=dsn)

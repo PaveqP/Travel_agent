@@ -16,11 +16,29 @@ from travel_agent.api import create_app
 from travel_agent.itinerary_pdf import itinerary_pdf
 from travel_agent.support import support_letter, support_reply
 from travel_agent.telegram import TelegramBot
-from travel_agent.web import ProgressRequest, checklist
+from travel_agent.web import ProgressRequest, checklist, create_web_app
 from test_travel_agent import TRIP, agreed_state, decide, run
 
 
 class PortalUnitTests(unittest.TestCase):
+    def test_container_uses_service_hostname_and_encodes_postgres_password(self):
+        env = {"TRAVEL_POSTGRES_HOST": "postgres", "TRAVEL_POSTGRES_PASSWORD": "a@:/#?%$=", "TRAVEL_DATABASE_URL": "postgresql://old@localhost/travel"}
+        with patch("travel_agent.web.environment", return_value=env), patch("travel_agent.api.create_app") as factory:
+            create_web_app()
+        factory.assert_called_once_with(portal_database_url="postgresql://travel:a%40%3A%2F%23%3F%25%24%3D@postgres:5432/travel")
+
+    def test_direct_startup_preserves_explicit_database_url(self):
+        dsn = "postgresql://travel:example@localhost:55432/travel"
+        with patch("travel_agent.web.environment", return_value={"TRAVEL_DATABASE_URL": dsn}), patch("travel_agent.api.create_app") as factory:
+            create_web_app()
+        factory.assert_called_once_with(portal_database_url=dsn)
+
+    def test_container_rejects_missing_password_before_database_access(self):
+        with patch("travel_agent.web.environment", return_value={"TRAVEL_POSTGRES_HOST": "postgres"}), patch("travel_agent.api.create_app") as factory:
+            with self.assertRaisesRegex(RuntimeError, "TRAVEL_POSTGRES_PASSWORD"):
+                create_web_app()
+        factory.assert_not_called()
+
     def test_account_contract_and_password_hash(self):
         self.assertEqual(AccountInput(name="Аня", email="Anna@Example.org", password="password1234").email, "anna@example.org")
         for values in ({"name": "Аня", "email": "broken", "password": "password1234"}, {"name": "", "email": "a@b.ru", "password": "password1234"}, {"name": "Аня", "email": "a@b.ru", "password": "short"}):
