@@ -14,7 +14,10 @@ class Settings(BaseModel):
 
 
 def environment() -> dict[str, str]:
-    return {k: v for k, v in {**dotenv_values('.env'), **os.environ}.items() if v is not None}
+    values = {k: v for k, v in {**dotenv_values('.env'), **os.environ}.items() if v is not None}
+    if not values.get('TAVILY_API_KEY') and values.get('TAVILY'):
+        values['TAVILY_API_KEY'] = values['TAVILY']
+    return values
 
 
 def settings(env: dict[str, str]) -> Settings:

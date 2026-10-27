@@ -1,0 +1,216 @@
+{
+  "created_at": "2026-10-27T21:42:47.416318+00:00",
+  "mode": "Isolated tools only; no LLM, MCP or trip flow",
+  "requests": [
+    "/search",
+    "/extract",
+    "/search",
+    "/extract",
+    "/search",
+    "/extract"
+  ],
+  "results": [
+    {
+      "role": "transport",
+      "query": "Международный аэропорт Сочи общественный транспорт как добраться",
+      "search_status": "ok",
+      "search_results": 5,
+      "search_seconds": 0.64,
+      "extract_status": "ok",
+      "extract_seconds": 1.37,
+      "requested_urls": [
+        "https://tonkosti.ru/%D0%9A%D0%B0%D0%BA_%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%D1%81%D1%8F_%D0%B8%D0%B7_%D0%B0%D1%8D%D1%80%D0%BE%D0%BF%D0%BE%D1%80%D1%82%D0%B0_%D0%B4%D0%BE_%D0%A1%D0%BE%D1%87%D0%B8",
+        "https://ridertrip.ru/transfer-aeroport-city",
+        "https://k2tour.ru/busesadler/airportsochi"
+      ],
+      "extracted": [
+        {
+          "url": "https://tonkosti.ru/%D0%9A%D0%B0%D0%BA_%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%D1%81%D1%8F_%D0%B8%D0%B7_%D0%B0%D1%8D%D1%80%D0%BE%D0%BF%D0%BE%D1%80%D1%82%D0%B0_%D0%B4%D0%BE_%D0%A1%D0%BE%D1%87%D0%B8",
+          "text_characters": 2000
+        },
+        {
+          "url": "https://ridertrip.ru/transfer-aeroport-city",
+          "text_characters": 2000
+        },
+        {
+          "url": "https://k2tour.ru/busesadler/airportsochi",
+          "text_characters": 2000
+        }
+      ],
+      "stored_extracted_sources": 3,
+      "catalog_only": true,
+      "skipped_urls": [],
+      "warnings": [],
+      "passed": true
+    },
+    {
+      "role": "stays",
+      "query": "Mirror Residence Сочи официальный сайт услуги",
+      "search_status": "ok",
+      "search_results": 5,
+      "search_seconds": 0.15,
+      "extract_status": "ok",
+      "extract_seconds": 0.89,
+      "requested_urls": [
+        "https://mirror-hotel.ru/servise",
+        "https://mirror-hotel.ru/mirror-residence",
+        "https://mirror-bronhotel.ru"
+      ],
+      "extracted": [
+        {
+          "url": "https://mirror-hotel.ru/servise",
+          "text_characters": 2000
+        },
+        {
+          "url": "https://mirror-hotel.ru/mirror-residence",
+          "text_characters": 2000
+        },
+        {
+          "url": "https://mirror-bronhotel.ru",
+          "text_characters": 2000
+        }
+      ],
+      "stored_extracted_sources": 3,
+      "catalog_only": true,
+      "skipped_urls": [],
+      "warnings": [],
+      "passed": true
+    },
+    {
+      "role": "experience",
+      "query": "Сочинский Дендрарий официальный сайт часы работы",
+      "search_status": "ok",
+      "search_results": 5,
+      "search_seconds": 0.15,
+      "extract_status": "ok",
+      "extract_seconds": 1.18,
+      "requested_urls": [
+        "https://manteratravel.ru/materials/dendrarij-sochi",
+        "https://akvaresort.ru/dendrarij-v-sochi",
+        "https://dendrarium.ru"
+      ],
+      "extracted": [
+        {
+          "url": "https://manteratravel.ru/materials/dendrarij-sochi",
+          "text_characters": 2000
+        },
+        {
+          "url": "https://akvaresort.ru/dendrarij-v-sochi",
+          "text_characters": 2000
+        },
+        {
+          "url": "https://dendrarium.ru",
+          "text_characters": 2000
+        }
+      ],
+      "stored_extracted_sources": 3,
+      "catalog_only": true,
+      "skipped_urls": [],
+      "warnings": [],
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "initial_attempt": {
+    "created_at": "2026-10-27T21:40:53.032139+00:00",
+    "mode": "Isolated tools only; no LLM, MCP or trip flow",
+    "requests": [
+      "/search",
+      "/extract",
+      "/search",
+      "/extract",
+      "/search"
+    ],
+    "results": [
+      {
+        "role": "transport",
+        "query": "Международный аэропорт Сочи общественный транспорт как добраться",
+        "search_status": "ok",
+        "search_results": 5,
+        "search_seconds": 1.7,
+        "extract_status": "ok",
+        "extract_seconds": 3.19,
+        "requested_urls": [
+          "https://tonkosti.ru/%D0%9A%D0%B0%D0%BA_%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%D1%81%D1%8F_%D0%B8%D0%B7_%D0%B0%D1%8D%D1%80%D0%BE%D0%BF%D0%BE%D1%80%D1%82%D0%B0_%D0%B4%D0%BE_%D0%A1%D0%BE%D1%87%D0%B8",
+          "https://ridertrip.ru/transfer-aeroport-city",
+          "https://k2tour.ru/busesadler/airportsochi"
+        ],
+        "extracted": [
+          {
+            "url": "https://tonkosti.ru/%D0%9A%D0%B0%D0%BA_%D0%B4%D0%BE%D0%B1%D1%80%D0%B0%D1%82%D1%8C%D1%81%D1%8F_%D0%B8%D0%B7_%D0%B0%D1%8D%D1%80%D0%BE%D0%BF%D0%BE%D1%80%D1%82%D0%B0_%D0%B4%D0%BE_%D0%A1%D0%BE%D1%87%D0%B8",
+            "text_characters": 2000
+          },
+          {
+            "url": "https://k2tour.ru/busesadler/airportsochi",
+            "text_characters": 2000
+          },
+          {
+            "url": "https://ridertrip.ru/transfer-aeroport-city",
+            "text_characters": 2000
+          }
+        ],
+        "stored_extracted_sources": 3,
+        "catalog_only": true,
+        "warnings": [],
+        "passed": true
+      },
+      {
+        "role": "stays",
+        "query": "Mirror Residence Сочи официальный сайт услуги",
+        "search_status": "ok",
+        "search_results": 5,
+        "search_seconds": 1.32,
+        "extract_status": "ok",
+        "extract_seconds": 7.13,
+        "requested_urls": [
+          "https://mirror-hotel.ru/servise",
+          "https://mirror-hotel.ru/mirror-residence",
+          "https://mirror-bronhotel.ru"
+        ],
+        "extracted": [
+          {
+            "url": "https://mirror-bronhotel.ru",
+            "text_characters": 2000
+          },
+          {
+            "url": "https://mirror-hotel.ru/mirror-residence",
+            "text_characters": 2000
+          },
+          {
+            "url": "https://mirror-hotel.ru/servise",
+            "text_characters": 2000
+          }
+        ],
+        "stored_extracted_sources": 3,
+        "catalog_only": true,
+        "warnings": [],
+        "passed": true
+      },
+      {
+        "role": "experience",
+        "query": "Сочинский Дендрарий официальный сайт часы работы",
+        "search_status": "ok",
+        "search_results": 5,
+        "search_seconds": 2.05,
+        "extract_status": "forbidden",
+        "extract_seconds": 3.0,
+        "requested_urls": [
+          "https://manteratravel.ru/materials/dendrarij-sochi",
+          "https://akvaresort.ru/dendrarij-v-sochi",
+          "https://dendrarium.ru"
+        ],
+        "extracted": [],
+        "stored_extracted_sources": 0,
+        "catalog_only": true,
+        "warnings": [],
+        "passed": false
+      }
+    ],
+    "passed": false
+  },
+  "configuration": "TAVILY is accepted as an alias for TAVILY_API_KEY; non-empty canonical name has priority",
+  "llm_calls": 0,
+  "trip_flow_runs": 0,
+  "mcp_calls": 0,
+  "offline_tests": "131 tests: 126 passed, 5 PostgreSQL integration tests skipped"
+}

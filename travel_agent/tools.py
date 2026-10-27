@@ -503,6 +503,8 @@ def build_tools(
             u not in urls or not public_url(u) for u in selected_urls
         ):
             return {"status": "forbidden"}
+        verified_urls = []
+        skipped = []
         for url in selected_urls:
             try:
                 addresses = await asyncio.wait_for(
@@ -511,23 +513,30 @@ def build_tools(
                     ),
                     timeout=3,
                 )
-            except (OSError, TimeoutError):
-                return {"status": "forbidden"}
+            except (OSError, TimeoutError) as exc:
+                status = 'timeout' if isinstance(exc, TimeoutError) else 'network_error'
+                warnings.append('tavily:dns_' + status)
+                skipped.append({'url': url, 'status': status})
+                continue
             if not addresses or any(
                 not ipaddress.ip_address(address[4][0]).is_global
                 for address in addresses
             ):
                 return {"status": "forbidden"}
-        return await rest(
+            verified_urls.append(url)
+        if not verified_urls:
+            return {'status': 'timeout' if any(row['status'] == 'timeout' for row in skipped) else 'network_error', 'skipped_urls': skipped}
+        result = await rest(
             "tavily_extract",
             "tavily",
             "TAVILY_API_KEY",
             lambda: client.post(
                 "https://api.tavily.com/extract",
                 headers={"Authorization": "Bearer " + env.get("TAVILY_API_KEY", "")},
-                json={"urls": selected_urls},
+                json={"urls": verified_urls},
             ),
         )
+        return {**result, 'skipped_urls': skipped}
 
     builders = {
         "transport": transport_tools,
