@@ -13,12 +13,13 @@ from travel_agent.agents.supervisor.response import option_context
 
 def llm_decider(model: BaseChatModel, prompt: str):
     structured = model.with_structured_output(
-        SupervisorDecision, method="function_calling"
+        SupervisorDecision, method="function_calling", strict=True
     )
 
     async def decide(state: TripState) -> SupervisorDecision:
         context = {
             "today": str(date.today()),
+            "user_request": next((message.content for message in reversed(state.get("messages", [])) if message.type == "human"), ""),
             "phase": "delegate" if state.get("calls", 0) else "extract_request",
             "constraints": state.get("constraints", {}),
             "options": option_context(state),
@@ -32,10 +33,8 @@ def llm_decider(model: BaseChatModel, prompt: str):
             "pending_check_in": state.get("pending_check_in"),
             "diagnostics": state.get("diagnostics", {}),
             "receipt": state.get("receipt", {}),
-            "results": {
-                r: {"status": v["status"], "warnings": v["warnings"]}
-                for r, v in state.get("results", {}).items()
-            },
+            "results": state.get("results", {}),
+            "research": state.get("research", {}),
             "source_ids": [
                 {"id": c.id, "name": c.name}
                 for c in [
@@ -47,12 +46,15 @@ def llm_decider(model: BaseChatModel, prompt: str):
         }
         messages = [
                 SystemMessage(content=prompt),
-                *state.get("messages", [])[-12:],
+                *state.get("messages", []),
                 HumanMessage(content=json.dumps(context, ensure_ascii=False)),
             ]
         for attempt in range(2):
             try:
-                return SupervisorDecision.model_validate(await structured.ainvoke(messages))
+                decision = SupervisorDecision.model_validate(await structured.ainvoke(messages))
+                if decision.action in ("transport", "stays", "experience") and not decision.task.strip():
+                    raise OutputParserException("Delegation task must preserve the user request and its requirements")
+                return decision
             except (ValidationError, OutputParserException) as exc:
                 if attempt:
                     raise

@@ -51,6 +51,7 @@ import {
   date,
   time,
   basis,
+  party,
   safeUrl,
   currentOption,
   tripStatus,
@@ -656,7 +657,7 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
         <div className="choice-content">
           <div className="choice-top">
             <span className="provider-icon">
-              <Icon of={stage === "transport" ? Plane : Building2} />
+              <Icon of={stage === "transport" ? (candidate?.transport_mode === "avia" ? Plane : Route) : Building2} />
             </span>
             <div>
               <span className="choice-kicker">
@@ -696,7 +697,7 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
               </div>
               <div>
                 <strong>{time(dates.arrival_at)}</strong>
-                <span>Сочи · AER</span>
+                <span>{candidate?.destination || state.constraints?.destination || "Сочи"}</span>
                 <small>{date(dates.arrival_at || dates.start)}</small>
               </div>
             </div>
@@ -707,7 +708,7 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
               {date(dates.start)} — {date(dates.end)}
               <span>
                 <Users size={16} />
-                {candidate?.adults || state.constraints?.adults} взрослых
+                {party(candidate?.adults ?? state.constraints?.adults, candidate?.children_ages ?? state.constraints?.children_ages)}
               </span>
             </div>
           )}
@@ -727,7 +728,7 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
           </div>
           <div className="choice-footer">
             <div>
-              <strong className="price">{money(price?.amount)}</strong>
+              <strong className="price">{money(price?.amount, price?.currency)}</strong>
               <span className="small muted">
                 {basis(price?.basis)} · {price?.currency || "RUB"}
               </span>
@@ -831,10 +832,11 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
   const total = receipt?.payment?.amount ?? option?.budget?.known_subtotal;
   const componentCost = (item) =>
     item?.price?.amount == null ||
+    (item.price.currency && item.price.currency !== "RUB") ||
     !["party", "room_stay", "person", "ticket"].includes(item.price.basis)
       ? 0
       : Number(item.price.amount) *
-        (["person", "ticket"].includes(item.price.basis) ? c.adults || 1 : 1);
+        (["person", "ticket"].includes(item.price.basis) ? (c.adults || 0) + (c.children_ages?.length || 0) || 1 : 1);
   const transportCost = componentCost(
     items.find((i) => i.kind === "transport"),
   );
@@ -852,7 +854,7 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
           </span>
           <h2>{receipt ? "Ваш Сочи ждёт" : "Ваша поездка, целиком"}</h2>
           <p>
-            {date(c.start)} — {date(c.end)} · {c.adults || "—"} взрослых ·{" "}
+            {date(c.start)} — {date(c.end)} · {party(c.adults, c.children_ages)} ·{" "}
             {c.origin || "Город уточняется"}
           </p>
         </div>
@@ -890,11 +892,11 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
                   "Подробности уточняйте у поставщика."}
               </p>
               <p>
-                {money(item.price?.amount)} · {basis(item.price?.basis)}
+                {money(item.price?.amount, item.price?.currency)} · {basis(item.price?.basis)}
               </p>
               {(item.arrival_at || item.details?.arrival_at) && (
                 <p>
-                  Прилёт: {date(item.arrival_at || item.details.arrival_at)} ·{" "}
+                  Прибытие: {date(item.arrival_at || item.details.arrival_at)} ·{" "}
                   {time(item.arrival_at || item.details.arrival_at)}
                 </p>
               )}
@@ -1081,7 +1083,7 @@ function Planner({
           </span>
           <span>
             <Users size={14} />
-            {state.constraints.adults || "—"} взрослых
+            {party(state.constraints.adults, state.constraints.children_ages)}
           </span>
           {state.constraints.budget && (
             <span>
@@ -1098,7 +1100,7 @@ function Planner({
         <div className="notice warning">
           <CalendarDays size={20} />
           <span>
-            Прилёт {date(state.pending_check_in)}. Обсудите с ассистентом новую
+            Прибытие {date(state.pending_check_in)}. Обсудите с ассистентом новую
             дату заселения и подтвердите её в чате.
           </span>
         </div>

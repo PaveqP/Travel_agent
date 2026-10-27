@@ -25,8 +25,8 @@ async def main() -> None:
         cases = [('stays', 'search_hotels', {}, trip.model_copy(update={'destination': 'Адлер'})),
                  ('stays', 'search_hotels', {}, trip.model_copy(update={'destination': 'Красная Поляна'})),
                  ('transport', 'search_flights', {}, TripConstraints(origin='Москва', start='2026-11-13', end='2026-11-17', adults=2)),
-                 ('transport', 'yandex_schedule', {'origin': 'Адлер', 'destination': 'Роза Хутор'}, trip),
-                 ('transport', 'cached_flights', {'origin_iata': 'MOW'}, trip)]
+                 ('transport', 'yandex_schedule', {'origin': 's9613054', 'destination': 's9812791'}, trip),
+                 ('transport', 'cached_flights', {'origin_iata': 'MOW', 'departure_date': str(trip.start), 'return_date': str(trip.end)}, trip)]
         cases += [('experience', name, {}, trip) for name in ('search_places', 'geoapify_places', 'weather', 'events', 'attractions')]
         cases += [('stays', 'tavily_search', {'query': 'Сочи'}, trip)]
         for role, name, arguments, constraints in cases:
@@ -34,7 +34,7 @@ async def main() -> None:
             tools = build_tools(role, constraints, 1, client, env, evidence, warnings, counts)
             result = await next(t for t in tools if t.name == name).ainvoke(arguments)
             record = {'role': role, 'tool': name, 'destination': constraints.destination, 'start': str(constraints.start),
-                      'status': result['status'], 'candidates': len(evidence), 'warnings': warnings,
+                      'status': result['status'], 'observations': len(evidence), 'warnings': warnings,
                       'evidence': [c.model_dump(mode='json') for c in evidence.values()]}
             results.append(record)
             Path(args.output).write_text(json.dumps({'created_at': datetime.now(timezone.utc).isoformat(), 'results': results}, ensure_ascii=False, indent=2))

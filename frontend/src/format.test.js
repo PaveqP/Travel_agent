@@ -34,3 +34,9 @@ test("summary follows selected option", () => {
     "b",
   );
 });
+
+test("party labels preserve children and infant ages", async () => {
+  const { party } = await import("./format.js");
+  assert.equal(party(2, [6, 1]), "2 взрослых; дети (возраст): 6, 1");
+  assert.equal(party(1, []), "1 взрослых");
+});

@@ -14,12 +14,12 @@ export const stageNames = [
   "Проверка",
   "Готово",
 ];
-export const money = (value) =>
+export const money = (value, currency = "RUB") =>
   value == null
     ? "Уточняется"
     : new Intl.NumberFormat("ru-RU", {
         style: "currency",
-        currency: "RUB",
+        currency,
         maximumFractionDigits: 0,
       }).format(Number(value));
 export const date = (value) =>
@@ -65,3 +65,6 @@ export function tripStatus(
   if (c.start && c.start <= today) return "В путешествии";
   return "Скоро в путь";
 }
+
+export const party = (adults, childrenAges = []) =>
+  `${adults ?? "—"} взрослых${childrenAges.length ? `; дети (возраст): ${childrenAges.join(", ")}` : ""}`;

@@ -106,7 +106,7 @@ def create_app(
                     app.state.persistent = False
                 prompts = read_prompts()
                 models = {
-                    role: create_model(config, client)
+                    role: create_model(config, client, max_tokens=8192)
                     for role in ("transport", "stays", "experience")
                 }
                 runners = {

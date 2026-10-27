@@ -15,7 +15,7 @@ from travel_agent.api import create_app
 from travel_agent.graph import build_graph
 from travel_agent.prompts import load_prompt
 from travel_agent.schemas import OfferCard, SupervisorDecision, TripDelta
-from test_agent_isolation import ToolModel, selection
+from test_agent_isolation import ProviderModel, selection
 from test_travel_agent import FIXTURES, TRIP
 
 
@@ -65,7 +65,7 @@ class PipelineE2ETests(unittest.TestCase):
         runners = {
             role: partial(
                 run,
-                model=ToolModel(responses=[selection()]),
+                model=ProviderModel(role=role,responses=[]),
                 client=client,
                 env={},
                 prompt=load_prompt(role),
@@ -135,10 +135,10 @@ class PipelineE2ETests(unittest.TestCase):
             transport = result["results"]["transport"]
             calls.clear()
             result = send("отель")
-            self.assertEqual(calls, [])
+            self.assertEqual([c[1] for c in calls], ["search_hotels"])
             self.assertEqual(result["stage"], "stays")
             result = complete(result)
-            self.assertEqual([c[1] for c in calls], ["search_places"])
+            self.assertEqual([c[1] for c in calls], ["search_hotels", "search_places"])
             self.assertEqual(result["results"]["transport"], transport)
             self.assertTrue(
                 all("Mirror" in o["stay"]["name"] for o in result["options"])

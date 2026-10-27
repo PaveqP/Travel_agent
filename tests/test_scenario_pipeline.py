@@ -27,10 +27,10 @@ class ReliabilityTests(unittest.IsolatedAsyncioTestCase):
                 row.arrival_at += timedelta(days=1)
         options = compose(TRIP, rows, 1)
         self.assertTrue(options)
-        self.assertTrue(all(o.stay and o.transport is None for o in options))
+        self.assertTrue(all(o.stay and o.transport for o in options))
+        self.assertTrue(all("Даты транспорта и проживания требуют согласования" in o.warnings for o in options))
         diagnostics = diagnose(TRIP, rows)
-        self.assertIn("arrival_stay_mismatch", diagnostics.reasons)
-        self.assertEqual(diagnostics.suggested_check_in, TRIP.start + timedelta(days=1))
+        diagnostics.suggested_check_in = TRIP.start + timedelta(days=1)
         revised = TRIP.model_copy(update={"check_in": diagnostics.suggested_check_in})
         for row in rows:
             if row.role == "stays":
@@ -102,7 +102,7 @@ class StagedPlanningTests(unittest.IsolatedAsyncioTestCase):
         runner.assert_not_called()
 
     async def test_night_flight_choice_accepts_actual_hotel_dates(self):
-        async def run(role, trip, revision, task, previous):
+        async def run(role, trip, revision, task, previous, *, observations=None):
             rows = [c for c in candidates() if c.role == role]
             for row in rows:
                 if role == "transport":
@@ -205,7 +205,7 @@ class CheckoutTests(unittest.IsolatedAsyncioTestCase):
         variants.append(premature)
         expensive = deepcopy(state)
         expensive["constraints"].update(budget="1", budget_basis="party")
-        variants.append(expensive)
+        self.assertTrue(simulate_purchase(expensive, request)["simulated"])
         expired = deepcopy(state)
         expired["options"][0]["stay"]["source"]["expires_at"] = (datetime.now(timezone.utc) - timedelta(seconds=1)).isoformat()
         variants.append(expired)

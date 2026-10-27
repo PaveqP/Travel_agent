@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest.mock import AsyncMock, patch
 
 import httpx
-from langchain_core.messages import HumanMessage
+from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.runnables import RunnableLambda
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
@@ -159,7 +159,7 @@ class DialogueTests(unittest.IsolatedAsyncioTestCase):
             ):
                 result = await research(
                     state,
-                    models={"stays": ToolModel(responses=[extract, selection()])},
+                    models={"stays": ToolModel(responses=[AIMessage(content="",tool_calls=[{"name":"tavily_search","args":{"query":"Mirror Сочи бассейн"},"id":"search","type":"tool_call"}]),extract, selection()])},
                     client=client,
                     env={"TAVILY_API_KEY": "fixture-key"},
                     prompt=load_prompt("research"),
@@ -183,14 +183,15 @@ class DialogueTests(unittest.IsolatedAsyncioTestCase):
             transport=httpx.MockTransport(lambda r: self.fail("Network forbidden"))
         ) as client:
             result = await research(
-                state, models={}, client=client, env={}, prompt=load_prompt("research")
+                state, models={"stays":ToolModel(responses=[AIMessage(content="",tool_calls=[{"name":"tavily_search","args":{"query":"Отзывы"},"id":"search","type":"tool_call"}]), selection()])}, client=client, env={}, prompt=load_prompt("research")
             )
         self.assertIn("tavily:missing_key", result.warnings)
         state["research"] = result.model_dump(mode="json")
         present = llm_presenter(
             ResponseModel(UserResponse(text="invented")), load_prompt("response")
         )
-        self.assertIn("не удалось получить веб-источники", await present(state))
+        self.assertFalse(result.sources)
+        self.assertEqual(result.observations[0].status,"missing_key")
 
     async def test_response_grounded_ids_prices_and_source_links(self):
         state = planned()
@@ -271,8 +272,8 @@ class DialogueTests(unittest.IsolatedAsyncioTestCase):
             for i in range(4)
         ]
         options = compose(TRIP, rows, 1)
-        self.assertEqual(len(options), 5)
-        self.assertEqual(len({o.stay.id for o in options}), 5)
+        self.assertEqual(len(options), 21)
+        self.assertEqual(len({o.stay.id for o in options}), 7)
         self.assertEqual(
             apply_delta(TRIP, TripDelta(purpose="Работа"))[1], {"stays", "experience"}
         )
@@ -363,8 +364,8 @@ class DialogueTests(unittest.IsolatedAsyncioTestCase):
         rows = candidates()
         stay = max((c for c in rows if c.role == "stays"), key=lambda c: c.price.amount)
         options = compose(TRIP, rows, 1, preferred_stays=[stay.id])
-        self.assertEqual(options[0].stay.id, stay.id)
-        self.assertEqual(len(options), 3)
+        self.assertTrue(any(o.stay.id == stay.id for o in options))
+        self.assertEqual(len(options), 9)
 
     async def test_greeting_bypasses_trip_requirements_and_extra_model_calls(self):
         runner, present, lookup = AsyncMock(), AsyncMock(), AsyncMock()

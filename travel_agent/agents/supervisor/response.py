@@ -16,15 +16,15 @@ def render_card(card: dict, index: int | None = None) -> str:
     dates = card['dates']
     if dates.get('start'):
         lines.append(f"Даты: {dates['start']} — {dates.get('end') or 'не указано'}.")
-    for field, label in (('departure_at', 'Вылет'), ('arrival_at', 'Прилёт'), ('return_departure_at', 'Обратный вылет')):
+    for field, label in (('departure_at', 'Отправление'), ('arrival_at', 'Прибытие'), ('return_departure_at', 'Отправление обратно')):
         if dates.get(field):
             lines.append(label + ': ' + datetime.fromisoformat(dates[field]).strftime('%d.%m.%Y %H:%M') + '.')
     price = card.get('price')
     if price:
-        basis = 'на человека' if price['basis'] in ('person', 'ticket') else 'за всю группу и весь период'
+        basis = {'person': 'на человека', 'ticket': 'за билет', 'party': 'за всю группу', 'room_stay': 'за проживание', 'unknown': '(основа цены не подтверждена)'}[price['basis']]
         lines.append(f"Цена: {Decimal(price['amount']):,.2f} {price['currency']} {basis}.".replace(',', ' '))
         if card.get('price_per_person') and price['basis'] not in ('person', 'ticket'):
-            lines.append(f"На человека: {Decimal(card['price_per_person']['amount']):,.2f} {price['currency']}.".replace(',', ' '))
+            lines.append(f"В среднем на человека: {Decimal(card['price_per_person']['amount']):,.2f} {price['currency']}.".replace(',', ' '))
     else:
         lines.append('Цена: источник не указал.')
     warnings = {'expired_quote': 'Сохранённая цена устарела; проверю перед выбором.', 'unverified_availability': 'Это кэш/справочная выдача, наличие не подтверждено.',
@@ -46,6 +46,8 @@ def render_stage(state: dict) -> str:
         lines.append(state['notice'])
     if trip.origin or trip.adults:
         lines.append(f"Из {trip.origin or 'города, который нужно указать'}; взрослых: {trip.adults or 'не указано'}.")
+    if trip.children_ages:
+        lines.append('Возраст детей: ' + ', '.join(map(str, trip.children_ages)) + '.')
     if trip.date_from and trip.date_to:
         lines.append(f"Диапазон поиска: {trip.date_from:%d.%m.%Y} — {trip.date_to:%d.%m.%Y}.")
     if stage == "booked" and state.get("receipt"):
@@ -60,9 +62,12 @@ def render_stage(state: dict) -> str:
         candidate = next((c for r in state.get("results", {}).values() for c in r.get("candidates", []) if c["id"] == ident), None)
         if candidate:
             lines.append(f"{label}: {candidate['name']}.")
-            if role == "transport" and stage == "stays" and trip.party_budget:
+            if role == "transport" and stage == "stays" and trip.party_budget and candidate.get("price", {}).get("currency") == 'RUB':
                 remaining = trip.party_budget - Decimal(candidate["price"]["amount"])
                 lines.append(f"После билетов от предела группы остаётся {remaining:,.2f} ₽ на остальные расходы.".replace(",", " "))
+    explanation = state.get('results', {}).get(stage if stage in ('transport', 'stays') else 'experience', {}).get('explanation', '')
+    if explanation:
+        lines.append(explanation)
     for index, choice in enumerate(state.get("choices", []), 1):
         if choice.get('aggregator'):
             lines.append('\n' + render_card(choice, index))
@@ -70,7 +75,7 @@ def render_stage(state: dict) -> str:
         lines.append(f"\n{index}. {choice['title']}\n{choice['details']}")
         if choice.get("price"):
             amount = Decimal(choice["price"]["amount"])
-            per_person = f"; {amount / trip.adults:,.2f} ₽ на человека" if trip.adults else ""
+            per_person = f"; {amount / trip.party_size:,.2f} ₽ на человека" if trip.adults else ""
             lines.append(f"{amount:,.2f} ₽ за всю группу и весь период{per_person}.".replace(",", " "))
     if stage == "scenarios":
         lines.append("Это направления поиска. Цены, наличие и свойства конкретных отелей ещё не проверены. Выберите сценарий по номеру; затем согласуем даты и транспорт.")
@@ -79,9 +84,9 @@ def render_stage(state: dict) -> str:
         if not state.get("choices"):
             received = len(result.get("candidates", []))
             warnings = result.get("warnings", [])
-            issues = {"timeout": "источник не ответил вовремя", "network_error": "ошибка соединения", "schema_error": "не удалось проверить формат ответа", "missing_key": "не настроен ключ источника", "forbidden": "доступ запрещён", "no_availability": "источник не подтвердил наличие", "llm_error": "не удалось завершить обработку моделью", "agent_limit": "достигнут лимит обработки"}
+            issues = {"timeout": "источник не ответил вовремя", "network_error": "ошибка соединения", "schema_error": "не удалось проверить формат ответа", "missing_key": "не настроен ключ источника", "forbidden": "доступ запрещён", "no_availability": "источник не подтвердил наличие", "llm_error": "не удалось завершить обработку моделью", "agent_limit": "достигнут лимит обработки", "payment_required": "недостаточно средств на стороне провайдера"}
             causes = list(dict.fromkeys(issues[w.split(":")[-1]] for w in warnings if w.split(":")[-1] in issues))
-            lines.append(f"Источник вернул {received} кандидатов; карточек с проверяемыми данными пока нет.")
+            lines.append(f"Сохранено ответов источников: {len(result.get('observations', []))}; карточек с проверяемыми данными: {received}.")
             if causes:
                 lines.append("Причина: " + "; ".join(causes) + ".")
             lines.append("Ограниченный поиск пока не дал предложений. Сохранённые компоненты поездки остаются доступны.")
@@ -95,7 +100,7 @@ def render_stage(state: dict) -> str:
             amount = Decimal(option["budget"]["known_subtotal"])
             lines.append(f"\nБилеты и проживание: {amount:,.2f} ₽ за группу.".replace(",", " "))
             if trip.adults:
-                lines.append(f"На человека: {amount / trip.adults:,.2f} ₽.".replace(",", " "))
+                lines.append(f"В среднем на человека: {amount / trip.party_size:,.2f} ₽.".replace(",", " "))
             for day in option.get("days", []):
                 places = ", ".join(c["name"] for c in day["candidates"]) or "свободное время / дорога"
                 lines.append(f"{day['date']}: {places}.")
@@ -107,22 +112,7 @@ def render_stage(state: dict) -> str:
 
 
 def option_context(state: dict) -> list[dict]:
-    return [
-        {
-            **{k: o[k] for k in ("id", "transport", "stay", "budget", "warnings")},
-            "days": [
-                {
-                    "date": d["date"],
-                    "places": [
-                        {"name": c["name"], "area": c.get("area")}
-                        for c in d["candidates"]
-                    ],
-                }
-                for d in o.get("days", [])
-            ],
-        }
-        for o in state.get("options", [])
-    ]
+    return state.get("options", [])
 
 
 def render_options(state: dict, response: UserResponse | None = None) -> str:
@@ -164,7 +154,7 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
                 "%d.%m в %H:%M"
             )
             lines.append(
-                f"Перелёт: {flight['name']}; прилёт {arrival}, обратный вылет {departure} (местное время)."
+                f"Транспорт: {flight['name']}; прибытие {arrival}, отправление обратно {departure} (местное время)."
             )
         amount = (
             f"{Decimal(option['budget']['known_subtotal']):,.2f}".rstrip("0")
@@ -182,10 +172,6 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
             lines.append(f"Подойдёт: {comment.benefit}\nКомпромисс: {comment.tradeoff}")
         if any("превышает бюджет" in w for w in option["warnings"]):
             lines.append("Известная сумма уже превышает ваш бюджет.")
-    if len(state.get("options", [])) < 5:
-        lines.append(
-            "\nПоказываю столько различных вариантов, сколько удалось проверить; до пяти."
-        )
     lines.append(
         "Питание, местные переезды, активности и дополнительные сборы не включены. Полная стоимость неизвестна; наличие и бронирование не подтверждены."
     )
@@ -206,10 +192,7 @@ def llm_presenter(model, prompt: str):
             "phase": "present_options" if planning else "answer_question",
             "now": datetime.now(timezone.utc).isoformat(),
             "constraints": state.get("constraints", {}),
-            "results": {
-                role: {"status": row["status"], "warnings": row.get("warnings", [])}
-                for role, row in state.get("results", {}).items()
-            },
+            "results": state.get("results", {}),
             "options": option_context(state),
             "selected": state.get("selected"),
             "stage": state.get("stage"),
@@ -227,15 +210,15 @@ def llm_presenter(model, prompt: str):
         if (
             not planning
             and state.get("decision", {}).get("action") == "research"
-            and not sources
+            and not sources and not research.get("observations")
         ):
-            return "Сейчас не удалось получить веб-источники по этому вопросу. Не могу подтвердить детали отеля или района. Сохранённые варианты поездки остаются доступны; можно обсудить их цены или изменить пожелания."
+            return "Сейчас не удалось получить веб-источники по этому вопросу. Не могу подтвердить запрошенные условия. Сохранённые варианты поездки остаются доступны; можно обсудить их цены или изменить пожелания."
         try:
             result = UserResponse.model_validate(
                 await structured.ainvoke(
                     [
                         SystemMessage(content=prompt),
-                        *state.get("messages", [])[-8:],
+                        *state.get("messages", []),
                         HumanMessage(content=json.dumps(context, ensure_ascii=False)),
                     ]
                 )

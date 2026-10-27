@@ -1,4 +1,5 @@
 import httpx
+from urllib.parse import urlparse
 from langchain_openai import ChatOpenAI
 
 from travel_agent.config import Settings
@@ -13,7 +14,8 @@ def create_model(
         base_url=config.base_url,
         http_async_client=client,
         max_retries=0,
-        timeout=45,
+        timeout=config.deadline,
         max_tokens=max_tokens,
         use_responses_api=False,
+        extra_body={"reasoning": {"effort": "none"}} if urlparse(config.base_url).hostname == "polza.ai" else None,
     )
