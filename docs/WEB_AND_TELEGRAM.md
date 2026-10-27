@@ -67,18 +67,35 @@ docker compose down
 Отдельный локальный сервер или второй экземпляр polling того же бота следует
 остановить перед запуском, чтобы освободить порт и обработку Telegram.
 
-Если существующая БД отвечает `password authentication failed`, укажите в `.env`
-прежний пароль. Если пароль намеренно меняется, сохраните volume и смените пароль
-роли через интерактивный psql, затем повторите запуск:
+### Ошибка пароля PostgreSQL
+
+`password authentication failed for user "travel"` с последующим `PoolTimeout`
+означает, что пароль приложения не подходит к сохранённой БД. Сообщение
+`Skipping initialization` подтверждает использование существующего volume.
+`POSTGRES_PASSWORD` задаёт пароль только при первом создании БД:
+[поведение официального образа](https://hub.docker.com/_/postgres).
+
+Можно вернуть прежний `TRAVEL_POSTGRES_PASSWORD` в `.env`. Чтобы вместо этого
+синхронизировать пароль роли `travel` с текущим значением Compose без удаления
+данных, выполните из корня проекта:
 
 ```bash
-docker compose up -d postgres
-docker compose exec postgres psql -U travel -d travel
+docker compose stop app
+docker compose up -d --wait postgres
+docker compose exec -T postgres sh -eu -c \
+  'printf "%s\n%s\n" "$POSTGRES_PASSWORD" "$POSTGRES_PASSWORD" |
+   psql -X -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "\password travel"'
+docker compose up -d --wait
 ```
 
-В psql выполните `\password travel`, введите новый пароль из `.env` в скрытых
-приглашениях и выйдите командой `\q`. Затем `docker compose up -d --wait`.
-Данные при такой смене пароля сохраняются.
+Команда передаёт пароль из окружения контейнера в скрытые приглашения
+[`\password`](https://www.postgresql.org/docs/17/app-psql.html#APP-PSQL-META-COMMAND-PASSWORD),
+не выводит его и не меняет `.env`. Данные остаются в прежнем volume.
+Не используйте `docker compose down -v` для исправления пароля: это удалит БД.
+
+Статус `healthy` у `postgres` проверяет готовность через `pg_isready`,
+но не подтверждает правильность пароля. Внутри контейнера подключения с
+`localhost` используют `trust`; проверять пароль нужно из контейнера приложения.
 
 ### Без контейнера приложения
 
