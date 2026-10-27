@@ -15,7 +15,12 @@ from langgraph.errors import GraphRecursionError
 from openai import APIError
 from pydantic import ValidationError
 
-from travel_agent.schemas import ResearchResult, SpecialistSelection, TripConstraints
+from travel_agent.schemas import (
+    Candidate,
+    ResearchResult,
+    SpecialistSelection,
+    TripConstraints,
+)
 from travel_agent.tools import build_tools
 
 
@@ -23,27 +28,51 @@ async def research(state, *, models, client, env, prompt) -> ResearchResult:
     role = state["decision"]["research_role"]
     sources = []
     warnings = []
+    candidates = {
+        c.id: c
+        for r in state.get("results", {}).values()
+        for row in r.get("candidates", [])
+        if (c := Candidate.model_validate(row)).role == role
+    }
+    ids = state["decision"].get("source_ids") or [state.get("selected_stay")]
+    evidence = (
+        {ident: candidates[ident] for ident in ids if ident in candidates}
+        if role == "stays"
+        else {}
+    )
     tools = build_tools(
         role,
         TripConstraints.model_validate(state.get("constraints", {})),
         state.get("revision", 0),
         client,
         env,
-        {},
+        evidence,
         warnings,
         {"tools": 0},
         web_evidence=sources,
     )
-    tools = [t for t in tools if t.name in ("tavily_search", "tavily_extract")]
+    tools = [
+        t
+        for t in tools
+        if t.name in ("tavily_search", "tavily_extract", "hotel_details")
+    ]
     query = state["decision"].get("task", "")
     if not query.strip():
         return ResearchResult(role=role, warnings=["missing_query"])
     try:
         async with asyncio.timeout(70):
-            observation = await next(
-                t for t in tools if t.name == "tavily_search"
-            ).ainvoke({"query": query})
-            if observation["status"] == "ok":
+            observations = []
+            if evidence:
+                result = await next(
+                    t for t in tools if t.name == "hotel_details"
+                ).ainvoke({"source_id": next(iter(evidence))})
+                observations.append({"tool": "hotel_details", "result": result})
+            if env.get("TAVILY_API_KEY") or not sources:
+                result = await next(
+                    t for t in tools if t.name == "tavily_search"
+                ).ainvoke({"query": query})
+                observations.append({"tool": "tavily_search", "result": result})
+            if sources:
                 agent = create_agent(
                     model=models[role],
                     tools=tools,
@@ -65,7 +94,7 @@ async def research(state, *, models, client, env, prompt) -> ResearchResult:
                                     {
                                         "role": role,
                                         "task": query,
-                                        "observations": observation,
+                                        "observations": observations,
                                     },
                                     ensure_ascii=False,
                                 )

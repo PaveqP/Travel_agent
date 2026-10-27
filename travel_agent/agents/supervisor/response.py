@@ -88,6 +88,11 @@ def render_stage(state: dict) -> str:
         else:
             lines.append("Выберите номер предложения: согласую его фактические даты и продолжу подбор. Для сохранённых или справочных цен сначала выполню проверку. Поисковая цена не подтверждает резерв.")
     elif stage in ("itinerary", "review", "booked"):
+        experience = state.get('results', {}).get('experience', {})
+        if experience.get('status') == 'partial':
+            lines.append('Программа получена частично. Ошибки источников или лимит обработки помешали завершить проверку; найденные места доступны как кандидаты.')
+            if not experience.get('selected_ids'):
+                lines.append('Места пока не отобраны для программы. Можно попросить повторить поиск активностей; билеты и отель сохранены.')
         if state.get('cards'):
             lines.append('\nНайденные места и активности:' if stage == 'itinerary' else '\nКомпоненты поездки:')
             lines.extend(render_card(card) for card in state['cards'])
@@ -235,8 +240,8 @@ def llm_presenter(model, prompt: str):
                 await structured.ainvoke(
                     [
                         SystemMessage(content=prompt),
-                        *state.get("messages", [])[-8:],
                         HumanMessage(content=json.dumps(context, ensure_ascii=False)),
+                        *state.get("messages", [])[-8:],
                     ]
                 )
             )

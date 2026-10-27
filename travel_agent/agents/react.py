@@ -56,6 +56,9 @@ async def run_react(
             observations = [
                 {"tool": primary, "result": await by_name[primary].ainvoke({})}
             ]
+            primary_status = observations[0]['result'].get('status', 'schema_error')
+            if primary_status not in ('ok', 'empty'):
+                warnings.append(f'{primary}:{primary_status}')
             if not evidence and fallback is not None:
                 observations.append(
                     {"tool": fallback, "result": await by_name[fallback].ainvoke({})}

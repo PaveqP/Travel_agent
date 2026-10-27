@@ -235,8 +235,14 @@ def compose(trip: TripConstraints, candidates: list[Candidate], revision: int, n
             selected = []
             arrival = flight.arrival_at.date() if flight else trip.stay_start
             if arrival < day < trip.end:
+                eligible_today = [c for c in available if not c.start or c.start == day]
+                regions = list(dict.fromkeys(area_of(c.coordinates) == 'Красная Поляна' for c in eligible_today))
+                mountain_day = regions[(index - 1) % len(regions)] if regions else None
+                target_area = next((area_of(c.coordinates) for c in eligible_today if (area_of(c.coordinates) == 'Красная Поляна') == mountain_day), None)
                 for activity in list(available):
                     if activity.start and activity.start != day:
+                        continue
+                    if area_of(activity.coordinates) != target_area:
                         continue
                     if selected and area_of(activity.coordinates) != area_of(selected[0].coordinates):
                         continue

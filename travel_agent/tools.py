@@ -98,6 +98,14 @@ def normalize(
                     id="hotel:" + row["hotel_id"],
                     role="stays",
                     name=row["name"],
+                    stars=row.get("stars"), rating=row.get("rating"),
+                    review_count=row.get("review_count"), address=row.get("address"),
+                    description='; '.join(value for value in (
+                        f"Звёзды: {row['stars']}" if row.get('stars') else '',
+                        f"Оценка Туту: {row['rating']}/10" if row.get('rating') is not None else '',
+                        f"Отзывов: {row['review_count']}" if row.get('review_count') is not None else '',
+                        row.get('address') or '',
+                    ) if value)[:1000],
                     coordinates=coordinates,
                     area=area_of(coordinates),
                     source=source if priced else source.model_copy(update={"evidence": "catalog"}),
@@ -186,6 +194,7 @@ def normalize(
                     id="2gis:" + row["id"],
                     role="experience",
                     name=row["name"],
+                    description='; '.join(str(row[k]) for k in ('subtype', 'full_address_name') if row.get(k))[:1000],
                     source=source,
                     coordinates=point,
                     area=area_of(point),
@@ -285,8 +294,13 @@ def build_tools(
     }
     env = {key: env[key] for key in key_names[role] if key in env}
     urls: set[str] = set()
-    owned: set[tuple[str, str]] = set()
+    owned: set[tuple[str, str]] = {
+        ('hotels', c.id.removeprefix('hotel:')) for c in evidence.values()
+        if role == 'stays' and c.role == 'stays' and c.id.startswith('hotel:')
+        and c.source.provider == 'tutu' and (c.start, c.end, c.adults) == (trip.stay_start, trip.stay_end, trip.adults)
+    }
     responses: dict[str, dict] = {}
+    flight_details: dict[str, dict] = {}
 
     async def execute(name: str, provider: str, operation, method: str = "", query_trip: TripConstraints | None = None) -> dict:
         if name not in ALLOWED[role]:
@@ -298,7 +312,7 @@ def build_tools(
         started = time.monotonic()
         status = "ok"
         try:
-            async with asyncio.timeout(65 if provider in ("tutu", "2gis") else 40):
+            async with asyncio.timeout(12 if method == "build_route" else 65 if provider in ("tutu", "2gis") else 40):
                 response = await operation()
             if isinstance(response, httpx.Response):
                 response.raise_for_status()
@@ -317,6 +331,9 @@ def build_tools(
             candidates = normalize(
                 provider, method, data, query_trip or trip, datetime.now(timezone.utc)
             )
+            if provider == 'tutu' and method == 'search_avia':
+                verified = {c.id for c in candidates}
+                flight_details.update({row['offer_id']: row for row in data.get('offers', []) if 'avia:' + row['offer_id'] in verified})
             for candidate in candidates:
                 evidence[candidate.id] = candidate
                 if provider == "tutu":
@@ -331,6 +348,7 @@ def build_tools(
                             include={
                                 "id",
                                 "name",
+                                "stars", "rating", "review_count", "address", "description",
                                 "price",
                                 "area",
                                 "start",
@@ -353,6 +371,20 @@ def build_tools(
                 "search_places",
             ) or provider in ("geoapify", "timepad", "opentripmap"):
                 return {"status": "empty", "candidates": []}
+            if method in ('search_rail', 'search_etrain') or provider == 'yandex_rasp':
+                rows = data.get('offers' if provider == 'tutu' else 'segments', [])
+                return {'status': 'ok' if rows else 'empty', 'context': data,
+                        'warning': 'Schedule context only; not a validated round-trip quote'}
+            if provider == 'tutu' and method == 'get_offer_details' and web_evidence is not None:
+                hotel = data.get('hotel', {})
+                details = {'hotel': {k: hotel[k] for k in ('name', 'stars', 'rating', 'address', 'amenities', 'amenity_groups', 'review_summary', 'policies') if k in hotel},
+                           'rooms': [{k: room[k] for k in ('room_name', 'room_amenities', 'max_occupancy') if k in room} for room in data.get('rooms', [])[:2]]}
+                candidate = next((c for c in evidence.values() if c.id == 'hotel:' + str(hotel.get('hotel_id') or hotel.get('id') or '')), None)
+                if candidate is None and len(evidence) == 1:
+                    candidate = next(iter(evidence.values()))
+                if candidate is not None and details['hotel']:
+                    web_evidence.append(WebEvidence(url=candidate.url or candidate.source.source_url,
+                        title='Туту: ' + candidate.name, text=json.dumps(details, ensure_ascii=False)[:2000], retrieved_at=datetime.now(timezone.utc)))
             if provider == "openmeteo":
                 daily = data.get("daily", {})
                 dates = daily.get("time", [])
@@ -417,6 +449,10 @@ def build_tools(
         return {"status": status}
 
     async def mcp(name: str, provider: str, method: str, args: dict) -> dict:
+        if method == 'get_offer_details' and args.get('product_type') == 'avia':
+            ref = flight_details.get(args.get('offer_id'))
+            if ref is not None:
+                args = {**args, 'details_ref': ref}
         key = json.dumps([name, provider, method, args], sort_keys=True)
         if key in responses:
             return responses[key]

@@ -248,8 +248,9 @@ class FlexibleGraphTests(unittest.IsolatedAsyncioTestCase):
             error = exc
         structured = AsyncMock(side_effect=[error, SupervisorDecision(action='compose', patch=TripDelta(date_from='2026-12-01', date_to='2026-12-20'))])
         model = Mock()
-        model.with_structured_output.return_value = Mock(ainvoke=structured)
+        model.with_structured_output.side_effect = lambda schema, **kwargs: Mock(ainvoke=AsyncMock(return_value=TripDelta())) if schema is TripDelta else Mock(ainvoke=structured)
         result = await llm_decider(model, 'Supervisor')({'messages': [HumanMessage(content='С 1 по 20 декабря')]})
         self.assertEqual(result.patch.date_to, date(2026, 12, 20))
         self.assertEqual(structured.await_count, 2)
-        self.assertIn('patch.date_from/date_to', structured.await_args.args[0][-1].content)
+        self.assertEqual(structured.await_args.args[0][-1].content, 'С 1 по 20 декабря')
+        self.assertTrue(any('patch.date_from/date_to' in m.content for m in structured.await_args.args[0]))

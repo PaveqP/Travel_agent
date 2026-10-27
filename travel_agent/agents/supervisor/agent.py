@@ -6,7 +6,8 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.exceptions import OutputParserException
 from pydantic import ValidationError
 
-from travel_agent.schemas import Candidate, SupervisorDecision
+from travel_agent.schemas import Candidate, SupervisorDecision, TripDelta
+from travel_agent.prompts import load_prompt
 from travel_agent.state import TripState
 from travel_agent.agents.supervisor.response import option_context
 
@@ -15,6 +16,9 @@ def llm_decider(model: BaseChatModel, prompt: str):
     structured = model.with_structured_output(
         SupervisorDecision, method="function_calling"
     )
+
+    extraction = model.with_structured_output(TripDelta, method="function_calling")
+    extraction_prompt = load_prompt("request")
 
     async def decide(state: TripState) -> SupervisorDecision:
         context = {
@@ -46,18 +50,88 @@ def llm_decider(model: BaseChatModel, prompt: str):
             ],
         }
         messages = [
-                SystemMessage(content=prompt),
-                *state.get("messages", [])[-12:],
-                HumanMessage(content=json.dumps(context, ensure_ascii=False)),
-            ]
+            SystemMessage(content=prompt),
+            HumanMessage(content=json.dumps(context, ensure_ascii=False)),
+            *state.get("messages", [])[-12:],
+        ]
         for attempt in range(2):
             try:
-                return SupervisorDecision.model_validate(await structured.ainvoke(messages))
+                decision = SupervisorDecision.model_validate(
+                    await structured.ainvoke(messages)
+                )
+                if decision.action in (
+                    "scenarios",
+                    "clarify",
+                    "compose",
+                    "transport",
+                    "stays",
+                    "experience",
+                ):
+                    latest = next(
+                        (
+                            m
+                            for m in reversed(state.get("messages", []))
+                            if isinstance(m, HumanMessage)
+                        ),
+                        HumanMessage(content=""),
+                    )
+                    delta = TripDelta.model_validate(
+                        await extraction.ainvoke(
+                            [
+                                SystemMessage(content=extraction_prompt),
+                                HumanMessage(
+                                    content=json.dumps(
+                                        {
+                                            "today": context["today"],
+                                            "constraints": context["constraints"],
+                                        },
+                                        ensure_ascii=False,
+                                    )
+                                ),
+                                latest,
+                            ]
+                        )
+                    )
+                    patch = {
+                        **decision.patch.model_dump(
+                            exclude_none=True, exclude={"clear"}
+                        ),
+                        **delta.model_dump(exclude_none=True, exclude={"clear"}),
+                    }
+                    cleared = list(
+                        dict.fromkeys(
+                            [
+                                name
+                                for name in decision.patch.clear
+                                if getattr(delta, name) is None
+                            ]
+                            + delta.clear
+                        )
+                    )
+                    for name in delta.clear:
+                        patch.pop(name, None)
+                    decision.patch = TripDelta.model_validate(
+                        {**patch, "clear": cleared}
+                    )
+                return decision
             except (ValidationError, OutputParserException) as exc:
                 if attempt:
                     raise
-                fields = [(e['loc'], e['type']) for e in exc.errors(include_input=False, include_url=False)] if isinstance(exc, ValidationError) else ['output_format']
-                messages.append(HumanMessage(content='Исправь только формат SupervisorDecision по схеме, сохрани смысл последнего сообщения. Диапазон дат записывается в patch.date_from/date_to; не выдумывай точные даты. Ошибки полей: ' + json.dumps(fields)))
-        raise OutputParserException('Supervisor structured output unavailable')
+                fields = (
+                    [
+                        (e["loc"], e["type"])
+                        for e in exc.errors(include_input=False, include_url=False)
+                    ]
+                    if isinstance(exc, ValidationError)
+                    else ["output_format"]
+                )
+                messages.insert(
+                    2,
+                    HumanMessage(
+                        content="Исправь только формат SupervisorDecision по схеме, сохрани смысл последнего сообщения. Диапазон дат записывается в patch.date_from/date_to; не выдумывай точные даты. Ошибки полей: "
+                        + json.dumps(fields)
+                    ),
+                )
+        raise OutputParserException("Supervisor structured output unavailable")
 
     return decide

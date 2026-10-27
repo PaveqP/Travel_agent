@@ -1,0 +1,3115 @@
+{
+  "created_at": "2026-10-27T21:36:32.767094+00:00",
+  "audited_head_before_fixes": "94e828a",
+  "read_only": true,
+  "sources": [
+    {
+      "role": "stays",
+      "tool": "search_hotels",
+      "arguments": {},
+      "destination": "Адлер",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 1.58,
+      "candidates": 10,
+      "new_candidates": 10,
+      "selectable": 10,
+      "areas": [
+        "Адлер",
+        "Сириус"
+      ],
+      "context_returned": false,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Родос",
+        "role": "stays",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "price": {
+          "amount": "7400.0",
+          "currency": "RUB",
+          "basis": "room_stay",
+          "taxes_included": null
+        },
+        "area": "Сириус",
+        "stars": 3,
+        "rating": "9.15",
+        "review_count": 187,
+        "description": "Звёзды: 3; Оценка Туту: 9.15/10; Отзывов: 187; 2.6 км от центра, 419 м до пляжа"
+      }
+    },
+    {
+      "role": "stays",
+      "tool": "hotel_details",
+      "arguments": {
+        "source_id": "hotel:7650079"
+      },
+      "destination": "Адлер",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 5.46,
+      "candidates": 10,
+      "new_candidates": 0,
+      "selectable": 10,
+      "areas": [
+        "Адлер",
+        "Сириус"
+      ],
+      "context_returned": true,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Родос",
+        "role": "stays",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "price": {
+          "amount": "7400.0",
+          "currency": "RUB",
+          "basis": "room_stay",
+          "taxes_included": null
+        },
+        "area": "Сириус",
+        "stars": 3,
+        "rating": "9.15",
+        "review_count": 187,
+        "description": "Звёзды: 3; Оценка Туту: 9.15/10; Отзывов: 187; 2.6 км от центра, 419 м до пляжа"
+      }
+    },
+    {
+      "role": "stays",
+      "tool": "search_hotels",
+      "arguments": {},
+      "destination": "Красная Поляна",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 1.25,
+      "candidates": 10,
+      "new_candidates": 10,
+      "selectable": 10,
+      "areas": [
+        "Красная Поляна"
+      ],
+      "context_returned": false,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Сочи Марриотт Красная Поляна",
+        "role": "stays",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "price": {
+          "amount": "53610.0",
+          "currency": "RUB",
+          "basis": "room_stay",
+          "taxes_included": null
+        },
+        "area": "Красная Поляна",
+        "stars": 5,
+        "rating": "9.07",
+        "review_count": 626,
+        "description": "Звёзды: 5; Оценка Туту: 9.07/10; Отзывов: 626; 281 м от центра"
+      }
+    },
+    {
+      "role": "stays",
+      "tool": "hotel_details",
+      "arguments": {
+        "source_id": "hotel:7646252"
+      },
+      "destination": "Красная Поляна",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 5.47,
+      "candidates": 10,
+      "new_candidates": 0,
+      "selectable": 10,
+      "areas": [
+        "Красная Поляна"
+      ],
+      "context_returned": true,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Сочи Марриотт Красная Поляна",
+        "role": "stays",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "price": {
+          "amount": "53610.0",
+          "currency": "RUB",
+          "basis": "room_stay",
+          "taxes_included": null
+        },
+        "area": "Красная Поляна",
+        "stars": 5,
+        "rating": "9.07",
+        "review_count": 626,
+        "description": "Звёзды: 5; Оценка Туту: 9.07/10; Отзывов: 626; 281 м от центра"
+      }
+    },
+    {
+      "role": "transport",
+      "tool": "search_flights",
+      "arguments": {},
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 2.36,
+      "candidates": 10,
+      "new_candidates": 10,
+      "selectable": 10,
+      "areas": [],
+      "context_returned": false,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Победа",
+        "role": "transport",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "price": {
+          "amount": "16396.0",
+          "currency": "RUB",
+          "basis": "party",
+          "taxes_included": null
+        },
+        "area": null,
+        "stars": null,
+        "rating": null,
+        "review_count": null,
+        "description": ""
+      }
+    },
+    {
+      "role": "transport",
+      "tool": "transport_details",
+      "arguments": {
+        "source_id": "avia:a04a671250bf5957059b93641b16b16a+d35398e02f3d684de2b124705b11d2f2"
+      },
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 30.89,
+      "candidates": 10,
+      "new_candidates": 0,
+      "selectable": 10,
+      "areas": [],
+      "context_returned": true,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Победа",
+        "role": "transport",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 2,
+        "price": {
+          "amount": "16396.0",
+          "currency": "RUB",
+          "basis": "party",
+          "taxes_included": null
+        },
+        "area": null,
+        "stars": null,
+        "rating": null,
+        "review_count": null,
+        "description": ""
+      }
+    },
+    {
+      "role": "transport",
+      "tool": "yandex_schedule",
+      "arguments": {
+        "origin": "Адлер",
+        "destination": "Роза Хутор"
+      },
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 0.5,
+      "candidates": 0,
+      "new_candidates": 0,
+      "selectable": 0,
+      "areas": [],
+      "context_returned": true,
+      "context_counts": {
+        "segments": 13,
+        "interval_segments": 0
+      },
+      "covers_trip": null,
+      "warnings": []
+    },
+    {
+      "role": "transport",
+      "tool": "cached_flights",
+      "arguments": {},
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 0.74,
+      "candidates": 10,
+      "new_candidates": 10,
+      "selectable": 0,
+      "areas": [],
+      "context_returned": false,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Aviasales — DP",
+        "role": "transport",
+        "start": "2026-11-12",
+        "end": "2026-11-16",
+        "adults": 1,
+        "price": {
+          "amount": "8086",
+          "currency": "RUB",
+          "basis": "person",
+          "taxes_included": null
+        },
+        "area": null,
+        "stars": null,
+        "rating": null,
+        "review_count": null,
+        "description": "Цена из кэша поисков Aviasales за одного пассажира. Наличие для всей группы и точное время прилёта требуют проверки."
+      }
+    },
+    {
+      "role": "experience",
+      "tool": "search_places",
+      "arguments": {},
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 31.92,
+      "candidates": 10,
+      "new_candidates": 10,
+      "selectable": 0,
+      "areas": [
+        "Сочи"
+      ],
+      "context_returned": false,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Ривьера, парк культуры и отдыха",
+        "role": "experience",
+        "start": null,
+        "end": null,
+        "adults": null,
+        "price": null,
+        "area": "Сочи",
+        "stars": null,
+        "rating": null,
+        "review_count": null,
+        "description": ""
+      }
+    },
+    {
+      "role": "experience",
+      "tool": "search_places",
+      "arguments": {
+        "query": "Рестораны",
+        "area": "Сочи"
+      },
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 1.61,
+      "candidates": 20,
+      "new_candidates": 10,
+      "selectable": 0,
+      "areas": [
+        "Сочи"
+      ],
+      "context_returned": false,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Ривьера, парк культуры и отдыха",
+        "role": "experience",
+        "start": null,
+        "end": null,
+        "adults": null,
+        "price": null,
+        "area": "Сочи",
+        "stars": null,
+        "rating": null,
+        "review_count": null,
+        "description": ""
+      }
+    },
+    {
+      "role": "experience",
+      "tool": "search_places",
+      "arguments": {
+        "query": "Достопримечательности",
+        "area": "Красная Поляна"
+      },
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 1.6,
+      "candidates": 30,
+      "new_candidates": 10,
+      "selectable": 0,
+      "areas": [
+        "Красная Поляна",
+        "Сочи"
+      ],
+      "context_returned": false,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Ривьера, парк культуры и отдыха",
+        "role": "experience",
+        "start": null,
+        "end": null,
+        "adults": null,
+        "price": null,
+        "area": "Сочи",
+        "stars": null,
+        "rating": null,
+        "review_count": null,
+        "description": ""
+      }
+    },
+    {
+      "role": "experience",
+      "tool": "route",
+      "arguments": {
+        "source_id": "2gis:4222652931637660"
+      },
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 1.78,
+      "candidates": 30,
+      "new_candidates": 0,
+      "selectable": 0,
+      "areas": [
+        "Красная Поляна",
+        "Сочи"
+      ],
+      "context_returned": true,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Ривьера, парк культуры и отдыха",
+        "role": "experience",
+        "start": null,
+        "end": null,
+        "adults": null,
+        "price": null,
+        "area": "Сочи",
+        "stars": null,
+        "rating": null,
+        "review_count": null,
+        "description": ""
+      }
+    },
+    {
+      "role": "experience",
+      "tool": "geoapify_places",
+      "arguments": {},
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 0.99,
+      "candidates": 10,
+      "new_candidates": 10,
+      "selectable": 0,
+      "areas": [
+        "Сочи"
+      ],
+      "context_returned": false,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Камень памяти жертвам политических репрессий",
+        "role": "experience",
+        "start": null,
+        "end": null,
+        "adults": null,
+        "price": null,
+        "area": "Сочи",
+        "stars": null,
+        "rating": null,
+        "review_count": null,
+        "description": ""
+      }
+    },
+    {
+      "role": "experience",
+      "tool": "weather",
+      "arguments": {},
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 0.44,
+      "candidates": 0,
+      "new_candidates": 0,
+      "selectable": 0,
+      "areas": [],
+      "context_returned": false,
+      "context_counts": {},
+      "covers_trip": false,
+      "warnings": [
+        "weather_outside_forecast_horizon"
+      ]
+    },
+    {
+      "role": "experience",
+      "tool": "events",
+      "arguments": {},
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 0.57,
+      "candidates": 3,
+      "new_candidates": 3,
+      "selectable": 0,
+      "areas": [
+        "Сочи"
+      ],
+      "context_returned": false,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Стендап-экскурсия по Сочи",
+        "role": "experience",
+        "start": "2026-11-13",
+        "end": null,
+        "adults": null,
+        "price": null,
+        "area": "Сочи",
+        "stars": null,
+        "rating": null,
+        "review_count": null,
+        "description": ""
+      }
+    },
+    {
+      "role": "experience",
+      "tool": "attractions",
+      "arguments": {},
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 0.51,
+      "candidates": 9,
+      "new_candidates": 9,
+      "selectable": 0,
+      "areas": [
+        "Сочи"
+      ],
+      "context_returned": false,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [],
+      "sample": {
+        "name": "Учительница",
+        "role": "experience",
+        "start": null,
+        "end": null,
+        "adults": null,
+        "price": null,
+        "area": "Сочи",
+        "stars": null,
+        "rating": null,
+        "review_count": null,
+        "description": ""
+      }
+    },
+    {
+      "role": "stays",
+      "tool": "tavily_search",
+      "arguments": {
+        "query": "Сочи"
+      },
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "missing_key",
+      "duration_seconds": 0.0,
+      "candidates": 0,
+      "new_candidates": 0,
+      "selectable": 0,
+      "areas": [],
+      "context_returned": false,
+      "context_counts": {},
+      "covers_trip": null,
+      "warnings": [
+        "tavily:missing_key"
+      ]
+    },
+    {
+      "role": "transport",
+      "tool": "search_trains",
+      "arguments": {
+        "mode": "rail"
+      },
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "ok",
+      "duration_seconds": 1.07,
+      "candidates": 0,
+      "new_candidates": 0,
+      "selectable": 0,
+      "areas": [],
+      "context_returned": true,
+      "context_counts": {
+        "offers": 6
+      },
+      "covers_trip": null,
+      "warnings": []
+    },
+    {
+      "role": "transport",
+      "tool": "search_trains",
+      "arguments": {
+        "mode": "etrain"
+      },
+      "destination": "Сочи",
+      "start": "2026-11-12",
+      "end": "2026-11-16",
+      "status": "empty",
+      "duration_seconds": 1.02,
+      "candidates": 0,
+      "new_candidates": 0,
+      "selectable": 0,
+      "areas": [],
+      "context_returned": true,
+      "context_counts": {
+        "offers": 0
+      },
+      "covers_trip": null,
+      "warnings": []
+    }
+  ],
+  "source_contracts_before_fixes": [
+    {
+      "provider": "2gis",
+      "method": "search_places",
+      "status": "ok",
+      "duration_seconds": 1.86,
+      "fields": [
+        "query",
+        "total",
+        "returned_count",
+        "items"
+      ],
+      "counts": {
+        "items": 10
+      },
+      "sample_fields": [
+        "id",
+        "name",
+        "type",
+        "subtype",
+        "full_address_name",
+        "address",
+        "coordinates",
+        "extra_fields"
+      ],
+      "attempts": 1
+    },
+    {
+      "provider": "2gis",
+      "method": "search_places",
+      "status": "ok",
+      "duration_seconds": 1.58,
+      "fields": [
+        "query",
+        "total",
+        "returned_count",
+        "items"
+      ],
+      "counts": {
+        "items": 10
+      },
+      "sample_fields": [
+        "id",
+        "name",
+        "type",
+        "subtype",
+        "full_address_name",
+        "address",
+        "coordinates",
+        "extra_fields"
+      ],
+      "attempts": 1
+    },
+    {
+      "provider": "2gis",
+      "method": "search_places",
+      "status": "ok",
+      "duration_seconds": 1.56,
+      "fields": [
+        "query",
+        "total",
+        "returned_count",
+        "items"
+      ],
+      "counts": {
+        "items": 10
+      },
+      "sample_fields": [
+        "id",
+        "name",
+        "type",
+        "subtype",
+        "full_address_name",
+        "address",
+        "coordinates",
+        "extra_fields"
+      ],
+      "attempts": 1
+    },
+    {
+      "provider": "tutu",
+      "method": "search_avia",
+      "status": "ok",
+      "duration_seconds": 9.88,
+      "fields": [
+        "offers",
+        "meta"
+      ],
+      "counts": {
+        "offers": 10
+      },
+      "sample_fields": [
+        "offer_id",
+        "transport",
+        "price",
+        "duration_min",
+        "carriers",
+        "search_results_url",
+        "segments_count",
+        "departure_at",
+        "arrival_at",
+        "return_departure_at",
+        "return_arrival_at",
+        "is_round_trip",
+        "legs",
+        "variants",
+        "checkout_ref",
+        "review_summary"
+      ],
+      "attempts": 1
+    },
+    {
+      "provider": "tutu",
+      "method": "get_offer_details",
+      "status": "schema_error",
+      "duration_seconds": 0.67,
+      "fields": [],
+      "counts": {},
+      "sample_fields": [],
+      "attempts": 1
+    },
+    {
+      "provider": "tutu",
+      "method": "search_rail",
+      "status": "ok",
+      "duration_seconds": 1.52,
+      "fields": [
+        "offers",
+        "meta"
+      ],
+      "counts": {
+        "offers": 6
+      },
+      "sample_fields": [
+        "offer_id",
+        "transport",
+        "price",
+        "duration_min",
+        "carriers",
+        "search_results_url",
+        "segments_count",
+        "departure_at",
+        "arrival_at",
+        "legs",
+        "checkout_ref",
+        "details_ref",
+        "review_summary",
+        "fares"
+      ],
+      "attempts": 1
+    },
+    {
+      "provider": "tutu",
+      "method": "search_etrain",
+      "status": "ok",
+      "duration_seconds": 17.07,
+      "fields": [
+        "offers",
+        "meta"
+      ],
+      "counts": {
+        "offers": 0
+      },
+      "sample_fields": [],
+      "attempts": 1
+    },
+    {
+      "provider": "tutu",
+      "method": "search_hotels",
+      "status": "ok",
+      "duration_seconds": 33.52,
+      "fields": [
+        "hotels",
+        "stay",
+        "meta"
+      ],
+      "counts": {
+        "hotels": 10
+      },
+      "sample_fields": [
+        "hotel_id",
+        "hotel_geo_id",
+        "tutu_offer_id",
+        "name",
+        "stars",
+        "rating",
+        "review_count",
+        "address",
+        "location",
+        "photos",
+        "alias",
+        "checkout_url",
+        "best_offer",
+        "review_summary",
+        "checkout_ref",
+        "photos_total"
+      ],
+      "attempts": 2
+    },
+    {
+      "provider": "tutu",
+      "method": "get_offer_details",
+      "status": "ok",
+      "duration_seconds": 1.46,
+      "fields": [
+        "hotel",
+        "stay",
+        "rooms",
+        "filters_available",
+        "checkout_hint"
+      ],
+      "counts": {
+        "rooms": 4,
+        "filters_available": 2
+      },
+      "sample_fields": [
+        "room_name",
+        "room_description",
+        "room_amenities",
+        "photos",
+        "bed_summary",
+        "bed_type",
+        "view",
+        "room_size_sqm",
+        "max_occupancy",
+        "room_property_items",
+        "price_from",
+        "rates",
+        "photos_total"
+      ],
+      "attempts": 1
+    },
+    {
+      "provider": "2gis",
+      "method": "build_route",
+      "status": "timeout",
+      "duration_seconds": 60.28,
+      "fields": [],
+      "counts": {},
+      "sample_fields": [],
+      "attempts": 2
+    }
+  ],
+  "other_origin_and_party": {
+    "origin": "Санкт-Петербург",
+    "adults": 3,
+    "status": "ok",
+    "warnings": [],
+    "live_candidates": 10,
+    "checks": {
+      "party_matches": true,
+      "basis_party": true,
+      "selectable": true
+    }
+  },
+  "runs": [
+    {
+      "run": "current-agent-live",
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": true,
+          "full_plan": false,
+          "purpose_clarified": true,
+          "natural_answer": false,
+          "comparison_without_search": true,
+          "research_without_replanning": false,
+          "hotel_preserves_transport": false,
+          "hotel_matches": false,
+          "dates_refresh": false,
+          "dates_match": false,
+          "changed_plan": false
+        }
+      ],
+      "reported_cost_usd": "0.003268888",
+      "turns": [
+        {
+          "message": "Хочу из Москвы в Сочи с 12 по 16 ноября 2026 года. Двое взрослых, бюджет 100000 рублей.",
+          "stage": "scenarios",
+          "status": "needs_input",
+          "constraints": {
+            "origin": null,
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": null,
+            "budget": null,
+            "budget_basis": "party",
+            "purpose": null,
+            "hotel": null,
+            "interests": []
+          },
+          "revision": 0,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Какой отдых вам хочется: море и прогулки, горы, спокойный или активный?"
+        },
+        {
+          "message": "Цель — спокойный отдых, гулять у моря. Подбери разные варианты.",
+          "stage": "scenarios",
+          "status": "needs_input",
+          "constraints": {
+            "origin": null,
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": null,
+            "budget": null,
+            "budget_basis": "party",
+            "purpose": null,
+            "hotel": null,
+            "interests": []
+          },
+          "revision": 0,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Какой отдых вам хочется: море и прогулки, горы, спокойный или активный?"
+        },
+        {
+          "message": "Сколько стоят согласованные билеты и проживание на человека? Ничего не меняй.",
+          "stage": "scenarios",
+          "status": "needs_input",
+          "constraints": {
+            "origin": null,
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": null,
+            "budget": null,
+            "budget_basis": "party",
+            "purpose": null,
+            "hotel": null,
+            "interests": []
+          },
+          "revision": 0,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Честно: сейчас назвать цену на человека не могу — согласованных вариантов нет. В текущем состоянии не сохранено ни одного предложения перелёта или проживания, нет выбранного варианта и нет расчёта стоимости, поэтому делить нечего. Более того, в действующих ограничениях этой сессии не зафиксированы ни даты (12–16 ноября 2026), ни число взрослых, ни бюджет — так что даже пересчитать подборку под вашу поездку не из чего.\n\nТо есть подтверждённой суммы за билеты и подтверждённой суммы за проживание н"
+        },
+        {
+          "message": "Есть ли бассейн у согласованного отеля? Проверь в интернете, поездку не меняй.",
+          "stage": "scenarios",
+          "status": "needs_input",
+          "constraints": {
+            "origin": null,
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": null,
+            "budget": null,
+            "budget_basis": "party",
+            "purpose": null,
+            "hotel": null,
+            "interests": []
+          },
+          "revision": 0,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Проверить нечего: согласованного отеля нет. В этой сессии не выбран ни один вариант проживания, поэтому конкретного объекта, у которого можно было бы искать бассейн, не существует. Поездку я не менял.\n\nПоиск по интернету тоже не дал подтверждения: материалов, относящихся к нужному отелю и району, не нашлось, так что говорить «бассейн есть» или «бассейна нет» я не могу — это было бы догадкой. Учтите и то, что наличие бассейна на сайте — описание источника, а не гарантия для ваших дат.\n\nСледующий "
+        },
+        {
+          "message": "Замени отель на Mirror Residence, билеты оставь прежними.",
+          "stage": "scenarios",
+          "status": "needs_input",
+          "constraints": {
+            "origin": null,
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": null,
+            "budget": null,
+            "budget_basis": "party",
+            "purpose": null,
+            "hotel": null,
+            "interests": []
+          },
+          "revision": 0,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Какой отдых вам хочется: море и прогулки, горы, спокойный или активный?"
+        },
+        {
+          "message": "Сдвинь поездку на 13–17 ноября 2026 года, оставь Mirror Residence.",
+          "stage": "scenarios",
+          "status": "needs_input",
+          "constraints": {
+            "origin": null,
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": null,
+            "budget": null,
+            "budget_basis": "party",
+            "purpose": null,
+            "hotel": null,
+            "interests": []
+          },
+          "revision": 0,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Какой отдых вам хочется: море и прогулки, горы, спокойный или активный?"
+        }
+      ]
+    },
+    {
+      "run": "fixed-agent-live",
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": false,
+          "full_plan": true,
+          "purpose_clarified": false,
+          "natural_answer": true,
+          "comparison_without_search": true,
+          "research_without_replanning": true,
+          "hotel_preserves_transport": true,
+          "hotel_matches": true,
+          "dates_refresh": true,
+          "dates_match": true,
+          "changed_plan": true
+        }
+      ],
+      "reported_cost_usd": "0.03410145956",
+      "turns": [
+        {
+          "message": "Хочу из Москвы в Сочи с 12 по 16 ноября 2026 года. Двое взрослых, бюджет 100000 рублей.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойная поездка вдвоём с прогулками у моря и по городу в межсезонье",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "набережные",
+              "городские кафе",
+              "смотровые площадки"
+            ]
+          },
+          "revision": 7,
+          "delegated": [
+            "transport",
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": [
+              "2gis:timeout",
+              "2gis:schema_error",
+              "agent_limit"
+            ]
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Централ Резиденс 3* by Provence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\n\nКомпоненты поездки:\n• Победа\nМосква → AER; в пути туда 225 мин; пересадок туда: 0\nАгрегатор / источник: Туту\nhttps://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491\nДаты: 2026-11-12 "
+        },
+        {
+          "message": "Цель — спокойный отдых, гулять у моря. Подбери разные варианты.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойная поездка вдвоём с прогулками у моря и по городу в межсезонье",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "набережные",
+              "городские кафе",
+              "смотровые площадки"
+            ]
+          },
+          "revision": 11,
+          "delegated": [
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": [
+              "2gis:schema_error"
+            ]
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Централ Резиденс 3* by Provence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\n\nКомпоненты поездки:\n• Победа\nМосква → AER; в пути туда 225 мин; пересадок туда: 0\nАгрегатор / источник: Туту\nhttps://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491\nДаты: 2026-11-12 "
+        },
+        {
+          "message": "Сколько стоят согласованные билеты и проживание на человека? Ничего не меняй.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойная поездка вдвоём с прогулками у моря и по городу в межсезонье",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "набережные",
+              "городские кафе",
+              "смотровые площадки"
+            ]
+          },
+          "revision": 11,
+          "delegated": [],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": [
+              "2gis:schema_error"
+            ]
+          },
+          "answer_excerpt": "По согласованным вариантам на двоих, то есть на человека:\n\n• Билеты «Победы» (туда-обратно, Москва — Сочи): 16 396 ₽ за двоих → 8 198 ₽ на человека.\n• Проживание в «Централ Резиденс 3* by Provence» (12–16 ноября): 5 740 ₽ за двоих → 2 870 ₽ на человека.\n• Вместе: 22 136 ₽ за двоих → 11 068 ₽ на человека.\n\nЭто известная сумма только по билетам и проживанию по поисковым тарифам; питание, местный транспорт, входные билеты и возможные сборы в неё не входят, поэтому полной стоимостью поездки её назыв"
+        },
+        {
+          "message": "Есть ли бассейн у согласованного отеля? Проверь в интернете, поездку не меняй.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойная поездка вдвоём с прогулками у моря и по городу в межсезонье",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "набережные",
+              "городские кафе",
+              "смотровые площадки"
+            ]
+          },
+          "revision": 11,
+          "delegated": [],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": [
+              "2gis:schema_error"
+            ]
+          },
+          "answer_excerpt": "Сейчас не удалось получить веб-источники по этому вопросу. Не могу подтвердить детали отеля или района. Сохранённые варианты поездки остаются доступны; можно обсудить их цены или изменить пожелания."
+        },
+        {
+          "message": "Замени отель на Mirror Residence, билеты оставь прежними.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойная поездка вдвоём с прогулками у моря и по городу в межсезонье",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "прогулки у моря",
+              "набережные",
+              "городские кафе",
+              "смотровые площадки"
+            ]
+          },
+          "revision": 14,
+          "delegated": [
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": [
+              "2gis:schema_error"
+            ]
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Mirror Residence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\n\nКомпоненты поездки:\n• Победа\nМосква → AER; в пути туда 225 мин; пересадок туда: 0\nАгрегатор / источник: Туту\nhttps://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491\nДаты: 2026-11-12 — 2026-11-16.\nВ"
+        },
+        {
+          "message": "Сдвинь поездку на 13–17 ноября 2026 года, оставь Mirror Residence.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-13",
+            "end": "2026-11-17",
+            "check_in": "2026-11-13",
+            "check_out": "2026-11-17",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойная поездка вдвоём с прогулками у моря и по городу в межсезонье",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "прогулки у моря",
+              "набережные",
+              "городские кафе",
+              "смотровые площадки"
+            ]
+          },
+          "revision": 18,
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": [
+              "2gis:schema_error",
+              "agent_limit"
+            ]
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Mirror Residence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\n\nКомпоненты поездки:\n• Победа\nМосква → AER; в пути туда 225 мин; пересадок туда: 0\nАгрегатор / источник: Туту\nhttps://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-13112026-78&route[1]=78-17112026-491\nДаты: 2026-11-13 — 2026-11-17.\nВ"
+        }
+      ]
+    },
+    {
+      "run": "final-agent-audit",
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": true,
+          "full_plan": false,
+          "scenario_chosen_before_search": true,
+          "natural_answer": false,
+          "comparison_without_search": true,
+          "research_without_replanning": false,
+          "hotel_preserves_transport": false,
+          "hotel_matches": false,
+          "dates_refresh": false,
+          "dates_match": false,
+          "changed_plan": false
+        }
+      ],
+      "reported_cost_usd": "0.0033408448",
+      "turns": [
+        {
+          "message": "Хочу из Москвы в Сочи, двое взрослых, бюджет 100000 рублей. Цель — спокойный отдых и прогулки у моря.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "парки",
+              "набережная"
+            ]
+          },
+          "revision": 3,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Когда хотите поехать и на сколько дней?"
+        },
+        {
+          "message": "С 12 по 16 ноября 2026 года. Подбери разные варианты под мои пожелания.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "парки",
+              "набережная"
+            ]
+          },
+          "revision": 3,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Когда хотите поехать и на сколько дней?"
+        },
+        {
+          "message": "Сколько стоят согласованные билеты и проживание на человека? Ничего не меняй.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "парки",
+              "набережная"
+            ]
+          },
+          "revision": 3,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Согласованных билетов и проживания пока нет: ни один вариант не выбран и не рассчитан, поэтому назвать цену на человека невозможно. Ничего не меняю. Бюджет 100 000 ₽ на двоих остаётся ориентиром, но это не подтверждённая стоимость поездки.\n\nСледующий шаг — выбрать один из предложенных сценариев (Сочи, Адлер или Сириус); после этого можно считать билеты и проживание под даты 12–16 ноября 2026."
+        },
+        {
+          "message": "Есть ли бассейн у согласованного отеля? Проверь в интернете, поездку не меняй.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "парки",
+              "набережная"
+            ]
+          },
+          "revision": 3,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Согласованного отеля нет: вариант проживания ещё не выбран и не рассчитан, поэтому проверить наличие бассейна не у чего. Веб-поиск по этому вопросу результатов не дал — подтверждения нет, и я не могу утверждать, что бассейн есть или его нет.\n\nПоездку не меняю. Следующий шаг — выбрать сценарий (Сочи, Адлер или Сириус) и подобрать конкретный отель под даты 12–16 ноября 2026, после чего можно будет проверить бассейн уже по конкретному объекту."
+        },
+        {
+          "message": "Замени отель на Mirror Residence, билеты оставь прежними.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "парки",
+              "набережная"
+            ]
+          },
+          "revision": 3,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Когда хотите поехать и на сколько дней?"
+        },
+        {
+          "message": "Сдвинь поездку на 13–17 ноября 2026 года, оставь Mirror Residence.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "парки",
+              "набережная"
+            ]
+          },
+          "revision": 3,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Когда хотите поехать и на сколько дней?"
+        }
+      ]
+    },
+    {
+      "run": "traced-agent-audit",
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": true,
+          "full_plan": false,
+          "scenario_chosen_before_search": true,
+          "natural_answer": false,
+          "comparison_without_search": true,
+          "research_without_replanning": false
+        }
+      ],
+      "reported_cost_usd": "0.005222376",
+      "turns": [
+        {
+          "message": "Хочу из Москвы в Сочи, двое взрослых, бюджет 100000 рублей. Цель — спокойный отдых и прогулки у моря.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "набережная",
+              "спокойный отдых",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 3,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Когда хотите поехать и на сколько дней?"
+        },
+        {
+          "message": "С 12 по 16 ноября 2026 года. Подбери разные варианты под мои пожелания.",
+          "stage": "transport",
+          "status": "partial",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "набережная",
+              "спокойный отдых",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 4,
+          "delegated": [
+            "transport"
+          ],
+          "options_count": 0,
+          "warnings": {
+            "transport": [
+              "search_flights:timeout",
+              "travelpayouts:timeout",
+              "unverified_source_ids"
+            ]
+          },
+          "answer_excerpt": "Сначала согласуем транспорт.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nИсточник вернул 0 кандидатов; карточек с проверяемыми данными пока нет.\nПричина: источник не ответил вовремя.\nОграниченный поиск пока не дал предложений. Сохранённые компоненты поездки остаются доступны."
+        },
+        {
+          "message": "Сколько стоят согласованные билеты и проживание на человека? Ничего не меняй.",
+          "stage": "transport",
+          "status": "partial",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "набережная",
+              "спокойный отдых",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 4,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {
+            "transport": [
+              "search_flights:timeout",
+              "travelpayouts:timeout",
+              "unverified_source_ids"
+            ]
+          },
+          "answer_excerpt": "Пока назвать стоимость на человека нельзя: согласованных билетов и проживания нет. Поиск по транспорту завершился частично — запросы к поставщикам (search_flights и travelpayouts) прервались по таймауту, поэтому в результатах ноль предложений, и ни один вариант не выбран. Цены на проживание в этой сессии тоже не запрашивались: этап подбора жилья ещё не начинался.\n\nТо есть подтверждённых сумм — ни общих, ни на человека — у меня нет, и вычислять их из пустого набора было бы выдумкой. Известно толь"
+        },
+        {
+          "message": "Есть ли бассейн у согласованного отеля? Проверь в интернете, поездку не меняй.",
+          "stage": "transport",
+          "status": "partial",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "набережная",
+              "спокойный отдых",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 4,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {
+            "transport": [
+              "search_flights:timeout",
+              "travelpayouts:timeout",
+              "unverified_source_ids"
+            ]
+          },
+          "answer_excerpt": "Согласованного отеля пока нет — ни один вариант проживания не выбран и не подтверждён, поэтому вопрос о бассейне отнести не к чему. Проверить в интернете тоже не могу: в этой сессии нет доступных веб-источников (research.sources пуст), а найденные ранее запросы к поставщику по транспорту завершились таймаутом. Так что подтверждения про бассейн нет ни по одному объекту.\n\nПоездку не менял: Москва — Сочи, 12–16 ноября 2026, двое взрослых, бюджет 100 000 ₽, цель — спокойный отдых и прогулки у моря.\n"
+        }
+      ]
+    },
+    {
+      "run": "acceptance-agent-audit",
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": true,
+          "full_plan": true,
+          "scenario_chosen_before_search": true,
+          "natural_answer": true,
+          "comparison_without_search": true,
+          "research_without_replanning": true,
+          "hotel_preserves_transport": true,
+          "hotel_matches": true,
+          "dates_refresh": true,
+          "dates_match": true,
+          "changed_plan": true
+        },
+        {
+          "repetition": 1,
+          "clarified_without_search": true,
+          "full_plan": true,
+          "scenario_chosen_before_search": true,
+          "natural_answer": true,
+          "comparison_without_search": true,
+          "research_without_replanning": true,
+          "hotel_preserves_transport": true,
+          "hotel_matches": true,
+          "dates_refresh": false,
+          "dates_match": false,
+          "changed_plan": true
+        }
+      ],
+      "reported_cost_usd": "0.21825684528",
+      "turns": [
+        {
+          "message": "Хочу из Москвы в Сочи, двое взрослых, бюджет 100000 рублей. Цель — спокойный отдых и прогулки у моря.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "спокойный отдых",
+              "прогулки у моря",
+              "набережная",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 3,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Когда хотите поехать и на сколько дней?"
+        },
+        {
+          "message": "С 12 по 16 ноября 2026 года. Подбери разные варианты под мои пожелания.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "спокойный отдых",
+              "прогулки у моря",
+              "набережная",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 7,
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": []
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Централ Резиденс 3* by Provence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\n\nКомпоненты поездки:\n• Победа\nМосква → AER; в пути туда 225 мин; пересадок туда: 0\nАгрегатор / источник: Туту\nhttps://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491\nДаты: 2026-11-12 "
+        },
+        {
+          "message": "Сколько стоят согласованные билеты и проживание на человека? Ничего не меняй.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "спокойный отдых",
+              "прогулки у моря",
+              "набережная",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 7,
+          "delegated": [],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": []
+          },
+          "answer_excerpt": "На человека согласованные билеты и проживание вместе дают 11 068 ₽ (известная часть бюджета: 22 136 ₽ на двоих). Это поисковые тарифы Туту, а не подтверждённая живая цена, поэтому итоговая сумма может отличаться. В неё не входят питание, трансферы, входные билеты, сборы и прочие расходы — полная стоимость поездки пока неизвестна. Ничего не менял: состав корзины тот же.\n\nПредлагаю следующим шагом проверить актуальность этих тарифов непосредственно перед оформлением."
+        },
+        {
+          "message": "Есть ли бассейн у согласованного отеля? Проверь в интернете, поездку не меняй.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "спокойный отдых",
+              "прогулки у моря",
+              "набережная",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 7,
+          "delegated": [],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": []
+          },
+          "answer_excerpt": "Подтверждения тому, что у «Централ Резиденс 3* by Provence» есть бассейн, нет. Веб-поиск я не выполнял: доступны только сведения MCP поставщика Туту по этому отелю, и в них бассейн не указан. В перечисленных удобствах там значатся только «Можно с питомцами» (включая миску для питомца), чайная станция, телевизор и фен.\n\nВажно: отсутствие бассейна в этом списке не доказывает, что его нет — список удобств в источнике может быть неполным. То есть вопрос остаётся открытым, а не решённым.\n\nПоездку не "
+        },
+        {
+          "message": "Замени отель на Mirror Residence, билеты оставь прежними.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых и прогулки у моря",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "спокойный отдых",
+              "прогулки у моря",
+              "набережная",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 10,
+          "delegated": [
+            "stays",
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": []
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Mirror Residence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\n\nКомпоненты поездки:\n• Победа\nМосква → AER; в пути туда 225 мин; пересадок туда: 0\nАгрегатор / источник: Туту\nhttps://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491\nДаты: 2026-11-12 — 2026-11-16.\nВ"
+        },
+        {
+          "message": "Сдвинь поездку на 13–17 ноября 2026 года, оставь Mirror Residence.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-13",
+            "end": "2026-11-17",
+            "check_in": "2026-11-13",
+            "check_out": "2026-11-17",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых и прогулки у моря",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "спокойный отдых",
+              "прогулки у моря",
+              "набережная",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 14,
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": []
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Mirror Residence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\n\nКомпоненты поездки:\n• Победа\nМосква → AER; в пути туда 225 мин; пересадок туда: 0\nАгрегатор / источник: Туту\nhttps://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-13112026-78&route[1]=78-17112026-491\nДаты: 2026-11-13 — 2026-11-17.\nВ"
+        },
+        {
+          "message": "Хочу из Москвы в Сочи, двое взрослых, бюджет 100000 рублей. Цель — спокойный отдых и прогулки у моря.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "спокойный отдых",
+              "набережная",
+              "парки",
+              "прогулки",
+              "море"
+            ]
+          },
+          "revision": 3,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Когда хотите поехать и на сколько дней?"
+        },
+        {
+          "message": "С 12 по 16 ноября 2026 года. Подбери разные варианты под мои пожелания.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "спокойный отдых",
+              "набережная",
+              "парки",
+              "прогулки",
+              "море"
+            ]
+          },
+          "revision": 7,
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": []
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Централ Резиденс 3* by Provence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\n\nКомпоненты поездки:\n• Победа\nМосква → AER; в пути туда 225 мин; пересадок туда: 0\nАгрегатор / источник: Туту\nhttps://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491\nДаты: 2026-11-12 "
+        },
+        {
+          "message": "Сколько стоят согласованные билеты и проживание на человека? Ничего не меняй.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "спокойный отдых",
+              "набережная",
+              "парки",
+              "прогулки",
+              "море"
+            ]
+          },
+          "revision": 7,
+          "delegated": [],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": []
+          },
+          "answer_excerpt": "По согласованной связке на двоих: билеты 16 396 ₽ и проживание 5 740 ₽, вместе 22 136 ₽ за группу — то есть 11 068 ₽ на человека. В разрезе: билеты — 8 198 ₽ на человека, проживание — 2 870 ₽ на человека (расчёт по ценам за всю группу, делённым на двоих).\n\nВажная оговорка: это суммы только по двум позициям — перелёту и проживанию. Питание, трансферы, входные билеты, сборы и прочие расходы не подтверждены и не включены, поэтому 22 136 ₽ нельзя считать полной стоимостью поездки. Обе цены — поисков"
+        },
+        {
+          "message": "Есть ли бассейн у согласованного отеля? Проверь в интернете, поездку не меняй.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойный отдых и прогулки у моря",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "спокойный отдых",
+              "набережная",
+              "парки",
+              "прогулки",
+              "море"
+            ]
+          },
+          "revision": 7,
+          "delegated": [],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": []
+          },
+          "answer_excerpt": "Сейчас не удалось получить веб-источники по этому вопросу. Не могу подтвердить детали отеля или района. Сохранённые варианты поездки остаются доступны; можно обсудить их цены или изменить пожелания."
+        },
+        {
+          "message": "Замени отель на Mirror Residence, билеты оставь прежними.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойный отдых и прогулки у моря",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "прогулки у моря",
+              "спокойный отдых",
+              "набережная",
+              "парки",
+              "прогулки",
+              "море"
+            ]
+          },
+          "revision": 10,
+          "delegated": [
+            "stays",
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": [
+              "llm_error"
+            ]
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Mirror Residence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\nПрограмма получена частично. Ошибки источников или лимит обработки помешали завершить проверку; найденные места доступны как кандидаты.\nМеста пока не отобраны для программы. Можно попросить повторить поиск активностей; билеты и отель сохранены.\n\nКом"
+        },
+        {
+          "message": "Сдвинь поездку на 13–17 ноября 2026 года, оставь Mirror Residence.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Спокойный отдых и прогулки у моря",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "прогулки у моря",
+              "спокойный отдых",
+              "набережная",
+              "парки",
+              "прогулки",
+              "море"
+            ]
+          },
+          "revision": 10,
+          "delegated": [],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": [
+              "llm_error"
+            ]
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nНовое условие не удалось применить. Показываю сохранённые предложения с датами и актуальностью; прежний выбор сохранён.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Mirror Residence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\nПрограмма получена частично. Ошибки источников или лимит обработки помешали завершить проверку; найденные места доступны как канд"
+        }
+      ]
+    },
+    {
+      "run": "mixed-agent-audit",
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": true,
+          "full_plan": false,
+          "scheduled_coast_and_mountains": false
+        }
+      ],
+      "reported_cost_usd": "0.00160484316",
+      "turns": [
+        {
+          "message": "Мы с девушкой хотим из Москвы в Сочи. Бюджет 100 тысяч рублей на двоих, включая дорогу и проживание. Хотим хороший отель, пару дней провести в горах, остальное время у моря, сходить в рестораны и посмотреть интересные места.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": null,
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": null,
+            "budget": null,
+            "budget_basis": "party",
+            "purpose": "Жить в центре Сочи, гулять по набережной и паркам, ходить в рестораны, один-два дня посвятить выездам в Красную Поляну",
+            "hotel": null,
+            "interests": [
+              "море",
+              "рестораны",
+              "достопримечательности",
+              "горы"
+            ]
+          },
+          "revision": 2,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Из какого города вы планируете ехать?"
+        },
+        {
+          "message": "С 12 по 17 ноября 2026 года. Подбери варианты под наши пожелания и программу по дням.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Жить в центре Сочи, гулять по набережной и паркам, ходить в рестораны, один-два дня посвятить выездам в Красную Поляну",
+            "hotel": null,
+            "interests": [
+              "море",
+              "рестораны",
+              "достопримечательности",
+              "горы"
+            ]
+          },
+          "revision": 3,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Когда хотите поехать и на сколько дней?"
+        }
+      ]
+    },
+    {
+      "run": "final-mixed-agent-audit",
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": true,
+          "full_plan": true,
+          "scheduled_coast_and_mountains": true
+        }
+      ],
+      "reported_cost_usd": "0.00566050516",
+      "turns": [
+        {
+          "message": "Мы с девушкой хотим из Москвы в Сочи. Бюджет 100 тысяч рублей на двоих, включая дорогу и проживание. Хотим хороший отель, пару дней провести в горах, остальное время у моря, сходить в рестораны и посмотреть интересные места.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Адлер",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Жить у моря, пару дней посвятить Красной Поляне выездами с одной базы",
+            "hotel": null,
+            "interests": [
+              "горы",
+              "море",
+              "рестораны",
+              "достопримечательности",
+              "прогулки"
+            ]
+          },
+          "revision": 3,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Когда хотите поехать и на сколько дней?"
+        },
+        {
+          "message": "С 12 по 17 ноября 2026 года. Подбери варианты под наши пожелания и программу по дням.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Адлер",
+            "start": "2026-11-12",
+            "end": "2026-11-17",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-17",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "Жить у моря, пару дней посвятить Красной Поляне выездами с одной базы",
+            "hotel": null,
+            "interests": [
+              "горы",
+              "море",
+              "рестораны",
+              "достопримечательности",
+              "прогулки"
+            ]
+          },
+          "revision": 7,
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": []
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Солнечный День.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\n\nКомпоненты поездки:\n• Победа\nМосква → AER; в пути туда 225 мин; пересадок туда: 0\nАгрегатор / источник: Туту\nhttps://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-17112026-491\nДаты: 2026-11-12 — 2026-11-17.\nВыл"
+        }
+      ]
+    },
+    {
+      "run": "final-dialogue-agent-audit",
+      "checks": [
+        {
+          "repetition": 0,
+          "clarified_without_search": true,
+          "full_plan": true,
+          "scenario_chosen_before_search": true,
+          "natural_answer": true,
+          "comparison_without_search": true,
+          "research_without_replanning": true,
+          "hotel_preserves_transport": true,
+          "hotel_matches": true,
+          "dates_refresh": true,
+          "dates_match": true,
+          "changed_plan": true
+        }
+      ],
+      "reported_cost_usd": "0.02401987956",
+      "turns": [
+        {
+          "message": "Хочу из Москвы в Сочи, двое взрослых, бюджет 100000 рублей. Цель — спокойный отдых и прогулки у моря.",
+          "stage": "transport",
+          "status": "needs_input",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": null,
+            "end": null,
+            "check_in": null,
+            "check_out": null,
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "набережная",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 3,
+          "delegated": [],
+          "options_count": 0,
+          "warnings": {},
+          "answer_excerpt": "Когда хотите поехать и на сколько дней?"
+        },
+        {
+          "message": "С 12 по 16 ноября 2026 года. Подбери разные варианты под мои пожелания.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "набережная",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 7,
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [
+              "agent_limit"
+            ],
+            "experience": []
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Централ Резиденс 3* by Provence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\n\nКомпоненты поездки:\n• Победа\nМосква → AER; в пути туда 225 мин; пересадок туда: 0\nАгрегатор / источник: Туту\nhttps://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491\nДаты: 2026-11-12 "
+        },
+        {
+          "message": "Сколько стоят согласованные билеты и проживание на человека? Ничего не меняй.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "набережная",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 7,
+          "delegated": [],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [
+              "agent_limit"
+            ],
+            "experience": []
+          },
+          "answer_excerpt": "Ничего не меняю — беру цифры из согласованного варианта.\n\nНа человека:\n• Билеты: 8 198 ₽ (16 396 ₽ за двоих)\n• Проживание: 2 450 ₽ (4 900 ₽ за двоих)\n• Итого на человека: 10 648 ₽ (21 296 ₽ за двоих)\n\nВажное уточнение: это поисковые тарифы, а не подтверждённая стоимость. Полная стоимость поездки неизвестна — питание, трансферы, входные билеты и сборы в эти суммы не входят.\n\nСледующий шаг: если хотите, могу ещё раз свериться с этими же тарифами, не меняя выбор."
+        },
+        {
+          "message": "Есть ли бассейн у согласованного отеля? Проверь в интернете, поездку не меняй.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых",
+            "hotel": null,
+            "interests": [
+              "прогулки у моря",
+              "набережная",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 7,
+          "delegated": [],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [
+              "agent_limit"
+            ],
+            "experience": []
+          },
+          "answer_excerpt": "Проверить полноценным веб-поиском не удалось: доступ к веб-поиску в этом прогоне не сработал (поиск вернул ошибку конфигурации). Поэтому подтверждения из интернета у меня нет.\n\nЧто есть по факту: в сведениях от MCP поставщика «Туту» по отелю «Централ Резиденс 3* by Provence» перечислены только часть удобств — например, можно с питомцами, чайная станция, телевизор, фен. Бассейн в этом списке не упомянут. Но это описание источника, к тому же неполное (выдача оборвалась), а не подтверждение того, ч"
+        },
+        {
+          "message": "Замени отель на Mirror Residence, билеты оставь прежними.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-12",
+            "end": "2026-11-16",
+            "check_in": "2026-11-12",
+            "check_out": "2026-11-16",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "прогулки у моря",
+              "набережная",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 10,
+          "delegated": [
+            "stays",
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": []
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Mirror Residence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\n\nКомпоненты поездки:\n• Победа\nМосква → AER; в пути туда 225 мин; пересадок туда: 0\nАгрегатор / источник: Туту\nhttps://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-12112026-78&route[1]=78-16112026-491\nДаты: 2026-11-12 — 2026-11-16.\nВ"
+        },
+        {
+          "message": "Сдвинь поездку на 13–17 ноября 2026 года, оставь Mirror Residence.",
+          "stage": "review",
+          "status": "ready",
+          "constraints": {
+            "origin": "Москва",
+            "destination": "Сочи",
+            "start": "2026-11-13",
+            "end": "2026-11-17",
+            "check_in": "2026-11-13",
+            "check_out": "2026-11-17",
+            "travel_month": null,
+            "date_from": null,
+            "date_to": null,
+            "date_flexibility": 3,
+            "direct_only": false,
+            "duration_days": null,
+            "nights": null,
+            "adults": 2,
+            "budget": "100000",
+            "budget_basis": "party",
+            "purpose": "спокойный отдых",
+            "hotel": "Mirror Residence",
+            "interests": [
+              "прогулки у моря",
+              "набережная",
+              "парки",
+              "кафе"
+            ]
+          },
+          "revision": 14,
+          "delegated": [
+            "transport",
+            "stays",
+            "experience"
+          ],
+          "options_count": 1,
+          "warnings": {
+            "transport": [],
+            "stays": [],
+            "experience": []
+          },
+          "answer_excerpt": "Поездка собрана — проверьте корзину.\nИз Москва; взрослых: 2.\nБюджет 100 000 ₽ на группу; предел группы 100 000 ₽.\nТранспорт согласован: Победа.\nПроживание согласовано: Mirror Residence.\n\n1. Корзина поездки\nБилеты, проживание и предложенная программа.\n\nКомпоненты поездки:\n• Победа\nМосква → AER; в пути туда 225 мин; пересадок туда: 0\nАгрегатор / источник: Туту\nhttps://avia.tutu.ru/f/Moskva/Sochi/?class=Y&travelers=2&route[0]=491-13112026-78&route[1]=78-17112026-491\nДаты: 2026-11-13 — 2026-11-17.\nВ"
+        }
+      ]
+    }
+  ],
+  "mixed_final_engine": {
+    "mode": "Final deterministic engine replay on current live mixed-trip evidence; no new provider requests",
+    "mountain_days": 2,
+    "restaurants": [
+      "Белый гриб, ресторан",
+      "Лихтенштейн, ресторан"
+    ],
+    "known_subtotal": "20596.0",
+    "confirmed_total": null,
+    "days": [
+      {
+        "date": "2026-11-12",
+        "candidates": [],
+        "warnings": [
+          "Время работы и местные переезды не подтверждены"
+        ]
+      },
+      {
+        "date": "2026-11-13",
+        "candidates": [
+          {
+            "id": "2gis:70000001077405796",
+            "role": "experience",
+            "name": "Адлерский парк",
+            "source": {
+              "provider": "2gis",
+              "source_url": "https://2gis.ru/sochi",
+              "retrieved_at": "2026-10-27T21:29:13.145971Z",
+              "evidence": "catalog",
+              "source_updated_at": null,
+              "expires_at": "2026-10-27T22:29:13.145971Z"
+            },
+            "price": null,
+            "stars": null,
+            "rating": null,
+            "review_count": null,
+            "address": null,
+            "coordinates": {
+              "lat": 43.432751,
+              "lon": 39.913825
+            },
+            "area": "Адлер",
+            "start": null,
+            "end": null,
+            "adults": null,
+            "origin": null,
+            "destination": null,
+            "arrival_at": null,
+            "departure_at": null,
+            "duration_minutes": null,
+            "transfers": null,
+            "return_departure_at": null,
+            "url": "https://2gis.ru/sochi/search/%D0%90%D0%B4%D0%BB%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9%20%D0%BF%D0%B0%D1%80%D0%BA",
+            "description": "Сочи, улица Ромашек, 1/10"
+          },
+          {
+            "id": "2gis:4222652931642789",
+            "role": "experience",
+            "name": "Sochi Discovery World Aquarium, океанариум",
+            "source": {
+              "provider": "2gis",
+              "source_url": "https://2gis.ru/sochi",
+              "retrieved_at": "2026-10-27T21:29:13.145971Z",
+              "evidence": "catalog",
+              "source_updated_at": null,
+              "expires_at": "2026-10-27T22:29:13.145971Z"
+            },
+            "price": null,
+            "stars": null,
+            "rating": null,
+            "review_count": null,
+            "address": null,
+            "coordinates": {
+              "lat": 43.47209,
+              "lon": 39.89682
+            },
+            "area": "Адлер",
+            "start": null,
+            "end": null,
+            "adults": null,
+            "origin": null,
+            "destination": null,
+            "arrival_at": null,
+            "departure_at": null,
+            "duration_minutes": null,
+            "transfers": null,
+            "return_departure_at": null,
+            "url": "https://2gis.ru/sochi/search/Sochi%20Discovery%20World%20Aquarium%2C%20%D0%BE%D0%BA%D0%B5%D0%B0%D0%BD%D0%B0%D1%80%D0%B8%D1%83%D0%BC",
+            "description": "Сочи, улица Ленина, 219а/4"
+          }
+        ],
+        "warnings": [
+          "Время работы и местные переезды не подтверждены"
+        ]
+      },
+      {
+        "date": "2026-11-14",
+        "candidates": [
+          {
+            "id": "2gis:70000001026169141",
+            "role": "experience",
+            "name": "Курорт Красная Поляна, горный курорт развлечений",
+            "source": {
+              "provider": "2gis",
+              "source_url": "https://2gis.ru/sochi",
+              "retrieved_at": "2026-10-27T21:29:17.106637Z",
+              "evidence": "catalog",
+              "source_updated_at": null,
+              "expires_at": "2026-10-27T22:29:17.106637Z"
+            },
+            "price": null,
+            "stars": null,
+            "rating": null,
+            "review_count": null,
+            "address": null,
+            "coordinates": {
+              "lat": 43.683442,
+              "lon": 40.266898
+            },
+            "area": "Красная Поляна",
+            "start": null,
+            "end": null,
+            "adults": null,
+            "origin": null,
+            "destination": null,
+            "arrival_at": null,
+            "departure_at": null,
+            "duration_minutes": null,
+            "transfers": null,
+            "return_departure_at": null,
+            "url": "https://2gis.ru/sochi/search/%D0%9A%D1%83%D1%80%D0%BE%D1%80%D1%82%20%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%B0%D1%8F%20%D0%9F%D0%BE%D0%BB%D1%8F%D0%BD%D0%B0%2C%20%D0%B3%D0%BE%D1%80%D0%BD%D1%8B%D0%B9%20%D0%BA%D1%83%D1%80%D0%BE%D1%80%D1%82%20%D1%80%D0%B0%D0%B7%D0%B2%D0%BB%D0%B5%D1%87%D0%B5%D0%BD%D0%B8%D0%B9",
+            "description": "Эстосадок (Сочи городской округ), улица Горная Карусель, 9"
+          },
+          {
+            "id": "2gis:70030076263278005",
+            "role": "experience",
+            "name": "Смотровая площадка Переходной мост",
+            "source": {
+              "provider": "2gis",
+              "source_url": "https://2gis.ru/sochi",
+              "retrieved_at": "2026-10-27T21:29:17.106637Z",
+              "evidence": "catalog",
+              "source_updated_at": null,
+              "expires_at": "2026-10-27T22:29:17.106637Z"
+            },
+            "price": null,
+            "stars": null,
+            "rating": null,
+            "review_count": null,
+            "address": null,
+            "coordinates": {
+              "lat": 43.659036,
+              "lon": 40.251303
+            },
+            "area": "Красная Поляна",
+            "start": null,
+            "end": null,
+            "adults": null,
+            "origin": null,
+            "destination": null,
+            "arrival_at": null,
+            "departure_at": null,
+            "duration_minutes": null,
+            "transfers": null,
+            "return_departure_at": null,
+            "url": "https://2gis.ru/sochi/search/%D0%A1%D0%BC%D0%BE%D1%82%D1%80%D0%BE%D0%B2%D0%B0%D1%8F%20%D0%BF%D0%BB%D0%BE%D1%89%D0%B0%D0%B4%D0%BA%D0%B0%20%D0%9F%D0%B5%D1%80%D0%B5%D1%85%D0%BE%D0%B4%D0%BD%D0%BE%D0%B9%20%D0%BC%D0%BE%D1%81%D1%82",
+            "description": "viewing_point"
+          }
+        ],
+        "warnings": [
+          "Время работы и местные переезды не подтверждены"
+        ]
+      },
+      {
+        "date": "2026-11-15",
+        "candidates": [
+          {
+            "id": "2gis:70000001023122269",
+            "role": "experience",
+            "name": "Адлерский дельфинарий",
+            "source": {
+              "provider": "2gis",
+              "source_url": "https://2gis.ru/sochi",
+              "retrieved_at": "2026-10-27T21:29:13.145971Z",
+              "evidence": "catalog",
+              "source_updated_at": null,
+              "expires_at": "2026-10-27T22:29:13.145971Z"
+            },
+            "price": null,
+            "stars": null,
+            "rating": null,
+            "review_count": null,
+            "address": null,
+            "coordinates": {
+              "lat": 43.468472,
+              "lon": 39.895668
+            },
+            "area": "Адлер",
+            "start": null,
+            "end": null,
+            "adults": null,
+            "origin": null,
+            "destination": null,
+            "arrival_at": null,
+            "departure_at": null,
+            "duration_minutes": null,
+            "transfers": null,
+            "return_departure_at": null,
+            "url": "https://2gis.ru/sochi/search/%D0%90%D0%B4%D0%BB%D0%B5%D1%80%D1%81%D0%BA%D0%B8%D0%B9%20%D0%B4%D0%B5%D0%BB%D1%8C%D1%84%D0%B8%D0%BD%D0%B0%D1%80%D0%B8%D0%B9",
+            "description": "Сочи, улица Ленина, 219/2"
+          }
+        ],
+        "warnings": [
+          "Время работы и местные переезды не подтверждены"
+        ]
+      },
+      {
+        "date": "2026-11-16",
+        "candidates": [
+          {
+            "id": "2gis:70000001027006253",
+            "role": "experience",
+            "name": "Белый гриб, ресторан",
+            "source": {
+              "provider": "2gis",
+              "source_url": "https://2gis.ru/sochi",
+              "retrieved_at": "2026-10-27T21:29:17.106637Z",
+              "evidence": "catalog",
+              "source_updated_at": null,
+              "expires_at": "2026-10-27T22:29:17.106637Z"
+            },
+            "price": null,
+            "stars": null,
+            "rating": null,
+            "review_count": null,
+            "address": null,
+            "coordinates": {
+              "lat": 43.669086,
+              "lon": 40.2576
+            },
+            "area": "Красная Поляна",
+            "start": null,
+            "end": null,
+            "adults": null,
+            "origin": null,
+            "destination": null,
+            "arrival_at": null,
+            "departure_at": null,
+            "duration_minutes": null,
+            "transfers": null,
+            "return_departure_at": null,
+            "url": "https://2gis.ru/sochi/search/%D0%91%D0%B5%D0%BB%D1%8B%D0%B9%20%D0%B3%D1%80%D0%B8%D0%B1%2C%20%D1%80%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%B0%D0%BD",
+            "description": "Эстосадок (Сочи городской округ), Горная улица, 11в"
+          },
+          {
+            "id": "2gis:70000001021259403",
+            "role": "experience",
+            "name": "Лихтенштейн, ресторан",
+            "source": {
+              "provider": "2gis",
+              "source_url": "https://2gis.ru/sochi",
+              "retrieved_at": "2026-10-27T21:29:17.106637Z",
+              "evidence": "catalog",
+              "source_updated_at": null,
+              "expires_at": "2026-10-27T22:29:17.106637Z"
+            },
+            "price": null,
+            "stars": null,
+            "rating": null,
+            "review_count": null,
+            "address": null,
+            "coordinates": {
+              "lat": 43.667808,
+              "lon": 40.261271
+            },
+            "area": "Красная Поляна",
+            "start": null,
+            "end": null,
+            "adults": null,
+            "origin": null,
+            "destination": null,
+            "arrival_at": null,
+            "departure_at": null,
+            "duration_minutes": null,
+            "transfers": null,
+            "return_departure_at": null,
+            "url": "https://2gis.ru/sochi/search/%D0%9B%D0%B8%D1%85%D1%82%D0%B5%D0%BD%D1%88%D1%82%D0%B5%D0%B9%D0%BD%2C%20%D1%80%D0%B5%D1%81%D1%82%D0%BE%D1%80%D0%B0%D0%BD",
+            "description": "Эстосадок (Сочи городской округ), Горная улица, 2"
+          }
+        ],
+        "warnings": [
+          "Время работы и местные переезды не подтверждены"
+        ]
+      },
+      {
+        "date": "2026-11-17",
+        "candidates": [],
+        "warnings": [
+          "Время работы и местные переезды не подтверждены"
+        ]
+      }
+    ]
+  },
+  "accounted_llm_cost_usd": "0.29725403952",
+  "unresolved_llm_reserve_usd": "0.038284",
+  "authorized_new_budget_usd": "3",
+  "tavily": "missing_key",
+  "telegram": "not_live_tested_missing_token",
+  "frontend_build": "npm registry download timeout; four Node tests passed",
+  "offline": "124 tests passed with dedicated PostgreSQL; default: 119 passed, 5 PostgreSQL tests skipped",
+  "final_dialogue_checks_passed": true,
+  "total_accounted_with_reserve_usd": "0.33553803952"
+}

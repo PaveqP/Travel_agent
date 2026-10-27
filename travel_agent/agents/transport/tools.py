@@ -46,7 +46,7 @@ def build_tools(
             async with semaphore:
                 searched.append({"start": str(start), "end": str(end)})
                 try:
-                    async with asyncio.timeout(25):
+                    async with asyncio.timeout(63):
                         return await mcp("search_flights", "tutu", "search_avia", {
                             "origin": trip.origin, "destination": "AER", "departure_date": str(start),
                             "return_date": str(end), "adults": trip.adults, "page_size": 10,
@@ -56,14 +56,14 @@ def build_tools(
 
         first = {"status": "empty"}
         try:
-            async with asyncio.timeout(55):
+            async with asyncio.timeout(65):
                 first = await query(*pairs[0])
                 fresh = any(transport_matches(c, trip, datetime.now(timezone.utc)) for c in evidence.values())
                 if first["status"] in ("ok", "empty", "no_availability") and (not fresh or trip.date_from and trip.date_to):
                     await asyncio.gather(*(query(start, end) for start, end in pairs[1:]))
         except TimeoutError:
             first = {"status": "timeout"}
-        return {"status": "ok" if evidence else first["status"],
+        return {"status": ("partial" if first["status"] == "timeout" else "ok") if evidence else first["status"],
                 "candidates": [c.model_dump(mode="json") for c in list(evidence.values())[:20]],
                 "searched_dates": searched, "exhaustive": False, "search_limit": 6}
 

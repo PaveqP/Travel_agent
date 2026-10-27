@@ -229,7 +229,8 @@ def planning(state: TripState) -> dict:
     chosen = [c for role in ('transport', 'stays') if (c := selected_candidate(state, role)) is not None]
     activities = state.get('results', {}).get('experience', {})
     selected = set(activities.get('selected_ids', []))
-    chosen += [c for c in all_candidates(state) if c.role == 'experience' and (not selected or c.id in selected)]
+    approved = selected or ({c.id for c in all_candidates(state) if c.role == 'experience'} if activities.get('status') == 'ok' and not activities.get('warnings') else set())
+    chosen += [c for c in all_candidates(state) if c.role == 'experience' and c.id in approved]
     options = compose(trip, chosen, state.get('revision', 0))
     return {'options': [o.model_dump(mode='json') for o in options], 'diagnostics': diagnose(trip, chosen).model_dump(mode='json')}
 

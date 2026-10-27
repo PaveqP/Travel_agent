@@ -31,10 +31,11 @@ async def main() -> None:
     parser.add_argument("--output", default="/tmp/travel-live.json")
     parser.add_argument("--extended", action="store_true")
     parser.add_argument("--dialogue", action="store_true")
+    parser.add_argument("--mixed", action="store_true")
     parser.add_argument("--repeat", type=int, choices=range(1, 4), default=1)
     args = parser.parse_args()
-    if not 0 < args.budget_usd <= 1:
-        raise ValueError("Authorized budget is at most $1")
+    if not 0 < args.budget_usd <= 3:
+        raise ValueError("Authorized budget is at most $3")
     reserved = Decimal(0)
     spent = Decimal(0)
     calls = 0
@@ -129,8 +130,30 @@ async def main() -> None:
             )
             return result
 
+        decide = llm_decider(model, prompts["supervisor"])
+
+        async def trace_decision(state):
+            decision = await decide(state)
+            print(
+                json.dumps(
+                    {
+                        "supervisor_calls_in_state": state.get("calls"),
+                        "stage": state.get("stage"),
+                        "action": decision.action,
+                        "patch_fields": list(
+                            decision.patch.model_dump(
+                                exclude_none=True, exclude={"clear"}
+                            )
+                        ),
+                    },
+                    ensure_ascii=False,
+                ),
+                flush=True,
+            )
+            return decision
+
         graph = build_graph(
-            llm_decider(model, prompts["supervisor"]),
+            trace_decision,
             run,
             InMemorySaver(),
             present=llm_presenter(
@@ -150,10 +173,15 @@ async def main() -> None:
         ]
         if args.dialogue:
             messages = [
-                "Хочу из Москвы в Сочи с 12 по 16 ноября 2026 года. Двое взрослых, бюджет 100000 рублей.",
-                "Цель — спокойный отдых, гулять у моря. Подбери разные варианты.",
+                "Хочу из Москвы в Сочи, двое взрослых, бюджет 100000 рублей. Цель — спокойный отдых и прогулки у моря.",
+                "С 12 по 16 ноября 2026 года. Подбери разные варианты под мои пожелания.",
                 "Сколько стоят согласованные билеты и проживание на человека? Ничего не меняй.",
                 "Есть ли бассейн у согласованного отеля? Проверь в интернете, поездку не меняй.",
+            ]
+        if args.mixed:
+            messages = [
+                "Мы с девушкой хотим из Москвы в Сочи. Бюджет 100 тысяч рублей на двоих, включая дорогу и проживание. Хотим хороший отель, пару дней провести в горах, остальное время у моря, сходить в рестораны и посмотреть интересные места.",
+                "С 12 по 17 ноября 2026 года. Подбери варианты под наши пожелания и программу по дням.",
             ]
         if args.extended:
             messages += [
@@ -175,10 +203,29 @@ async def main() -> None:
                     },
                     cfg,
                 )
-                for _ in range(5):
-                    if result.get("stage") not in ("scenarios", "transport", "stays", "itinerary") or not result.get("choices") or result.get("pending_check_in"):
+                transitions = []
+                for _ in range(8):
+                    if (
+                        result.get("stage")
+                        not in ("scenarios", "transport", "stays", "itinerary")
+                        or not result.get("choices")
+                        or result.get("pending_check_in")
+                    ):
                         break
-                    result = await graph.ainvoke({"requested_choice": result["choices"][0]["id"], "calls": 0}, cfg)
+                    choice = next(
+                        (c for c in result["choices"] if c.get("selectable")),
+                        result["choices"][0],
+                    )
+                    transitions.append(
+                        {
+                            "stage": result["stage"],
+                            "choice_id": choice["id"],
+                            "revision": result["revision"],
+                        }
+                    )
+                    result = await graph.ainvoke(
+                        {"requested_choice": choice["id"], "calls": 0}, cfg
+                    )
                 record = {
                     k: result.get(k)
                     for k in [
@@ -198,6 +245,7 @@ async def main() -> None:
                 record.update(
                     repetition=repetition,
                     message=message,
+                    transitions=transitions,
                     delegated=[r["role"] for r in role_results[before:]],
                 )
                 results.append(record)
@@ -243,9 +291,21 @@ async def main() -> None:
                     and all(o["stay"] and o["transport"] for o in turns[1]["options"]),
                 }
             )
+            if args.mixed:
+                areas = {
+                    c.get("area")
+                    for option in turns[1]["options"]
+                    for day in option["days"]
+                    for c in day["candidates"]
+                }
+                checks[-1]["scheduled_coast_and_mountains"] = (
+                    "Красная Поляна" in areas
+                    and bool(areas & {"Сочи", "Адлер", "Сириус"})
+                )
             if args.dialogue:
                 checks[-1].update(
-                    purpose_clarified=not turns[0]["constraints"].get("purpose"),
+                    scenario_chosen_before_search=bool(turns[0]["transitions"])
+                    and turns[0]["transitions"][0]["stage"] == "scenarios",
                     natural_answer="Билеты и проживание:" in turns[1]["answer"]
                     and "known_subtotal" not in turns[1]["answer"],
                     comparison_without_search=not turns[2]["delegated"]
@@ -272,7 +332,9 @@ async def main() -> None:
                     dates_match=dates_turn["constraints"]["start"] == "2026-11-13"
                     and dates_turn["constraints"]["end"] == "2026-11-17",
                     changed_plan=bool(dates_turn["options"])
-                    and all(o["stay"] and o["transport"] for o in dates_turn["options"]),
+                    and all(
+                        o["stay"] and o["transport"] for o in dates_turn["options"]
+                    ),
                 )
         report = json.loads(Path(args.output).read_text())
         report["checks"] = checks

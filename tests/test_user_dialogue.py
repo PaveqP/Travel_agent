@@ -212,7 +212,7 @@ class DialogueTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn("T15:", text)
         self.assertIn("Полная стоимость неизвестна", text)
         self.assertNotIn("known_subtotal", text)
-        context = json.loads(model.messages[-1].content)
+        context = json.loads(model.messages[1].content)
         self.assertEqual(
             context["options"][0]["stay"]["name"], state["options"][0]["stay"]["name"]
         )

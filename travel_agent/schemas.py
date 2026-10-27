@@ -25,8 +25,8 @@ class TripConstraints(BaseModel):
     model_config = ConfigDict(extra="forbid")
     origin: str | None = Field(default=None, min_length=1, max_length=120)
     destination: Area = "Сочи"
-    start: date | None = None
-    end: date | None = None
+    start: date | None = Field(default=None, description="Явно указанная дата отправления YYYY-MM-DD")
+    end: date | None = Field(default=None, description="Явно указанная дата обратного отправления YYYY-MM-DD")
     check_in: date | None = None
     check_out: date | None = None
     travel_month: str | None = Field(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$")
@@ -83,8 +83,8 @@ class TripDelta(BaseModel):
     model_config = ConfigDict(extra="forbid")
     origin: str | None = Field(default=None, min_length=1, max_length=120)
     destination: Area | None = None
-    start: date | None = None
-    end: date | None = None
+    start: date | None = Field(default=None, description="Явно указанная дата отправления YYYY-MM-DD")
+    end: date | None = Field(default=None, description="Явно указанная дата обратного отправления YYYY-MM-DD")
     check_in: date | None = None
     check_out: date | None = None
     travel_month: str | None = Field(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$")
@@ -157,10 +157,14 @@ class Candidate(BaseModel):
     name: str
     source: Provenance
     price: Money | None = None
+    stars: int | None = Field(default=None, ge=0, le=5)
+    rating: Decimal | None = Field(default=None, ge=0, le=10)
+    review_count: int | None = Field(default=None, ge=0)
+    address: str | None = Field(default=None, max_length=1000)
     coordinates: Coordinates | None = None
     area: str | None = None
-    start: date | None = None
-    end: date | None = None
+    start: date | None = Field(default=None, description="Явно указанная дата отправления YYYY-MM-DD")
+    end: date | None = Field(default=None, description="Явно указанная дата обратного отправления YYYY-MM-DD")
     adults: int | None = None
     origin: str | None = None
     destination: str | None = None
@@ -220,8 +224,8 @@ class PlanDiagnostics(BaseModel):
 
 class OfferDates(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    start: date | None = None
-    end: date | None = None
+    start: date | None = Field(default=None, description="Явно указанная дата отправления YYYY-MM-DD")
+    end: date | None = Field(default=None, description="Явно указанная дата обратного отправления YYYY-MM-DD")
     departure_at: datetime | None = None
     arrival_at: datetime | None = None
     return_departure_at: datetime | None = None
