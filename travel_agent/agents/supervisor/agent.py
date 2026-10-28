@@ -152,6 +152,7 @@ def llm_planner(model: BaseChatModel, prompt: str):
             'phase': 'repair' if state.get('repair_decision') else 'user_turn',
             'feedback': state.get('feedback', []), 'options': options[:5],
             'selected': state.get('selected'), 'focus': state.get('focus'),
+            'scenarios': state.get('scenarios', []), 'receipt': state.get('receipt', {}),
             'results': {role: {'status': row['status'], 'warnings': row.get('warnings', []),
                 'candidates': [{'id': c['id'], 'name': c['name'], 'start': c.get('start'), 'end': c.get('end'), 'area': c.get('area')} for c in row.get('candidates', [])[:12]]}
                 for role, row in state.get('results', {}).items()},
@@ -170,8 +171,10 @@ def llm_planner(model: BaseChatModel, prompt: str):
                 errors = [(e['loc'], e['type']) for e in exc.errors(include_input=False, include_url=False)] if isinstance(exc, ValidationError) else ['output_format']
                 messages.insert(1, HumanMessage(content=json.dumps({'validation_errors': errors, 'patch_extracted_separately': True})))
         if not state.get('repair_decision') and (decision.action in ('plan', 'clarify') or decision.action == 'select' and decision.patch.model_dump(exclude_none=True, exclude={'clear'})):
-            latest = next((m for m in reversed(state.get('messages', [])) if isinstance(m, HumanMessage)), HumanMessage(content=''))
-            extraction_messages = [SystemMessage(content=extraction_prompt), HumanMessage(content=json.dumps({'today': context['today'], 'constraints': context['constraints']}, ensure_ascii=False)), latest]
+            extraction_messages = [SystemMessage(content=extraction_prompt), HumanMessage(content=json.dumps({
+                'today': context['today'], 'constraints': context['constraints'],
+                'proposed_patch': decision.patch.model_dump(mode='json', exclude_none=True),
+            }, ensure_ascii=False)), *[m for m in state.get('messages', []) if isinstance(m, HumanMessage)][-6:]]
             for attempt in range(2):
                 try:
                     delta = TripDelta.model_validate(await extraction.ainvoke(extraction_messages))
@@ -181,7 +184,8 @@ def llm_planner(model: BaseChatModel, prompt: str):
                         raise
                     errors = [(e['loc'], e['type']) for e in exc.errors(include_input=False, include_url=False)] if isinstance(exc, ValidationError) else ['output_format']
                     extraction_messages.insert(1, HumanMessage(content=json.dumps({'validation_errors': errors})))
-            decision.patch = delta
+            if delta.model_dump(exclude_none=True, exclude={'clear'}) or delta.clear:
+                decision.patch = delta
         return decision
 
     return plan

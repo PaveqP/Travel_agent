@@ -57,18 +57,22 @@ def apply_delta(current: TripConstraints, delta: TripDelta) -> tuple[TripConstra
         affected.add('experience')
     if 'origin' in patch:
         affected.add('transport')
-    if patch.keys() & {'destination', 'hotel'}:
+    if 'hotel' in patch:
+        affected.add('stays')
+    if 'destination' in patch:
         affected.update(('stays', 'experience'))
     if patch.keys() & {'check_in', 'check_out'}:
         affected.update(('stays', 'experience'))
-    if patch.keys() & {'purpose', 'interests', 'min_hotel_stars', 'min_hotel_rating'}:
-        affected.update(('stays', 'experience'))
+    if patch.keys() & {'min_hotel_stars', 'min_hotel_rating'}:
+        affected.add('stays')
+    if patch.keys() & {'purpose', 'interests'}:
+        affected.add('experience')
     return revised, affected
 
 
 def search_dates(trip: TripConstraints, today: date | None = None) -> list[tuple[date, date]]:
     today = today or date.today()
-    duration = trip.nights or (trip.duration_days - 1 if trip.duration_days and trip.duration_days > 1 else None) or ((trip.end - trip.start).days if trip.start and trip.end else 7)
+    duration = (trip.end - trip.start).days if trip.start and trip.end else trip.nights or (trip.duration_days - 1 if trip.duration_days and trip.duration_days > 1 else 7)
     lower, upper = trip.date_from, trip.date_to
     if lower and not upper:
         upper = lower + timedelta(days=31)
@@ -326,7 +330,7 @@ def simulate_purchase(state: dict, request: BookingRequest) -> dict:
         raise ValueError('Known subtotal exceeds the party budget')
     return {'id': str(uuid4()), 'option_id': request.option_id, 'revision': request.revision,
             'simulated': True, 'status': 'simulated', 'paid': False, 'reserved': False,
-            'items': [{'kind': c.role, 'source_id': c.id, 'name': c.name, 'price': c.price.model_dump(mode='json'), 'url': offer_card(c, trip).url, 'provider': c.source.provider, 'aggregator': offer_card(c, trip).aggregator, 'details': c.model_dump(mode='json', exclude={'source', 'price', 'url'})} for c in (option.transport, option.stay)],
+            'items': [{'kind': c.role, 'source_id': c.id, 'name': c.name, 'price': c.price.model_dump(mode='json'), 'url': offer_card(c, trip).url, 'provider': c.source.provider, 'aggregator': offer_card(c, trip).aggregator, 'details': c.model_dump(mode='json', exclude={'source', 'price', 'url', 'provider_details'})} for c in (option.transport, option.stay)],
             'payment': {'simulated': True, 'status': 'succeeded', 'currency': 'RUB', 'amount': str(option.budget.known_subtotal), 'scope': 'transport_and_stay', 'method': request.payment_method},
             'missing_costs': option.budget.missing, 'itinerary': [d.model_dump(mode='json') for d in option.days],
             'message': 'Имитация покупки оформлена: билеты, проживание и маршрут сохранены в заказе. Реальные места не зарезервированы, оплата не выполнялась. Питание, трансферы, активности и сборы не оплачены.'}
@@ -352,16 +356,15 @@ def compose_packages(trip: TripConstraints, results: dict, revision: int) -> tup
         feedback.append(PlanFeedback(role='stays', code='no_stays', detail='Нет свежего проживания с проверенной ценой, районом и составом гостей.'))
     if transport and stays and not any((s.start, s.end) == (item.arrival_at.date(), item.return_departure_at.date()) for item in transport for s in stays):
         item = transport[0]
-        feedback.append(PlanFeedback(role='stays', code='arrival_stay_mismatch', detail=f'Для {item.id} проживание нужно {item.arrival_at.date()}–{item.return_departure_at.date()}. Выполни search_hotels с этими check_in/check_out.'))
+        feedback.append(PlanFeedback(role='stays', code='arrival_stay_mismatch', detail=f'Для {item.id} проживание нужно {item.arrival_at.date()}–{item.return_departure_at.date()}. Согласуй проживание с этими датами по найденным предложениям или дополнительному поиску.'))
     experience = parsed.get('experience')
     days = experience.days if experience else []
     activities = {c.id: c for c in candidates if c.role == 'experience' and usable(c, trip, now)}
     if not days:
-        feedback.append(PlanFeedback(role='experience', code='no_day_plan', detail=f'Нужна программа в days для ВСЕГО исходного периода {trip.start or trip.date_from or trip.travel_month}–{trip.end or trip.date_to or "окно поиска"}, с source_ids найденных мест и двумя пустыми днями дороги. Не сокращай её под один ЖД-вариант.'))
+        feedback.append(PlanFeedback(role='experience', code='no_day_plan', detail=f'Нужна программа в days для ВСЕГО исходного периода {trip.start or trip.date_from or trip.travel_month}–{trip.end or trip.date_to or "окно поиска"}, с source_ids найденных мест и с учётом дней дороги. Не сокращай её под один ЖД-вариант.'))
     unknown = any(ident not in activities for day in days for ident in day.source_ids)
-    repeated = len([ident for day in days for ident in day.source_ids]) != len({ident for day in days for ident in day.source_ids})
-    if unknown or repeated or len({d.date for d in days}) != len(days):
-        feedback.append(PlanFeedback(role='experience', code='invalid_day_evidence', detail='Устрани неизвестные/повторяющиеся ID и дубли дат в программе.'))
+    if unknown or len({d.date for d in days}) != len(days):
+        feedback.append(PlanFeedback(role='experience', code='invalid_day_evidence', detail='Устрани неизвестные ID и дубли дат в программе.'))
     options = []
     for journey, stay in product(transport, stays):
         if (stay.start, stay.end) != (journey.arrival_at.date(), journey.return_departure_at.date()):
@@ -372,18 +375,16 @@ def compose_packages(trip: TripConstraints, results: dict, revision: int) -> tup
             continue
         option = base[0]
         planned = []
-        used = set()
         for day in option.days:
             proposal = next((d for d in days if d.date == day.date), None)
             rows = []
-            if proposal and stay.start < day.date < stay.end:
+            used = set()
+            if proposal and stay.start <= day.date <= stay.end:
                 for ident in proposal.source_ids:
                     item = activities.get(ident)
                     if item is None or ident in used or item.start and item.start != day.date:
                         continue
                     if trip.holiday_type == 'ski' and item.area != 'Красная Поляна':
-                        continue
-                    if rows and area_of(item.coordinates) != area_of(rows[0].coordinates):
                         continue
                     rows.append(item)
                     used.add(ident)
@@ -405,9 +406,11 @@ def compose_packages(trip: TripConstraints, results: dict, revision: int) -> tup
     if options and all(not any(d.candidates for d in o.days) for o in options):
         if not any(f.code == 'no_day_plan' for f in feedback):
             feedback.append(PlanFeedback(role='experience', code='empty_program', detail='Программа не содержит подходящих посещений на доступные дни поездки.'))
+    if trip.baggage == 'required' and transport and not any(c.baggage_included is True for c in transport):
+        feedback.append(PlanFeedback(role='transport', code='unverified_baggage', detail='Проверь тарифные варианты и условия багажа у найденных перелётов; нужен тариф с зарегистрированным багажом.'))
     preferred = {ident: i for i, ident in enumerate(parsed['stays'].selected_ids)} if 'stays' in parsed else {}
     transport_priority = {ident: i for i, ident in enumerate(parsed['transport'].selected_ids)} if 'transport' in parsed else {}
-    options.sort(key=lambda o: (bool(trip.party_budget and o.budget.known_subtotal > trip.party_budget), transport_priority.get(o.transport.id, 100), preferred.get(o.stay.id, 100), o.budget.known_subtotal))
+    options.sort(key=lambda o: (trip.baggage == 'required' and o.transport.baggage_included is not True, bool(trip.party_budget and o.budget.known_subtotal > trip.party_budget), transport_priority.get(o.transport.id, 100), preferred.get(o.stay.id, 100), o.budget.known_subtotal))
     selected = []
     seen = set()
     for option in options:

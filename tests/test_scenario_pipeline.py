@@ -44,7 +44,7 @@ class ReliabilityTests(unittest.IsolatedAsyncioTestCase):
         trip, _ = apply_delta(trip, TripDelta(hotel="Mirror"))
         trip, affected = apply_delta(trip, TripDelta(clear=["hotel"]))
         self.assertIsNone(trip.hotel)
-        self.assertEqual(affected, {"stays", "experience"})
+        self.assertEqual(affected, {"stays"})
         with self.assertRaises(ValidationError):
             TripDelta(hotel="Mirror", clear=["hotel"])
 

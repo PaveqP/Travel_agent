@@ -2,7 +2,7 @@ from datetime import date, datetime
 from decimal import Decimal
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, ConfigDict, Field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, JsonValue, model_validator
 from integrations.schemas.models import Budget, Coordinates, Money, Provenance
 
 Role = Literal["transport", "stays", "experience"]
@@ -43,7 +43,8 @@ class TripConstraints(BaseModel):
     hotel: str | None = Field(default=None, max_length=200)
     interests: list[str] = Field(default_factory=list, max_length=10)
     holiday_type: Literal['general', 'ski', 'mixed'] = 'general'
-    stay_preferences: list[Literal['near_lift', 'mountain_view']] = Field(default_factory=list, max_length=2)
+    stay_preferences: list[str] = Field(default_factory=list, max_length=10)
+    requirements: list[str] = Field(default_factory=list, max_length=20)
     option_limit: int = Field(default=5, ge=1, le=5)
     mountain_days: int | None = Field(default=None, ge=0, le=25)
     transport_modes: list[Literal['avia', 'rail']] = Field(default_factory=list, max_length=2)
@@ -110,7 +111,8 @@ class TripDelta(BaseModel):
     hotel: str | None = Field(default=None, max_length=200)
     interests: list[str] | None = Field(default=None, max_length=10)
     holiday_type: Literal['general', 'ski', 'mixed'] | None = None
-    stay_preferences: list[Literal['near_lift', 'mountain_view']] | None = Field(default=None, max_length=2)
+    stay_preferences: list[str] | None = Field(default=None, max_length=10)
+    requirements: list[str] | None = Field(default=None, max_length=20)
     option_limit: int | None = Field(default=None, ge=1, le=5)
     mountain_days: int | None = Field(default=None, ge=0, le=25)
     transport_modes: list[Literal['avia', 'rail']] | None = Field(default=None, max_length=2)
@@ -267,6 +269,9 @@ class Candidate(BaseModel):
     legs: list[TransportLeg] = Field(default_factory=list, max_length=4)
     baggage_included: bool | None = None
     sports_equipment_included: bool | None = None
+    variant_id: str | None = None
+    conditions: dict[str, JsonValue] = Field(default_factory=dict)
+    provider_details: dict[str, JsonValue] = Field(default_factory=dict)
 
 
 class SpecialistSelection(BaseModel):

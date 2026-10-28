@@ -248,7 +248,7 @@ class AutonomousToolTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(ValueError):
             simulate_purchase(state, BookingRequest(option_id=options[0].id, revision=1, confirm=True, idempotency_key='baggage-test'))
 
-    async def test_final_step_exposes_only_structured_output_and_reuses_evidence(self):
+    async def test_tools_remain_available_after_two_steps_and_reuse_evidence(self):
         from langchain_core.language_models.fake_chat_models import FakeMessagesListChatModel
         from travel_agent.agents.stays.agent import run
         from travel_agent.prompts import read_prompts
@@ -268,7 +268,8 @@ class AutonomousToolTests(unittest.IsolatedAsyncioTestCase):
             with patch('travel_agent.tools.runtime_call', new=AsyncMock(return_value={'status': 'ok', 'data': FIXTURES['search_hotels']})) as network:
                 row = await run(TRIP, 1, 'Сравни', [], model=model, client=client, env={}, prompt=read_prompts()['stays'], autonomous=True)
                 self.assertEqual(network.await_count, 1)
-                self.assertEqual(bindings[-1], ['SpecialistSelection'])
+                self.assertIn('hotel_details', bindings[-1])
+                self.assertIn('SpecialistSelection', bindings[-1])
                 source_ids = [c.id for c in row.candidates]
             cached = ToolModel(responses=[AIMessage(content='', tool_calls=[{'name': 'SpecialistSelection', 'args': {'source_ids': source_ids}, 'id': 'cached', 'type': 'tool_call'}])])
             with patch('travel_agent.tools.runtime_call', new=AsyncMock()) as network:
@@ -403,7 +404,7 @@ class PlannerContractTests(unittest.IsolatedAsyncioTestCase):
         sent = clients[TurnPlan].ainvoke.await_args.args[0]
         self.assertLessEqual(len(next(m.content for m in sent if isinstance(m, AIMessage))), 500)
 
-    async def test_search_waits_for_purpose_then_starts_all_missing_components(self):
+    async def test_search_starts_without_a_mandatory_purpose_question(self):
         runners = {}
         for role in ROLES:
             async def run(trip, revision, goal, previous, role=role):
@@ -412,8 +413,7 @@ class PlannerContractTests(unittest.IsolatedAsyncioTestCase):
         graph = build_graph(AsyncMock(side_effect=[TurnPlan(action='plan', reply='Начинаю поиск'), TurnPlan(action='plan', patch=TripDelta(purpose='Море и прогулки'))]), runners, InMemorySaver(), autonomous=True)
         cfg = {'configurable': {'thread_id': 'purpose-first'}}
         first = await graph.ainvoke({'constraints': TRIP.model_copy(update={'purpose': None, 'interests': []}).model_dump(mode='json')}, cfg)
-        self.assertIn('Какой отдых', first['answer'])
-        self.assertEqual(sum(r.await_count for r in runners.values()), 0)
-        planned = await graph.ainvoke({'messages': [HumanMessage(content='Море и прогулки')]}, cfg)
+        self.assertNotIn('Какой отдых', first['answer'])
         self.assertEqual([r.await_count for r in runners.values()], [1, 1, 1])
-        self.assertTrue(planned['options'])
+        self.assertTrue(first['options'])
+        self.assertIn(first['selected'], {o['id'] for o in first['options']})

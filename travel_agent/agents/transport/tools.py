@@ -38,7 +38,10 @@ def build_tools(
     *, autonomous: bool = False,
 ) -> list[BaseTool]:
     @tool
-    async def search_flights(departure_date: date | None = None, return_date: date | None = None, direct_only: bool | None = None) -> dict:
+    async def search_flights(departure_date: date | None = None, return_date: date | None = None, direct_only: bool | None = None,
+                             service_class: Literal['Y', 'S', 'C', 'F'] = 'Y', carriers: list[str] | None = None,
+                             flight_numbers: list[str] | None = None, page: int = 1,
+                             sort: Literal['price_asc', 'price_desc', 'duration_asc', 'departure_asc'] = 'price_asc') -> dict:
         """Search the user's dates, then bounded nearby dates; explicit windows sample up to six date pairs."""
         allowed = search_dates(trip)
         if departure_date is not None or return_date is not None:
@@ -60,7 +63,10 @@ def build_tools(
                         return await mcp("search_flights", "tutu", "search_avia", {
                             "origin": trip.origin, "destination": "AER", "departure_date": str(start),
                             "return_date": str(end), "adults": trip.adults, "page_size": 10,
-                            "sort": "price_asc", "direct_only": trip.direct_only or bool(direct_only)})
+                            "sort": sort, "service_class": service_class, "page": page,
+                            "direct_only": trip.direct_only or bool(direct_only),
+                            **({'carriers': carriers} if carriers is not None else {}),
+                            **({'flight_numbers': flight_numbers} if flight_numbers is not None else {})})
                 except TimeoutError:
                     return {"status": "timeout"}
 
@@ -74,7 +80,7 @@ def build_tools(
         except TimeoutError:
             first = {"status": "timeout"}
         return {"status": ("partial" if first["status"] == "timeout" else "ok") if evidence else first["status"],
-                "candidates": [c.model_dump(mode="json") for c in list(evidence.values())[:20]],
+                "candidates": [c.model_dump(mode="json", exclude={"provider_details"}) for c in evidence.values()],
                 "searched_dates": searched, "exhaustive": False, "search_limit": 6}
 
     @tool
@@ -114,11 +120,12 @@ def build_tools(
     @tool
     async def transport_details(source_id: str) -> dict:
         """Read flight details only for a flight obtained in this delegation."""
+        candidate = evidence.get(source_id)
+        if candidate is None or candidate.role != 'transport' or candidate.source.provider != 'tutu':
+            return {'status': 'forbidden'}
         return await mcp(
-            "transport_details",
-            "tutu",
-            "get_offer_details",
-            {"product_type": "avia", "offer_id": source_id.removeprefix("avia:")},
+            "transport_details", "tutu", "get_offer_details",
+            {"product_type": "avia", "offer_id": candidate.provider_id or source_id.removeprefix("avia:")},
         )
 
     @tool

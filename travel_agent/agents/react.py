@@ -7,8 +7,6 @@ import httpx
 from langchain.agents import create_agent
 from langchain.agents.middleware import (
     ModelCallLimitMiddleware,
-    ModelRequest,
-    wrap_model_call,
     ToolCallLimitMiddleware,
 )
 from langchain.agents.middleware.model_call_limit import ModelCallLimitExceededError
@@ -59,15 +57,9 @@ async def run_react(
     )
     by_name = {t.name: t for t in tools}
 
-    @wrap_model_call
-    async def finalize(request: ModelRequest, handler):
-        if autonomous and (request.state.get('run_model_call_count', 0) >= 2 or counts['tools'] >= 4):
-            request = request.override(tools=[])
-        return await handler(request)
-
     try:
         async with asyncio.timeout(deadline):
-            observations = [{'tool': 'saved_evidence', 'result': {'candidates': [c.model_dump(mode='json', include={'id', 'name', 'area', 'start', 'end', 'price', 'stars', 'rating', 'description'}) for c in evidence.values()]}}] if evidence else []
+            observations = [{'tool': 'saved_evidence', 'result': {'candidates': [c.model_dump(mode='json', exclude={'provider_details'}) for c in evidence.values()]}}] if evidence else []
             if not autonomous:
                 observations = [
                     {"tool": primary, "result": await by_name[primary].ainvoke({})}
@@ -88,11 +80,10 @@ async def run_react(
                 tools=tools,
                 system_prompt=prompt,
                 checkpointer=False,
-                response_format=ToolStrategy(SpecialistSelection, handle_errors=False),
+                response_format=ToolStrategy(SpecialistSelection, handle_errors=True),
                 middleware=[
-                    finalize,
-                    ModelCallLimitMiddleware(run_limit=4, exit_behavior="error"),
-                    ToolCallLimitMiddleware(run_limit=7 if autonomous else 6, exit_behavior="error"),
+                    ModelCallLimitMiddleware(run_limit=8, exit_behavior="error"),
+                    ToolCallLimitMiddleware(run_limit=12 if autonomous else 6, exit_behavior="error"),
                 ],
             )
             result = await agent.ainvoke(
@@ -111,7 +102,7 @@ async def run_react(
                         )
                     ]
                 },
-                {"recursion_limit": 20},
+                {"recursion_limit": 32},
             )
             selection = SpecialistSelection.model_validate(
                 result.get("structured_response")

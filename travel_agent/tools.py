@@ -209,6 +209,24 @@ def normalize(
                     description="" if row.get("search_results_url") else "Поставщик не вернул ссылку на конкретный тариф; ссылка ведёт в общий поиск авиабилетов Туту.",
                 )
             )
+            candidate = result[-1]
+            candidate.provider_id = row['offer_id']
+            candidate.provider_details = row
+            if row.get('variants'):
+                result.pop()
+                for variant in row['variants']:
+                    conditions = {**(variant.get('conditions') or {}),
+                                  **({'service_class': variant['service_class']} if variant.get('service_class') else {})}
+                    baggage = conditions.get('baggage')
+                    amounts = [baggage[key] for key in ('kg', 'pieces') if isinstance(baggage, dict) and isinstance(baggage.get(key), (int, float))]
+                    included = any(value > 0 for value in amounts) if amounts else candidate.baggage_included
+                    result.append(candidate.model_copy(update={
+                        'id': candidate.id + '@' + sha256(variant['variant_id'].encode()).hexdigest()[:12],
+                        'variant_id': variant['variant_id'], 'conditions': conditions,
+                        'price': Money(**variant['price'], basis='party'), 'baggage_included': included,
+                        'description': '; '.join(filter(None, [candidate.description, conditions.get('fare_family'),
+                            f"Багаж: {baggage['kg']} кг" if isinstance(baggage, dict) and baggage.get('kg') is not None else None]))[:1000],
+                    }))
     elif provider == "travelpayouts":
         source = source.model_copy(update={"provider": provider, "source_url": "https://www.aviasales.ru/", "evidence": "cached"})
         for row in data.get("data", []):
@@ -345,20 +363,25 @@ def build_tools(
         and c.source.provider == 'tutu' and (c.start, c.end, c.adults) == (trip.stay_start, trip.stay_end, trip.adults)
     }
     responses: dict[str, dict] = {}
-    flight_details: dict[str, dict] = {}
+    flight_details: dict[str, dict] = {
+        c.provider_id or c.id.removeprefix('avia:'): c.provider_details
+        for c in evidence.values() if role == 'transport' and c.role == 'transport'
+        and c.source.provider == 'tutu' and c.provider_details
+    }
+    owned.update(('avia', ident) for ident in flight_details)
 
     async def execute(name: str, provider: str, operation, method: str = "", query_trip: TripConstraints | None = None,
                       hotel_ref: tuple[str, str, str] | None = None) -> dict:
         if name not in ALLOWED[role]:
             return {"status": "forbidden"}
-        if counts["tools"] >= (6 if autonomous else 8):
+        if counts["tools"] >= (10 if autonomous else 8):
             warnings.append("tool_limit")
             return {"status": "cost_guard"}
         counts["tools"] += 1
         started = time.monotonic()
         status = "ok"
         try:
-            async with asyncio.timeout(12 if method == "build_route" else 20 if autonomous else 65 if provider in ("tutu", "2gis") else 40):
+            async with asyncio.timeout(12 if method == "build_route" else 45 if autonomous else 65 if provider in ("tutu", "2gis") else 40):
                 response = await operation()
             if isinstance(response, httpx.Response):
                 response.raise_for_status()
@@ -378,8 +401,8 @@ def build_tools(
                 provider, method, data, query_trip or trip, datetime.now(timezone.utc)
             )
             if provider == 'tutu' and method == 'search_avia':
-                verified = {c.id for c in candidates}
-                flight_details.update({row['offer_id']: row for row in data.get('offers', []) if 'avia:' + row['offer_id'] in verified})
+                verified = {c.provider_id for c in candidates}
+                flight_details.update({row['offer_id']: row for row in data.get('offers', []) if row['offer_id'] in verified})
             for candidate in candidates:
                 if autonomous and candidate.role == 'stays':
                     quote = sha256(f'{candidate.start}:{candidate.end}:{candidate.adults}'.encode()).hexdigest()[:10]
@@ -397,7 +420,8 @@ def build_tools(
                             include={
                                 "id",
                                 "name", "transport_mode", "baggage_included", "sports_equipment_included",
-                                "stars", "rating", "review_count", "address", "description",
+                                "variant_id", "conditions",
+                                "stars", "rating", "review_count", "address", "description", "amenities",
                                 "price",
                                 "area",
                                 "start",

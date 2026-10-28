@@ -26,10 +26,11 @@ def build_tools(
     @tool
     async def search_hotels(area: Area | None = None, check_in: date | None = None, check_out: date | None = None,
                             min_stars: int | None = None, min_rating: float | None = None,
-                            free_cancellation: bool | None = None, page: int = 1) -> dict:
+                            free_cancellation: bool | None = None, page: int = 1,
+                            hotel_amenities: list[str] | None = None, room_amenities: list[str] | None = None,
+                            meals: list[str] | None = None, breakfast_included: bool | None = None,
+                            hotel_types: list[str] | None = None, price_max: int | None = None) -> dict:
         """Search hotels for the server's area, dates and adult party."""
-        if not 1 <= page <= 3:
-            return {'status': 'forbidden', 'reason': 'Search is limited to three pages'}
         start, end = check_in or trip.stay_start, check_out or trip.stay_end
         lower, upper = trip.date_from or trip.start, trip.date_to or trip.end
         if not start or not end or not lower or not upper or not lower <= start < end <= upper:
@@ -49,6 +50,10 @@ def build_tools(
             filters['min_rating'] = rating
         if free_cancellation is not None:
             filters['free_cancellation'] = free_cancellation
+        filters.update({key: value for key, value in {
+            'hotel_amenities': hotel_amenities, 'room_amenities': room_amenities, 'meals': meals,
+            'breakfast_included': breakfast_included, 'hotel_types': hotel_types, 'price_max': price_max,
+        }.items() if value is not None})
         return await mcp(
             "search_hotels",
             "tutu",

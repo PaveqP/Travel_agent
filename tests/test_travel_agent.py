@@ -92,7 +92,7 @@ class EngineTests(unittest.TestCase):
         self.assertTrue(all(o.stay is None or o.stay.area=='Адлер' for o in compose(trip,candidates(),1)))
 
     def test_invalidation(self):
-        self.assertEqual(apply_delta(TRIP,TripDelta(hotel='Mirror'))[1],{'stays','experience'})
+        self.assertEqual(apply_delta(TRIP,TripDelta(hotel='Mirror'))[1],{'stays'})
         self.assertEqual(apply_delta(TRIP,TripDelta(budget=100000))[1],set())
         self.assertEqual(apply_delta(TRIP,TripDelta(start='2026-11-13'))[1],{'transport','stays','experience'})
 

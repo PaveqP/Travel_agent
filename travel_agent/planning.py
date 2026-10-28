@@ -1,9 +1,10 @@
+import json
 import logging
 from datetime import datetime
 from functools import partial
 
 from langchain_core.exceptions import OutputParserException
-from langchain_core.messages import AIMessage
+from langchain_core.messages import AIMessage, HumanMessage
 from langgraph.config import get_stream_writer
 from langgraph.graph import END, START, StateGraph
 from langgraph.types import Send
@@ -93,10 +94,8 @@ async def prepare(state: TripState, decide) -> dict:
         revised, affected = apply_delta(current, decision.patch)
     except ValidationError:
         return {'route': 'finish', 'status': 'needs_input', 'answer': 'Даты или состав поездки противоречат друг другу. Уточните изменяемые параметры.'}
-    if decision.action == 'clarify' and revised == current:
-        return {'route': 'finish', 'answer': decision.reply or 'Что именно хотите уточнить?', 'status': 'needs_input', 'requested_choice': None}
     tasks = list(decision.tasks)
-    focus = None if decision.focus == 'trip' else decision.focus or state.get('focus')
+    focus = None if decision.focus == 'trip' or state.get('options') else decision.focus or state.get('focus')
     affected.update(role for role in ('transport', 'stays', 'experience') if role not in state.get('results', {}))
     required = {dep for task in tasks for dep in task.depends_on if dep not in state.get('results', {})}
     affected.update(required - {t.role for t in tasks})
@@ -107,24 +106,30 @@ async def prepare(state: TripState, decide) -> dict:
         tasks = [t.model_copy(update={'depends_on': []}) for t in tasks if t.role == focus]
     elif any(t.role == 'transport' for t in tasks) and (not revised.start or not revised.end):
         tasks = [t.model_copy(update={'depends_on': list(dict.fromkeys([*t.depends_on, 'transport'])) if t.role != 'transport' else []}) for t in tasks]
-    results = {role: row for role, row in state.get('results', {}).items() if role not in affected}
+    results = dict(state.get('results', {}))
+    baseline = next((o for o in state.get('options', []) if o['id'] == (decision.option_id or state.get('selected'))), {})
+    if baseline.get('days') and 'experience' in results and not results['experience'].get('days'):
+        results['experience'] = {**results['experience'], 'days': [
+            {'date': day['date'], 'source_ids': [c['id'] for c in day.get('candidates', [])]}
+            for day in baseline['days']
+        ]}
     changed = revised != current or bool(tasks)
     update = {'autonomous': True, 'focus': focus, 'constraints': revised.model_dump(mode='json'), 'revision': state.get('revision', 0) + int(changed),
               'tasks': [t.model_dump() for t in tasks], 'search_round': 0, 'repair_decision': False, 'feedback': [],
               'results': results, 'requested_choice': None, 'selected': None if changed else state.get('selected'),
               'decision': {'action': 'compose'}, 'stage': 'review', 'route': 'delegate' if tasks else 'evaluate',
-              'selected_transport': None if 'transport' in affected else state.get('selected_transport'),
-              'selected_stay': None if 'stays' in affected else state.get('selected_stay')}
+              'selected_transport': (baseline.get('transport') or {}).get('id') or (None if 'transport' in affected else state.get('selected_transport')),
+              'selected_stay': (baseline.get('stay') or {}).get('id') or (None if 'stays' in affected else state.get('selected_stay'))}
     missing = revised.missing()
     if search_dates(revised):
         missing = [name for name in missing if name not in ('start', 'end')]
-    if missing or not revised.purpose and not revised.interests:
-        questions = {'origin': 'Из какого города поедете?', 'start': 'Когда хотите поехать?', 'end': 'До какого числа?', 'adults': 'Сколько взрослых поедет?'}
-        return {**update, 'route': 'finish', 'status': 'needs_input', 'answer': decision.reply if decision.action == 'clarify' and decision.reply else (questions[missing[0]] if missing else 'Какой отдых вам хочется?'), 'tasks': []}
-    if revised.start and revised.start < datetime.now().date():
-        return {**update, 'route': 'finish', 'status': 'needs_input', 'answer': 'Нужны будущие даты поездки.', 'tasks': []}
     if changed:
         update.update(options=[], choices=[], cards=[], plan_answer='', research={})
+    if missing:
+        questions = {'origin': 'Из какого города поедете?', 'start': 'Когда хотите поехать?', 'end': 'До какого числа?', 'adults': 'Сколько взрослых поедет?'}
+        return {**update, 'route': 'finish', 'status': 'needs_input', 'answer': questions[missing[0]], 'tasks': []}
+    if revised.start and revised.start < datetime.now().date():
+        return {**update, 'route': 'finish', 'status': 'needs_input', 'answer': 'Нужны будущие даты поездки.', 'tasks': []}
     return update
 
 
@@ -160,7 +165,21 @@ async def worker(state: dict, run, role: str) -> dict:
         return {'task_results': {role: {'revision': state['revision'], 'round': state.get('search_round', 0), 'result': result.model_dump(mode='json')}}}
     previous = [Candidate.model_validate(c) for c in state.get('results', {}).get('stays', {}).get('candidates', [])]
     known = [Candidate.model_validate(c) for c in state.get('results', {}).get(role, {}).get('candidates', [])]
-    result = SpecialistResult.model_validate(await run(trip, state['revision'], task.goal, [*known, *(previous if role == 'experience' else [])]))
+    latest = next((m.content for m in reversed(state.get('messages', [])) if isinstance(m, HumanMessage)), '')
+    context = {'user_request': latest, 'selected_transport': state.get('selected_transport'),
+               'selected_stay': state.get('selected_stay')}
+    context['current_transport'] = next((c for c in state.get('results', {}).get('transport', {}).get('candidates', [])
+                                         if c['id'] == state.get('selected_transport')), None)
+    if context['current_transport']:
+        context['current_transport'] = {k: v for k, v in context['current_transport'].items() if k != 'provider_details'}
+    if role == 'experience':
+        option = next((o for o in state.get('options', []) if o['id'] == state.get('selected')), {})
+        context['current_days'] = state.get('results', {}).get(role, {}).get('days') or [
+            {'date': day['date'], 'source_ids': [c['id'] for c in day.get('candidates', [])]}
+            for day in option.get('days', [])
+        ]
+    goal = task.goal + '\n' + json.dumps(context, ensure_ascii=False)
+    result = SpecialistResult.model_validate(await run(trip, state['revision'], goal, [*known, *(previous if role == 'experience' else [])]))
     if result.revision != state['revision'] or result.role != role or any(c.role != role for c in result.candidates):
         result = SpecialistResult(role=role, revision=state['revision'], status='partial', warnings=['stale_or_invalid_result'])
     progress({'transport': 'Предложения транспорта получены', 'stays': 'Варианты проживания получены', 'experience': 'Программа подготовлена'}[role],
@@ -173,9 +192,8 @@ def evaluate(state: TripState) -> dict:
     results = dict(state.get('results', {}))
     for role, slot in state.get('task_results', {}).items():
         if slot.get('revision') == state['revision'] and slot.get('round') == state.get('search_round', 0):
-            previous = results.get(role, {}).get('candidates', [])
             row = dict(slot['result'])
-            row['candidates'] = list({c['id']: c for c in [*previous, *row['candidates']]}.values())[-100:]
+            row['candidates'] = list({c['id']: c for c in row['candidates']}.values())[-100:]
             results[role] = row
     pending = any(not completed(state, t['role']) for t in state.get('tasks', []))
     if pending:
@@ -186,9 +204,24 @@ def evaluate(state: TripState) -> dict:
         from travel_agent.agents.supervisor.response import stay_cards
         cards = stay_cards({**state, 'results': results})
         return {'results': results, 'options': [], 'choices': [{'id': c['id'], 'title': c['title'], 'details': c['description']} for c in cards], 'cards': cards, 'feedback': [], 'status': 'ready' if cards else 'partial', 'route': 'respond', 'repair_decision': False, 'decision': {'action': 'compose'}}
-    options, feedback = compose_packages(trip, results, state['revision'])
+    package_results = dict(results)
+    scheduled = {task['role'] for task in state.get('tasks', [])}
+    for role, key in (('transport', 'selected_transport'), ('stays', 'selected_stay')):
+        if role not in scheduled and state.get(key) and role in results:
+            saved = [c for c in results[role].get('candidates', []) if c['id'] == state[key]]
+            if saved:
+                package_results[role] = {**results[role], 'candidates': saved}
+    options, feedback = compose_packages(trip, package_results, state['revision'])
+    chosen = next((o for o in options if o.transport.id == state.get('selected_transport') and o.stay.id == state.get('selected_stay')), options[0] if options else None)
     return {'results': results, 'options': [o.model_dump(mode='json') for o in options],
             'feedback': [f.model_dump() for f in feedback], 'stage': 'review',
+            'selected': chosen.id if chosen else None,
+            'selected_transport': chosen.transport.id if chosen else state.get('selected_transport'),
+            'selected_stay': chosen.stay.id if chosen else state.get('selected_stay'),
+            'constraints': trip.model_copy(update={
+                'start': chosen.transport.start, 'end': chosen.transport.end,
+                'check_in': chosen.stay.start, 'check_out': chosen.stay.end,
+            }).model_dump(mode='json') if chosen else state['constraints'],
             'choices': [{'id': o.id, 'title': f"{o.transport.name} + {o.stay.name}", 'details': f"Известная сумма {o.budget.known_subtotal} ₽ за группу"} for o in options],
             'status': 'ready' if options and not feedback else 'partial', 'decision': {'action': 'compose'},
             'route': 'repair' if feedback and state.get('search_round', 0) == 0 else 'respond', 'repair_decision': bool(feedback) and state.get('search_round', 0) == 0}

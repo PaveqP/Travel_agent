@@ -121,7 +121,7 @@ def create_app(
                         client=client,
                         env=env,
                         prompt=prompts[role],
-                        deadline=min(config.deadline, 65),
+                        deadline=config.deadline,
                         autonomous=autonomous,
                     )
                     for role, run in (
@@ -332,7 +332,7 @@ def create_app(
                 "profile_update": None,
                 "repair_decision": False,
             }
-            if portal_database_url:
+            if portal_database_url and not autonomous:
                 from travel_agent.support import support_reply
 
                 reply = support_reply(request.message, snapshot.values)
@@ -354,7 +354,7 @@ def create_app(
             run_id = str(uuid4())
             run_progress[progress_key] = {'run_id': run_id, 'status': 'running', 'sequence': 1, 'label': 'Запрос принят, планирую работу', 'previews': {}}
             try:
-                async with asyncio.timeout(180 if autonomous else 420):
+                async with asyncio.timeout(240 if autonomous else 420):
                     if autonomous:
                         async for kind, event in app.state.graph.astream(initial, config, stream_mode=['custom', 'updates']):
                             if kind == 'custom' and isinstance(event, dict) and event.get('label'):

@@ -274,7 +274,7 @@ class DialogueTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(options), 5)
         self.assertEqual(len({o.stay.id for o in options}), 5)
         self.assertEqual(
-            apply_delta(TRIP, TripDelta(purpose="Работа"))[1], {"stays", "experience"}
+            apply_delta(TRIP, TripDelta(purpose="Работа"))[1], {"experience"}
         )
 
     async def test_clarification_keeps_existing_options(self):

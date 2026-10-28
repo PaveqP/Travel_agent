@@ -116,7 +116,7 @@ def option_context(state: dict) -> list[dict]:
     return [
         {
             **{k: o[k] for k in ("id", "budget", "warnings")},
-            **{role: {k: value for k, value in (o.get(role) or {}).items() if k in ('id', 'name', 'area', 'price', 'start', 'end', 'arrival_at', 'return_departure_at', 'transport_mode', 'stars', 'rating', 'baggage_included')} for role in ('transport', 'stay')},
+            **{role: {k: value for k, value in (o.get(role) or {}).items() if k in ('id', 'name', 'area', 'price', 'start', 'end', 'arrival_at', 'return_departure_at', 'transport_mode', 'stars', 'rating', 'baggage_included', 'conditions', 'variant_id', 'source', 'duration_minutes', 'transfers')} for role in ('transport', 'stay')},
             "days": [
                 {
                     "date": d["date"],
@@ -178,6 +178,14 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
             )
             label = 'Поезд' if flight.get('transport_mode') == 'rail' else 'Перелёт'
             lines.append(f"{label}: {flight['name']}; прибытие {arrival}, отправление обратно {departure} (местное время).")
+            conditions = flight.get('conditions') or {}
+            if conditions.get('fare_family'):
+                lines.append('Тариф: ' + conditions['fare_family'] + '.')
+            baggage = conditions.get('baggage') or {}
+            if baggage.get('kg') is not None:
+                lines.append(f"Зарегистрированный багаж: {baggage['kg']} кг.")
+            elif flight.get('baggage_included') is True:
+                lines.append('Зарегистрированный багаж включён в тариф.')
         amount = (
             f"{Decimal(option['budget']['known_subtotal']):,.2f}".rstrip("0")
             .rstrip(".")
@@ -253,7 +261,7 @@ def llm_presenter(model, prompt: str):
     async def present(state: dict) -> str:
         planning = state.get("decision", {}).get("action") == "compose"
         stays_only = planning and state.get("focus") == "stays"
-        research = {"sources": state.get("results", {}).get("stays", {}).get("sources", [])} if stays_only else state.get("research", {})
+        research = {"sources": state.get("results", {}).get("stays", {}).get("sources", [])} if stays_only else state.get("research", {}) if state.get("decision", {}).get("action") == "research" else {}
         sources = research.get("sources", [])
         context = {
             "phase": "compare_stays" if stays_only else "present_options" if planning else "answer_question",
@@ -269,6 +277,7 @@ def llm_presenter(model, prompt: str):
             "stage": state.get("stage"),
             "choices": state.get("choices", []),
             "receipt": state.get("receipt", {}),
+            "scenarios": state.get("scenarios", []),
             "research": research,
         }
         if stays_only:
