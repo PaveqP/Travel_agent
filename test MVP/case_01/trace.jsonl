@@ -1,0 +1,1 @@
+{"timestamp": "2026-10-28T19:20:17.268953+00:00", "session_id": null, "case_id": "case_01", "event": "validation_error", "phase": "preflight", "status": "blocked", "duration_ms": null, "reason": "Missing real LLM/database configuration; backend startup failed", "user_message_sent": false, "evidence": "../PREFLIGHT.md", "recorded_at_reporting": true}
