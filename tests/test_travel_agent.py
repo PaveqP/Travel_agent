@@ -14,7 +14,7 @@ from pydantic import ValidationError
 
 from integrations.mcp.client import runtime_call
 from travel_agent.api import create_app
-from travel_agent.engine import apply_delta, area_of, compose
+from travel_agent.engine import apply_delta, area_of, compose, search_requirements
 from travel_agent.graph import build_graph
 from travel_agent.schemas import Candidate, SpecialistResult, SupervisorDecision, TripConstraints, TripDelta
 from travel_agent.tools import ALLOWED, build_tools, normalize, public_url
@@ -63,6 +63,19 @@ def agreed_state(stage='transport'):
 
 
 class EngineTests(unittest.TestCase):
+    def test_search_requirements_handle_stale_windows_and_component_scope(self):
+        past = date.today().replace(day=1) - timedelta(days=1)
+        for changes, focus, expected in (
+            ({'origin': None}, None, ['origin']),
+            ({'origin': None}, 'stays', []),
+            ({'start': None, 'end': None, 'travel_month': '2026-11'}, None, ['duration']),
+            ({'start': None, 'end': None, 'travel_month': past.strftime('%Y-%m'), 'nights': 4}, None, ['start', 'end', 'future_dates']),
+            ({'start': past - timedelta(days=4), 'end': past}, None, ['future_dates']),
+            ({'origin': None, 'start': None, 'end': None, 'check_in': TRIP.start, 'check_out': TRIP.end}, 'stays', []),
+        ):
+            with self.subTest(changes=changes, focus=focus):
+                self.assertEqual(search_requirements(TRIP.model_copy(update=changes), focus), expected)
+
     def test_contracts(self):
         for patch in [{'adults': 0}, {'destination': ''}, {'start': '2026-11-16', 'end': '2026-11-12'}, {'currency': 'USD'}]:
             with self.assertRaises(ValidationError):

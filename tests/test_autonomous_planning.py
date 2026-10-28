@@ -17,7 +17,7 @@ from pydantic import ValidationError
 from travel_agent.api import create_app
 from travel_agent.engine import compose_packages, simulate_purchase
 from travel_agent.graph import build_graph
-from travel_agent.schemas import AgentTask, BookingRequest, ProposedDay, SpecialistResult, TripDelta, TurnPlan
+from travel_agent.schemas import AgentTask, BookingRequest, ProposedDay, SpecialistResult, TripDelta, TripScenario, TurnPlan
 from test_travel_agent import TRIP, candidates
 
 ROLES = ('transport', 'stays', 'experience')
@@ -427,6 +427,118 @@ class SessionReliabilityTests(unittest.IsolatedAsyncioTestCase):
         runners = runners or {role: AsyncMock(side_effect=lambda trip, revision, goal, previous, role=role: result(role, trip, revision)) for role in ROLES}
         return build_graph(planner, runners, InMemorySaver(), autonomous=True), runners
 
+    async def test_destination_selection_clarifies_and_resumes_search_over_http(self):
+        question = 'Из какого города поедете и на какие будущие даты перенести поездку?'
+        scenario = TripScenario(id='krasnodar', title='Город и гастрономия', destination='Краснодар',
+            purpose='Парки и рестораны', tradeoff='Без моря')
+        async def decide(state):
+            if not state.get('stage'):
+                return TurnPlan(action='destinations', scenarios=[scenario], patch=TripDelta(
+                    start='2026-03-10', end='2026-03-20', adults=4, budget=300000))
+            if state.get('plan_review'):
+                self.assertEqual(state['selected_scenario'], 'krasnodar')
+                self.assertEqual(state['constraints']['destination'], 'Краснодар')
+                self.assertEqual(set(state['plan_review']['unresolved_fields']), {'origin', 'future_dates'})
+                self.assertIsNone(state['requested_choice'])
+                return TurnPlan(action='clarify', reply=question)
+            return TurnPlan(action='plan', patch=TripDelta(origin='Москва', start=TRIP.start, end=TRIP.end),
+                tasks=[task(r) for r in ROLES])
+        def run(role, trip, revision, goal, previous):
+            row = result(role, trip, revision)
+            for candidate in row.candidates:
+                candidate.destination = trip.destination
+                if role in ('transport', 'stays'):
+                    candidate.adults = trip.adults
+            return row
+        runners = {role: AsyncMock(side_effect=lambda *args, role=role: run(role, *args)) for role in ROLES}
+        planner = AsyncMock(side_effect=decide)
+        graph, _ = self.graph(planner, runners)
+        app = create_app(graph, tokens=('alice',))
+        async with app.router.lifespan_context(app), httpx.AsyncClient(transport=httpx.ASGITransport(app), base_url='http://test', headers={'Authorization': 'Bearer alice'}) as client:
+            ident = (await client.post('/trips')).json()['trip_id']
+            first = (await client.post(f'/trips/{ident}/messages', json={'message': 'Предложи направления', 'revision': 0})).json()
+            chosen = await client.post(f'/trips/{ident}/select/krasnodar', params={'revision': first['revision']})
+            self.assertEqual(chosen.status_code, 200)
+            selected = chosen.json()
+            self.assertEqual(selected['status'], 'needs_input')
+            self.assertEqual(selected['answer'], question)
+            self.assertEqual(selected['selected_scenario'], 'krasnodar')
+            self.assertEqual(selected['constraints']['adults'], 4)
+            self.assertEqual(selected['constraints']['budget'], '300000')
+            self.assertEqual(selected['choices'], [])
+            for runner in runners.values():
+                runner.assert_not_awaited()
+            restored = (await client.get(f'/trips/{ident}')).json()
+            self.assertEqual(restored['constraints'], selected['constraints'])
+            response = await client.post(f'/trips/{ident}/messages', json={'message': 'Из Москвы, 12–16 ноября 2026', 'revision': selected['revision']})
+            self.assertEqual(response.status_code, 200)
+            ready = response.json()
+            self.assertEqual(ready['status'], 'ready')
+            self.assertTrue(ready['options'])
+            self.assertEqual(ready['constraints']['destination'], 'Краснодар')
+            for runner in runners.values():
+                runner.assert_awaited_once()
+                self.assertEqual(runner.await_args.args[0].adults, 4)
+                self.assertEqual(runner.await_args.args[0].budget, Decimal(300000))
+
+    async def test_complete_destination_choice_starts_search_without_another_planner_call(self):
+        scenario = TripScenario(id='sochi', title='Море', destination='Сочи', purpose='Прогулки', tradeoff='Проверим тарифы')
+        planner = AsyncMock(return_value=TurnPlan(action='destinations', scenarios=[scenario]))
+        graph, runners = self.graph(planner)
+        config = {'configurable': {'thread_id': 'complete-destination'}}
+        await graph.ainvoke({'constraints': TRIP.model_dump(mode='json')}, config)
+        selected = await graph.ainvoke({'requested_choice': 'sochi'}, config)
+        self.assertEqual(selected['selected_scenario'], 'sochi')
+        self.assertEqual(selected['status'], 'ready')
+        self.assertTrue(selected['options'])
+        planner.assert_awaited_once()
+        for runner in runners.values():
+            runner.assert_awaited_once()
+
+    async def test_selection_review_can_restore_known_fields_and_search_immediately(self):
+        from unittest.mock import Mock
+        from travel_agent.agents.supervisor.agent import llm_planner
+        async def decide(messages):
+            context = json.loads(messages[1].content)
+            self.assertEqual(context['plan_review']['unresolved_fields'], ['origin'])
+            self.assertEqual(context['selected_scenario'], 'sochi')
+            self.assertEqual(context['constraints']['destination'], 'Сочи')
+            self.assertIn('Из Москвы', [m.content for m in messages])
+            return TurnPlan(action='plan', patch=TripDelta(origin='Москва'))
+        structured = Mock(ainvoke=AsyncMock(side_effect=decide))
+        model = Mock(with_structured_output=Mock(return_value=structured))
+        graph, runners = self.graph(llm_planner(model, 'Offline planner'))
+        scenario = TripScenario(id='sochi', title='Море', destination='Сочи', purpose='Прогулки', tradeoff='Проверим тарифы')
+        trip = TRIP.model_copy(update={'origin': None})
+        state = await graph.ainvoke({'constraints': trip.model_dump(mode='json'), 'stage': 'scenarios',
+            'scenarios': [scenario.model_dump(mode='json')], 'requested_choice': 'sochi',
+            'messages': [HumanMessage(content='Из Москвы'), HumanMessage(content='/select sochi')]},
+            {'configurable': {'thread_id': 'restore-origin'}})
+        self.assertEqual(state['status'], 'ready')
+        self.assertTrue(state['options'])
+        structured.ainvoke.assert_awaited_once()
+        for runner in runners.values():
+            runner.assert_awaited_once()
+
+    async def test_failed_clarification_preserves_choice_and_requests_missing_data(self):
+        for failure in (TimeoutError(), TurnPlan(action='plan'), TurnPlan(action='select', option_id='sochi'), TurnPlan(action='unsupported')):
+            with self.subTest(failure=repr(failure)):
+                planner = AsyncMock(side_effect=[failure] if isinstance(failure, Exception) else None, return_value=failure)
+                graph, runners = self.graph(planner)
+                scenario = TripScenario(id='sochi', title='Море', destination='Сочи', purpose='Прогулки', tradeoff='Проверим тарифы')
+                trip = TRIP.model_copy(update={'origin': None})
+                state = await graph.ainvoke({'constraints': trip.model_dump(mode='json'), 'stage': 'scenarios',
+                    'scenarios': [scenario.model_dump(mode='json')], 'requested_choice': 'sochi'},
+                    {'configurable': {'thread_id': 'clarification-failure'}})
+                self.assertEqual(state['status'], 'needs_input')
+                self.assertIn('город отправления', state['answer'])
+                self.assertEqual(state['selected_scenario'], 'sochi')
+                self.assertEqual(state['constraints']['destination'], 'Сочи')
+                self.assertIsNone(state['requested_choice'])
+                planner.assert_awaited_once()
+                for runner in runners.values():
+                    runner.assert_not_awaited()
+
     async def test_month_without_duration_clarifies_before_any_search(self):
         planner = AsyncMock(side_effect=[
             TurnPlan(action='clarify', patch=TripDelta(destination='Сочи', travel_month='2026-12', adults=2, purpose='Отдых'), reply='Из какого города удобно выехать и на сколько ночей?'),
@@ -732,11 +844,12 @@ class SupervisorQuestionTests(unittest.IsolatedAsyncioTestCase):
         structured.ainvoke.assert_awaited_once()
         self.assertEqual(decision.patch.origin, 'Санкт-Петербург')
 
-    async def test_invalid_plan_never_uses_a_scripted_question_or_calls_sources(self):
-        graph, runners = PlanningTests().graph([TurnPlan(action='plan')])
+    async def test_incomplete_plan_returns_to_supervisor_without_calling_sources(self):
+        question = 'Куда хотите поехать и из какого города?'
+        graph, runners = PlanningTests().graph([TurnPlan(action='plan'), TurnPlan(action='clarify', reply=question)])
         state = await graph.ainvoke({'messages': [HumanMessage(content='Полный запрос, потерянный в решении')]}, {'configurable': {'thread_id': 'bad-plan'}})
-        self.assertEqual(state['status'], 'error')
-        self.assertNotIn('?', state['answer'])
+        self.assertEqual(state['status'], 'needs_input')
+        self.assertEqual(state['answer'], question)
         for runner in runners.values():
             runner.assert_not_awaited()
 

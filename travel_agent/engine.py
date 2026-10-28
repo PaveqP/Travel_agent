@@ -102,6 +102,22 @@ def search_dates(trip: TripConstraints, today: date | None = None) -> list[tuple
     return [(start, start + timedelta(days=duration)) for start in starts if start >= today]
 
 
+def search_requirements(trip: TripConstraints, focus: str | None = None) -> list[str]:
+    missing = trip.missing()
+    if focus == 'stays':
+        missing = [key for key in missing if key != 'origin' and not (key in ('start', 'end') and trip.stay_start and trip.stay_end)]
+    if search_dates(trip):
+        missing = [key for key in missing if key not in ('start', 'end')]
+    if not (trip.start and trip.end or focus == 'stays' and trip.stay_start and trip.stay_end) and not (trip.nights or trip.duration_days):
+        missing.append('duration')
+    start = trip.stay_start if focus == 'stays' else trip.start
+    if start and start < date.today():
+        missing.append('future_dates')
+    elif not search_dates(trip) and (trip.travel_month or trip.date_from or trip.date_to):
+        missing.append('future_dates')
+    return missing
+
+
 def transport_matches(c: Candidate, trip: TripConstraints, now: datetime) -> bool:
     if trip.transport_modes and c.transport_mode not in trip.transport_modes:
         return False

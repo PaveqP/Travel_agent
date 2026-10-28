@@ -11,7 +11,7 @@ from langgraph.types import Send
 from openai import APIError
 from pydantic import ValidationError
 
-from travel_agent.engine import offer_card, apply_delta, compose_packages, search_dates, simulate_purchase, transport_matches, usable
+from travel_agent.engine import offer_card, apply_delta, compose_packages, search_dates, search_requirements, simulate_purchase, transport_matches, usable
 from travel_agent.schemas import AgentTask, BookingRequest, Candidate, ResearchResult, SpecialistResult, TripConstraints, TripDelta, TurnPlan
 from travel_agent.state import TripState
 
@@ -22,7 +22,16 @@ def progress(label: str, **fields) -> None:
     get_stream_writer()({'label': label, **fields})
 
 
-async def prepare(state: TripState, decide) -> dict:
+def search_question(missing: list[str]) -> str:
+    labels = {'origin': 'город отправления', 'destination': 'направление отдыха',
+              'start': 'дату начала', 'end': 'дату окончания', 'adults': 'число взрослых',
+              'duration': 'длительность поездки', 'future_dates': 'актуальные даты будущей поездки с годом'}
+    if 'future_dates' in missing:
+        missing = [key for key in missing if key not in ('start', 'end')]
+    return 'Продолжим подбор. Уточните, пожалуйста: ' + ', '.join(labels[key] for key in missing) + '.'
+
+
+async def prepare(state: TripState, decide, *, reviewed: bool = False) -> dict:
     progress('Разбираю пожелания и планирую поиск')
     if state.get('requested_choice'):
         decision = TurnPlan(action='select', option_id=state['requested_choice'])
@@ -33,8 +42,13 @@ async def prepare(state: TripState, decide) -> dict:
             logging.getLogger(__name__).warning('planner outcome=%s fields=%s', type(exc).__name__, [(e['loc'], e['type']) for e in exc.errors(include_input=False, include_url=False)] if isinstance(exc, ValidationError) else [])
             if state.get('repair_decision'):
                 decision = TurnPlan(action='plan')
+            elif reviewed:
+                return {'route': 'finish', 'status': 'needs_input', 'tasks': [], 'requested_choice': None,
+                        'answer': search_question(state['plan_review']['unresolved_fields'])}
             else:
                 return {'route': 'finish', 'status': 'error', 'answer': 'Не удалось обработать сообщение. Сохранённая поездка не изменена; повторите запрос.'}
+    if reviewed and decision.action not in ('plan', 'clarify'):
+        decision = TurnPlan(action='clarify', reply=search_question(state['plan_review']['unresolved_fields']))
     if state.get('repair_decision'):
         tasks = [t for t in decision.tasks if not state.get('focus') or t.role == state['focus']]
         for role in ('transport', 'stays', 'experience'):
@@ -59,10 +73,13 @@ async def prepare(state: TripState, decide) -> dict:
                              'details': item.purpose + ' ' + item.tradeoff} for item in proposals],
                 'options': [], 'cards': [], 'selected': None, 'selected_transport': None, 'selected_stay': None,
                 'selected_scenario': None, 'results': {}, 'tasks': [], 'answer': answer, 'plan_answer': answer,
+                'focus': None if decision.focus == 'trip' else decision.focus or state.get('focus'),
                 'requested_choice': None}
+    selected_scenario = state.get('selected_scenario')
     if decision.action == 'select' and state.get('stage') == 'scenarios':
         proposal = next((item for item in state.get('scenarios', []) if item['id'] == decision.option_id), None)
         if proposal:
+            selected_scenario = proposal['id']
             patch = decision.patch.model_dump(exclude_none=True, exclude={'clear'})
             patch.update(destination=proposal['destination'], purpose=proposal['purpose'], interests=proposal['interests'])
             decision = TurnPlan(action='plan', patch=TripDelta(**patch))
@@ -174,22 +191,22 @@ async def prepare(state: TripState, decide) -> dict:
         ]}
     changed = revised != current or bool(tasks)
     update = {'autonomous': True, 'focus': focus, 'constraints': revised.model_dump(mode='json'), 'revision': state.get('revision', 0) + int(changed),
+              'selected_scenario': selected_scenario,
               'tasks': [t.model_dump() for t in tasks], 'search_round': 0, 'repair_decision': False, 'feedback': [],
               'results': results, 'requested_choice': None, 'selected': None if changed else state.get('selected'),
               'decision': {'action': 'compose'}, 'stage': 'review', 'route': 'delegate' if tasks else 'evaluate',
               'selected_transport': (baseline.get('transport') or {}).get('id') or (None if 'transport' in affected else state.get('selected_transport')),
               'selected_stay': (baseline.get('stay') or {}).get('id') or (None if 'stays' in affected else state.get('selected_stay'))}
-    missing = revised.missing()
-    if focus == 'stays':
-        missing = [name for name in missing if name != 'origin']
-    if search_dates(revised):
-        missing = [name for name in missing if name not in ('start', 'end')]
+    missing = search_requirements(revised, focus)
     if changed:
         update.update(options=[], choices=[], cards=[], plan_answer='', research={})
-    if missing or not (revised.start and revised.end) and not (revised.nights or revised.duration_days) or revised.start and revised.start < datetime.now().date():
+    if missing:
         logging.getLogger(__name__).warning('planner outcome=incomplete_search_parameters missing=%s', missing)
-        return {**update, 'route': 'finish', 'status': 'error',
-                'answer': 'Не удалось подготовить параметры поиска из сообщения. Ваши данные сохранены; поиск не запускался.', 'tasks': []}
+        update.update(route='finish', status='needs_input', tasks=[])
+        if not reviewed:
+            review = {**state, **update, 'plan_review': {'unresolved_fields': missing}}
+            return {**update, **await prepare(review, decide, reviewed=True)}
+        return {**update, 'answer': search_question(missing)}
     update['preserved_roles'] = [role for role, key in (('transport', 'selected_transport'), ('stays', 'selected_stay'))
                                  if role not in affected and state.get(key)]
     return update
