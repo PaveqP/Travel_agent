@@ -323,12 +323,38 @@ def simulate_purchase(state: dict, request: BookingRequest) -> dict:
         raise ValueError('Transport and stay dates are incompatible')
     if trip.party_budget and option.budget.known_subtotal > trip.party_budget:
         raise ValueError('Known subtotal exceeds the party budget')
+    if state.get('autonomous') and not state.get('results', {}).get('experience', {}).get('days'):
+        activities = [Candidate.model_validate(c) for c in state.get('results', {}).get('experience', {}).get('candidates', [])]
+        option.days = suggested_program(option, activities, datetime.now(timezone.utc))
     return {'id': str(uuid4()), 'option_id': request.option_id, 'revision': request.revision,
             'simulated': True, 'status': 'simulated', 'paid': False, 'reserved': False,
             'items': [{'kind': c.role, 'source_id': c.id, 'name': c.name, 'price': c.price.model_dump(mode='json'), 'url': offer_card(c, trip).url, 'provider': c.source.provider, 'aggregator': offer_card(c, trip).aggregator, 'details': c.model_dump(mode='json', exclude={'source', 'price', 'url', 'provider_details'})} for c in (option.transport, option.stay)],
             'payment': {'simulated': True, 'status': 'succeeded', 'currency': 'RUB', 'amount': str(option.budget.known_subtotal), 'scope': 'transport_and_stay', 'method': request.payment_method},
             'missing_costs': option.budget.missing, 'itinerary': [d.model_dump(mode='json') for d in option.days],
             'message': 'Имитация покупки оформлена: билеты, проживание и маршрут сохранены в заказе. Реальные места не зарезервированы, оплата не выполнялась. Питание, трансферы, активности и сборы не оплачены.'}
+
+
+def suggested_program(option: TripOption, candidates: list[Candidate], now: datetime) -> list[ItineraryDay]:
+    if not option.transport or not option.stay or any(day.candidates for day in option.days):
+        return option.days
+    available = [c for c in candidates if c.role == 'experience' and c.source.expires_at and c.source.expires_at > now]
+    used = set()
+    planned = []
+    for day in option.days:
+        rows = []
+        if option.stay.start < day.date < option.stay.end:
+            eligible = [c for c in available if (not c.start or c.start <= day.date <= (c.end or c.start))]
+            eligible.sort(key=lambda c: c.start is None)
+            for item in eligible:
+                key = item.name.strip().casefold()
+                if key in used:
+                    continue
+                rows.append(item)
+                used.add(key)
+                if len(rows) == 2:
+                    break
+        planned.append(day.model_copy(update={'candidates': rows}))
+    return planned
 
 
 def compose_packages(trip: TripConstraints, results: dict, revision: int) -> tuple[list[TripOption], list[PlanFeedback]]:
@@ -386,6 +412,8 @@ def compose_packages(trip: TripConstraints, results: dict, revision: int) -> tup
                     used.add(ident)
             planned.append(ItineraryDay(date=day.date, candidates=rows, mountain=proposal.mountain if proposal else False))
         option.days = planned
+        if not days:
+            option.days = suggested_program(option, list(activities.values()), now)
         if trip.mountain_days is not None:
             count = sum(d.mountain for d in planned)
             if count != trip.mountain_days:

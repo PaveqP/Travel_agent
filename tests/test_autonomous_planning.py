@@ -75,6 +75,49 @@ class PlanningTests(unittest.IsolatedAsyncioTestCase):
                 runners[role] = AsyncMock(side_effect=run)
         return build_graph(AsyncMock(side_effect=decisions), runners, saver or InMemorySaver(), present=present, research=research, autonomous=True), runners
 
+    async def test_full_trip_does_not_infer_component_scope_from_one_task(self):
+        graph, runners = self.graph([TurnPlan(action='plan', tasks=[task('stays')])])
+        state = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json')}, {'configurable': {'thread_id': 'whole-trip'}})
+        self.assertIsNone(state['focus'])
+        self.assertTrue(state['options'])
+        self.assertTrue(all(o['transport'] and o['stay'] and any(d['candidates'] for d in o['days']) for o in state['options']))
+        self.assertEqual([runners[r].await_count for r in ROLES], [1, 1, 1])
+
+    def test_suggested_program_uses_evidence_dates_and_preserves_costs(self):
+        from datetime import datetime, timezone
+        from travel_agent.engine import suggested_program
+        from travel_agent.schemas import TripOption
+
+        results = {role: result(role, TRIP, 1).model_dump(mode='json') for role in ROLES}
+        results['experience']['days'] = []
+        options, feedback = compose_packages(TRIP, results, 1)
+        option = options[0]
+        self.assertIn('no_day_plan', [f.code for f in feedback])
+        self.assertTrue(any(day.candidates for day in option.days))
+        self.assertEqual(option.days[0].candidates, [])
+        self.assertEqual(option.days[-1].candidates, [])
+        self.assertIsNone(option.budget.confirmed_total)
+        empty = TripOption.model_validate(option.model_dump())
+        for day in empty.days:
+            day.candidates = []
+        place = result('experience', TRIP, 1).candidates[0]
+        now = datetime.now(timezone.utc)
+        expired = place.model_copy(deep=True)
+        expired.id, expired.name = 'expired', 'Expired'
+        expired.source.expires_at = now - timedelta(seconds=1)
+        duplicate = place.model_copy(update={'id': 'duplicate'})
+        event = place.model_copy(update={'id': 'event', 'name': 'Dated event', 'start': TRIP.start + timedelta(days=2), 'end': TRIP.start + timedelta(days=2)})
+        outside = place.model_copy(update={'id': 'outside', 'name': 'Other date', 'start': TRIP.end + timedelta(days=1)})
+        planned = suggested_program(empty, [expired, outside, place, duplicate, event], now)
+        scheduled = [(day.date, c) for day in planned for c in day.candidates]
+        self.assertEqual([c.id for _, c in scheduled].count(place.id), 1)
+        self.assertEqual({c.id for _, c in scheduled}, {place.id, event.id})
+        self.assertEqual(next(day for day, c in scheduled if c.id == 'event'), event.start)
+        self.assertTrue(all(len(day.candidates) <= 2 for day in planned))
+        self.assertEqual(empty.budget, option.budget)
+        with_plan = empty.model_copy(update={'days': planned})
+        self.assertEqual(suggested_program(with_plan, [outside], now), planned)
+
     async def test_clarify_hotel_budget_dates_and_readonly_question(self):
         decisions = [TurnPlan(action='clarify', patch=TripDelta(destination='Сочи', origin='Москва', adults=2, purpose='Море'), reply='Когда поедете?'),
                      TurnPlan(action='plan', patch=TripDelta(start=TRIP.start, end=TRIP.end), tasks=[task(r) for r in ROLES]),
@@ -113,7 +156,7 @@ class PlanningTests(unittest.IsolatedAsyncioTestCase):
         state = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json')}, {'configurable': {'thread_id': 'repair'}})
         self.assertEqual([runners[r].await_count for r in ROLES], [1, 1, 2])
         self.assertEqual(state['search_round'], 1)
-        self.assertIn('no_day_plan', [f['code'] for f in state['feedback']])
+        self.assertIn('program_update_incomplete', [f['code'] for f in state['feedback']])
         self.assertEqual(state['status'], 'partial')
         self.assertFalse(state['repair_decision'])
         self.assertTrue(state['options'])
@@ -682,8 +725,8 @@ class ScopeAndLatencyTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(full['focus'])
         self.assertTrue(full['options'])
 
-    async def test_single_role_task_infers_scope_without_expanding_missing_components(self):
-        graph, runners = PlanningTests().graph([TurnPlan(action='plan', tasks=[task('stays')])])
+    async def test_explicit_component_scope_does_not_expand_missing_components(self):
+        graph, runners = PlanningTests().graph([TurnPlan(action='plan', focus='stays', tasks=[task('stays')])])
         state = await graph.ainvoke({'constraints': TRIP.model_copy(update={'origin': None}).model_dump(mode='json')}, {'configurable': {'thread_id': 'inferred-scope'}})
         self.assertEqual(state['focus'], 'stays')
         self.assertTrue(state['cards'])
@@ -702,10 +745,12 @@ class ScopeAndLatencyTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(narrowed['cards'])
         self.assertEqual([runners[r].await_count for r in ROLES], [1, 2, 1])
 
-    async def test_long_explanation_is_one_llm_call_and_preserves_trip(self):
+    async def test_concise_explanation_is_one_llm_call_and_preserves_trip(self):
         from unittest.mock import Mock
         from travel_agent.agents.supervisor.agent import llm_planner
-        reply = 'Сравнение по сохранённым ценам. ' * 70
+        reply = 'Сравнение по сохранённым ценам. ' * 20
+        with self.assertRaises(ValidationError):
+            TurnPlan(action='answer', reply=reply * 4)
         structured = Mock(ainvoke=AsyncMock(return_value=TurnPlan(action='answer', reply=reply)))
         model = Mock(with_structured_output=Mock(return_value=structured))
         presenter = AsyncMock()
@@ -937,7 +982,9 @@ class TurnDeadlineTests(unittest.IsolatedAsyncioTestCase):
             partial = response.json()
             self.assertEqual(partial['status'], 'partial')
             self.assertTrue(partial['options'])
-            self.assertIn('частичный результат', partial['answer'])
+            self.assertIn('Туры под ключ', partial['answer'])
+            self.assertNotIn('лимит', partial['answer'].lower())
+            self.assertLess(len(partial['answer']), 1200)
             self.assertTrue(cancelled.is_set())
             restored = (await client.get(f'/trips/{ident}')).json()
             self.assertEqual(restored['options'], partial['options'])

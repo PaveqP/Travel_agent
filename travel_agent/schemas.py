@@ -209,7 +209,7 @@ class TurnPlan(BaseModel):
     patch: TripDelta = Field(default_factory=TripDelta)
     tasks: list[AgentTask] = Field(default_factory=list, max_length=3)
     scenarios: list[TripScenario] = Field(default_factory=list, max_length=8)
-    reply: str = Field(default='', max_length=12000, description='Для answer — готовый ответ по сохранённым фактам; для остальных действий — короткое сообщение или задача исследования.')
+    reply: str = Field(default='', max_length=1600, description='Краткий ответ в Markdown: ключевые выводы без переписывания карточек. Для research — точная задача исследования.')
     source_ids: list[str] = Field(default_factory=list, max_length=10)
     research_role: Role = 'experience'
     option_id: str | None = None
@@ -414,6 +414,6 @@ class OptionExplanation(BaseModel):
 
 class UserResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
-    text: str = Field(min_length=1, max_length=2000)
+    text: str = Field(min_length=1, max_length=1600)
     options: list[OptionExplanation] = Field(default_factory=list, max_length=5)
     source_urls: list[str] = Field(default_factory=list, max_length=10)

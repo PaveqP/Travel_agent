@@ -64,7 +64,6 @@ import {
   tripMapUrls,
   tripStatus,
   canCheckout,
-  feedbackText,
   messageLinks,
   transportRoutes,
   pendingText,
@@ -514,6 +513,7 @@ function Sidebar({
       ? activeTrip
       : trips.find((trip) => trip.state.stage === "booked");
   const artifacts = [
+    [Luggage, "Туры под ключ", state?.options?.length ? counted(state.options.length, "тур", "тура", "туров") : null, null, "tours"],
     [Plane, "Билеты", transport?.name, transport?.price, "transport"],
     [Building2, "Проживание", stay?.name, stay?.price, "stays"],
     [
@@ -670,10 +670,45 @@ function Sidebar({
   );
 }
 
+function ChatInline({ text }) {
+  return messageLinks(text).map((part, index) => part.href
+    ? <a key={index} href={part.href} target="_blank" rel="noopener noreferrer">{part.text}</a>
+    : <React.Fragment key={index}>{part.text.split(/(\*\*[^*\n]+\*\*|`[^`\n]+`)/g).map((token, i) =>
+      token.startsWith("**") && token.endsWith("**") ? <strong key={i}>{token.slice(2, -2)}</strong>
+        : token.startsWith("`") && token.endsWith("`") ? <code key={i}>{token.slice(1, -1)}</code>
+          : <React.Fragment key={i}>{token}</React.Fragment>)}</React.Fragment>);
+}
+
 function ChatText({ text }) {
-  return <p>{messageLinks(text).map((part, index) => part.href ? (
-    <a key={index} href={part.href} target="_blank" rel="noreferrer">{part.text}</a>
-  ) : <React.Fragment key={index}>{part.text}</React.Fragment>)}</p>;
+  const blocks = [];
+  let paragraph = [], items = [], ordered = false;
+  const flushParagraph = () => {
+    if (paragraph.length) blocks.push(<p key={blocks.length}><ChatInline text={paragraph.join("\n")} /></p>);
+    paragraph = [];
+  };
+  const flushList = () => {
+    if (items.length) {
+      const Tag = ordered ? "ol" : "ul";
+      blocks.push(<Tag key={blocks.length}>{items.map((item, i) => <li key={i}><ChatInline text={item} /></li>)}</Tag>);
+    }
+    items = [];
+  };
+  for (const line of text.split("\n")) {
+    const heading = line.match(/^#{1,3}\s+(.+)$/);
+    const item = line.match(/^\s*(?:[-*•]|(\d+)\.)\s+(.+)$/);
+    if (heading || !line.trim()) {
+      flushParagraph(); flushList();
+      if (heading) blocks.push(<h3 key={blocks.length}><ChatInline text={heading[1]} /></h3>);
+    } else if (item) {
+      flushParagraph();
+      if (items.length && ordered !== !!item[1]) flushList();
+      ordered = !!item[1]; items.push(item[2]);
+    } else {
+      flushList(); paragraph.push(line);
+    }
+  }
+  flushParagraph(); flushList();
+  return <div className="chat-markdown">{blocks}</div>;
 }
 
 function Conversation({
@@ -914,7 +949,7 @@ function OfferName({ item, children }) {
 
 function PresentationLinks({ state, openPanel, past = false }) {
   if (!state || !openPanel) return null;
-  const links = [[Plane, "Билеты", "transport", offerItems(state, "transport").length], [Building2, "Отели", "stays", offerItems(state, "stays").length], [Route, "Программа", "itinerary", tripParts(state).days.length]].filter((row) => row[3]);
+  const links = [[Luggage, "Туры под ключ", "tours", state.options?.length], [Plane, "Билеты", "transport", offerItems(state, "transport").length], [Building2, "Отели", "stays", offerItems(state, "stays").length], [Route, "Программа", "itinerary", tripParts(state).days.length]].filter((row) => row[3]);
   if (!links.length) return null;
   return <div className="presentation-links" aria-label="Варианты поездки">
     {past && <span className="small muted">Подбор из этого ответа. Открыть актуальные варианты:</span>}
@@ -929,7 +964,7 @@ function TripOptions({ kind, state, busy, choose, close, closing, changeKind, di
   const [compact, setCompact] = useState(() => window.matchMedia("(max-width: 1000px)").matches);
   const [details, setDetails] = useState(null);
   const heading = useRef(null);
-  const title = { transport: "Билеты", stays: "Отели", itinerary: "Программа по дням", budget: "Бюджет" }[kind];
+  const title = { tours: "Туры под ключ", transport: "Билеты", stays: "Отели", itinerary: "Программа по дням", budget: "Бюджет" }[kind];
   const items = offerItems(state, kind);
   const signature = items.map((item) => item.id).join("|");
   useEffect(() => {
@@ -965,10 +1000,15 @@ function TripOptions({ kind, state, busy, choose, close, closing, changeKind, di
   };
   const content = <>
     <div className="options-tabs" aria-label="Разделы вариантов">
-      {[[Plane, "Билеты", "transport"], [Building2, "Отели", "stays"], [Route, "Программа", "itinerary"], [Wallet, "Бюджет", "budget"]].map(([Component, label, key]) => <button key={key} aria-pressed={kind === key} onClick={() => changeKind(key)}><Component size={15} />{label}</button>)}
+      {[[Luggage, "Туры", "tours"], [Plane, "Билеты", "transport"], [Building2, "Отели", "stays"], [Route, "Программа", "itinerary"], [Wallet, "Бюджет", "budget"]].map(([Component, label, key]) => <button key={key} aria-pressed={kind === key} onClick={() => changeKind(key)}><Component size={15} />{label}</button>)}
     </div>
     <div className="options-panel-scroll" key={kind}>
-      {!state ? <div className="panel-empty"><LoaderCircle className="spin" />Загружаем поездку…</div> : ["transport", "stays"].includes(kind) ? <>
+      {!state ? <div className="panel-empty"><LoaderCircle className="spin" />Загружаем поездку…</div> : kind === "tours" ? <section className="panel-tours" aria-label="Готовые туры">
+        <p className="small muted">Дорога туда и обратно, проживание и предложенная программа — в одном варианте.</p>
+        {state.options?.map((option, index) => <PackageCard key={option.id} option={option} index={index} state={state} choose={choose} busy={busy} />)}
+        {!state.options?.length && <p>Расскажите о поездке — здесь появятся готовые туры.</p>}
+        {canCheckout(state) && <button className="primary" disabled={busy} onClick={pay}><CreditCard size={16} />К имитации оплаты</button>}
+      </section> : ["transport", "stays"].includes(kind) ? <>
         <div className="options-toolbar"><span>{counted(items.length, "вариант", "варианта", "вариантов")}{busy && " · обновляем подбор"}</span><button className="text-button" disabled={selectedItems.length < 2} aria-pressed={comparing} onClick={() => setComparing(!comparing)}>{comparing ? <List size={15} /> : <Columns2 size={15} />}{comparing ? "Карточки" : `Сравнить · ${selectedItems.length}`}</button></div>
         {comparing ? <div className="offer-comparison" style={{ "--columns": selectedItems.length }} role="group" aria-label="Сравнение вариантов">
           {selectedItems.map((item) => <div className="comparison-heading" key={item.id}><h3><OfferName item={item} /></h3>{offerSelected(state, item, kind) && <span className="panel-selected"><Check size={12} />Выбрано</span>}</div>)}
@@ -1095,7 +1135,6 @@ function SearchPreviews({ previews }) {
 
 function PackageCard({ option, index, state, choose, busy }) {
   const selected = state.selected === option.id;
-  const trip = { ...state, options: [option], selected: option.id };
   const people = state.constraints?.adults;
   return (
     <article className={`package-card ${selected ? "is-selected" : ""}`}>
@@ -1112,7 +1151,6 @@ function PackageCard({ option, index, state, choose, busy }) {
         <MapPin size={14} />
         {option.stay?.area || "Россия"}
       </p>
-      <HotelDetails hotel={option.stay} />
       <div className="package-components">
         <div>
           <Icon
@@ -1139,7 +1177,6 @@ function PackageCard({ option, index, state, choose, busy }) {
           </span>
         </div>
       </div>
-      {option.transport && <TransportRoutes candidate={option.transport} constraints={state.constraints} />}
       <div className="package-price">
         <strong>{money(option.budget?.known_subtotal)}</strong>
         <span>билеты + отель за всех</span>
@@ -1149,19 +1186,14 @@ function PackageCard({ option, index, state, choose, busy }) {
           </small>
         )}
       </div>
-      <p className="small muted">
-        Питание, активности и местные переезды пока не посчитаны.
-      </p>
+      {option.days?.some((day) => day.candidates?.length) && <p className="package-program"><Route size={16} /><span>{[...new Set(option.days.flatMap((day) => day.candidates || []).map((item) => item.name))].slice(0, 3).join(" · ")}</span></p>}
       <details className="package-details">
         <summary>
           Программа и условия <ChevronDown size={14} />
         </summary>
         <DayPlan days={option.days || []} />
-        {option.warnings?.map((warning) => (
-          <p className="day-warning" key={warning}>
-            {warning}
-          </p>
-        ))}
+        <HotelDetails hotel={option.stay} />
+        {option.transport && <TransportRoutes candidate={option.transport} constraints={state.constraints} />}
         <SourceLink url={option.transport?.url}>Билеты у поставщика</SourceLink>
         <SourceLink url={option.stay?.url}>Отель у поставщика</SourceLink>
       </details>
@@ -1173,9 +1205,6 @@ function PackageCard({ option, index, state, choose, busy }) {
         {selected ? "Этот вариант выбран" : `Выбрать вариант ${index + 1}`}
         <Check size={16} />
       </button>
-      {selected && !canCheckout(trip) && (
-        <p className="small muted">Тарифы нужно обновить перед оформлением.</p>
-      )}
     </article>
   );
 }
@@ -1218,17 +1247,6 @@ function AutonomousPlan({
             {staysOnly ? "Проживание под ваш запрос" : componentOnly ? "Варианты проезда" : "Варианты вашей поездки"}
           </h2>
           <span>{tripStatus(state)}</span>
-        </div>
-      )}
-      {state.feedback?.length > 0 && (
-        <div className="plan-feedback" role="status">
-          <strong>Что ещё нужно уточнить</strong>
-          <ul>
-            {state.feedback.map((item, index) => (
-              <li key={index}>{feedbackText(item)}</li>
-            ))}
-          </ul>
-          <p>Обсудите изменения с агентом в чате.</p>
         </div>
       )}
       {componentOnly || (!options.length && state.cards?.length > 0) ? (
@@ -2783,10 +2801,10 @@ function App() {
   useEffect(() => {
     if (!state || chatId || page !== "plan") return;
     const hotels = offerItems(state, "stays"), tickets = offerItems(state, "transport");
-    const signature = JSON.stringify([tripId, state.revision, state.stage, hotels.map((row) => row.id), tickets.map((row) => row.id)]);
+    const signature = JSON.stringify([tripId, state.revision, state.stage, state.options?.map((row) => row.id), hotels.map((row) => row.id), tickets.map((row) => row.id)]);
     if (signature === panelResults.current) return;
     panelResults.current = signature;
-    if (window.matchMedia("(min-width: 1001px)").matches && (hotels.length || tickets.length)) setPanelKind(state.stage === "booked" ? "budget" : !state.autonomous && state.stage === "itinerary" ? "itinerary" : state.focus === "transport" ? "transport" : hotels.length ? "stays" : "transport");
+    if (window.matchMedia("(min-width: 1001px)").matches && (hotels.length || tickets.length)) setPanelKind(state.stage === "booked" ? "budget" : !state.autonomous && state.stage === "itinerary" ? "itinerary" : state.focus === "transport" ? "transport" : state.options?.length && !state.focus ? "tours" : hotels.length ? "stays" : "transport");
   }, [state, page, chatId, tripId]);
   const closePanel = () => { clearTimeout(panelCloseTimer.current); setPanelClosing(true); panelCloseTimer.current = setTimeout(() => { setPanelKind(null); setPanelClosing(false); const target = panelTrigger.current?.isConnected && !panelTrigger.current.closest("[inert]") ? panelTrigger.current : document.querySelector(".topbar-options"); target?.focus({ preventScroll: true }); }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 180); };
   const openPanel = (kind) => {
@@ -3134,7 +3152,7 @@ function App() {
           </div>
           <div className="topbar-actions">
             {planning && tripId && (
-              <button className="topbar-trip topbar-options" onClick={() => openPanel(panelKind || "stays")} aria-label="Открыть варианты поездки" aria-expanded={!!panelKind} aria-controls="trip-options-panel"><PanelRightOpen size={16} />Варианты</button>
+              <button className="topbar-trip topbar-options" onClick={() => openPanel(panelKind || (state?.options?.length ? "tours" : "stays"))} aria-label="Открыть варианты поездки" aria-expanded={!!panelKind} aria-controls="trip-options-panel"><PanelRightOpen size={16} />Варианты</button>
             )}
             {planning && tripId && (
               <button

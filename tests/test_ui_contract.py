@@ -18,6 +18,46 @@ from test_travel_agent import FIXTURES, TRIP, agreed_state, decide, run
 
 
 class PresentationTests(unittest.TestCase):
+    def test_saved_tour_reopens_with_summary_program_and_unchanged_checkpoint(self):
+        from travel_agent.engine import compose_packages
+        from travel_agent.schemas import TurnPlan
+        from test_autonomous_planning import result
+
+        graph = build_graph(AsyncMock(return_value=TurnPlan(action='chat', reply='Обсудим детали.')),
+                            {role: AsyncMock() for role in ('transport', 'stays', 'experience')},
+                            InMemorySaver(), autonomous=True)
+        results = {role: result(role, TRIP, 1).model_dump(mode='json') for role in ('transport', 'stays', 'experience')}
+        results['experience']['days'] = []
+        options, feedback = compose_packages(TRIP, results, 1)
+        for option in options:
+            for day in option.days:
+                day.candidates = []
+        saved = {'autonomous': True, 'constraints': TRIP.model_dump(mode='json'), 'revision': 1, 'stage': 'review',
+                 'results': results, 'options': [o.model_dump(mode='json') for o in options],
+                 'feedback': [f.model_dump() for f in feedback], 'selected': options[0].id,
+                 'choices': [{'id': o.id} for o in options], 'answer': 'Не удалось: timeout. ' * 300,
+                 'plan_answer': 'Не удалось: timeout. ' * 300}
+        saved['messages'] = [HumanMessage(content='Поездка целиком'), AIMessage(content=saved['answer'])]
+        with TestClient(create_app(graph, tokens=('alice',))) as client:
+            client.headers['Authorization'] = 'Bearer alice'
+            trip_id = client.post('/trips').json()['trip_id']
+            config = {'configurable': {'thread_id': hashlib.sha256(b'alice').hexdigest() + ':' + trip_id}}
+            client.portal.call(graph.aupdate_state, config, saved)
+            shown = client.get('/trips/' + trip_id).json()
+            self.assertLess(len(shown['answer']), 1200)
+            self.assertNotIn('timeout', shown['answer'])
+            self.assertNotIn('Не удалось', shown['answer'])
+            self.assertTrue(any(d['candidates'] for d in shown['options'][0]['days']))
+            self.assertEqual(shown['options'][0]['budget'], saved['options'][0]['budget'])
+            self.assertEqual(shown['selected'], saved['selected'])
+            self.assertEqual(shown['revision'], 1)
+            self.assertEqual(shown['messages'][-1]['text'], shown['answer'])
+            self.assertEqual(shown['messages'][-1]['presentation']['options'], shown['options'])
+            stored = client.portal.call(graph.aget_state, config).values
+            self.assertEqual(stored['answer'], saved['answer'])
+            self.assertFalse(any(d['candidates'] for d in stored['options'][0]['days']))
+            self.assertEqual(client.get('/trips/' + trip_id).json(), shown)
+
     def test_cards_survive_a_text_reply_and_reload_without_nested_message_history(self):
         async def chat(state):
             return SupervisorDecision(action="chat", reply="Условия: [Туту](https://tutu.ru).")

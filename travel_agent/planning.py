@@ -46,7 +46,7 @@ async def prepare(state: TripState, decide, *, reviewed: bool = False) -> dict:
                 return {'route': 'finish', 'status': 'needs_input', 'tasks': [], 'requested_choice': None,
                         'answer': search_question(state['plan_review']['unresolved_fields'])}
             else:
-                return {'route': 'finish', 'status': 'error', 'answer': 'Не удалось обработать сообщение. Сохранённая поездка не изменена; повторите запрос.'}
+                return {'route': 'finish', 'status': 'error', 'answer': 'Продолжим планировать поездку. Напишите, что хотите подобрать или изменить.'}
     if reviewed and decision.action not in ('plan', 'clarify'):
         decision = TurnPlan(action='clarify', reply=search_question(state['plan_review']['unresolved_fields']))
     if state.get('repair_decision'):
@@ -165,8 +165,6 @@ async def prepare(state: TripState, decide, *, reviewed: bool = False) -> dict:
                 'decision': decision.model_dump(mode='json'), 'tasks': [], 'requested_choice': None}
     tasks = list(decision.tasks)
     focus = None if decision.focus == 'trip' else decision.focus or state.get('focus')
-    if not focus and decision.focus is None and not state.get('options') and len(tasks) == 1 and tasks[0].role in ('stays', 'transport'):
-        focus = tasks[0].role
     if focus == 'stays' and revised.stay_start and revised.stay_end and not (revised.start and revised.end):
         revised = TripConstraints.model_validate({**revised.model_dump(), 'start': revised.stay_start, 'end': revised.stay_end})
     affected.update(role for role in ('transport', 'stays', 'experience') if role not in state.get('results', {}))
@@ -329,20 +327,11 @@ def evaluate(state: TripState) -> dict:
 
 
 async def respond(state: TripState, present) -> dict:
-    from travel_agent.agents.supervisor.response import render_options, render_card, render_stays
+    from travel_agent.agents.supervisor.response import render_options, render_components
 
     progress('Сравниваю варианты и готовлю рекомендацию')
-    fallback = render_options(state) if state.get('options') else 'Не удалось собрать проверенную поездку. Полученные данные сохранены; можно изменить условия или повторить поиск.'
-    if not state.get('options') and not state.get('focus'):
-        trip = TripConstraints.model_validate(state['constraints'])
-        cards = [offer_card(Candidate.model_validate(c), trip).model_dump(mode='json') for row in state.get('results', {}).values() for c in row.get('candidates', [])[:2]]
-        fallback += '\n\n' + '\n\n'.join(render_card(c) for c in cards)
-    if state.get('focus') in ('transport', 'stays'):
-        fallback = render_stays(state) if state['focus'] == 'stays' else '\n\n'.join(render_card(c, i) for i, c in enumerate(state.get('cards', []), 1))
+    fallback = render_options(state) if state.get('options') else render_components(state)
     answer = await present({**state, 'answer': fallback}) if present else fallback
-    if state.get('feedback'):
-        labels = {'no_transport': 'Не удалось подтвердить билеты на подходящие даты.', 'no_stays': 'Не удалось подтвердить проживание на выбранные даты.', 'no_day_plan': 'Программа по дням пока не подтверждена.', 'mountain_days_mismatch': 'Не удалось подтвердить требуемое число горных дней.', 'arrival_stay_mismatch': 'Даты проживания пока не согласованы с прибытием транспорта.', 'ski_program_mismatch': 'Программа пока не соответствует горнолыжной цели.'}
-        answer += '\n\nЧто пока не удалось подтвердить:\n' + '\n'.join('• ' + labels.get(f['code'], 'Часть программы не прошла проверку фактов и совместимости.') for f in state['feedback'])
     return {'answer': answer, 'plan_answer': answer}
 
 

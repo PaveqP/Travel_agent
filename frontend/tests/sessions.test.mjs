@@ -213,7 +213,17 @@ test("right panel preserves chat, links offer names and selects the correspondin
   const { page, trips } = await openSession(t, { state: offersState() });
   const panel = page.getByRole("complementary", { name: "Варианты поездки" });
   await panel.waitFor();
-  await page.screenshot({path:"/tmp/flinters-options-desktop.png"});
+  await panel.getByRole("heading", { name: "Туры под ключ", exact: true }).waitFor();
+  assert.equal(await panel.locator(".package-card").count(), 2);
+  await panel.getByRole("button", { name: "Выбрать вариант 2", exact: true }).click();
+  await page.waitForFunction(() => document.querySelector('.saved-artifacts').textContent.includes('Морской парк'));
+  assert.equal(trips.get("existing").selected, "option-1");
+  await panel.locator(".package-card").first().locator("summary").click();
+  await panel.locator(".package-card").first().locator(".day-plan").getByText("Прогулка у моря", { exact: true }).waitFor();
+  await page.screenshot({path:"/tmp/flinters-tours-desktop.png"});
+  await panel.getByRole("button", { name: "Выбрать вариант 1", exact: true }).click();
+  await page.waitForFunction(() => document.querySelector('.saved-artifacts').textContent.includes('Солнечный День'));
+  await panel.getByRole("button", { name: "Отели", exact: true }).click();
   assert.equal(await page.locator(".conversation-scroll .package-card").count(), 0);
   assert.equal(await panel.getByRole("link", { name: "Солнечный День" }).getAttribute("href"), "https://hotel.tutu.ru/hotel-a");
   await panel.getByRole("button", { name: /Сравнить · 2/ }).click();
@@ -318,4 +328,22 @@ test("the legacy day approval remains available in the itinerary panel", async(t
   const panel=page.getByRole('complementary',{name:'Варианты поездки'});
   await panel.getByRole('heading',{name:'Программа по дням',exact:true}).waitFor();
   assert.equal(await panel.getByRole('button',{name:'Мне подходит, собери поездку'}).isEnabled(),true);
+});
+
+test("tour sheet works on phones and Markdown stays safe and readable", async (t) => {
+  const state = offersState();
+  state.messages.at(-1).text = "**Сургут**\n\n- Перелёт и отель\n- Программа по дням\n\n[Отель](https://example.com)\n<script>window.injected=true</script>";
+  const { page } = await openSession(t, { state, viewport: { width: 390, height: 844 } });
+  await page.locator(".chat-markdown strong").filter({ hasText: "Сургут" }).waitFor();
+  assert.equal(await page.locator(".chat-markdown li").count(), 2);
+  assert.equal(await page.locator(".chat-markdown script").count(), 0);
+  assert.equal(await page.evaluate(() => window.injected), undefined);
+  await page.getByRole("button", { name: "Открыть варианты поездки", exact: true }).click();
+  const sheet = page.getByRole("dialog");
+  await sheet.getByRole("heading", { name: "Туры под ключ", exact: true }).waitFor();
+  assert.equal(await sheet.locator(".package-card").count(), 2);
+  await sheet.getByRole("button", { name: "Выбрать вариант 2", exact: true }).click();
+  await sheet.locator(".package-card").last().getByText("Выбран", { exact: true }).waitFor();
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
+  await page.screenshot({ path: "/tmp/flinters-tours-mobile.png" });
 });

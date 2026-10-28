@@ -133,93 +133,45 @@ def option_context(state: dict) -> list[dict]:
 
 
 def render_options(state: dict, response: UserResponse | None = None) -> str:
-    comments = {o.option_id: o for o in response.options} if response else {}
-    lines = [response.text if response else "Вот доступные варианты поездки:"]
+    options = state.get("options", [])
+    if not options:
+        return render_components(state)
     trip = state.get("constraints", {})
-    start = (
-        date.fromisoformat(trip["start"]).strftime("%d.%m.%Y")
-        if trip.get("start")
-        else "дата не указана"
-    )
-    end = (
-        date.fromisoformat(trip["end"]).strftime("%d.%m.%Y")
-        if trip.get("end")
-        else "дата не указана"
-    )
-    if not trip.get('start') or not trip.get('end'):
-        if trip.get('travel_month'):
-            start, end = 'поиск в месяце ' + trip['travel_month'], 'даты каждого варианта ниже'
-    lines.append(
-        f"{trip.get('origin', '')} → {trip.get('destination', 'Россия')}, {start} — {end}; взрослых: {trip.get('adults', '')}."
-    )
-    if state.get("diagnostics", {}).get("reasons"):
-        lines.append(state.get("answer", ""))
-    if trip.get("budget"):
-        from travel_agent.schemas import TripConstraints
+    lines = [f"**{trip.get('origin', '')} → {trip.get('destination', 'Россия')}**", ""]
+    for index, option in enumerate(options[:5], 1):
+        journey, stay = option.get("transport"), option.get("stay")
+        if not journey or not stay:
+            continue
+        start = date.fromisoformat(journey["start"]).strftime("%d.%m")
+        end = date.fromisoformat(journey["end"]).strftime("%d.%m.%Y")
+        amount = f"{Decimal(option['budget']['known_subtotal']):,.0f}".replace(",", " ")
+        name = stay["name"] if len(stay["name"]) <= 70 else stay["name"][:67] + "…"
+        lines.append(f"- **Вариант {index}: {name}** · {start}–{end} · билеты и проживание **{amount} ₽ за группу**.")
+    selected = next((o for o in options if o["id"] == state.get("selected")), options[0])
+    journey = selected.get("transport") or {}
+    baggage = (journey.get("conditions") or {}).get("baggage") or {}
+    if baggage.get("kg") is not None:
+        lines.append(f"\nБагаж выбранного перелёта: **{baggage['kg']} кг**.")
+    places = list(dict.fromkeys(c["name"] for d in selected.get("days", []) for c in d.get("candidates", [])))
+    if places:
+        lines.append("\n**В программе:** " + ", ".join(name if len(name) <= 50 else name[:47] + "…" for name in places[:3]) + ".")
+    lines.append("\nСравните варианты в **«Туры под ключ»** и выберите тур. Пожелания можно изменить в чате.")
+    return "\n".join(lines)
 
-        constraints = TripConstraints.model_validate(trip)
-        basis = "на человека" if constraints.budget_basis == "person" else "на группу"
-        lines.append(f"Бюджет: {constraints.budget} ₽ {basis}; предел группы {constraints.party_budget} ₽.")
-    for index, option in enumerate(state.get("options", []), 1):
-        stay, flight = option.get("stay"), option.get("transport")
-        lines.append(
-            f"\n{index}. {stay['name'] if stay else 'Проживание пока не найдено'}"
-            + (f" — {stay.get('area') or 'район не определён'}" if stay else "")
-        )
-        if stay:
-            lines.append('Проживание: ' + stay['start'] + ' — ' + stay['end'] + '.')
-        if flight:
-            lines.append('Поездка: ' + flight['start'] + ' — ' + flight['end'] + '.')
-            arrival = datetime.fromisoformat(flight["arrival_at"]).strftime(
-                "%d.%m в %H:%M"
-            )
-            departure = datetime.fromisoformat(flight["return_departure_at"]).strftime(
-                "%d.%m в %H:%M"
-            )
-            label = 'Поезд' if flight.get('transport_mode') == 'rail' else 'Перелёт'
-            lines.append(f"{label}: {flight['name']}; прибытие {arrival}, отправление обратно {departure} (местное время).")
-            if flight.get('arrival_city'):
-                lines.append('Транспорт прибывает: ' + flight['arrival_city'] + '. Местный трансфер не включён.')
-            conditions = flight.get('conditions') or {}
-            if conditions.get('fare_family'):
-                lines.append('Тариф: ' + conditions['fare_family'] + '.')
-            baggage = conditions.get('baggage') or {}
-            if baggage.get('kg') is not None:
-                lines.append(f"Зарегистрированный багаж: {baggage['kg']} кг.")
-            elif flight.get('baggage_included') is True:
-                lines.append('Зарегистрированный багаж включён в тариф.')
-        amount = (
-            f"{Decimal(option['budget']['known_subtotal']):,.2f}".rstrip("0")
-            .rstrip(".")
-            .replace(",", " ")
-            .replace(".", ",")
-        )
-        lines.append(
-            f"Билеты и проживание: известная сумма {amount} ₽ на всю группу и весь период."
-        )
-        if not flight or not stay:
-            lines.append("Сумма неполная: транспорт или проживание ещё не найдены.")
-        if option["id"] in comments:
-            comment = comments[option["id"]]
-            lines.append(f"Подойдёт: {comment.benefit}\nКомпромисс: {comment.tradeoff}")
-        lines.extend(w for w in option['warnings'] if any(term in w for term in ('багаж', 'снаряжения', 'Горных дней')))
-        if any("превышает бюджет" in w for w in option["warnings"]):
-            lines.append("Известная сумма уже превышает ваш бюджет.")
-    if state.get('options'):
-        mountain_days = sum(d.get('mountain', False) for d in state['options'][0].get('days', []))
-        lines.append(f'\nПрограмма первого варианта (горных дней: {mountain_days}):')
-        for day in state['options'][0].get('days', []):
-            lines.append(day['date'] + ': ' + (', '.join(c['name'] for c in day['candidates']) or 'дорога / свободное время') + '.')
-    if len(state.get("options", [])) < 5:
-        lines.append(
-            "\nПоказываю столько различных вариантов, сколько удалось проверить; до пяти."
-        )
-    lines.append(
-        "Питание, местные переезды, активности и дополнительные сборы не включены. Полная стоимость неизвестна; наличие и бронирование не подтверждены."
-    )
-    lines.append(
-        "Какой вариант обсудим? Можно спросить об отеле или районе, изменить пожелания или выбрать номер варианта."
-    )
+
+def render_components(state: dict) -> str:
+    role = state.get("focus")
+    cards = state.get("cards") or (stay_cards(state) if role == "stays" else [])
+    title = "Варианты отелей" if role == "stays" else "Варианты проезда" if role == "transport" else "Подбор поездки"
+    lines = [f"**{title}**", ""]
+    for index, card in enumerate(cards[:5], 1):
+        price = card.get("price")
+        basis = {'person': 'на человека', 'ticket': 'за билет', 'party': 'за группу', 'room_stay': 'за проживание'}
+        cost = f" · {Decimal(price['amount']):,.0f} {price['currency']} {basis.get(price['basis'], '')}".replace(",", " ") if price else ""
+        url = card.get("url")
+        name = f"[{card['title']}]({url})" if url else card["title"]
+        lines.append(f"- **{index}.** {name}{cost}")
+    lines.append("\nВыберите вариант или напишите, что изменить." if cards else "\nПожелания к поездке сохранены. Можно изменить даты, бюджет или предпочтения.")
     return "\n".join(lines)
 
 
@@ -259,18 +211,7 @@ def component_cards(state: dict, role: str) -> list[dict]:
 
 
 def render_stays(state: dict, response: UserResponse | None = None) -> str:
-    cards = stay_cards(state)
-    if not cards:
-        return (response.text + '\n\n' if response else '') + 'Не удалось подтвердить тариф подходящего отеля на выбранные даты. Можно расширить диапазон или повторить поиск отелей.'
-    comments = {o.option_id: o for o in response.options} if response else {}
-    lines = [response.text if response else 'Вот найденные варианты проживания по вашим условиям:']
-    for index, card in enumerate(cards, 1):
-        lines.append('\n' + render_card(card, index))
-        comment = comments.get(card['id'])
-        if comment:
-            lines.append('Подойдёт: ' + comment.benefit + '\nЧто проверить: ' + comment.tradeoff)
-    lines.append('Поисковый тариф не подтверждает резерв. Близость к подъёмнику и вид из конкретного номера считаются подтверждёнными только при наличии сведений источника; цена с видом может отличаться.')
-    return '\n'.join(lines)
+    return render_components({**state, "focus": "stays", "cards": stay_cards(state)})
 
 
 def llm_presenter(model, prompt: str):
@@ -278,11 +219,12 @@ def llm_presenter(model, prompt: str):
 
     async def present(state: dict) -> str:
         planning = state.get("decision", {}).get("action") == "compose"
-        stays_only = planning and state.get("focus") == "stays"
-        research = {"sources": state.get("results", {}).get("stays", {}).get("sources", [])} if stays_only else state.get("research", {}) if state.get("decision", {}).get("action") == "research" else {}
+        if planning:
+            return render_options(state) if state.get("options") else render_components(state)
+        research = state.get("research", {}) if state.get("decision", {}).get("action") == "research" else {}
         sources = research.get("sources", [])
         context = {
-            "phase": "compare_stays" if stays_only else "present_options" if planning else "answer_question",
+            "phase": "answer_question",
             "stays": stay_cards(state) if state.get("focus") == "stays" else [],
             "now": datetime.now(timezone.utc).isoformat(),
             "constraints": state.get("constraints", {}),
@@ -298,20 +240,12 @@ def llm_presenter(model, prompt: str):
             "scenarios": state.get("scenarios", []),
             "research": research,
         }
-        if stays_only:
-            fallback = render_stays(state)
-        elif planning:
-            fallback = render_options(state) if state.get('options') else state.get('answer', '')
-        else:
-            fallback = 'Не удалось подготовить ответ на этот вопрос. Поездка сохранена; уточните вопрос или повторите сообщение.' if state.get('autonomous') else state.get('answer', '')
-        if planning and not stays_only and (not state.get("options") or state.get("diagnostics", {}).get("reasons")):
-            return fallback
+        fallback = 'Поездка сохранена. Напишите, какие детали хотите обсудить.' if state.get('autonomous') else state.get('answer', '')
         if (
-            not planning
-            and state.get("decision", {}).get("action") == "research"
+            state.get("decision", {}).get("action") == "research"
             and not sources
         ):
-            return "Сейчас не удалось получить веб-источники по этому вопросу. Не могу подтвердить детали отеля или района. Сохранённые варианты поездки остаются доступны; можно обсудить их цены или изменить пожелания."
+            return "Сохранённые варианты доступны в панели поездки. Можно сравнить их цены и расположение или изменить пожелания."
         try:
             result = UserResponse.model_validate(
                 await structured.ainvoke(
@@ -322,19 +256,15 @@ def llm_presenter(model, prompt: str):
                     ]
                 )
             )
-            allowed = {c["id"] for c in stay_cards(state)} if stays_only else {o["id"] for o in state.get("options", [])}
+            allowed = {o["id"] for o in state.get("options", [])}
             if any(o.option_id not in allowed for o in result.options):
-                return fallback
-            if planning and {o.option_id for o in result.options} != allowed:
                 return fallback
             urls = {s["url"] for s in sources}
             if any(url not in urls for url in result.source_urls):
                 return fallback
             if sources and not result.source_urls:
                 return fallback
-            answer = (
-                render_stays(state, result) if stays_only else render_options(state, result) if planning and allowed else result.text
-            )
+            answer = result.text
             if result.source_urls:
                 answer += "\n\nИсточники:\n" + "\n".join(result.source_urls)
             return answer

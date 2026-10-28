@@ -190,7 +190,9 @@ class DialogueTests(unittest.IsolatedAsyncioTestCase):
         present = llm_presenter(
             ResponseModel(UserResponse(text="invented")), load_prompt("response")
         )
-        self.assertIn("не удалось получить веб-источники", await present(state))
+        answer = await present(state)
+        self.assertIn("Сохранённые варианты", answer)
+        self.assertNotIn("не удалось", answer)
 
     async def test_response_grounded_ids_prices_and_source_links(self):
         state = planned()
@@ -207,15 +209,13 @@ class DialogueTests(unittest.IsolatedAsyncioTestCase):
         )
         model = ResponseModel(response)
         text = await llm_presenter(model, load_prompt("response"))(state)
-        self.assertIn("Сравнил варианты", text)
-        self.assertIn("19 590 ₽ на всю группу и весь период", text)
+        self.assertIn("**Москва → Сочи**", text)
+        self.assertIn("**19 590 ₽ за группу**", text)
         self.assertNotIn("T15:", text)
-        self.assertIn("Полная стоимость неизвестна", text)
+        self.assertNotIn("Полная стоимость неизвестна", text)
+        self.assertLess(len(text), 1200)
+        self.assertEqual(model.messages, [])
         self.assertNotIn("known_subtotal", text)
-        context = json.loads(model.messages[1].content)
-        self.assertEqual(
-            context["options"][0]["stay"]["name"], state["options"][0]["stay"]["name"]
-        )
         response.options[0].option_id = "fabricated"
         self.assertEqual(
             await llm_presenter(model, load_prompt("response"))(state),

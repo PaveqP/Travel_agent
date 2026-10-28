@@ -3534,3 +3534,17 @@ hr {
 .saved-artifacts { grid-template-columns: minmax(0, 1fr); }
 .saved-artifacts > button { min-width: 0; width: 100%; }
 .app-sidebar, .sidebar-scroll { min-width: 0; }
+
+.chat-markdown { overflow-wrap: anywhere; }
+.chat-markdown p { margin: 8px 0 13px; white-space: pre-wrap; }
+.chat-markdown ul, .chat-markdown ol { padding-left: 20px; margin: 10px 0 14px; }
+.chat-markdown li { margin: 7px 0; }
+.chat-markdown h3 { font-size: 15px; margin: 14px 0 8px; }
+.chat-markdown a { color: var(--blue); text-decoration: underline; }
+.chat-markdown code { background: #edf2ff; border-radius: 4px; padding: 2px 4px; }
+.panel-tours .package-card { margin: 14px 0; padding: 18px; }
+.panel-tours .package-heading { flex-wrap: wrap; gap: 8px; }
+.panel-tours .package-components { grid-template-columns: 1fr; }
+.panel-tours .package-card h3 { overflow-wrap: anywhere; }
+.package-program { display: flex; gap: 8px; font-size: 12px; color: var(--blue); }
+.package-program svg { flex-shrink: 0; margin-top: 3px; }

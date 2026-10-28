@@ -243,6 +243,32 @@ def create_app(
             last = values.get("messages", [])[-1]
             if "presentation" not in last.response_metadata:
                 result["messages"][-1]["presentation"] = presentation(values)
+        if result['autonomous']:
+            from travel_agent.agents.supervisor.response import render_options, render_components
+            from travel_agent.engine import suggested_program
+            from travel_agent.schemas import Candidate, TripOption
+
+            def display_options(plan: dict) -> dict:
+                if plan.get('stage') == 'booked' or plan.get('results', {}).get('experience', {}).get('days'):
+                    return plan
+                candidates = [Candidate.model_validate(c) for c in plan.get('results', {}).get('experience', {}).get('candidates', [])]
+                options = []
+                for raw in plan.get('options', []):
+                    option = TripOption.model_validate(raw)
+                    option.days = suggested_program(option, candidates, datetime.now(timezone.utc))
+                    options.append(option.model_dump(mode='json'))
+                return {**plan, 'options': options}
+
+            result = display_options(result)
+            for message in result['messages']:
+                plan = message.get('presentation')
+                if not plan or not plan.get('autonomous') or plan.get('stage') in ('scenarios', 'booked'):
+                    continue
+                plan = display_options(plan)
+                message['presentation'] = plan
+                message['text'] = render_options(plan) if plan.get('options') else render_components(plan)
+            if values.get('answer') == values.get('plan_answer') and result['messages'] and result['messages'][-1].get('presentation'):
+                result['answer'] = result['plan_answer'] = result['messages'][-1]['text']
         return result
 
     def presentation(values: dict) -> dict | None:
@@ -383,18 +409,14 @@ def create_app(
                 run_progress[progress_key] = {**run_progress[progress_key], 'status': 'timeout', 'label': 'Лимит ожидания достигнут; показываю сохранённые результаты'}
                 if not autonomous:
                     raise HTTPException(504, 'Turn deadline exceeded; read current trip state before retrying') from None
-                from travel_agent.agents.supervisor.response import component_cards, render_card, render_options
+                from travel_agent.agents.supervisor.response import component_cards, render_components, render_options
 
                 result = dict((await app.state.graph.aget_state(config)).values)
                 cards = result.get('cards', [])
                 if not result.get('options'):
                     roles = [result['focus']] if result.get('focus') in ('transport', 'stays') else ['transport', 'stays']
                     cards = [card for role in roles for card in component_cards(result, role)]
-                answer = 'Достигнут лимит ожидания. Это частичный результат: обработка остановлена, найденные данные сохранены. Программа и отдельные компоненты могут быть не завершены.'
-                if result.get('options'):
-                    answer += '\n\n' + render_options(result)
-                elif cards:
-                    answer += '\n\n' + '\n\n'.join(render_card(card, index) for index, card in enumerate(cards, 1))
+                answer = render_options(result) if result.get('options') else render_components({**result, 'cards': cards})
                 update = {'status': 'partial', 'answer': answer, 'plan_answer': answer, 'cards': cards,
                           'messages': [AIMessage(content=answer)], 'tasks': [], 'repair_decision': False, 'route': 'finish'}
                 await app.state.graph.aupdate_state(config, update, as_node='finish')
@@ -402,7 +424,7 @@ def create_app(
             finally:
                 if run_progress[progress_key]['status'] == 'running':
                     run_progress[progress_key] = {**run_progress[progress_key], 'status': 'stopped', 'label': 'Обработка завершена'}
-            run_progress[progress_key] = {**run_progress[progress_key], 'status': 'finished', 'label': 'Частичный ответ готов' if result.get('status') == 'partial' else 'Ответ готов'}
+            run_progress[progress_key] = {**run_progress[progress_key], 'status': 'finished', 'label': 'Ответ готов'}
             if result.get("profile_update") is not None:
                 await save_profile(user, result["profile_update"])
             await sync_trip(user, trip_id, result)
