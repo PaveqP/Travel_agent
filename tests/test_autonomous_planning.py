@@ -395,7 +395,7 @@ class PlannerContractTests(unittest.IsolatedAsyncioTestCase):
         model = Mock()
         model.with_structured_output.side_effect = lambda schema, **kwargs: clients[schema]
         previous = AIMessage(content='Старый подробный план ' * 1000)
-        state = {'constraints': {}, 'messages': [previous, HumanMessage(content='12–16 ноября 2026, хороший отель и отдых у моря')]}
+        state = {'constraints': TRIP.model_dump(mode='json'), 'messages': [previous, HumanMessage(content='12–16 ноября 2026, хороший отель и отдых у моря')]}
         decision = await llm_planner(model, 'Offline prompt')(state)
         self.assertEqual(decision.patch.start, TRIP.start)
         self.assertEqual(decision.patch.end, TRIP.end)
@@ -429,13 +429,13 @@ class SessionReliabilityTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_month_without_duration_clarifies_before_any_search(self):
         planner = AsyncMock(side_effect=[
-            TurnPlan(action='plan', patch=TripDelta(destination='Сочи', travel_month='2026-12', adults=2, purpose='Отдых')),
-            TurnPlan(action='plan', patch=TripDelta(origin='Санкт-Петербург')),
+            TurnPlan(action='clarify', patch=TripDelta(destination='Сочи', travel_month='2026-12', adults=2, purpose='Отдых'), reply='Из какого города удобно выехать и на сколько ночей?'),
+            TurnPlan(action='clarify', patch=TripDelta(origin='Санкт-Петербург'), reply='Какую длительность отдыха рассматриваете?'),
         ])
         graph, runners = self.graph(planner)
         config = {'configurable': {'thread_id': 'unknown-duration'}}
         first = await graph.ainvoke({'messages': [HumanMessage(content='Хочу отдохнуть в декабре вдвоём')]}, config)
-        self.assertEqual(first['answer'], 'Из какого города поедете?')
+        self.assertEqual(first['answer'], 'Из какого города удобно выехать и на сколько ночей?')
         second = await graph.ainvoke({'messages': [HumanMessage(content='Санкт-Петербург')]}, config)
         self.assertEqual(second['status'], 'needs_input')
         self.assertIn('длительность', second['answer'])
@@ -552,7 +552,7 @@ class ScopeAndLatencyTests(unittest.IsolatedAsyncioTestCase):
         runners['experience'].assert_not_awaited()
 
     async def test_component_scope_survives_clarification_and_can_expand_explicitly(self):
-        decisions = [TurnPlan(action='clarify', focus='stays', patch=TripDelta(destination='Сочи', adults=2)),
+        decisions = [TurnPlan(action='clarify', focus='stays', patch=TripDelta(destination='Сочи', adults=2), reply='На какие даты искать проживание?'),
             TurnPlan(action='plan', patch=TripDelta(start=TRIP.start, end=TRIP.end), tasks=[task('stays')]),
             TurnPlan(action='plan', focus='trip', patch=TripDelta(origin='Москва'), tasks=[task(r) for r in ROLES])]
         graph, runners = PlanningTests().graph(decisions)
@@ -685,3 +685,64 @@ class ScopeAndLatencyTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(observed, [TRIP.start])
         self.assertTrue(state['cards'])
         runners['transport'].assert_not_awaited()
+
+
+class SupervisorQuestionTests(unittest.IsolatedAsyncioTestCase):
+    async def test_supervisor_chooses_question_without_field_order_or_overwriting(self):
+        question = 'Что важнее для романтичного отдыха: тишина у моря или рестораны в центре?'
+        graph, runners = PlanningTests().graph([TurnPlan(action='clarify', reply=question,
+            patch=TripDelta(origin='Санкт-Петербург', destination='Владивосток', adults=2, budget=350000))])
+        state = await graph.ainvoke({'messages': [HumanMessage(content='Из Питера во Владивосток вдвоём, бюджет 350 тысяч')]}, {'configurable': {'thread_id': 'natural-question'}})
+        self.assertEqual(state['answer'], question)
+        self.assertEqual(state['constraints']['origin'], 'Санкт-Петербург')
+        self.assertEqual(state['constraints']['destination'], 'Владивосток')
+        self.assertEqual(state['constraints']['budget'], '350000')
+        self.assertEqual(state['status'], 'needs_input')
+        for runner in runners.values():
+            runner.assert_not_awaited()
+
+    async def test_lost_request_fields_are_reviewed_by_supervisor_before_search(self):
+        from unittest.mock import Mock
+        from travel_agent.agents.supervisor.agent import llm_planner
+        request = 'Мы с девушкой из Питера во Владивосток 12–17 ноября 2026, 350 тысяч на двоих, отель, море и горы, программа по дням'
+        complete = TripDelta(origin='Санкт-Петербург', destination='Владивосток', start='2026-11-12', end='2026-11-17', adults=2, budget=350000, interests=['море', 'горы'])
+        outputs = [TurnPlan(action='plan', tasks=[task(r) for r in ROLES]), TurnPlan(action='plan', focus='trip', patch=complete, tasks=[task(r) for r in ROLES])]
+        async def decide(messages):
+            self.assertEqual(messages[-1].content, request)
+            if len(outputs) == 1:
+                review = json.loads(messages[2].content)['plan_review']
+                self.assertIn('origin', review['unresolved_fields'])
+                self.assertIn('destination', review['unresolved_fields'])
+            return outputs.pop(0)
+        structured = Mock(ainvoke=AsyncMock(side_effect=decide))
+        model = Mock(with_structured_output=Mock(return_value=structured))
+        decision = await llm_planner(model, 'Offline planner')({'messages': [HumanMessage(content=request)]})
+        self.assertEqual(decision.action, 'plan')
+        self.assertEqual(decision.patch, complete)
+        self.assertEqual(structured.ainvoke.await_count, 2)
+
+    async def test_complete_request_does_not_need_review_or_city_question(self):
+        from unittest.mock import Mock
+        from travel_agent.agents.supervisor.agent import llm_planner
+        complete = TurnPlan(action='plan', focus='trip', patch=TripDelta(origin='Санкт-Петербург', destination='Владивосток', start='2026-11-12', end='2026-11-17', adults=2, budget=350000), tasks=[task(r) for r in ROLES])
+        structured = Mock(ainvoke=AsyncMock(return_value=complete))
+        model = Mock(with_structured_output=Mock(return_value=structured))
+        decision = await llm_planner(model, 'Offline planner')({'messages': [HumanMessage(content='Полный маршрут из Питера во Владивосток')]})
+        self.assertEqual(decision, complete)
+        structured.ainvoke.assert_awaited_once()
+        self.assertEqual(decision.patch.origin, 'Санкт-Петербург')
+
+    async def test_invalid_plan_never_uses_a_scripted_question_or_calls_sources(self):
+        graph, runners = PlanningTests().graph([TurnPlan(action='plan')])
+        state = await graph.ainvoke({'messages': [HumanMessage(content='Полный запрос, потерянный в решении')]}, {'configurable': {'thread_id': 'bad-plan'}})
+        self.assertEqual(state['status'], 'error')
+        self.assertNotIn('?', state['answer'])
+        for runner in runners.values():
+            runner.assert_not_awaited()
+
+    def test_clarification_requires_supervisor_text_and_wire_schema_requires_patch(self):
+        with self.assertRaises(ValidationError):
+            TurnPlan(action='clarify')
+        required = TurnPlan.model_json_schema()['required']
+        self.assertIn('patch', required)
+        self.assertIn('reply', required)

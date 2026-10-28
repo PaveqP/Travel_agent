@@ -1,4 +1,5 @@
 import json
+import logging
 from datetime import date
 
 from langchain_core.messages import AIMessage, HumanMessage, SystemMessage
@@ -139,7 +140,8 @@ def llm_decider(model: BaseChatModel, prompt: str):
 
 
 def llm_planner(model: BaseChatModel, prompt: str):
-    from travel_agent.schemas import TurnPlan, RepairPlan
+    from travel_agent.schemas import TurnPlan, RepairPlan, TripConstraints
+    from travel_agent.engine import apply_delta, search_dates
 
     structured = model.with_structured_output(TurnPlan, method='function_calling')
     repair_model = model.with_structured_output(RepairPlan, method='function_calling')
@@ -165,6 +167,27 @@ def llm_planner(model: BaseChatModel, prompt: str):
         for attempt in range(2):
             try:
                 decision = TurnPlan.model_validate(await structured.ainvoke(messages))
+                logging.getLogger(__name__).info('planner action=%s focus=%s patch_fields=%s', decision.action, decision.focus,
+                    sorted(decision.patch.model_dump(exclude_none=True, exclude={'clear'})))
+                if decision.action == 'plan':
+                    trip, _ = apply_delta(TripConstraints.model_validate(state.get('constraints', {})), decision.patch)
+                    focus = decision.focus if decision.focus != 'trip' else None
+                    if decision.focus is None:
+                        focus = state.get('focus')
+                        if not focus and not state.get('options') and len(decision.tasks) == 1:
+                            focus = decision.tasks[0].role
+                    missing = trip.missing()
+                    if focus == 'stays':
+                        missing = [key for key in missing if key != 'origin' and not (key in ('start', 'end') and trip.stay_start and trip.stay_end)]
+                    if search_dates(trip):
+                        missing = [key for key in missing if key not in ('start', 'end')]
+                    if not (trip.start and trip.end or focus == 'stays' and trip.stay_start and trip.stay_end) and not (trip.nights or trip.duration_days):
+                        missing.append('duration')
+                    if trip.start and trip.start < date.today():
+                        missing.append('future_dates')
+                    if missing and not attempt:
+                        messages.insert(2, HumanMessage(content=json.dumps({'plan_review': {'unresolved_fields': missing}}, ensure_ascii=False)))
+                        continue
                 break
             except (ValidationError, OutputParserException) as exc:
                 if attempt:

@@ -141,6 +141,11 @@ async def prepare(state: TripState, decide) -> dict:
         revised, affected = apply_delta(current, decision.patch)
     except ValidationError:
         return {'route': 'finish', 'status': 'needs_input', 'answer': 'Даты или состав поездки противоречат друг другу. Уточните изменяемые параметры.'}
+    if decision.action == 'clarify':
+        return {'route': 'finish', 'status': 'needs_input', 'answer': decision.reply,
+                'constraints': revised.model_dump(mode='json'), 'revision': state.get('revision', 0) + int(revised != current),
+                'focus': None if decision.focus == 'trip' else decision.focus or state.get('focus'),
+                'decision': decision.model_dump(mode='json'), 'tasks': [], 'requested_choice': None}
     tasks = list(decision.tasks)
     focus = None if decision.focus == 'trip' else decision.focus or state.get('focus')
     if not focus and decision.focus is None and not state.get('options') and len(tasks) == 1 and tasks[0].role in ('stays', 'transport'):
@@ -181,14 +186,10 @@ async def prepare(state: TripState, decide) -> dict:
         missing = [name for name in missing if name not in ('start', 'end')]
     if changed:
         update.update(options=[], choices=[], cards=[], plan_answer='', research={})
-    if missing:
-        questions = {'destination': 'Какой город или регион России выбираем?', 'origin': 'Из какого города поедете?', 'start': 'Когда хотите поехать?', 'end': 'До какого числа?', 'adults': 'Сколько взрослых поедет?'}
-        return {**update, 'route': 'finish', 'status': 'needs_input', 'answer': questions[missing[0]], 'tasks': []}
-    if not (revised.start and revised.end) and not (revised.nights or revised.duration_days):
-        return {**update, 'route': 'finish', 'status': 'needs_input',
-                'answer': 'На какие даты планируете поездку? Если даты гибкие, укажите длительность в днях или ночах — подберу варианты в вашем диапазоне.', 'tasks': []}
-    if revised.start and revised.start < datetime.now().date():
-        return {**update, 'route': 'finish', 'status': 'needs_input', 'answer': 'Нужны будущие даты поездки.', 'tasks': []}
+    if missing or not (revised.start and revised.end) and not (revised.nights or revised.duration_days) or revised.start and revised.start < datetime.now().date():
+        logging.getLogger(__name__).warning('planner outcome=incomplete_search_parameters missing=%s', missing)
+        return {**update, 'route': 'finish', 'status': 'error',
+                'answer': 'Не удалось подготовить параметры поиска из сообщения. Ваши данные сохранены; поиск не запускался.', 'tasks': []}
     update['preserved_roles'] = [role for role, key in (('transport', 'selected_transport'), ('stays', 'selected_stay'))
                                  if role not in affected and state.get(key)]
     return update

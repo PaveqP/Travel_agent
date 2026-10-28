@@ -148,7 +148,7 @@ class DialogueChangesTests(unittest.IsolatedAsyncioTestCase):
             human = [m.content for m in messages if isinstance(m, HumanMessage)]
             self.assertIn(original, human)
             self.assertEqual(human[-1], 'активный')
-            return TurnPlan(action='plan', patch=TripDelta(destination='Сочи', start='2026-12-10', end='2026-12-20', adults=2, budget=200000, purpose='Горнолыжная поездка'))
+            return TurnPlan(action='clarify', reply='Из какого города удобнее отправиться?', patch=TripDelta(destination='Сочи', start='2026-12-10', end='2026-12-20', adults=2, budget=200000, purpose='Горнолыжная поездка'))
         model = Mock()
         model.with_structured_output.side_effect = lambda schema, **kwargs: {
             TurnPlan: Mock(ainvoke=plan),

@@ -203,7 +203,7 @@ class RepairPlan(BaseModel):
 
 
 class TurnPlan(BaseModel):
-    model_config = ConfigDict(extra='forbid')
+    model_config = ConfigDict(extra='forbid', json_schema_extra={'required': ['action', 'patch', 'reply']})
     focus: Literal['trip', 'transport', 'stays'] | None = Field(default=None, description='Область запроса: stays — только отели, transport — только дорога, trip — полная поездка. Сохраняй область при уточнениях.')
     action: Literal['plan', 'chat', 'clarify', 'answer', 'research', 'select', 'checkout', 'remember', 'unsupported', 'destinations']
     patch: TripDelta = Field(default_factory=TripDelta)
@@ -218,6 +218,8 @@ class TurnPlan(BaseModel):
 
     @model_validator(mode='after')
     def dependencies(self):
+        if self.action == 'clarify' and not self.reply.strip():
+            raise ValueError('Clarify requires the Supervisor question in reply')
         roles = {t.role for t in self.tasks}
         if len(roles) != len(self.tasks):
             raise ValueError('One task per role per round')
