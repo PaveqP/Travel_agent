@@ -100,6 +100,36 @@ export function currentOption(state) {
     state?.options?.find((o) => o.id === state.selected) || state?.options?.[0]
   );
 }
+export function offerItems(state, kind) {
+  if (!state) return [];
+  const part = kind === "transport" ? "transport" : "stay";
+  if (state.stage === "booked") {
+    const item = tripParts(state)[part];
+    return item ? [item] : [];
+  }
+  const items = [
+    ...(state.results?.[kind]?.candidates || []),
+    ...(state.options || []).map((option) => option[part]).filter(Boolean),
+    ...(state.cards || []).filter((card) => card.kind === kind).map((card) => ({ ...card.dates, ...card, name: card.title })),
+  ];
+  return [...new Map(items.map((item) => [item.id, { ...items.find((row) => row.id === item.id), ...item }])).values()];
+}
+export function offerChoice(state, item, kind) {
+  if (state.stage === "booked") return null;
+  const card = state.cards?.find((card) => card.id === item.id);
+  if (card?.selectable === false || card?.freshness === "expired") return null;
+  if (state.choices?.some((choice) => choice.id === item.id)) return item.id;
+  const part = kind === "transport" ? "transport" : "stay";
+  const other = kind === "transport" ? "stay" : "transport";
+  const selected = tripParts(state)[other]?.id;
+  const options = (state.options || []).filter((option) => option.revision === state.revision && option[part]?.id === item.id && state.choices?.some((choice) => choice.id === option.id));
+  return (options.find((option) => option[other]?.id === selected) || options[0])?.id || null;
+}
+export function offerSelected(state, item, kind) {
+  const selected = state[kind === "transport" ? "selected_transport" : "selected_stay"];
+  const option = state.options?.find((row) => row.id === state.selected);
+  return selected === item.id || option?.[kind === "transport" ? "transport" : "stay"]?.id === item.id || state.stage === "booked";
+}
 export function tripParts(state) {
   const option = currentOption(state);
   const receipt = state?.stage === "booked" ? state.receipt : null;
@@ -256,5 +286,7 @@ export function feedbackText(feedback) {
   );
 }
 
+const plural = new Intl.PluralRules("ru");
+export const counted = (value, one, few, many) => `${value} ${{ one, few, many, other: many }[plural.select(value)]}`;
 export const party = (adults, childrenAges = []) =>
-  `${adults ?? "—"} взрослых${childrenAges.length ? `; дети (возраст): ${childrenAges.join(", ")}` : ""}`;
+  `${adults == null ? "— взрослых" : counted(adults, "взрослый", "взрослых", "взрослых")}${childrenAges.length ? `; дети (возраст): ${childrenAges.join(", ")}` : ""}`;

@@ -12,7 +12,24 @@ import {
   feedbackText,
   messageLinks,
   transportRoutes,
+  offerItems,
+  offerChoice,
+  offerSelected,
+  counted,
 } from "./format.js";
+
+test("panel merges matching evidence with cards and selects only current permitted choices", () => {
+  const hotel = { id: "h", role: "stays", name: "Отель", url: "https://example.org/h", price: {amount:"100",currency:"RUB",basis:"room_stay"} };
+  const state = { stage: "review", revision: 2, results: {stays:{candidates:[hotel]}}, cards:[{id:"h",kind:"stays",title:"Отель",selectable:true}], options:[{id:"package",revision:2,stay:hotel,transport:{id:"t"}}],choices:[{id:"package"}],selected:null };
+  assert.equal(offerItems(state,"stays").length,1);
+  assert.equal(offerItems(state,"stays")[0].url,hotel.url);
+  assert.equal(offerChoice(state,hotel,"stays"),"package");
+  assert.equal(offerSelected(state,hotel,"stays"),false);
+  assert.equal(offerSelected({...state,selected:"package"},hotel,"stays"),true);
+  assert.equal(offerChoice({...state,revision:3},hotel,"stays"),null);
+  assert.equal(offerChoice({...state,stage:"booked"},hotel,"stays"),null);
+  assert.equal(offerChoice({...state,cards:[{id:"h",selectable:false}]},hotel,"stays"),null);
+});
 
 test("chat links preserve labels, punctuation, query strings and safe protocols", () => {
   const parts = messageLinks("См. [отель](https://hotel.tutu.ru/details?id=1&adults=2) и https://example.org/view_(sea). Потом https://tutu.ru.");
@@ -152,7 +169,10 @@ test("summary follows selected option", () => {
 test("party labels preserve children and infant ages", async () => {
   const { party } = await import("./format.js");
   assert.equal(party(2, [6, 1]), "2 взрослых; дети (возраст): 6, 1");
-  assert.equal(party(1, []), "1 взрослых");
+  assert.equal(party(1, []), "1 взрослый");
+  assert.equal(counted(1, "день", "дня", "дней"), "1 день");
+  assert.equal(counted(2, "вариант", "варианта", "вариантов"), "2 варианта");
+  assert.equal(counted(14, "день", "дня", "дней"), "14 дней");
 });
 
 test("saved trip parts follow selected IDs before a complete option exists", () => {

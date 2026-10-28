@@ -29,6 +29,7 @@ from travel_agent.agents.experience.agent import run as run_experience
 from travel_agent.prompts import read_prompts
 from travel_agent.config import environment, settings
 from travel_agent.engine import simulate_purchase
+from travel_agent.conversations import delete_chats, mount_conversations
 from travel_agent.graph import build_graph
 from travel_agent.schemas import (
     BookingRequest,
@@ -64,6 +65,7 @@ def create_app(
         async with AsyncExitStack() as stack:
             app.state.profile_db = None
             app.state.accounts = None
+            app.state.chat_model = None
             if portal_database_url:
                 from travel_agent.accounts import Accounts
                 from psycopg_pool import AsyncConnectionPool
@@ -138,6 +140,7 @@ def create_app(
                     )
                 }
                 supervisor_model = create_model(config, client, max_tokens=2600, timeout=35, role='supervisor')
+                app.state.chat_model = supervisor_model
                 app.state.graph = build_graph(
                     (llm_planner(supervisor_model, prompts["planner"]) if autonomous else llm_decider(supervisor_model, prompts["supervisor"])),
                     runners,
@@ -294,12 +297,15 @@ def create_app(
         key = user + ":" + trip_id
         async with locks.setdefault(key, asyncio.Lock()):
             await require_trip(user, trip_id)
+            await delete_chats(app.state.store, user, trip_id)
             if app.state.graph.checkpointer:
                 await app.state.graph.checkpointer.adelete_thread(key)
             await app.state.store.adelete(("trips", user), trip_id)
             if app.state.accounts is not None:
                 await app.state.accounts.delete_trip(user, trip_id)
             run_progress.pop(key, None)
+
+    mount_conversations(app, owner, require_trip, config_for, locks)
 
     @app.get('/trips/{trip_id}/status')
     async def read_status(trip_id: str, user: str = Depends(owner)):

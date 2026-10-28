@@ -3434,3 +3434,103 @@ hr {
 .destination-banner span { font-size: 24px; font-weight: 700; }
 .destination-banner small { font-size: 12px; }
 @media (max-width: 600px) { .destination-explorer { padding: 16px; } .destination-chips button { min-height: 36px; } }
+
+.planning-workspace { display: flex; flex: 1; min-height: 0; min-width: 0; overflow: hidden; }
+.planning-workspace > .conversation-shell { flex: 1; min-width: 0; }
+.has-options .conversation-content { width: min(864px, 100%); }
+.trip-options-panel { flex: 0 0 clamp(320px, 30%, 400px); min-width: 0; display: flex; flex-direction: column; background: #fff; border-left: 1px solid var(--line); animation: options-enter 220ms cubic-bezier(.2,.7,.2,1); z-index: 3; }
+.trip-options-panel.is-closing { animation: options-exit 180ms ease-in forwards; pointer-events: none; }
+.options-panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 20px 20px 12px; }
+.options-panel-head h2 { margin: 4px 0 0; font-size: 19px; letter-spacing: -.5px; }
+.options-panel-head .eyebrow { font-size: 9px; }
+.options-tabs { display: flex; flex-wrap: wrap; gap: 5px; padding: 10px 18px 15px; border-bottom: 1px solid var(--line); }
+.options-tabs button { display: flex; align-items: center; gap: 5px; padding: 7px 8px; font-size: 10px; color: var(--muted); border-radius: 8px; transition: background 150ms, color 150ms; }
+.options-tabs button[aria-pressed="true"] { color: var(--blue); background: #edf2ff; }
+.options-panel-scroll { flex: 1; overflow: auto; overscroll-behavior: contain; scrollbar-width: thin; padding: 16px 18px; animation: options-content 150ms ease-out; }
+.options-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; font-size: 11px; color: var(--muted); }
+.options-toolbar .text-button { font-size: 11px; gap: 5px; }
+.panel-offer { border: 1px solid var(--line); border-radius: 13px; padding: 14px; margin-bottom: 12px; transition: border-color 180ms, background 180ms; }
+.panel-offer.is-selected { border-color: #91b9a6; background: #fcfefd; }
+.panel-offer h3 { margin: 12px 0 4px; font-size: 15px; overflow-wrap: anywhere; }
+.panel-offer p { margin: 6px 0; }
+.panel-offer-top, .panel-offer-links { display: flex; justify-content: space-between; gap: 8px; align-items: center; flex-wrap: wrap; }
+.panel-selected { display: inline-flex; gap: 4px; align-items: center; font-size: 10px; border-radius: 5px; padding: 4px 6px; color: #4e8269; background: #edf5ef; }
+.compare-check { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--muted); cursor: pointer; }
+.compare-check input { width: 13px; height: 13px; margin: 0; accent-color: var(--blue); }
+.panel-price { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; margin: 14px 0 10px; }
+.panel-price strong { font-size: 20px; letter-spacing: -.6px; }
+.panel-price span { font-size: 10px; color: var(--muted); }
+.panel-choice-action > small { display: block; font-size: 10px; line-height: 1.6; color: var(--muted); margin-bottom: 9px; }
+.panel-choice-action > button { width: 100%; padding: 10px; font-size: 11px; justify-content: center; }
+.panel-offer-links { margin-top: 12px; }
+.panel-offer-links .text-button { font-size: 11px; gap: 4px; }
+.panel-offer-details { border-top: 1px solid var(--line); padding-top: 10px; margin-top: 10px; font-size: 12px; animation: options-content 150ms ease-out; }
+.panel-offer-details .hotel-photos { grid-template-columns: repeat(2,minmax(0,1fr)); }
+.offer-name { color: inherit; text-decoration: underline; text-decoration-color: #a4b9d8; text-underline-offset: 3px; overflow-wrap: anywhere; }
+.offer-name:hover { color: var(--blue); text-decoration-color: currentColor; }
+.offer-name > svg { display: inline; vertical-align: middle; margin-left: 5px; flex-shrink: 0; }
+.presentation-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.presentation-links > span { flex-basis: 100%; }
+.presentation-links > button { display: flex; gap: 9px; align-items: center; text-align: left; border: 1px solid #dfe7ef; background: #fff; border-radius: 10px; padding: 10px 13px; font-size: 12px; transition: border-color 150ms, background 150ms; }
+.presentation-links > button:hover { border-color: #9db5df; background: #f9fbff; }
+.presentation-links > button > svg:first-child { color: var(--blue); }
+.presentation-links small { display: block; color: var(--muted); font-size: 10px; margin-top: 2px; }
+.presentation-links > button > svg:last-child { color: #92a1af; margin-left: 5px; }
+.saved-artifacts > button.artifact-active { background: #f5f8ff; border-color: #b9ccf3; }
+.options-panel-footer { padding: 14px 18px; border-top: 1px solid var(--line); }
+.options-panel-footer .text-button { width: 100%; font-size: 12px; justify-content: space-between; }
+.panel-empty { display: flex; align-items: flex-start; flex-direction: column; gap: 12px; color: var(--muted); padding: 24px 4px; font-size: 12px; }
+.panel-empty h3 { color: var(--ink); margin: 0; }
+.panel-empty p { margin: 0; }
+.offer-comparison { display: grid; grid-template-columns: repeat(var(--columns), minmax(0,1fr)); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.comparison-heading { min-width: 0; padding: 12px 9px; background: #f7f9fc; border-bottom: 1px solid var(--line); }
+.comparison-heading h3 { font-size: 12px; overflow-wrap: anywhere; margin: 0 0 6px; }
+.comparison-cell { min-width: 0; padding: 12px 9px; border-bottom: 1px solid var(--line); font-size: 11px; overflow-wrap: anywhere; }
+.comparison-cell > small { color: var(--muted); display: block; font-size: 10px; margin-bottom: 6px; }
+.comparison-cell div > small { color: var(--muted); display: block; font-size: 10px; }
+.comparison-cell .transport-routes { font-size: 10px; }
+.comparison-cell .panel-choice-action > button { padding: 7px 5px; }
+.comparison-cell .panel-choice-action > small { font-size: 10px; }
+.options-panel-scroll .day-plan { gap: 10px; }
+.options-panel-scroll .day-card { padding: 12px; }
+.options-panel-scroll .day-card h3 { font-size: 13px; }
+.options-panel-scroll .day-activities { padding-left: 0; }
+.panel-budget h3 { margin: 0 0 18px; font-size: 16px; }
+.panel-budget-row { display: flex; justify-content: space-between; align-items: start; gap: 10px; border-bottom: 1px solid var(--line); padding: 13px 0; font-size: 12px; }
+.panel-budget-row > div { text-align: right; }
+.panel-budget-row small { display: block; color: var(--muted); font-size: 10px; margin-top: 3px; }
+.panel-budget > button { width: 100%; justify-content: center; margin-top: 14px; font-size: 11px; }
+.options-sheet { width: min(640px,calc(100% - 24px)); padding: 0; max-height: calc(100dvh - 32px); }
+.options-sheet > .modal-head { padding: 20px 20px 0; }
+.options-sheet #trip-options-panel { display: flex; flex-direction: column; min-height: 0; }
+.options-sheet .options-panel-scroll { max-height: calc(100dvh - 250px); }
+.options-sheet.is-closing { animation: options-exit 180ms ease-in forwards; }
+.trip-chat-folder { margin-top: 22px; }
+.trip-chat-folder .sidebar-section-title { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+.trip-chat-folder .sidebar-section-title > button { margin-left: auto; padding: 3px; }
+.trip-chat-folder nav { display: flex; flex-direction: column; gap: 3px; }
+.trip-chat-folder nav button:not(.chat-delete) { display: flex; align-items: center; gap: 8px; width: 100%; border-radius: 8px; padding: 9px; color: #7c8d9e; font-size: 11px; text-align: left; min-width: 0; }
+.trip-chat-folder nav button > svg { flex-shrink: 0; }
+.trip-chat-folder nav button > span { min-width: 0; overflow-wrap: anywhere; }
+.trip-chat-folder nav button.active { background: #edf2ff; color: var(--blue); }
+.trip-chat-row { display: flex; gap: 2px; align-items: center; min-width: 0; }
+.chat-delete { flex-shrink: 0; color: #98a6b3; padding: 5px; }
+.chat-delete:hover { color: #ad3f40; background: #fff0f0; }
+.chat-retry { padding: 8px; font-size: 10px; }
+.chat-welcome { margin: 45px 0; display: flex; align-items: flex-start; flex-direction: column; gap: 14px; }
+.chat-welcome h2 { margin: 0; font-size: 25px; letter-spacing: -.8px; }
+.chat-welcome p { color: var(--muted); margin: 0; }
+.chat-kind-picker { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0; }
+.chat-kind-picker button[aria-pressed="true"] { border-color: #a9c0ef; background: #edf2ff; color: var(--blue); }
+.chat-trip-choice { width: 100%; margin-top: 8px; justify-content: flex-start; }
+@keyframes options-enter { from { opacity: 0; transform: translateX(24px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes options-exit { to { opacity: 0; transform: translateX(20px); } }
+@keyframes options-content { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 1200px) and (min-width: 1001px) { .trip-options-panel { flex-basis: 320px; } .has-options .conversation-content { padding-left: 20px; padding-right: 20px; } .has-options .conversation-composer { padding-left: 18px; padding-right: 18px; } .has-options .composer-footnote > span:last-child { display: none; } }
+@media (max-width: 760px) { .topbar-actions .topbar-trip { font-size: 0; gap: 0; padding: 9px; } .topbar-actions .topbar-trip svg { width: 18px; height: 18px; } .topbar-actions .topbar-trip svg:last-child:not(:first-child) { display: none; } .options-sheet { width: 100%; max-width: 100%; margin: auto 0 0; border-radius: 20px 20px 0 0; max-height: 94dvh; } .options-sheet .options-panel-scroll { max-height: calc(94dvh - 220px); } .compare-check { min-height: 32px; } }
+@media (prefers-reduced-motion: reduce) { .trip-options-panel, .options-panel-scroll, .panel-offer-details, .options-sheet.is-closing { animation: none !important; } }
+.panel-approve { width: 100%; margin-top: 16px; font-size: 11px; }
+.offer-comparison .primary, .offer-comparison .secondary { gap: 4px; flex-wrap: wrap; }
+.saved-artifacts { grid-template-columns: minmax(0, 1fr); }
+.saved-artifacts > button { min-width: 0; width: 100%; }
+.app-sidebar, .sidebar-scroll { min-width: 0; }

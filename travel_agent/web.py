@@ -10,6 +10,7 @@ from pydantic import BaseModel, ConfigDict, Field
 
 from travel_agent.accounts import AccountInput, AccountProfile, LoginInput
 from travel_agent.config import environment
+from travel_agent.conversations import delete_chats
 from travel_agent.graph import present_stage
 from travel_agent.support import GUIDES, support_letter
 
@@ -145,6 +146,7 @@ def mount_portal(app: FastAPI, owner, require_trip, config_for, view, sync_trip,
         trips = await app.state.accounts.trips(user)
         for trip in trips:
             async with locks.setdefault(user + ":" + trip["trip_id"], asyncio.Lock()):
+                await delete_chats(app.state.store, user, trip["trip_id"])
                 if app.state.graph.checkpointer:
                     await app.state.graph.checkpointer.adelete_thread(user + ":" + trip["trip_id"])
                 await app.state.store.adelete(("trips", user), trip["trip_id"])

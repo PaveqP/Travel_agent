@@ -44,6 +44,10 @@ import {
   Link2,
   LockKeyhole,
   Maximize2,
+  PanelRightOpen,
+  Columns2,
+  List,
+  FolderOpen,
 } from "lucide-react";
 import {
   stages,
@@ -64,6 +68,10 @@ import {
   messageLinks,
   transportRoutes,
   pendingText,
+  offerItems,
+  offerChoice,
+  offerSelected,
+  counted,
 } from "./format";
 import "./styles.css";
 
@@ -173,13 +181,15 @@ function Brand() {
 
 function Modal({ title, children, close, wide = false, className = "" }) {
   const ref = useRef(null);
+  const closeRef = useRef(close);
+  closeRef.current = close;
   useEffect(() => {
     const dialog = ref.current;
     dialog.showModal();
     const stop = (e) => {
       if (e.key === "Escape") {
         e.preventDefault();
-        close();
+        closeRef.current();
       }
     };
     dialog.addEventListener("keydown", stop);
@@ -188,6 +198,7 @@ function Modal({ title, children, close, wide = false, className = "" }) {
   return (
     <dialog
       ref={ref}
+      aria-label={title}
       className={`modal ${wide ? "modal-wide" : ""} ${className}`}
       onClick={(e) => {
         if (e.target === e.currentTarget) close();
@@ -318,7 +329,7 @@ function Auth({ close, authenticated, run }) {
   );
 }
 
-function Composer({ value, setValue, send, busy, compact = false }) {
+function Composer({ value, setValue, send, busy, compact = false, contextual = false }) {
   const ref = useRef(null);
   useEffect(() => {
     if (ref.current) {
@@ -342,7 +353,7 @@ function Composer({ value, setValue, send, busy, compact = false }) {
         rows={compact ? 2 : 3}
         aria-label="Сообщение ассистенту"
         placeholder={
-          compact
+          contextual ? "Задайте вопрос о поездке…" : compact
             ? "Что изменим? Например, отель поближе к морю…"
             : "Хочу на пять ночей вдвоём из Москвы. Сравни города России для прогулок, природы и вкусной еды…"
         }
@@ -358,7 +369,7 @@ function Composer({ value, setValue, send, busy, compact = false }) {
         <span>
           <Sparkles size={14} />
           {busy
-            ? "Собираем ваши варианты…"
+            ? contextual ? "Готовлю ответ…" : "Собираем ваши варианты…"
             : compact
               ? "Можно просто своими словами"
               : "Вы мечтаете. Мы собираем поездку."}
@@ -461,6 +472,15 @@ function Sidebar({
   busy,
   open,
   close,
+  openPanel,
+  panelKind,
+  chats = [],
+  chatId,
+  openChat,
+  newChat,
+  chatsError,
+  reloadChats,
+  removeChat,
 }) {
   const [mobile, setMobile] = useState(
     () => window.matchMedia("(max-width: 760px)").matches,
@@ -499,12 +519,12 @@ function Sidebar({
     [
       Route,
       "Программа",
-      days.length ? `${days.length} дней · ваш маршрут` : null,
+      days.length ? `${counted(days.length, "день", "дня", "дней")} · ваш маршрут` : null,
       null,
       "itinerary",
     ],
     [Wallet, "Бюджет", total != null ? money(total) : null, null, "budget"],
-  ].filter((item) => item[2]);
+  ].filter((item) => item[2] || (item[4] === "transport" || item[4] === "stays") && offerItems(state, item[4]).length);
   return (
     <>
       {open && (
@@ -568,13 +588,15 @@ function Sidebar({
           {artifacts.length ? (
             <div className="saved-artifacts">
               {artifacts.map(([Component, label, name, price, key]) => (
-                <button key={key} onClick={() => navigate("trip", tripId)}>
+                <button key={key} className={page === "plan" && panelKind === key ? "artifact-active" : ""}
+                  aria-expanded={page === "plan" && panelKind === key}
+                  aria-controls="trip-options-panel" onClick={() => openPanel(key)}>
                   <span className={`artifact-icon artifact-${key}`}>
                     <Component size={18} />
                   </span>
                   <span>
                     <small>{label}</small>
-                    <strong>{name}</strong>
+                    <strong>{name || counted(offerItems(state, key).length, "вариант", "варианта", "вариантов")}</strong>
                     {price && (
                       <small>
                         {money(price.amount, price.currency)} ·{" "}
@@ -604,6 +626,18 @@ function Sidebar({
               </p>
             </div>
           )}
+          {tripId && <div className="trip-chat-folder">
+            <div className="sidebar-section-title"><FolderOpen size={14} /> ЧАТЫ ПОЕЗДКИ
+              <button className="icon-button" aria-label="Новый чат поездки" onClick={newChat}><Plus size={15} /></button>
+            </div>
+            <nav aria-label="Чаты поездки">
+              <button className={page === "plan" && !chatId ? "active" : ""} onClick={() => openChat(null)}><Route size={15} /><span>План поездки</span></button>
+              {chats.map((chat) => <div className="trip-chat-row" key={chat.chat_id}><button className={page === "plan" && chatId === chat.chat_id ? "active" : ""} onClick={() => openChat(chat.chat_id)}>
+                <Icon of={chat.kind === "support" ? LifeBuoy : chat.kind === "places" ? MapPin : MessageCircle} size={15} /><span>{chat.title}</span>
+              </button><button className="icon-button chat-delete" aria-label={`Удалить чат: ${chat.title}`} onClick={() => removeChat(chat)}><Trash2 size={13} /></button></div>)}
+            </nav>
+            {chatsError && <button className="text-button chat-retry" onClick={reloadChats}>Не удалось загрузить чаты · повторить</button>}
+          </div>}
         </div>
         <div className="sidebar-bottom">
           <button
@@ -657,6 +691,10 @@ function Conversation({
   pay,
   navigate,
   download,
+  openPanel,
+  chat,
+  chatError,
+  retryChat,
 }) {
   const latest = useRef(null);
   const thinking = useRef(null);
@@ -688,7 +726,7 @@ function Conversation({
     setValue(text);
     composer.current?.querySelector("textarea")?.focus();
   };
-  const recommendations = state && (
+  const recommendations = !chat && state && (
     <Planner
       state={state}
       tripId={tripId}
@@ -706,7 +744,7 @@ function Conversation({
         <div
           className={`conversation-content ${hasConversation ? "has-conversation" : ""}`}
         >
-          {!hasConversation && !loading && !unavailable && (
+          {!hasConversation && !loading && !unavailable && !chat && (
             <section className="conversation-intro">
               <span className="intro-eyebrow">
                 <span /> О!ДИН ЗАПРОС — ЦЕЛАЯ ПОЕЗДКА
@@ -733,6 +771,12 @@ function Conversation({
               </div>
             </section>
           )}
+          {chat && !hasConversation && !loading && !chatError && <section className="chat-welcome">
+            <span className="empty-icon"><Icon of={chat.kind === "support" ? LifeBuoy : chat.kind === "places" ? MapPin : MessageCircle} size={28} /></span>
+            <h2>{chat.title}</h2><p>Обсудим детали вашей поездки в отдельном разговоре.</p>
+            <span className="small muted">План, билеты и отель остаются в чате «План поездки».</span>
+          </section>}
+          {chatError && <div className="empty-state" role="alert"><h3>Не удалось открыть чат</h3><p>{chatError}</p><button className="secondary" onClick={retryChat}>Повторить загрузку</button></div>}
           {unavailable && (
             <div className="empty-state">
               <Luggage size={30} />
@@ -752,7 +796,7 @@ function Conversation({
             <>
               {hasConversation && (
                 <div className="conversation-start">
-                  <span>ОДИН РАЗГОВОР. ВАША ПОЕЗДКА ЦЕЛИКОМ.</span>
+                  <span>{chat ? chat.title : "ОДИН РАЗГОВОР. ВАША ПОЕЗДКА ЦЕЛИКОМ."}</span>
                 </div>
               )}
               {messages.map((message, index) => (
@@ -770,7 +814,7 @@ function Conversation({
                         О! рядом <span>ваш агент путешествий</span>
                       </div>
                     )}
-                    {message.presentation ? (
+                    {!chat && message.presentation && message.presentation.stage === "scenarios" && message.presentation.choices?.length && !offerItems(message.presentation, "stays").length && !offerItems(message.presentation, "transport").length ? (
                       index === lastPresentation && !busy && message.presentation.revision === state.revision ? recommendations : (
                         <fieldset className="past-recommendations" disabled>
                           <Planner state={message.presentation} tripId={tripId} busy
@@ -779,8 +823,11 @@ function Conversation({
                         </fieldset>
                       )
                     ) : (
+                      <>
                       <ChatText text={message.role === "user" && message.text.startsWith("/select ")
                         ? "Выбираю этот вариант" : message.text} />
+                      {!chat && message.presentation && <PresentationLinks state={index === lastPresentation ? state : message.presentation} openPanel={openPanel} past={index !== lastPresentation} />}
+                      </>
                     )}
                   </div>
                 </div>
@@ -805,23 +852,22 @@ function Conversation({
                         <span role="status" aria-live="polite">
                           {runStatus?.status === "running"
                             ? runStatus.label
-                            : "Собираю вашу поездку…"}
+                            : chat ? "Готовлю ответ…" : "Собираю вашу поездку…"}
                         </span>
                       </div>
                       <p className="thinking-note">
-                        Сравниваю источники и проверяю варианты. Это может
-                        занять несколько минут.
+                        {chat ? "Учитываю детали поездки и историю этого разговора." : "Сравниваю источники и проверяю варианты. Это может занять несколько минут."}
                       </p>
-                      <SearchPreviews previews={runStatus?.previews} />
+                      {!chat && <SearchPreviews previews={runStatus?.previews} />}
                     </div>
                   </div>
                 )}
-                {!busy &&
+                {!chat && !busy &&
                   lastAssistant < 0 &&
                   hasConversation &&
-                  recommendations}
+                  (state?.choices?.length && state.stage === "scenarios" ? recommendations : <PresentationLinks state={state} openPanel={openPanel} />)}
               </div>
-              {state && !busy && hasConversation && (
+              {state && !chat && !busy && hasConversation && (
                 <div className="conversation-suggestions">
                   {[
                     "Хочу отель поближе к морю",
@@ -845,13 +891,13 @@ function Conversation({
             value={value}
             setValue={setValue}
             send={send}
-            busy={busy || loading || !!unavailable}
+            busy={busy || loading || !!unavailable || !!chatError}
             compact={!!hasConversation}
+            contextual={!!chat}
           />
           <div className="composer-footnote">
             <span>
-              <LockKeyhole size={11} /> Всё выбранное сохраняется в вашей
-              поездке
+              <LockKeyhole size={11} /> {chat ? "Отдельный чат · контекст вашей поездки" : "Всё выбранное сохраняется в вашей поездке"}
             </span>
             <span>Бронирование и оплата — имитация</span>
           </div>
@@ -859,6 +905,92 @@ function Conversation({
       </div>
     </div>
   );
+}
+
+function OfferName({ item, children }) {
+  const href = safeUrl(item?.url || item?.source?.source_url);
+  return href ? <a className="offer-name" href={href} target="_blank" rel="noopener noreferrer">{children || item.name}<ExternalLink size={12} aria-label="Открыть у поставщика" /></a> : children || item?.name;
+}
+
+function PresentationLinks({ state, openPanel, past = false }) {
+  if (!state || !openPanel) return null;
+  const links = [[Plane, "Билеты", "transport", offerItems(state, "transport").length], [Building2, "Отели", "stays", offerItems(state, "stays").length], [Route, "Программа", "itinerary", tripParts(state).days.length]].filter((row) => row[3]);
+  if (!links.length) return null;
+  return <div className="presentation-links" aria-label="Варианты поездки">
+    {past && <span className="small muted">Подбор из этого ответа. Открыть актуальные варианты:</span>}
+    {links.map(([Component, label, kind, count]) => <button key={kind} onClick={() => openPanel(kind)}><Component size={16} /><span>{label}{!past && <small>{kind === "itinerary" ? counted(count, "день", "дня", "дней") : counted(count, "вариант", "варианта", "вариантов")}</small>}</span><PanelRightOpen size={15} /></button>)}
+    {!past && state.selected && <button onClick={() => openPanel("budget")}><Wallet size={16} /><span>Проверить поездку<small>Стоимость и оформление</small></span><ArrowRight size={15} /></button>}
+  </div>;
+}
+
+function TripOptions({ kind, state, busy, choose, close, closing, changeKind, discuss, pay, tripId, navigate }) {
+  const [compareIds, setCompareIds] = useState([]);
+  const [comparing, setComparing] = useState(false);
+  const [compact, setCompact] = useState(() => window.matchMedia("(max-width: 1000px)").matches);
+  const [details, setDetails] = useState(null);
+  const heading = useRef(null);
+  const title = { transport: "Билеты", stays: "Отели", itinerary: "Программа по дням", budget: "Бюджет" }[kind];
+  const items = offerItems(state, kind);
+  const signature = items.map((item) => item.id).join("|");
+  useEffect(() => {
+    setCompareIds(items.slice(0, 2).map((item) => item.id));
+    setComparing(false);
+    setDetails(null);
+  }, [kind, signature, tripId]);
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 1000px)");
+    const update = () => setCompact(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    if (!compact) heading.current?.focus({ preventScroll: true });
+    const escape = (event) => { if (event.key === "Escape" && !document.querySelector("dialog[open]")) close(); };
+    window.addEventListener("keydown", escape);
+    return () => window.removeEventListener("keydown", escape);
+  }, [compact, kind]);
+  const parts = tripParts(state);
+  const selectedItems = items.filter((item) => compareIds.includes(item.id));
+  const selection = (item) => {
+    const id = offerChoice(state, item, kind);
+    const selected = offerSelected(state, item, kind);
+    const option = state.options?.find((row) => row.id === id);
+    const other = option?.[kind === "stays" ? "transport" : "stay"];
+    return <div className="panel-choice-action">
+      {other && !selected && <small>В составе варианта: {other.name} · билеты + отель {money(option.budget?.known_subtotal)}</small>}
+      <button className={selected ? "secondary" : "primary"} disabled={busy || selected} onClick={() => id ? choose(id) : discuss(`Хочу выбрать ${kind === "stays" ? "отель" : "билеты"}: ${item.name}. Проверь условия и обнови план.`)}>
+        {selected ? <Check size={15} /> : id ? <Plus size={15} /> : <MessageCircle size={15} />}{selected ? "Выбрано" : id ? "Выбрать вариант" : "Обсудить выбор"}
+      </button>
+    </div>;
+  };
+  const content = <>
+    <div className="options-tabs" aria-label="Разделы вариантов">
+      {[[Plane, "Билеты", "transport"], [Building2, "Отели", "stays"], [Route, "Программа", "itinerary"], [Wallet, "Бюджет", "budget"]].map(([Component, label, key]) => <button key={key} aria-pressed={kind === key} onClick={() => changeKind(key)}><Component size={15} />{label}</button>)}
+    </div>
+    <div className="options-panel-scroll" key={kind}>
+      {!state ? <div className="panel-empty"><LoaderCircle className="spin" />Загружаем поездку…</div> : ["transport", "stays"].includes(kind) ? <>
+        <div className="options-toolbar"><span>{counted(items.length, "вариант", "варианта", "вариантов")}{busy && " · обновляем подбор"}</span><button className="text-button" disabled={selectedItems.length < 2} aria-pressed={comparing} onClick={() => setComparing(!comparing)}>{comparing ? <List size={15} /> : <Columns2 size={15} />}{comparing ? "Карточки" : `Сравнить · ${selectedItems.length}`}</button></div>
+        {comparing ? <div className="offer-comparison" style={{ "--columns": selectedItems.length }} role="group" aria-label="Сравнение вариантов">
+          {selectedItems.map((item) => <div className="comparison-heading" key={item.id}><h3><OfferName item={item} /></h3>{offerSelected(state, item, kind) && <span className="panel-selected"><Check size={12} />Выбрано</span>}</div>)}
+          {[['Стоимость', (item) => <><strong>{money(item.price?.amount, item.price?.currency)}</strong><small>{basis(item.price?.basis)}</small></>], ['Даты', (item) => `${date(item.start)} — ${date(item.end)}`], [kind === 'stays' ? 'Расположение' : 'Маршрут', (item) => kind === 'stays' ? item.area || 'Не указано' : `${item.origin || state.constraints?.origin || '—'} → ${item.destination || state.constraints?.destination || '—'}`], [kind === 'stays' ? 'Условия' : 'В пути', (item) => kind === 'stays' ? item.meal || item.description || 'Уточните у поставщика' : <TransportRoutes candidate={item} constraints={state.constraints} />], ['Наличие', (item) => item.source?.evidence === 'live' ? 'Найдено при поиске; перед оформлением проверим повторно' : 'Не подтверждено']].flatMap(([label, render]) => selectedItems.map((item) => <div className="comparison-cell" key={label + item.id}><small>{label}</small><div>{render(item)}</div></div>))}
+          {selectedItems.map((item) => <div className="comparison-cell" key={"choose" + item.id}>{selection(item)}</div>)}
+        </div> : items.map((item) => <article key={item.id} className={`panel-offer ${offerSelected(state, item, kind) ? "is-selected" : ""}`}>
+          <div className="panel-offer-top">{offerSelected(state, item, kind) ? <span className="panel-selected"><Check size={13} />В вашей поездке</span> : <span className="small muted">Вариант</span>}<label className="compare-check"><input type="checkbox" aria-label={`Сравнить вариант ${item.name}`} checked={compareIds.includes(item.id)} disabled={!compareIds.includes(item.id) && compareIds.length >= 3} onChange={(event) => setCompareIds(event.target.checked ? [...compareIds, item.id] : compareIds.filter((id) => id !== item.id))} />Сравнить</label></div>
+          <h3><OfferName item={item} /></h3><p className="small muted">{kind === "stays" ? item.area : `${item.origin || state.constraints?.origin || ''} → ${item.destination || state.constraints?.destination || ''}`}</p>
+          <p className="small muted">{date(item.start)} — {date(item.end)}</p>
+          <div className="panel-price"><strong>{money(item.price?.amount, item.price?.currency)}</strong><span>{basis(item.price?.basis)}</span></div>
+          {selection(item)}
+          <div className="panel-offer-links"><button className="text-button" aria-expanded={details === item.id} onClick={() => setDetails(details === item.id ? null : item.id)}>Детали<ChevronDown size={14} /></button><button className="text-button" onClick={() => discuss(`Расскажи подробнее о варианте «${item.name}».`)}><MessageCircle size={14} />Обсудить</button></div>
+          {details === item.id && <div className="panel-offer-details">{item.description && <p>{item.description}</p>}{kind === "stays" ? <HotelDetails hotel={item} /> : <TransportRoutes candidate={item} constraints={state.constraints} />}<p className="small muted">{item.source?.evidence === "live" ? "Цена найдена при поиске. Подтверждение потребуется перед оформлением." : "Наличие и стоимость требуют подтверждения у поставщика."}</p></div>}
+        </article>)}
+        {!items.length && <div className="panel-empty"><Icon of={kind === "stays" ? Building2 : Plane} size={28} /><h3>Вариантов пока нет</h3><p>Продолжите разговор — найденные предложения появятся здесь.</p><button className="secondary" onClick={() => discuss(kind === "stays" ? "Подбери варианты проживания для моей поездки" : "Подбери билеты для моей поездки")}>Попросить ассистента</button></div>}
+      </> : kind === "itinerary" ? parts.days.length ? <DayPlan days={parts.days} /> : <div className="panel-empty"><Route size={28} /><h3>Программа ещё собирается</h3><button className="secondary" onClick={() => discuss("Составь программу моей поездки по дням")}>Обсудить программу</button></div> : <section className="panel-budget"><h3>Стоимость поездки</h3>{[["Билеты", parts.transport], ["Проживание", parts.stay]].map(([label, item]) => <div className="panel-budget-row" key={label}><span>{label}</span><div><strong>{money(item?.price?.amount, item?.price?.currency)}</strong>{item?.price && <small>{basis(item.price.basis)}</small>}</div></div>)}<div className="panel-budget-row"><span>Известная сумма</span><strong>{money(parts.total)}</strong></div><p className="small muted">Неизвестные расходы не включены. Питание, активности и местные переезды могут оплачиваться отдельно.</p>{state.stage === "booked" ? <span className="panel-selected"><Check size={15} />Имитация бронирования выполнена</span> : canCheckout(state) ? <button className="primary" disabled={busy} onClick={pay}><CreditCard size={16} />К имитации оплаты</button> : <button className="secondary" disabled={busy} onClick={() => discuss("Проверь актуальность выбранных тарифов и подготовь поездку к оформлению")}>Проверить тарифы</button>}</section>}
+      {state?.notice && <p className="notice">{state.notice}</p>}
+      {kind === "itinerary" && state?.stage === "itinerary" && state.choices?.map((choice) => <button className="primary panel-approve" key={choice.id} disabled={busy} onClick={() => choose(choice.id)}>Мне подходит, собери поездку<ArrowRight size={15} /></button>)}
+    </div>
+    <div className="options-panel-footer"><button className="text-button" onClick={() => navigate("trip", tripId)}><Luggage size={15} />Вся поездка<ArrowUpRight size={14} /></button></div>
+  </>;
+  return compact ? <Modal title={title} close={close} className={`options-sheet ${closing ? "is-closing" : ""}`}><section id="trip-options-panel">{content}</section></Modal> : <aside className={`trip-options-panel ${closing ? "is-closing" : ""}`} id="trip-options-panel" aria-label="Варианты поездки"><div className="options-panel-head"><div><span className="eyebrow">ВАША ПОЕЗДКА</span><h2 ref={heading} tabIndex={-1}>{title}</h2></div><button className="icon-button" onClick={close} aria-label="Закрыть панель вариантов"><X size={19} /></button></div>{content}</aside>;
 }
 
 function SourceLink({ url, children }) {
@@ -975,7 +1107,7 @@ function PackageCard({ option, index, state, choose, busy }) {
           </span>
         )}
       </div>
-      <h3>{option.stay?.name}</h3>
+      <h3><OfferName item={option.stay} /></h3>
       <p className="package-area">
         <MapPin size={14} />
         {option.stay?.area || "Россия"}
@@ -990,7 +1122,7 @@ function PackageCard({ option, index, state, choose, busy }) {
             size={18}
           />
           <span>
-            <strong>{option.transport?.name}</strong>
+            <strong><OfferName item={option.transport} /></strong>
             <small>
               {date(option.transport?.start)} — {date(option.transport?.end)} ·
               туда и обратно
@@ -1166,7 +1298,7 @@ function AutonomousPlan({
                 size={18}
               />
               <div>
-                <strong>{item.name}</strong>
+                <strong><OfferName item={item} /></strong>
                 <p>
                   {money(item.price?.amount, item.price?.currency)}
                   {item.price && ` · ${basis(item.price.basis)}`}
@@ -1271,7 +1403,7 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
                   ? "ТУДА И ОБРАТНО"
                   : candidate?.area || "ПРОЖИВАНИЕ"}
               </span>
-              <h3>{choice.title}</h3>
+              <h3><OfferName item={{ ...candidate, url: card?.url || candidate?.url }} >{choice.title}</OfferName></h3>
             </div>
             {index === 0 && <span className="soft-badge">Вариант 1</span>}
           </div>
@@ -1494,7 +1626,7 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
                     ? "Билеты туда и обратно"
                     : "Ваш отель"}
                 </small>
-                <strong>{item.name}</strong>
+                <strong><OfferName item={{ ...item.details, ...item }} /></strong>
               </div>
               <ChevronDown size={18} />
             </summary>
@@ -1576,7 +1708,7 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
           <details className="itinerary-details">
             <summary>
               <Route size={17} />
-              Программа по дням<span>{days.length} дней</span>
+              Программа по дням<span>{counted(days.length, "день", "дня", "дней")}</span>
               <ChevronDown size={16} />
             </summary>
             <DayPlan days={days} />
@@ -1603,7 +1735,7 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
                       </p>
                       {b.items?.map((item) => (
                         <p key={item.source_id}>
-                          {item.name} · {item.details?.start} —{" "}
+                          <OfferName item={{ ...item.details, ...item }} /> · {item.details?.start} —{" "}
                           {item.details?.end}
                         </p>
                       ))}
@@ -1715,7 +1847,7 @@ function Planner({
           <details className="itinerary-details">
             <summary>
               <Route size={17} />
-              Программа по дням<span>{parts.days.length} дней</span>
+              Программа по дням<span>{counted(parts.days.length, "день", "дня", "дней")}</span>
               <ChevronDown size={16} />
             </summary>
             <DayPlan days={parts.days} />
@@ -2229,7 +2361,7 @@ function Trips({ account, auth, trips, navigate, reload, run, removeTrip, busy }
                 <div>
                   <span>
                     {t.state.constraints?.adults
-                      ? `${t.state.constraints.adults} взрослых`
+                      ? party(t.state.constraints.adults, t.state.constraints.children_ages)
                       : "Детали уточняются"}
                   </span>
                   <span className="history-open">
@@ -2342,10 +2474,6 @@ function Support({ guides, tripId, run, discuss }) {
           <ArrowRight size={16} />
         </button>
       </div>
-      <p className="demo-note">
-        Справочник помогает подготовить обращение. Актуальные условия уточняйте
-        у поставщика.
-      </p>
       {letter && (
         <Modal wide title={letter.title} close={() => setLetter(null)}>
           <ol className="support-steps">
@@ -2532,20 +2660,42 @@ function App() {
   const [trips, setTrips] = useState([]);
   const [guides, setGuides] = useState([]);
   const [progress, setProgress] = useState(null);
-  const [value, setValue] = useState("");
+  const [drafts, setDrafts] = useState({});
   const [runningTrips, setRunningTrips] = useState(() => new Set());
   const [runStatus, setRunStatus] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [payment, setPayment] = useState(false);
-  const [pendingMessage, setPendingMessage] = useState(null);
+  const [pendingMessages, setPendingMessages] = useState({});
   const [mobileNav, setMobileNav] = useState(false);
-  const [page, tripId] = route.split("/");
-  const busy = runningTrips.has(tripId || "new");
+  const [panelKind, setPanelKind] = useState(null);
+  const [panelClosing, setPanelClosing] = useState(false);
+  const panelCloseTimer = useRef(null);
+  const [chats, setChats] = useState([]);
+  const [chat, setChat] = useState(null);
+  const [chatLoading, setChatLoading] = useState(false);
+  const [chatError, setChatError] = useState("");
+  const [chatsError, setChatsError] = useState(false);
+  const [chatDialog, setChatDialog] = useState(null);
+  const [creatingChat, setCreatingChat] = useState(false);
+  const [chatTitle, setChatTitle] = useState("");
+  const [chatToDelete, setChatToDelete] = useState(null);
+  const [page, tripId, chatId] = route.split("/");
+  const sessionKey = tripId ? tripId + (chatId ? ":" + chatId : "") : "new";
+  const pendingMessage = pendingMessages[sessionKey];
+  const activeChat = chat?.chat_id === chatId ? chat : null;
+  const activeChatError = chatError?.id === sessionKey ? chatError.message : "";
+  const value = drafts[sessionKey] || "";
+  const setValue = (next) => setDrafts((current) => ({ ...current, [sessionKey]: typeof next === "function" ? next(current[sessionKey] || "") : next }));
+  const busy = runningTrips.has(sessionKey);
+  const chatVersion = useRef(0);
+  const panelTrigger = useRef(null);
+  const panelResults = useRef("");
+  const chatsVersion = useRef(0);
   useEffect(() => {
     setRunStatus(null);
-    if (!busy || !tripId) return;
+    if (!busy || !tripId || chatId) return;
     const source = new EventSource(`/trips/${tripId}/events`);
     source.onmessage = (event) => {
       try {
@@ -2555,13 +2705,13 @@ function App() {
       }
     };
     return () => source.close();
-  }, [busy, tripId]);
+  }, [busy, tripId, chatId]);
   const operation = useRef(new Set());
   const snapshotVersion = useRef(0);
   const draftVersion = useRef(0);
   const main = useRef(null);
-  const navigate = (page, id) => {
-    const next = page + (id ? "/" + id : "");
+  const navigate = (page, id, conversationId) => {
+    const next = page + (id ? "/" + id : "") + (conversationId ? "/" + conversationId : "");
     setRoute(next);
     window.location.hash = next;
     setMobileNav(false);
@@ -2603,6 +2753,50 @@ function App() {
     return () => window.removeEventListener("hashchange", update);
   }, []);
   const reloadTrips = async () => setTrips(await api("/trips"));
+  const reloadChats = async () => {
+    if (!tripId) return;
+    const id = tripId;
+    const version = ++chatsVersion.current;
+    try {
+      const list = await api(`/trips/${id}/chats`);
+      if (version === chatsVersion.current && window.location.hash.slice(1).split("/")[1] === id) { setChats(Array.isArray(list) ? list : []); setChatsError(false); }
+    } catch { if (version === chatsVersion.current && window.location.hash.slice(1).split("/")[1] === id) setChatsError(true); }
+  };
+  useEffect(() => { setChats([]); setChatsError(false); if (account && tripId) reloadChats(); }, [tripId, account?.id]);
+  const loadChat = async () => {
+    if (!chatId || !account) return;
+    const version = ++chatVersion.current;
+    setChat(null); setChatLoading(true); setChatError("");
+    try {
+      const next = await api(`/trips/${tripId}/chats/${chatId}`);
+      if (version === chatVersion.current) setChat(next);
+    } catch (e) { if (version === chatVersion.current) setChatError({ id: sessionKey, message: e.message }); }
+    finally { if (version === chatVersion.current) setChatLoading(false); }
+  };
+  useEffect(() => {
+    setChat(null); setChatError(""); setChatLoading(false);
+    loadChat();
+    return () => { chatVersion.current += 1; };
+  }, [chatId, tripId, account?.id]);
+  useEffect(() => { clearTimeout(panelCloseTimer.current); setPanelKind(null); setPanelClosing(false); panelResults.current = ""; }, [tripId]);
+  useEffect(() => () => clearTimeout(panelCloseTimer.current), []);
+  useEffect(() => {
+    if (!state || chatId || page !== "plan") return;
+    const hotels = offerItems(state, "stays"), tickets = offerItems(state, "transport");
+    const signature = JSON.stringify([tripId, state.revision, state.stage, hotels.map((row) => row.id), tickets.map((row) => row.id)]);
+    if (signature === panelResults.current) return;
+    panelResults.current = signature;
+    if (window.matchMedia("(min-width: 1001px)").matches && (hotels.length || tickets.length)) setPanelKind(state.stage === "booked" ? "budget" : !state.autonomous && state.stage === "itinerary" ? "itinerary" : state.focus === "transport" ? "transport" : hotels.length ? "stays" : "transport");
+  }, [state, page, chatId, tripId]);
+  const closePanel = () => { clearTimeout(panelCloseTimer.current); setPanelClosing(true); panelCloseTimer.current = setTimeout(() => { setPanelKind(null); setPanelClosing(false); const target = panelTrigger.current?.isConnected && !panelTrigger.current.closest("[inert]") ? panelTrigger.current : document.querySelector(".topbar-options"); target?.focus({ preventScroll: true }); }, window.matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 180); };
+  const openPanel = (kind) => {
+    if (!tripId) return;
+    panelTrigger.current = document.activeElement;
+    clearTimeout(panelCloseTimer.current); setPanelClosing(false);
+    setPanelKind(kind);
+    if (page !== "plan") navigate("plan", tripId);
+    setMobileNav(false);
+  };
   useEffect(() => {
     let active = true;
     if (!account) {
@@ -2670,34 +2864,38 @@ function App() {
         e.message || "Не удалось связаться с сервером. Проверьте соединение.",
       );
       if (e.status === 401) setAuth(true);
-      const activeTripId = window.location.hash.slice(1).split("/")[1];
+      const [, activeTripId, activeChatId] = window.location.hash.slice(1).split("/");
       if ([409, 504].includes(e.status) && activeTripId) {
         try {
-          const current = await api(`/trips/${activeTripId}`);
-          if (window.location.hash.slice(1).split("/")[1] === activeTripId) {
+          const activeRoute = window.location.hash;
+          const current = await api(`/trips/${activeTripId}` + (activeChatId ? `/chats/${activeChatId}` : ""));
+          if (window.location.hash === activeRoute) {
+            if (activeChatId) { chatVersion.current += 1; setChat(current); setChatLoading(false); }
+            else {
             snapshotVersion.current += 1;
             setState(current);
+            }
           }
         } catch {}
       }
       return null;
     }
   }
-  async function mutate(fn) {
-    const key = tripId || "new";
+  async function mutate(fn, operationKey = sessionKey) {
+    const key = operationKey;
     if (operation.current.has(key)) return;
     const keys = new Set([key]);
     operation.current.add(key);
     setRunningTrips(new Set(operation.current));
     try {
-      await run(() => fn(keys), () => keys.has(window.location.hash.slice(1).split("/")[1] || "new"));
+      await run(() => fn(keys), () => { const [, id, cid] = window.location.hash.slice(1).split("/"); return keys.has(id ? id + (cid ? ":" + cid : "") : "new"); });
     } finally {
       for (const id of keys) operation.current.delete(id);
       setRunningTrips(new Set(operation.current));
     }
   }
   async function send() {
-    if (!value.trim() || operation.current.has(tripId || "new")) return;
+    if (!value.trim() || operation.current.has(sessionKey)) return;
     if (!account) {
       setAuth(true);
       return;
@@ -2706,7 +2904,8 @@ function App() {
     const draft = draftVersion.current;
     const requestId = crypto.randomUUID();
     setValue("");
-    setPendingMessage({ tripId, text, requestId });
+    setPendingMessages((current) => ({ ...current, [sessionKey]: { tripId, chatId, text, requestId } }));
+    const clearPending = () => setPendingMessages((current) => Object.fromEntries(Object.entries(current).filter(([, pending]) => pending.requestId !== requestId)));
     let sent = false;
     let targetTripId = tripId;
     await mutate(async (keys) => {
@@ -2720,28 +2919,29 @@ function App() {
         operation.current.delete("new");
         setRunningTrips(new Set(operation.current));
         if (draftVersion.current === draft && window.location.hash.slice(1) === "plan") {
-          setPendingMessage({ tripId: id, text, requestId });
+          setPendingMessages((current) => ({ ...Object.fromEntries(Object.entries(current).filter(([, pending]) => pending.requestId !== requestId)), [id]: { tripId: id, text, requestId } }));
           navigate("plan", id);
         }
       }
-      const current =
-        id === tripId && state ? state : await api(`/trips/${id}`);
-      const startRoute = "plan/" + id;
-      const next = await api(`/trips/${id}/messages`, {
+      const current = chatId ? chat || await api(`/trips/${id}/chats/${chatId}`) : id === tripId && state ? state : await api(`/trips/${id}`);
+      const startRoute = "plan/" + id + (chatId ? "/" + chatId : "");
+      const next = await api(`/trips/${id}` + (chatId ? `/chats/${chatId}` : "") + "/messages", {
         method: "POST",
         body: { message: text, revision: current.revision },
       });
       sent = true;
-      setPendingMessage((pending) => pending?.requestId === requestId ? null : pending);
+      clearPending();
       if (window.location.hash.slice(1) === startRoute) {
-        snapshotVersion.current += 1;
-        setState(next);
-        setLoading(false);
+        if (chatId) { chatVersion.current += 1; setChat(next); setChatLoading(false); }
+        else { snapshotVersion.current += 1; setState(next); setLoading(false); }
       }
-      await reloadTrips();
+      if (!chatId) await reloadTrips();
     });
-    setPendingMessage((pending) => pending?.requestId === requestId ? null : pending);
-    if (!sent && window.location.hash.slice(1) === "plan" + (targetTripId ? "/" + targetTripId : "")) setValue((current) => current || text);
+    clearPending();
+    if (!sent && window.location.hash.slice(1) === "plan" + (targetTripId ? "/" + targetTripId : "") + (chatId ? "/" + chatId : "")) {
+      const key = targetTripId ? targetTripId + (chatId ? ":" + chatId : "") : "new";
+      setDrafts((current) => ({ ...current, [key]: current[key] || text }));
+    }
   }
   const removeTrip = async (id) => {
     await api(`/trips/${id}`, { method: "DELETE" });
@@ -2754,19 +2954,21 @@ function App() {
     setSuccess("Поездка удалена");
     return true;
   };
-  const choose = (id) =>
-    mutate(async () => {
+  const choose = (id) => {
+    if (chatId) navigate("plan", tripId);
+    return mutate(async () => {
       const next = await api(
         `/trips/${tripId}/select/${encodeURIComponent(id)}?revision=${state.revision}`,
         { method: "POST" },
       );
-      if (window.location.hash.slice(1) === "plan/" + tripId) {
+      if (window.location.hash.slice(1).split("/")[1] === tripId) {
         snapshotVersion.current += 1;
         setState(next);
         setLoading(false);
       }
       await reloadTrips();
-    });
+    }, tripId);
+  };
   const back = (stage) =>
     mutate(async () => {
       const next = await api(`/trips/${tripId}/back`, {
@@ -2813,15 +3015,43 @@ function App() {
       await reloadTrips();
       navigate("trip", tripId);
     });
-  const discuss = (text) => {
-    setValue(text);
+  const discussPlan = (text) => {
+    setDrafts((current) => ({ ...current, [tripId]: text }));
     navigate("plan", tripId);
+    if (window.matchMedia("(max-width: 1000px)").matches) closePanel();
+    requestAnimationFrame(() => document.querySelector(".conversation-composer textarea")?.focus());
+  };
+  const createChat = async (id, kind, text = "", title = "") => {
+    if (creatingChat) return;
+    setCreatingChat(true);
+    const originRoute = window.location.hash;
+    await run(async () => {
+      const target = id || (await api("/trips", { method: "POST" })).trip_id;
+      const created = await api(`/trips/${target}/chats`, { method: "POST", body: { kind, title } });
+      setDrafts((current) => ({ ...current, [target + ":" + created.chat_id]: text }));
+      if (window.location.hash === originRoute) {
+        setChatDialog(null); setChatTitle("");
+        if (target === tripId) { chatsVersion.current += 1; setChats((current) => [...current, created]); }
+        navigate("plan", target, created.chat_id);
+      }
+      await reloadTrips();
+    });
+    setCreatingChat(false);
+  };
+  const discussSupport = (text) => {
+    if (!account) { setAuth(true); return; }
+    if (tripId) createChat(tripId, "support", text, text.startsWith("Помоги составить письмо:") ? text.slice(0, 120) : "Помощь в пути");
+    else setChatDialog({ kind: "support", text });
   };
   const logout = () =>
     run(async () => {
       await api("/api/auth/logout", { method: "POST" });
       setAccount(null);
       setState(null);
+      setDrafts({});
+      setPendingMessages({});
+      setChats([]);
+      setChat(null);
       navigate("plan");
     });
   const planning = page === "plan";
@@ -2833,9 +3063,9 @@ function App() {
     setLoading(false);
     setRunStatus(null);
     setPayment(false);
-    setPendingMessage(null);
+    setPendingMessages((current) => Object.fromEntries(Object.entries(current).filter(([key]) => key !== "new")));
     setError("");
-    setValue("");
+    setDrafts((current) => ({ ...current, new: "" }));
     navigate("plan");
   };
   const pageTitle =
@@ -2860,6 +3090,15 @@ function App() {
         busy={busy}
         open={mobileNav}
         close={() => setMobileNav(false)}
+        openPanel={openPanel}
+        panelKind={panelKind}
+        chats={chats}
+        chatId={chatId}
+        openChat={(id) => navigate("plan", tripId, id)}
+        newChat={() => { setChatTitle(""); setChatDialog({ kind: "general", text: "" }); }}
+        chatsError={chatsError}
+        reloadChats={reloadChats}
+        removeChat={setChatToDelete}
       />
       <div className="app-main" inert={mobileNav ? true : undefined}>
         <header className="app-topbar">
@@ -2875,25 +3114,28 @@ function App() {
             <span>
               <strong>
                 {planning && tripId
-                  ? state?.constraints?.destination || "Ваша поездка"
+                  ? chatId ? activeChat?.title || "Чат поездки" : state?.constraints?.destination || "Ваша поездка"
                   : pageTitle}
               </strong>
               <small>
                 {planning
-                  ? "Один запрос · один общий план"
+                  ? chatId ? "Отдельный разговор в вашей поездке" : "Один запрос · один общий план"
                   : "О! рядом · ваш агент путешествий"}
               </small>
             </span>
             {planning && (
               <span className="topbar-status">
                 <span />
-                {state?.stage === "booked"
+                {chatId ? "Чат поездки" : state?.stage === "booked"
                   ? tripStatus(state)
                   : "Планируем вместе"}
               </span>
             )}
           </div>
           <div className="topbar-actions">
+            {planning && tripId && (
+              <button className="topbar-trip topbar-options" onClick={() => openPanel(panelKind || "stays")} aria-label="Открыть варианты поездки" aria-expanded={!!panelKind} aria-controls="trip-options-panel"><PanelRightOpen size={16} />Варианты</button>
+            )}
             {planning && tripId && (
               <button
                 className="topbar-trip"
@@ -2926,24 +3168,29 @@ function App() {
             tripId && !account && authChecked ? (
               <AccountRequired auth={() => setAuth(true)} />
             ) : (
-              <Conversation
+              <div className={`planning-workspace ${panelKind ? "has-options" : ""}`}><Conversation
+                key={`chat-${sessionKey}`}
                 runStatus={runStatus}
-                state={state}
+                state={chatId ? { ...state, messages: activeChat?.messages || [] } : state}
                 value={value}
                 setValue={setValue}
                 send={send}
                 busy={busy}
-                loading={loading || (!!tripId && !authChecked)}
+                loading={loading || chatLoading || (!!chatId && !activeChat && !activeChatError) || (!!tripId && !authChecked)}
                 tripId={tripId}
                 pendingMessage={
-                  pendingMessage?.tripId === tripId ? pendingMessage?.text : ""
+                  pendingMessage?.tripId === tripId && pendingMessage?.chatId === chatId ? pendingMessage?.text : ""
                 }
                 choose={choose}
                 back={back}
                 pay={() => setPayment(true)}
                 navigate={navigate}
                 download={download}
-              />
+                openPanel={openPanel}
+                chat={chatId ? activeChat || { title: "Чат поездки", kind: "general" } : null}
+                chatError={activeChatError}
+                retryChat={loadChat}
+              />{panelKind && <TripOptions key={`options-${tripId}`} kind={panelKind} state={state} busy={busy || runningTrips.has(tripId)} choose={choose} close={closePanel} closing={panelClosing} changeKind={setPanelKind} discuss={discussPlan} pay={() => setPayment(true)} tripId={tripId} navigate={navigate} />}</div>
             )
           ) : page === "trips" ? (
             <Trips
@@ -2961,6 +3208,7 @@ function App() {
               account={account}
               setAccount={(data) => {
                 setAccount(data);
+                if (!data) setDrafts({});
                 setSuccess(data ? "Изменения сохранены" : "Аккаунт удалён");
               }}
               run={run}
@@ -2972,7 +3220,7 @@ function App() {
               guides={guides}
               tripId={tripId}
               run={run}
-              discuss={discuss}
+              discuss={discussSupport}
             />
           ) : ["trip", "track"].includes(page) && tripId ? (
             !account && authChecked ? (
@@ -2996,7 +3244,7 @@ function App() {
                 progress={progress}
                 setProgress={setProgress}
                 run={run}
-                discuss={discuss}
+                discuss={discussSupport}
                 download={download}
               />
             ) : (
@@ -3025,12 +3273,7 @@ function App() {
               </div>
             )
           ) : (
-            <Conversation
-              value={value}
-              setValue={setValue}
-              send={send}
-              busy={busy}
-            />
+            <div className="empty-state"><h3>Страница не найдена</h3><p>Откройте диалог или выберите сохранённую поездку.</p><a className="primary" href="#plan">К диалогу с агентом</a></div>
           )}
         </main>
       </div>
@@ -3041,6 +3284,19 @@ function App() {
           run={run}
         />
       )}
+      {chatDialog && <Modal title="Новый чат поездки" close={() => { if (!creatingChat) setChatDialog(null); }}>
+        <p className="muted">Отдельный разговор с контекстом поездки. Обсуждение плана останется в своём чате.</p>
+        <div className="chat-kind-picker">{[[LifeBuoy, "Помощь в пути", "support"], [MapPin, "Места и впечатления", "places"], [MessageCircle, "Другой вопрос", "general"]].map(([Component, title, kind]) => <button key={kind} className="secondary" aria-pressed={chatDialog.kind === kind} disabled={creatingChat} onClick={() => setChatDialog({ ...chatDialog, kind })}><Component size={17} />{title}</button>)}</div>
+        <label className="field-label">Название чата<input value={chatTitle} maxLength={120} placeholder="Можно оставить пустым" disabled={creatingChat} onChange={(event) => setChatTitle(event.target.value)} /></label>
+        {!tripId && <p>Выберите поездку:</p>}
+        {!tripId && trips.map((trip) => <button key={trip.trip_id} className="chat-trip-choice secondary" disabled={creatingChat} onClick={() => createChat(trip.trip_id, chatDialog.kind, chatDialog.text, chatTitle)}><FolderOpen size={17} />{trip.state.constraints?.destination || "Новая поездка"} · {date(trip.state.constraints?.start)}</button>)}
+        <div className="modal-actions"><button className="secondary" disabled={creatingChat} onClick={() => setChatDialog(null)}>Отмена</button><button className="primary" disabled={creatingChat} onClick={() => createChat(tripId, chatDialog.kind, chatDialog.text, chatTitle)}>{creatingChat ? <LoaderCircle className="spin" size={16} /> : <Plus size={16} />}{tripId ? "Создать чат" : "Создать для новой поездки"}</button></div>
+      </Modal>}
+      {chatToDelete && <Modal title="Удалить чат?" close={() => { if (!creatingChat) setChatToDelete(null); }}><p>Переписка «{chatToDelete.title}» будет удалена. План поездки и другие чаты сохранятся.</p><div className="modal-actions"><button className="secondary" disabled={creatingChat} onClick={() => setChatToDelete(null)}>Отмена</button><button className="primary danger-button" disabled={creatingChat || runningTrips.has(tripId + ":" + chatToDelete.chat_id)} onClick={async () => {
+        setCreatingChat(true);
+        await run(async () => { const id = chatToDelete.chat_id; await api(`/trips/${tripId}/chats/${id}`, { method: "DELETE" }); chatsVersion.current += 1; setChats((current) => current.filter((row) => row.chat_id !== id)); if (chatId === id) navigate("plan", tripId); setChatToDelete(null); });
+        setCreatingChat(false);
+      }}><Trash2 size={16} />Удалить чат</button></div></Modal>}
       {payment && state && (
         <Payment
           close={() => {
