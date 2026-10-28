@@ -1,0 +1,765 @@
+{
+  "tested_at_utc": "2026-10-28T21:15:39.214144+00:00",
+  "application_commit": "681cf530e1a42bf369d2c0e5ad816912ec1221ee",
+  "purpose": "Provider geographic capability probes; not application E2E",
+  "paid_calls": 0,
+  "llm_calls": 0,
+  "new_cost_usd": "0",
+  "probe_results": [
+    {
+      "timestamp": "2026-10-28T21:12:44.074365+00:00",
+      "provider": "tutu",
+      "tool": "search_hotels",
+      "parameters": {
+        "city_name": "Казань",
+        "check_in": "2026-11-18",
+        "check_out": "2026-11-22",
+        "adults": 2,
+        "page_size": 2
+      },
+      "status": "ok",
+      "duration_ms": 2715,
+      "count": 2,
+      "top_level_fields": [
+        "hotels",
+        "stay",
+        "meta"
+      ],
+      "pricing": null,
+      "resolved_geo": {
+        "geo_id": "2656873",
+        "name": "Казань",
+        "country": "Россия",
+        "region": "Республика Татарстан",
+        "geo_type": "locality",
+        "hotels_count": 15646
+      },
+      "from": null,
+      "to": null,
+      "stay": {
+        "check_in": "2026-11-18",
+        "check_out": "2026-11-22",
+        "nights": 4
+      },
+      "samples": [
+        {
+          "name": "Отель Булгар",
+          "location": {
+            "lat": 55.789196,
+            "lng": 49.152664,
+            "city": null,
+            "city_geo_id": null
+          },
+          "price": {
+            "amount": 33951.0,
+            "currency": "RUB"
+          },
+          "price_basis": "stay_total"
+        },
+        {
+          "name": "Апарт Отель \"Центральный\"",
+          "location": {
+            "lat": 55.799152,
+            "lng": 49.119747,
+            "city": null,
+            "city_geo_id": null
+          },
+          "price": {
+            "amount": 22000.0,
+            "currency": "RUB"
+          },
+          "price_basis": "stay_total"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-28T21:12:46.254539+00:00",
+      "provider": "tutu",
+      "tool": "search_hotels",
+      "parameters": {
+        "city_name": "Новосибирск",
+        "check_in": "2026-11-18",
+        "check_out": "2026-11-22",
+        "adults": 2,
+        "page_size": 2
+      },
+      "status": "ok",
+      "duration_ms": 2180,
+      "count": 2,
+      "top_level_fields": [
+        "hotels",
+        "stay",
+        "meta"
+      ],
+      "pricing": null,
+      "resolved_geo": {
+        "geo_id": "2656898",
+        "name": "Новосибирск",
+        "country": "Россия",
+        "region": "Новосибирская область",
+        "geo_type": "locality",
+        "hotels_count": 8552
+      },
+      "from": null,
+      "to": null,
+      "stay": {
+        "check_in": "2026-11-18",
+        "check_out": "2026-11-22",
+        "nights": 4
+      },
+      "samples": [
+        {
+          "name": "Гранд Автограф отель Новосибирск (бывш. Марриотт Новосибирск)",
+          "location": {
+            "lat": 55.031433,
+            "lng": 82.9236,
+            "city": null,
+            "city_geo_id": null
+          },
+          "price": {
+            "amount": 51720.0,
+            "currency": "RUB"
+          },
+          "price_basis": "stay_total"
+        },
+        {
+          "name": "Гостиниц NET на Обской",
+          "location": {
+            "lat": 55.0015,
+            "lng": 82.9453,
+            "city": null,
+            "city_geo_id": null
+          },
+          "price": {
+            "amount": 12160.0,
+            "currency": "RUB"
+          },
+          "price_basis": "stay_total"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-28T21:12:49.427511+00:00",
+      "provider": "tutu",
+      "tool": "search_avia",
+      "parameters": {
+        "origin": "Москва",
+        "destination": "Казань",
+        "departure_date": "2026-11-18",
+        "return_date": "2026-11-22",
+        "adults": 2,
+        "page_size": 2
+      },
+      "status": "ok",
+      "duration_ms": 8057,
+      "count": 2,
+      "top_level_fields": [
+        "offers",
+        "meta"
+      ],
+      "pricing": {
+        "basis": "party_total",
+        "passengers": {
+          "full": 2
+        }
+      },
+      "resolved_geo": null,
+      "from": {
+        "name": "Москва",
+        "geo_id": "2657260",
+        "region": "Москва город федерального значения",
+        "iata": "MOW"
+      },
+      "to": {
+        "name": "Казань",
+        "geo_id": "2656873",
+        "region": "городской округ Казань, Республика Татарстан",
+        "iata": "KZN"
+      },
+      "stay": null,
+      "samples": [
+        {
+          "price": {
+            "amount": 13102.0,
+            "currency": "RUB"
+          },
+          "departure_at": "2026-11-18T19:40:00+03:00",
+          "arrival_at": "2026-11-18T21:35:00+03:00",
+          "return_departure_at": "2026-11-22T17:20:00+03:00",
+          "return_arrival_at": "2026-11-22T19:10:00+03:00",
+          "is_round_trip": true
+        },
+        {
+          "price": {
+            "amount": 13566.0,
+            "currency": "RUB"
+          },
+          "departure_at": "2026-11-18T06:50:00+03:00",
+          "arrival_at": "2026-11-18T08:45:00+03:00",
+          "return_departure_at": "2026-11-22T17:20:00+03:00",
+          "return_arrival_at": "2026-11-22T19:10:00+03:00",
+          "is_round_trip": true
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-28T21:12:50.925044+00:00",
+      "provider": "tutu",
+      "tool": "search_hotels",
+      "parameters": {
+        "city_name": "Владивосток",
+        "check_in": "2026-11-18",
+        "check_out": "2026-11-22",
+        "adults": 2,
+        "page_size": 2
+      },
+      "status": "ok",
+      "duration_ms": 1497,
+      "count": 2,
+      "top_level_fields": [
+        "hotels",
+        "stay",
+        "meta"
+      ],
+      "pricing": null,
+      "resolved_geo": {
+        "geo_id": "2656861",
+        "name": "Владивосток",
+        "country": "Россия",
+        "region": "Приморский край",
+        "geo_type": "locality",
+        "hotels_count": 6781
+      },
+      "from": null,
+      "to": null,
+      "stay": {
+        "check_in": "2026-11-18",
+        "check_out": "2026-11-22",
+        "nights": 4
+      },
+      "samples": [
+        {
+          "name": "Гостиница \"Жемчужина\"",
+          "location": {
+            "lat": 43.109882,
+            "lng": 131.87672,
+            "city": null,
+            "city_geo_id": null
+          },
+          "price": {
+            "amount": 11900.0,
+            "currency": "RUB"
+          },
+          "price_basis": "stay_total"
+        },
+        {
+          "name": "Приморье",
+          "location": {
+            "lat": 43.110172,
+            "lng": 131.87886,
+            "city": null,
+            "city_geo_id": null
+          },
+          "price": {
+            "amount": 13680.0,
+            "currency": "RUB"
+          },
+          "price_basis": "stay_total"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-28T21:12:51.516610+00:00",
+      "provider": "tutu",
+      "tool": "search_avia",
+      "parameters": {
+        "origin": "Москва",
+        "destination": "Новосибирск",
+        "departure_date": "2026-11-18",
+        "return_date": "2026-11-22",
+        "adults": 2,
+        "page_size": 2
+      },
+      "status": "ok",
+      "duration_ms": 5262,
+      "count": 2,
+      "top_level_fields": [
+        "offers",
+        "meta"
+      ],
+      "pricing": {
+        "basis": "party_total",
+        "passengers": {
+          "full": 2
+        }
+      },
+      "resolved_geo": null,
+      "from": {
+        "name": "Москва",
+        "geo_id": "2657260",
+        "region": "Москва город федерального значения",
+        "iata": "MOW"
+      },
+      "to": {
+        "name": "Новосибирск",
+        "geo_id": "2656898",
+        "region": "городской округ Новосибирск, Новосибирская область",
+        "iata": "OVB"
+      },
+      "stay": null,
+      "samples": [
+        {
+          "price": {
+            "amount": 27842.0,
+            "currency": "RUB"
+          },
+          "departure_at": "2026-11-18T22:45:00+03:00",
+          "arrival_at": "2026-11-19T06:50:00+07:00",
+          "return_departure_at": "2026-11-22T07:50:00+07:00",
+          "return_arrival_at": "2026-11-22T08:20:00+03:00",
+          "is_round_trip": true
+        },
+        {
+          "price": {
+            "amount": 29074.0,
+            "currency": "RUB"
+          },
+          "departure_at": "2026-11-18T15:45:00+03:00",
+          "arrival_at": "2026-11-18T23:45:00+07:00",
+          "return_departure_at": "2026-11-22T07:50:00+07:00",
+          "return_arrival_at": "2026-11-22T08:20:00+03:00",
+          "is_round_trip": true
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-28T21:12:53.172504+00:00",
+      "provider": "tutu",
+      "tool": "search_rail",
+      "parameters": {
+        "origin": "Москва",
+        "destination": "Казань",
+        "departure_date": "2026-11-18",
+        "passengers": 2,
+        "page_size": 2
+      },
+      "status": "ok",
+      "duration_ms": 1655,
+      "count": 2,
+      "top_level_fields": [
+        "offers",
+        "meta"
+      ],
+      "pricing": {
+        "basis": "per_seat",
+        "passengers": 2
+      },
+      "resolved_geo": null,
+      "from": {
+        "name": "Москва",
+        "geo_id": "2657260",
+        "region": "Москва"
+      },
+      "to": {
+        "name": "Казань",
+        "geo_id": "2656873",
+        "region": "Республика Татарстан, городской округ Казань"
+      },
+      "stay": null,
+      "samples": [
+        {
+          "price": {
+            "amount": 1374.33,
+            "currency": "RUB"
+          },
+          "departure_at": "2026-11-18T00:20:00+03:00",
+          "arrival_at": "2026-11-18T13:27:00+03:00",
+          "return_departure_at": null,
+          "return_arrival_at": null,
+          "is_round_trip": null
+        },
+        {
+          "price": {
+            "amount": 1546.12,
+            "currency": "RUB"
+          },
+          "departure_at": "2026-11-18T16:15:00+03:00",
+          "arrival_at": "2026-11-19T04:52:00+03:00",
+          "return_departure_at": null,
+          "return_arrival_at": null,
+          "is_round_trip": null
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-28T21:12:53.758554+00:00",
+      "provider": "tutu",
+      "tool": "search_rail",
+      "parameters": {
+        "origin": "Москва",
+        "destination": "Новосибирск",
+        "departure_date": "2026-11-18",
+        "passengers": 2,
+        "page_size": 2
+      },
+      "status": "ok",
+      "duration_ms": 586,
+      "count": 2,
+      "top_level_fields": [
+        "offers",
+        "meta"
+      ],
+      "pricing": {
+        "basis": "per_seat",
+        "passengers": 2
+      },
+      "resolved_geo": null,
+      "from": {
+        "name": "Москва",
+        "geo_id": "2657260",
+        "region": "Москва"
+      },
+      "to": {
+        "name": "Новосибирск",
+        "geo_id": "2656898",
+        "region": "Новосибирская область"
+      },
+      "stay": null,
+      "samples": [
+        {
+          "price": {
+            "amount": 7419.16,
+            "currency": "RUB"
+          },
+          "departure_at": "2026-11-18T01:00:00+03:00",
+          "arrival_at": "2026-11-20T11:54:00+07:00",
+          "return_departure_at": null,
+          "return_arrival_at": null,
+          "is_round_trip": null
+        },
+        {
+          "price": {
+            "amount": 8531.09,
+            "currency": "RUB"
+          },
+          "departure_at": "2026-11-18T16:38:00+03:00",
+          "arrival_at": "2026-11-20T18:37:00+07:00",
+          "return_departure_at": null,
+          "return_arrival_at": null,
+          "is_round_trip": null
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-28T21:12:54.473218+00:00",
+      "provider": "tutu",
+      "tool": "search_hotels",
+      "parameters": {
+        "city_name": "Курорт Архыз",
+        "check_in": "2026-11-18",
+        "check_out": "2026-11-22",
+        "adults": 2,
+        "page_size": 2
+      },
+      "status": "ok",
+      "duration_ms": 714,
+      "count": 2,
+      "top_level_fields": [
+        "hotels",
+        "stay",
+        "meta"
+      ],
+      "pricing": null,
+      "resolved_geo": {
+        "geo_id": "3172007",
+        "name": "Курорт \"Архыз\"",
+        "country": null,
+        "region": null,
+        "geo_type": "region",
+        "hotels_count": 1434
+      },
+      "from": null,
+      "to": null,
+      "stay": {
+        "check_in": "2026-11-18",
+        "check_out": "2026-11-22",
+        "nights": 4
+      },
+      "samples": [
+        {
+          "name": "Hayat Haus",
+          "location": {
+            "lat": 43.56513,
+            "lng": 41.2793,
+            "city": null,
+            "city_geo_id": null
+          },
+          "price": {
+            "amount": 12486.0,
+            "currency": "RUB"
+          },
+          "price_basis": "stay_total"
+        },
+        {
+          "name": "Arkhyz Royal Resort & Spa",
+          "location": {
+            "lat": 43.543472,
+            "lng": 41.183792,
+            "city": null,
+            "city_geo_id": null
+          },
+          "price": {
+            "amount": 36000.0,
+            "currency": "RUB"
+          },
+          "price_basis": "stay_total"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-28T21:13:08.877145+00:00",
+      "provider": "tutu",
+      "tool": "search_avia",
+      "parameters": {
+        "origin": "Москва",
+        "destination": "Владивосток",
+        "departure_date": "2026-11-18",
+        "return_date": "2026-11-22",
+        "adults": 2,
+        "page_size": 2
+      },
+      "status": "ok",
+      "duration_ms": 17952,
+      "count": 2,
+      "top_level_fields": [
+        "offers",
+        "meta"
+      ],
+      "pricing": {
+        "basis": "party_total",
+        "passengers": {
+          "full": 2
+        }
+      },
+      "resolved_geo": null,
+      "from": {
+        "name": "Москва",
+        "geo_id": "2657260",
+        "region": "Москва город федерального значения",
+        "iata": "MOW"
+      },
+      "to": {
+        "name": "Владивосток",
+        "geo_id": "2656861",
+        "region": "Владивостокский городской округ, Приморский край",
+        "iata": "VVO"
+      },
+      "stay": null,
+      "samples": [
+        {
+          "price": {
+            "amount": 66528.0,
+            "currency": "RUB"
+          },
+          "departure_at": "2026-11-18T18:25:00+03:00",
+          "arrival_at": "2026-11-19T09:40:00+10:00",
+          "return_departure_at": "2026-11-22T13:50:00+10:00",
+          "return_arrival_at": "2026-11-22T15:40:00+03:00",
+          "is_round_trip": true
+        },
+        {
+          "price": {
+            "amount": 66528.0,
+            "currency": "RUB"
+          },
+          "departure_at": "2026-11-18T20:30:00+03:00",
+          "arrival_at": "2026-11-19T11:50:00+10:00",
+          "return_departure_at": "2026-11-22T12:05:00+10:00",
+          "return_arrival_at": "2026-11-22T14:00:00+03:00",
+          "is_round_trip": true
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-28T21:13:14.302415+00:00",
+      "provider": "yandex_rasp",
+      "city": "Казань",
+      "http_status": 200,
+      "duration_ms": 5412,
+      "count": 2,
+      "samples": [
+        {
+          "code": "s9623141",
+          "title": "Казань-Пасс.",
+          "lat": 55.788184,
+          "lng": 49.099904,
+          "transport_type": "train"
+        },
+        {
+          "code": "s9612125",
+          "title": "Адмиралтейская Слобода",
+          "lat": 55.802147,
+          "lng": 49.065523,
+          "transport_type": "train"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-28T21:13:14.795351+00:00",
+      "provider": "openmeteo",
+      "city": "Казань",
+      "http_status": 200,
+      "duration_ms": 493,
+      "timezone": "Europe/Moscow",
+      "utc_offset_seconds": 10800,
+      "daily": {
+        "time": [
+          "2026-10-29"
+        ],
+        "temperature_2m_max": [
+          10.8
+        ],
+        "temperature_2m_min": [
+          0.9
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-28T21:13:14.915381+00:00",
+      "provider": "yandex_rasp",
+      "city": "Новосибирск",
+      "http_status": 200,
+      "duration_ms": 120,
+      "count": 2,
+      "samples": [
+        {
+          "code": "s9610287",
+          "title": "Речной Вокзал",
+          "lat": 55.009583,
+          "lng": 82.939603,
+          "transport_type": "train"
+        },
+        {
+          "code": "s9610192",
+          "title": "Новосибирск-южный",
+          "lat": 55.004495,
+          "lng": 82.951766,
+          "transport_type": "train"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-28T21:13:14.979867+00:00",
+      "provider": "openmeteo",
+      "city": "Новосибирск",
+      "http_status": 200,
+      "duration_ms": 64,
+      "timezone": "Asia/Novosibirsk",
+      "utc_offset_seconds": 25200,
+      "daily": {
+        "time": [
+          "2026-10-29"
+        ],
+        "temperature_2m_max": [
+          4.8
+        ],
+        "temperature_2m_min": [
+          1.0
+        ]
+      }
+    },
+    {
+      "timestamp": "2026-10-28T21:13:15.111789+00:00",
+      "provider": "yandex_rasp",
+      "city": "Владивосток",
+      "http_status": 200,
+      "duration_ms": 131,
+      "count": 2,
+      "samples": [
+        {
+          "code": "s9608404",
+          "title": "Владивосток",
+          "lat": 43.111528,
+          "lng": 131.881829,
+          "transport_type": "train"
+        },
+        {
+          "code": "s9608661",
+          "title": "Мыс Чуркин",
+          "lat": 43.105124,
+          "lng": 131.898672,
+          "transport_type": "train"
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-10-28T21:13:15.175277+00:00",
+      "provider": "openmeteo",
+      "city": "Владивосток",
+      "http_status": 200,
+      "duration_ms": 63,
+      "timezone": "Asia/Vladivostok",
+      "utc_offset_seconds": 36000,
+      "daily": {
+        "time": [
+          "2026-10-29"
+        ],
+        "temperature_2m_max": [
+          12.4
+        ],
+        "temperature_2m_min": [
+          7.8
+        ]
+      }
+    }
+  ],
+  "2gis_metadata": {
+    "provider": "2gis",
+    "check": "free_metadata_only",
+    "server_info_is_error": false,
+    "server_info_fields": [
+      "name",
+      "version",
+      "protocol_version",
+      "transport",
+      "ready",
+      "environment",
+      "capabilities"
+    ],
+    "search_places_properties": {
+      "query": {},
+      "types": {},
+      "locale": {},
+      "longitude": {},
+      "latitude": {},
+      "radius": {},
+      "sort": {
+        "type": "string"
+      },
+      "page": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 1000000
+      },
+      "page_size": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 50
+      },
+      "extra_fields": {
+        "type": "array"
+      },
+      "additional_params": {
+        "type": "object"
+      }
+    },
+    "geographic_business_queries_sent": 0
+  },
+  "limits": [
+    "No paid 2GIS/Geoapify/Tavily business calls outside Sochi",
+    "Yandex nearest stations only, not fares or round-trip validation",
+    "Rail outbound only",
+    "Quotes are search results, not confirmed booking",
+    "Three cities plus one resort do not prove nationwide coverage"
+  ]
+}
