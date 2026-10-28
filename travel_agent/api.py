@@ -225,12 +225,39 @@ def create_app(
             )
         }
         result["messages"] = [
-            {"role": "user" if isinstance(m, HumanMessage) else "assistant", "text": m.content}
+            {"role": "user" if isinstance(m, HumanMessage) else "assistant", "text": m.content,
+             "presentation": m.response_metadata.get("presentation") if isinstance(m, AIMessage) else None}
             for m in values.get("messages", []) if isinstance(m, (HumanMessage, AIMessage)) and isinstance(m.content, str) and m.content
         ]
+        if result["messages"] and result["messages"][-1]["role"] == "assistant":
+            last = values.get("messages", [])[-1]
+            if "presentation" not in last.response_metadata:
+                result["messages"][-1]["presentation"] = presentation(values)
         return result
 
+    def presentation(values: dict) -> dict | None:
+        if not values.get("answer") or values.get("answer") != values.get("plan_answer"):
+            return None
+        if not (values.get("choices") or values.get("options") or values.get("receipt") or
+                any(row.get("candidates") for row in values.get("results", {}).values())):
+            return None
+        return {key: values[key] for key in (
+            "autonomous", "focus", "feedback", "status", "constraints", "revision", "options", "results",
+            "selected", "diagnostics", "stage", "scenarios", "selected_scenario", "selected_transport",
+            "selected_stay", "choices", "cards", "notice", "pending_check_in", "receipt",
+        ) if key in values}
+
+    async def save_presentation(user: str, trip_id: str, values: dict) -> None:
+        messages = values.get("messages", [])
+        if messages and isinstance(messages[-1], AIMessage) and "presentation" not in messages[-1].response_metadata:
+            tagged = messages[-1].model_copy(update={"response_metadata": {
+                **messages[-1].response_metadata, "presentation": presentation(values),
+            }})
+            await app.state.graph.aupdate_state(config_for(user, trip_id), {"messages": [tagged]})
+            values["messages"] = [*messages[:-1], tagged]
+
     async def sync_trip(user: str, trip_id: str, values: dict) -> None:
+        await save_presentation(user, trip_id, values)
         if app.state.accounts is not None and await app.state.accounts.account(user):
             await app.state.accounts.sync_trip(user, trip_id, view(values))
 
@@ -254,6 +281,18 @@ def create_app(
         await require_trip(user, trip_id)
         snapshot = await app.state.graph.aget_state(config_for(user, trip_id))
         return view(snapshot.values)
+
+    @app.delete("/trips/{trip_id}", status_code=204)
+    async def delete_trip(trip_id: str, user: str = Depends(owner)):
+        key = user + ":" + trip_id
+        async with locks.setdefault(key, asyncio.Lock()):
+            await require_trip(user, trip_id)
+            if app.state.graph.checkpointer:
+                await app.state.graph.checkpointer.adelete_thread(key)
+            await app.state.store.adelete(("trips", user), trip_id)
+            if app.state.accounts is not None:
+                await app.state.accounts.delete_trip(user, trip_id)
+            run_progress.pop(key, None)
 
     @app.get('/trips/{trip_id}/status')
     async def read_status(trip_id: str, user: str = Depends(owner)):
@@ -280,9 +319,11 @@ def create_app(
         await require_trip(user, trip_id)
         config = config_for(user, trip_id)
         async with locks.setdefault(user + ":" + trip_id, asyncio.Lock()):
+            await require_trip(user, trip_id)
             snapshot = await app.state.graph.aget_state(config)
             if request.revision != snapshot.values.get("revision", 0):
                 raise HTTPException(409, "Stale revision")
+            await save_presentation(user, trip_id, snapshot.values)
             initial = {
                 "messages": [HumanMessage(content=request.message)],
                 "calls": 0,
@@ -344,7 +385,9 @@ def create_app(
         await require_trip(user, trip_id)
         config = config_for(user, trip_id)
         async with locks.setdefault(user + ":" + trip_id, asyncio.Lock()):
+            await require_trip(user, trip_id)
             snapshot = await app.state.graph.aget_state(config)
+            await save_presentation(user, trip_id, snapshot.values)
             if snapshot.values.get("stage") and option_id in {c["id"] for c in snapshot.values.get("choices", [])}:
                 if revision != snapshot.values.get("revision", 0):
                     raise HTTPException(409, "Stale revision")
@@ -370,6 +413,7 @@ def create_app(
         await require_trip(user, trip_id)
         config = config_for(user, trip_id)
         async with locks.setdefault(user + ":" + trip_id, asyncio.Lock()):
+            await require_trip(user, trip_id)
             snapshot = await app.state.graph.aget_state(config)
             state = snapshot.values
             try:

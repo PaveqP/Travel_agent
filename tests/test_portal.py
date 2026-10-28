@@ -171,6 +171,31 @@ class PortalPostgresTests(unittest.TestCase):
         self.assertEqual(self.client.get("/api/account").status_code, 401)
         self.assertEqual(self.client.post("/api/auth/login", json=bad).status_code, 401)
 
+    def test_delete_trip_removes_saved_state_and_telegram_pointer_across_restart(self):
+        trip_id, path, state = self.plan()
+        other = self.client.post("/trips").json()["trip_id"]
+        cookies = dict(self.client.cookies)
+        accounts = self.client.app.state.accounts
+        telegram_id = uuid4().int % 10**12 + 1
+        token = self.client.post("/api/telegram/link").json()["url"].split("link_")[1]
+        self.client.portal.call(accounts.telegram_owner, telegram_id, "Аня", token)
+        async def point_to_trip():
+            await accounts.bot_state(telegram_id, trip_id, write=True)
+        self.client.portal.call(point_to_trip)
+        self.assertEqual(self.client.delete(path, headers={"Origin": "https://attacker.example"}).status_code, 403)
+        with TestClient(create_app(portal_database_url=self.dsn, autonomous=False)) as stranger:
+            stranger.post("/api/auth/register", json={**self.credentials, "email": f"{uuid4()}@example.org"})
+            self.assertEqual(stranger.delete(path).status_code, 404)
+            stranger.request("DELETE", "/api/account", json={"confirmation": "УДАЛИТЬ"})
+        self.assertEqual(self.client.delete(path).status_code, 204)
+        self.assertEqual(self.client.portal.call(accounts.bot_state, telegram_id), (None, None))
+        with TestClient(create_app(portal_database_url=self.dsn, autonomous=False)) as restored:
+            restored.cookies.update(cookies)
+            self.assertEqual(restored.get(path).status_code, 404)
+            self.assertEqual([trip["trip_id"] for trip in restored.get("/trips").json()], [other])
+            self.assertEqual(restored.get("/trips/" + other).status_code, 200)
+        self.client.request("DELETE", "/api/account", json={"confirmation": "УДАЛИТЬ"})
+
     def test_full_trip_back_booking_pdf_progress_and_support(self):
         trip_id, path, state = self.plan()
         before_transport = state["selected_transport"]

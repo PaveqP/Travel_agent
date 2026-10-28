@@ -50,6 +50,49 @@ export const safeUrl = (value) => {
     return null;
   }
 };
+export function messageLinks(text) {
+  const parts = [];
+  const pattern = /\[([^\]\n]+)\]\((https?:\/\/(?:[^\s()]|\([^()\s]*\))+)\)|https?:\/\/[^\s<>\[\]]+/g;
+  let cursor = 0;
+  for (const match of text.matchAll(pattern)) {
+    if (match.index > cursor) parts.push({ text: text.slice(cursor, match.index) });
+    let url = match[2] || match[0].replace(/[.,!?;:]+$/, "");
+    if (!match[2]) {
+      while (url.endsWith(")") && (url.match(/\)/g) || []).length > (url.match(/\(/g) || []).length)
+        url = url.slice(0, -1);
+    }
+    const href = safeUrl(url);
+    const length = match[2] ? match[0].length : url.length;
+    parts.push({ text: href ? match[1] || url : match[0].slice(0, length), href });
+    cursor = match.index + length;
+  }
+  if (cursor < text.length) parts.push({ text: text.slice(cursor) });
+  return parts;
+}
+
+export function transportRoutes(candidate = {}) {
+  const fallback = [
+    {
+      origin: candidate.origin,
+      destination: candidate.destination,
+      departure_at: candidate.departure_at,
+      arrival_at: candidate.arrival_at,
+      start: candidate.start,
+      duration_minutes: candidate.duration_minutes,
+      transfers: candidate.transfers,
+    },
+    {
+      origin: candidate.destination,
+      destination: candidate.origin,
+      departure_at: candidate.return_departure_at,
+      arrival_at: candidate.return_arrival_at,
+      start: candidate.end,
+    },
+  ];
+  return candidate.legs?.length >= 2 ? candidate.legs
+    : candidate.legs?.length === 1 ? [candidate.legs[0], fallback[1]] : fallback;
+}
+
 export function currentOption(state) {
   return (
     state?.options?.find((o) => o.id === state.selected) || state?.options?.[0]

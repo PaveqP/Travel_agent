@@ -57,6 +57,36 @@ def public_url(url: str) -> bool:
         return True
 
 
+def hotel_amenities(hotel: dict[str, Any]) -> list[str]:
+    labels: list[str] = []
+
+    def collect(items: object) -> None:
+        if not isinstance(items, list):
+            return
+        for item in items:
+            if isinstance(item, str) and item.strip():
+                labels.append(item.strip())
+            elif isinstance(item, dict):
+                if item.get("available") is False or item.get("included") is False:
+                    continue
+                nested = item.get("amenities", item.get("items"))
+                if isinstance(nested, list):
+                    collect(nested)
+                else:
+                    label = item.get("name") or item.get("label") or item.get("text")
+                    if isinstance(label, str) and label.strip():
+                        labels.append(label.strip())
+
+    collect(hotel.get("amenities"))
+    collect(hotel.get("amenity_groups"))
+    return list(dict.fromkeys(labels))[:60]
+
+
+def hotel_photos(hotel: dict[str, Any]) -> list[str]:
+    return list(dict.fromkeys(url for url in (hotel.get("photos") or [])
+                              if isinstance(url, str) and public_url(url)))[:10]
+
+
 def normalize(
     provider: str,
     method: str,
@@ -101,6 +131,8 @@ def normalize(
                     name=row["name"],
                     stars=row.get("stars"), rating=row.get("rating"),
                     review_count=row.get("review_count"), address=row.get("address"),
+                    amenities=hotel_amenities(row),
+                    photos=hotel_photos(row),
                     description='; '.join(value for value in (
                         f"Звёзды: {row['stars']}" if row.get('stars') else '',
                         f"Оценка Туту: {row['rating']}/10" if row.get('rating') is not None else '',
@@ -163,6 +195,15 @@ def normalize(
                     duration_minutes=legs[0].get("duration_min"),
                     transfers=len(legs[0]["segments"]) - 1 if legs[0].get("segments") else None,
                     return_departure_at=returning,
+                    return_arrival_at=row.get("return_arrival_at"),
+                    legs=[{
+                        "mode": "avia", "origin": leg["from"], "destination": leg["to"],
+                        "departure_at": leg["departure_at"], "arrival_at": leg["arrival_at"],
+                        "duration_minutes": leg.get("duration_min"),
+                        "transfers": len(leg["segments"]) - 1 if leg.get("segments") else None,
+                        "carriers": list(dict.fromkeys(s["carrier"] for s in leg.get("segments", []) if s.get("carrier")))[:10],
+                        "flight_numbers": [s["voyage_no"] for s in leg.get("segments", []) if s.get("voyage_no")][:10],
+                    } for leg in legs if all(leg.get(k) for k in ("from", "to", "departure_at", "arrival_at"))],
                     price=Money(**row["price"], basis="party"),
                     url=row.get("search_results_url") or "https://www.tutu.ru/avia/",
                     description="" if row.get("search_results_url") else "Поставщик не вернул ссылку на конкретный тариф; ссылка ведёт в общий поиск авиабилетов Туту.",
@@ -306,7 +347,8 @@ def build_tools(
     responses: dict[str, dict] = {}
     flight_details: dict[str, dict] = {}
 
-    async def execute(name: str, provider: str, operation, method: str = "", query_trip: TripConstraints | None = None) -> dict:
+    async def execute(name: str, provider: str, operation, method: str = "", query_trip: TripConstraints | None = None,
+                      hotel_ref: tuple[str, str, str] | None = None) -> dict:
         if name not in ALLOWED[role]:
             return {"status": "forbidden"}
         if counts["tools"] >= (6 if autonomous else 8):
@@ -382,6 +424,17 @@ def build_tools(
                 rows = data.get('offers' if provider == 'tutu' else 'segments', [])
                 return {'status': 'ok' if rows else 'empty', 'context': data,
                         'warning': 'Schedule context only; not a validated round-trip quote'}
+            if provider == 'tutu' and method == 'get_offer_details' and role == 'stays':
+                hotel = data.get('hotel', {})
+                hotel_id = str(hotel.get('hotel_id') or hotel.get('id') or (hotel_ref[0] if hotel_ref else ''))
+                if hotel_ref and hotel_id != hotel_ref[0]:
+                    raise ValueError('Hotel details ID mismatch')
+                for ident, candidate in evidence.items():
+                    if candidate.role == 'stays' and hotel_ref == (candidate.provider_id or candidate.id.removeprefix('hotel:'), str(candidate.start), str(candidate.end)):
+                        evidence[ident] = candidate.model_copy(update={
+                            'amenities': hotel_amenities(hotel) or candidate.amenities,
+                            'photos': hotel_photos(hotel) or candidate.photos,
+                        })
             if provider == 'tutu' and method == 'get_offer_details' and web_evidence is not None:
                 hotel = data.get('hotel', {})
                 details = {'hotel': {k: hotel[k] for k in ('name', 'description', 'stars', 'rating', 'address', 'location', 'amenities', 'amenity_groups', 'review_summary', 'policies') if k in hotel},
@@ -474,6 +527,7 @@ def build_tools(
             lambda: runtime_call(role, provider, method, args, env, frozenset(owned)),
             method,
             query_trip,
+            (str(args['hotel_id']), args['check_in'], args['check_out']) if role == 'stays' and method == 'get_offer_details' else None,
         )
         responses[key] = result
         return result

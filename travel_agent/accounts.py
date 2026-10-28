@@ -165,6 +165,11 @@ class Accounts:
             rows = await cursor.fetchall()
         return [{"trip_id": r[0], "created_at": r[1], "updated_at": r[2], "state": json.loads(r[3]), "progress": json.loads(r[4])} for r in rows]
 
+    async def delete_trip(self, owner: str, trip_id: str) -> None:
+        async with self.lock, self.pool.connection() as db, db.transaction():
+            await db.execute("DELETE FROM telegram_state WHERE trip_id=%s AND telegram_id=(SELECT telegram_id FROM accounts WHERE id=%s)", (trip_id, owner))
+            await db.execute("DELETE FROM portal_trips WHERE owner=%s AND id=%s", (owner, trip_id))
+
     async def progress(self, owner: str, trip_id: str, progress: dict[str, bool]) -> None:
         async with self.lock, self.pool.connection() as db, db.transaction():
             await db.execute("UPDATE portal_trips SET progress=%s WHERE owner=%s AND id=%s", (json.dumps(progress), owner, trip_id))

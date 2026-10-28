@@ -175,6 +175,10 @@ class TransportLeg(BaseModel):
     destination: str
     departure_at: datetime
     arrival_at: datetime
+    duration_minutes: int | None = Field(default=None, ge=1)
+    transfers: int | None = Field(default=None, ge=0)
+    carriers: list[str] = Field(default_factory=list, max_length=10)
+    flight_numbers: list[str] = Field(default_factory=list, max_length=10)
 
 
 class ProposedDay(BaseModel):
@@ -242,6 +246,8 @@ class Candidate(BaseModel):
     rating: Decimal | None = Field(default=None, ge=0, le=10)
     review_count: int | None = Field(default=None, ge=0)
     address: str | None = Field(default=None, max_length=1000)
+    amenities: list[str] = Field(default_factory=list, max_length=60)
+    photos: list[str] = Field(default_factory=list, max_length=10)
     coordinates: Coordinates | None = None
     area: str | None = None
     start: date | None = Field(default=None, description="Явно указанная дата отправления YYYY-MM-DD")
@@ -254,6 +260,7 @@ class Candidate(BaseModel):
     duration_minutes: int | None = Field(default=None, ge=1)
     transfers: int | None = Field(default=None, ge=0)
     return_departure_at: datetime | None = None
+    return_arrival_at: datetime | None = None
     url: str | None = None
     description: str = Field(default="", max_length=1000)
     transport_mode: Literal['avia', 'rail'] = 'avia'

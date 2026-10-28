@@ -85,7 +85,7 @@ def mount_portal(app: FastAPI, owner, require_trip, config_for, view, sync_trip,
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "no-referrer"
         response.headers["X-Frame-Options"] = "DENY"
-        response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
         if not request.url.path.startswith("/assets/"):
             response.headers["Cache-Control"] = "no-store"
         return response
@@ -165,6 +165,7 @@ def mount_portal(app: FastAPI, owner, require_trip, config_for, view, sync_trip,
         await require_trip(user, trip_id)
         config = config_for(user, trip_id)
         async with locks.setdefault(user + ":" + trip_id, asyncio.Lock()):
+            await require_trip(user, trip_id)
             state = (await app.state.graph.aget_state(config)).values
             if state.get('autonomous'):
                 raise HTTPException(409, 'Измените пожелания в чате: обновятся только зависимые компоненты поездки.')

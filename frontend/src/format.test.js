@@ -9,7 +9,36 @@ import {
   tripMapPoints,
   canCheckout,
   feedbackText,
+  messageLinks,
+  transportRoutes,
 } from "./format.js";
+
+test("chat links preserve labels, punctuation, query strings and safe protocols", () => {
+  const parts = messageLinks("См. [отель](https://hotel.tutu.ru/details?id=1&adults=2) и https://example.org/view_(sea). Потом https://tutu.ru.");
+  assert.deepEqual(parts.filter((part) => part.href), [
+    { text: "отель", href: "https://hotel.tutu.ru/details?id=1&adults=2" },
+    { text: "https://example.org/view_(sea)", href: "https://example.org/view_(sea)" },
+    { text: "https://tutu.ru", href: "https://tutu.ru/" },
+  ]);
+  assert.equal(parts.at(-1).text, ".");
+  assert.equal(messageLinks("[клик](javascript:alert(1)) <script>код</script>").some((part) => part.href), false);
+  assert.equal(messageLinks("https://secret:password@example.org").some((part) => part.href), false);
+  assert.equal(messageLinks("[Первый](https://one.example) [Второй](https://two.example)").filter((part) => part.href).length, 2);
+});
+
+test("return tickets use their own airports, carrier and arrival instead of outbound details", () => {
+  const outbound = { origin: "SVO", destination: "AER", departure_at: "2026-11-12T11:30:00+03:00", arrival_at: "2026-11-12T15:20:00+03:00" };
+  const returning = { origin: "AER", destination: "VKO", departure_at: "2026-11-16T15:10:00+03:00", arrival_at: "2026-11-16T19:00:00+03:00", carriers: ["Utair"], flight_numbers: ["UT-268"] };
+  assert.deepEqual(transportRoutes({ legs: [outbound, returning] }), [outbound, returning]);
+  const legacy = transportRoutes({ origin: "Москва", destination: "Сочи", duration_minutes: 230, transfers: 0, return_departure_at: returning.departure_at, end: "2026-11-16" });
+  assert.equal(legacy[1].origin, "Сочи");
+  assert.equal(legacy[1].destination, "Москва");
+  assert.equal(legacy[1].departure_at, returning.departure_at);
+  assert.equal(legacy[1].arrival_at, undefined);
+  assert.equal(legacy[1].duration_minutes, undefined);
+  assert.equal(legacy[1].transfers, undefined);
+  assert.equal(transportRoutes({ legs: [outbound], return_departure_at: returning.departure_at })[1].departure_at, returning.departure_at);
+});
 
 test("unknown costs are distinct from zero", () => {
   assert.equal(money(null), "Уточняется");
