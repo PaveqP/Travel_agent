@@ -30,6 +30,8 @@ export const date = (value) =>
       }).format(new Date(value.slice(0, 10) + "T12:00:00"))
     : "Даты уточняются";
 export const time = (value) => (value ? value.slice(11, 16) : "—:—");
+export const pendingText = (messages, text) =>
+  messages.at(-1)?.role === "user" && messages.at(-1)?.text === text ? "" : text;
 export const basis = (value) =>
   ({
     party: "за всех",
@@ -244,6 +246,7 @@ export function feedbackText(feedback) {
       arrival_stay_mismatch:
         "Нужно согласовать даты отеля с прибытием и выездом.",
       no_day_plan: "Программа по дням пока не подтверждена.",
+      program_update_incomplete: "Прежняя программа сохранена, но последнее изменение пока не удалось применить.",
       invalid_day_evidence: "Часть мест в программе требует проверки.",
       empty_program: "Пока не найдены подходящие занятия на дни поездки.",
       mountain_days_mismatch: "Нужно уточнить число дней в горах.",

@@ -240,6 +240,22 @@ def stay_cards(state: dict) -> list[dict]:
     return [offer_card(c, trip).model_dump(mode='json') for c in candidates[:trip.option_limit]]
 
 
+def component_cards(state: dict, role: str) -> list[dict]:
+    if role == 'stays':
+        return stay_cards(state)
+    from travel_agent.engine import offer_card, transport_matches
+    from travel_agent.schemas import Candidate, TripConstraints
+
+    trip = TripConstraints.model_validate(state.get('constraints', {}))
+    now = datetime.now(timezone.utc)
+    row = state.get('results', {}).get(role, {})
+    priority = {ident: i for i, ident in enumerate(row.get('selected_ids', []))}
+    candidates = [Candidate.model_validate(c) for c in row.get('candidates', [])]
+    candidates = [c for c in candidates if c.role == role and transport_matches(c, trip, now)]
+    candidates.sort(key=lambda c: (trip.baggage == 'required' and c.baggage_included is not True, priority.get(c.id, 100), c.price.amount))
+    return [offer_card(c, trip).model_dump(mode='json') for c in candidates[:trip.option_limit]]
+
+
 def render_stays(state: dict, response: UserResponse | None = None) -> str:
     cards = stay_cards(state)
     if not cards:

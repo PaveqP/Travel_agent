@@ -205,7 +205,7 @@ class RepairPlan(BaseModel):
 
 class TurnPlan(BaseModel):
     model_config = ConfigDict(extra='forbid')
-    focus: Literal['trip', 'stays'] | None = None
+    focus: Literal['trip', 'transport', 'stays'] | None = None
     action: Literal['plan', 'chat', 'clarify', 'answer', 'research', 'select', 'checkout', 'remember', 'unsupported']
     patch: TripDelta = Field(default_factory=TripDelta)
     tasks: list[AgentTask] = Field(default_factory=list, max_length=3)
@@ -272,6 +272,18 @@ class Candidate(BaseModel):
     variant_id: str | None = None
     conditions: dict[str, JsonValue] = Field(default_factory=dict)
     provider_details: dict[str, JsonValue] = Field(default_factory=dict)
+
+    def summary(self) -> dict[str, JsonValue]:
+        data = self.model_dump(mode='json', exclude_none=True, include={
+            'id', 'role', 'name', 'price', 'area', 'coordinates', 'start', 'end', 'adults',
+            'origin', 'destination', 'arrival_at', 'departure_at', 'return_departure_at',
+            'duration_minutes', 'transfers', 'transport_mode', 'stars', 'rating', 'review_count', 'address', 'amenities',
+            'baggage_included', 'sports_equipment_included', 'variant_id', 'conditions', 'description',
+        })
+        data['description'] = self.description[:240]
+        data['amenities'] = self.amenities[:12]
+        data['source'] = self.source.model_dump(mode='json', include={'provider', 'evidence', 'expires_at'})
+        return data
 
 
 class SpecialistSelection(BaseModel):

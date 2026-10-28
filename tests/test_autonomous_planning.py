@@ -59,7 +59,8 @@ class PlanningTests(unittest.IsolatedAsyncioTestCase):
         state = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json'), 'messages': [HumanMessage(content='Поехали')]}, {'configurable': {'thread_id': 'parallel'}})
         self.assertEqual(started, set(ROLES))
         self.assertEqual(state['status'], 'ready')
-        self.assertEqual(len(state['options']), 3)
+        self.assertEqual(len(state['options']), 5)
+        self.assertEqual(len({o['id'] for o in state['options']}), 5)
         self.assertEqual(state['feedback'], [])
         self.assertTrue(all(o['transport'] and o['stay'] for o in state['options']))
         self.assertTrue(state['options'][0]['days'][1]['candidates'])
@@ -417,3 +418,106 @@ class PlannerContractTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual([r.await_count for r in runners.values()], [1, 1, 1])
         self.assertTrue(first['options'])
         self.assertIn(first['selected'], {o['id'] for o in first['options']})
+
+
+class SessionReliabilityTests(unittest.IsolatedAsyncioTestCase):
+    def graph(self, planner, runners=None):
+        runners = runners or {role: AsyncMock(side_effect=lambda trip, revision, goal, previous, role=role: result(role, trip, revision)) for role in ROLES}
+        return build_graph(planner, runners, InMemorySaver(), autonomous=True), runners
+
+    async def test_month_without_duration_clarifies_before_any_search(self):
+        planner = AsyncMock(side_effect=[
+            TurnPlan(action='plan', patch=TripDelta(travel_month='2026-12', adults=2, purpose='Отдых')),
+            TurnPlan(action='plan', patch=TripDelta(origin='Санкт-Петербург')),
+        ])
+        graph, runners = self.graph(planner)
+        config = {'configurable': {'thread_id': 'unknown-duration'}}
+        first = await graph.ainvoke({'messages': [HumanMessage(content='Хочу отдохнуть в декабре вдвоём')]}, config)
+        self.assertEqual(first['answer'], 'Из какого города поедете?')
+        second = await graph.ainvoke({'messages': [HumanMessage(content='Санкт-Петербург')]}, config)
+        self.assertEqual(second['status'], 'needs_input')
+        self.assertIn('длительность', second['answer'])
+        self.assertIsNone(second['constraints']['start'])
+        self.assertIsNone(second['constraints']['end'])
+        self.assertEqual(second['constraints']['purpose'], 'Отдых')
+        for runner in runners.values():
+            runner.assert_not_awaited()
+
+    async def test_month_with_duration_keeps_flexible_constraints_after_composition(self):
+        planner = AsyncMock(return_value=TurnPlan(action='plan', tasks=[task(r) for r in ROLES]))
+        runners = {role: AsyncMock(return_value=result(role, TRIP, 1)) for role in ROLES}
+        graph, _ = self.graph(planner, runners)
+        trip = TRIP.model_copy(update={'start': None, 'end': None, 'travel_month': '2026-11', 'nights': 4})
+        state = await graph.ainvoke({'constraints': trip.model_dump(mode='json')}, {'configurable': {'thread_id': 'flexible-month'}})
+        self.assertTrue(state['options'])
+        self.assertIsNone(state['constraints']['start'])
+        self.assertIsNone(state['constraints']['end'])
+        self.assertEqual(state['constraints']['travel_month'], '2026-11')
+        booking = simulate_purchase(state, BookingRequest(option_id=state['selected'], revision=state['revision'],
+            confirm=True, idempotency_key='month-simulation'))
+        self.assertTrue(booking['simulated'])
+        self.assertIsNone(state['constraints']['start'])
+
+    async def test_program_repair_keeps_all_package_alternatives(self):
+        attempts = 0
+        async def program(trip, revision, goal, previous):
+            nonlocal attempts
+            attempts += 1
+            row = result('experience', trip, revision)
+            if attempts == 1:
+                row.days = []
+            return row
+        runners = {r: AsyncMock(side_effect=lambda trip, revision, goal, previous, role=r: result(role, trip, revision)) for r in ROLES}
+        runners['experience'].side_effect = program
+        graph, _ = self.graph(AsyncMock(side_effect=[TurnPlan(action='plan'), TurnPlan(action='plan', tasks=[task('experience')])]), runners)
+        state = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json')}, {'configurable': {'thread_id': 'keep-alternatives'}})
+        self.assertEqual(len(state['options']), 5)
+        self.assertGreater(len({o['stay']['id'] for o in state['options']}), 1)
+        self.assertTrue(all(any(d['candidates'] for d in o['days']) for o in state['options']))
+        self.assertEqual([runners[r].await_count for r in ROLES], [1, 1, 2])
+
+    async def test_hotel_repair_covers_both_transport_arrival_windows(self):
+        transport = result('transport', TRIP, 1)
+        rail = transport.candidates[0].model_copy(update={'id': 'rail:fixture', 'transport_mode': 'rail', 'destination': 'Сочи',
+            'arrival_at': transport.candidates[0].arrival_at + timedelta(days=1)})
+        transport.candidates.append(rail)
+        stays = result('stays', TRIP, 1)
+        rail_hotel = stays.candidates[0].model_copy(update={'id': 'hotel:rail-date', 'start': TRIP.start + timedelta(days=1)})
+        rounds = 0
+        async def lodging(trip, revision, goal, previous):
+            nonlocal rounds
+            rounds += 1
+            if rounds == 1:
+                return SpecialistResult(role='stays', revision=revision, status='ok', candidates=[rail_hotel])
+            context = json.loads(goal.split('\n', 1)[1])
+            self.assertEqual({p['check_in'] for p in context['transport_stays']}, {str(TRIP.start), str(TRIP.start + timedelta(days=1))})
+            self.assertEqual(trip.stay_start, TRIP.start)
+            return stays.model_copy(update={'candidates': [*stays.candidates, rail_hotel]})
+        runners = {'transport': AsyncMock(return_value=transport), 'stays': AsyncMock(side_effect=lodging),
+                   'experience': AsyncMock(return_value=result('experience', TRIP, 1))}
+        graph, _ = self.graph(AsyncMock(side_effect=[TurnPlan(action='plan'), TurnPlan(action='plan')]), runners)
+        state = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json')}, {'configurable': {'thread_id': 'arrival-windows'}})
+        self.assertEqual({o['transport']['transport_mode'] for o in state['options']}, {'avia', 'rail'})
+        self.assertEqual(rounds, 2)
+        self.assertEqual(state['feedback'], [])
+
+    async def test_transport_cards_are_selectable_without_a_complete_package(self):
+        planner = AsyncMock(return_value=TurnPlan(action='plan', focus='transport', tasks=[task('transport')]))
+        graph, runners = self.graph(planner)
+        config = {'configurable': {'thread_id': 'transport-cards'}}
+        state = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json')}, config)
+        self.assertTrue(state['cards'])
+        self.assertTrue(all(c['selectable'] for c in state['cards']))
+        ident = state['cards'][0]['id']
+        selected = await graph.ainvoke({'requested_choice': ident}, config)
+        self.assertEqual(selected['selected_transport'], ident)
+        self.assertEqual(selected['constraints']['check_in'], str(TRIP.start))
+        runners['stays'].assert_not_awaited()
+        runners['experience'].assert_not_awaited()
+
+    def test_same_hotel_still_offers_distinct_flights(self):
+        rows = {role: result(role, TRIP, 1).model_dump(mode='json') for role in ROLES}
+        rows['stays']['candidates'] = rows['stays']['candidates'][:1]
+        options, _ = compose_packages(TRIP, rows, 1)
+        self.assertGreater(len({o.transport.id for o in options}), 1)
+        self.assertEqual(len({o.stay.id for o in options}), 1)

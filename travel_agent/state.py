@@ -46,3 +46,4 @@ class TripState(TypedDict, total=False):
     feedback: list[dict]
     route: str
     repair_decision: bool
+    preserved_roles: list[str]

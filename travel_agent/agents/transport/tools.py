@@ -54,19 +54,22 @@ def build_tools(
             return {"status": "empty", "candidates": []}
         semaphore = asyncio.Semaphore(2)
         searched = []
+        found: dict[str, dict] = {}
 
         async def query(start: date, end: date) -> dict:
             async with semaphore:
                 searched.append({"start": str(start), "end": str(end)})
                 try:
                     async with asyncio.timeout(63):
-                        return await mcp("search_flights", "tutu", "search_avia", {
+                        result = await mcp("search_flights", "tutu", "search_avia", {
                             "origin": trip.origin, "destination": "AER", "departure_date": str(start),
                             "return_date": str(end), "adults": trip.adults, "page_size": 10,
                             "sort": sort, "service_class": service_class, "page": page,
                             "direct_only": trip.direct_only or bool(direct_only),
                             **({'carriers': carriers} if carriers is not None else {}),
                             **({'flight_numbers': flight_numbers} if flight_numbers is not None else {})})
+                        found.update({c['id']: c for c in result.get('candidates', [])})
+                        return result
                 except TimeoutError:
                     return {"status": "timeout"}
 
@@ -79,8 +82,8 @@ def build_tools(
                     await asyncio.gather(*(query(start, end) for start, end in pairs[1:]))
         except TimeoutError:
             first = {"status": "timeout"}
-        return {"status": ("partial" if first["status"] == "timeout" else "ok") if evidence else first["status"],
-                "candidates": [c.model_dump(mode="json", exclude={"provider_details"}) for c in evidence.values()],
+        return {"status": ("partial" if first["status"] == "timeout" else "ok") if found else first["status"],
+                "candidates": list(found.values())[:20], "total_candidates": len(found),
                 "searched_dates": searched, "exhaustive": False, "search_limit": 6}
 
     @tool
@@ -115,7 +118,7 @@ def build_tools(
         except (KeyError, TypeError, ValueError):
             return {'status': 'schema_error'}
         evidence.update({c.id: c for c in rows})
-        return {'status': 'ok' if rows else 'empty', 'candidates': [c.model_dump(mode='json') for c in rows]}
+        return {'status': 'ok' if rows else 'empty', 'candidates': [c.summary() for c in rows]}
 
     @tool
     async def transport_details(source_id: str) -> dict:

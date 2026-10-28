@@ -414,29 +414,8 @@ def build_tools(
             if candidates:
                 return {
                     "status": "ok",
-                    "candidates": [
-                        c.model_dump(
-                            mode="json",
-                            include={
-                                "id",
-                                "name", "transport_mode", "baggage_included", "sports_equipment_included",
-                                "variant_id", "conditions",
-                                "stars", "rating", "review_count", "address", "description", "amenities",
-                                "price",
-                                "area",
-                                "start",
-                                "end",
-                                "arrival_at",
-                                "departure_at",
-                                "duration_minutes",
-                                "transfers",
-                                "return_departure_at",
-                                "url",
-                                "source",
-                            },
-                        )
-                        for c in candidates
-                    ],
+                    "candidates": [c.summary() for c in candidates[:20]],
+                    "total_candidates": len(candidates),
                 }
             if method in (
                 "search_avia",

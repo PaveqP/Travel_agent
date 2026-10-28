@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
-    "test": "node --test src/format.test.js"
+    "test": "node --test src/format.test.js",
+    "test:browser": "node --test tests/sessions.test.mjs"
   },
   "dependencies": {
     "react": "19.3.1",
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "vite": "6.4.5",
-    "@vitejs/plugin-react": "4.7.0"
+    "@vitejs/plugin-react": "4.7.0",
+    "playwright": "1.63.0"
   }
 }

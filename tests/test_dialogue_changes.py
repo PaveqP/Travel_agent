@@ -341,3 +341,62 @@ class PortalAnswerTests(unittest.TestCase):
             response_model.with_structured_output.return_value.ainvoke.assert_awaited_once()
             self.assertEqual(sum(r.await_count for r in runners.values()), 0)
             client.request('DELETE', '/api/account', json={'confirmation': 'УДАЛИТЬ'})
+
+
+class ContextBudgetTests(unittest.IsolatedAsyncioTestCase):
+    async def test_saved_fares_are_compact_and_bounded_without_losing_evidence(self):
+        from travel_agent.schemas import Candidate
+        from langchain_core.callbacks import AsyncCallbackHandler
+        base = result('transport', TRIP, 1).candidates[0]
+        previous = [base.model_copy(update={'id': f'avia:saved-{i}', 'provider_details': {'large': 'x' * 10000},
+                    'url': 'https://example.org/' + 'a' * 6000}) for i in range(120)]
+        seen = []
+        class Capture(AsyncCallbackHandler):
+            async def on_chat_model_start(self, serialized, messages, **kwargs):
+                seen.extend(m for batch in messages for m in batch if isinstance(m, HumanMessage))
+        model = ToolModel(responses=[call('SpecialistSelection', {'source_ids': [previous[0].id]})], callbacks=[Capture()])
+        async with httpx.AsyncClient() as client:
+            with patch('travel_agent.tools.runtime_call', new=AsyncMock()) as network:
+                row = await run_transport(TRIP, 2, 'Сравни найденное', previous, model=model, client=client, env={},
+                                          prompt=read_prompts()['transport'], autonomous=True)
+        network.assert_not_awaited()
+        self.assertEqual(len(row.candidates), 120)
+        context = json.loads(seen[0].content)
+        self.assertEqual(len(context['observations'][0]['result']['candidates']), 24)
+        self.assertLess(len(seen[0].content), 40000)
+        self.assertNotIn('provider_details', seen[0].content)
+        self.assertNotIn('https://example.org', seen[0].content)
+        self.assertTrue(all(isinstance(c, Candidate) for c in row.candidates))
+
+    async def test_flight_search_returns_only_current_query_not_accumulated_fares(self):
+        base = result('transport', TRIP, 1).candidates[0]
+        evidence = {f'avia:old-{i}': base.model_copy(update={'id': f'avia:old-{i}'}) for i in range(120)}
+        async with httpx.AsyncClient() as client:
+            with patch('travel_agent.tools.runtime_call', new=AsyncMock(return_value={'status': 'ok', 'data': FIXTURES['search_avia']})):
+                tools = {t.name: t for t in build_tools('transport', TRIP, 2, client, {}, evidence, [], {'tools': 0}, autonomous=True)}
+                response = await tools['search_flights'].ainvoke({})
+        self.assertTrue(response['candidates'])
+        self.assertTrue(all(not c['id'].startswith('avia:old-') for c in response['candidates']))
+        self.assertGreater(len(evidence), 120)
+        self.assertLess(len(json.dumps(response, ensure_ascii=False)), 30000)
+
+    async def test_tool_limit_still_finalizes_days_from_observed_places(self):
+        from travel_agent.agents.experience.agent import run
+        from travel_agent.schemas import SpecialistSelection
+        place = result('experience', TRIP, 1).candidates[0]
+        async def limited(state, config):
+            raise TimeoutError()
+        model = Mock()
+        finalizer = AsyncMock(return_value=SpecialistSelection(source_ids=[place.id],
+            days=[ProposedDay(date=TRIP.start + timedelta(days=1), source_ids=[place.id])]))
+        model.with_structured_output.return_value.ainvoke = finalizer
+        with patch('travel_agent.agents.react.create_agent', return_value=Mock(ainvoke=limited)):
+            async with httpx.AsyncClient() as client:
+                row = await run(TRIP, 2, 'Собери программу', [place], model=model, client=client, env={},
+                                prompt=read_prompts()['experience'], autonomous=True)
+        finalizer.assert_awaited_once()
+        context = json.loads(finalizer.await_args.args[0][-1].content)
+        self.assertEqual(context['phase'], 'finalize')
+        self.assertEqual(row.days[0].source_ids, [place.id])
+        self.assertIn('agent_limit', row.warnings)
+        self.assertEqual(row.tool_calls, 0)

@@ -2,6 +2,7 @@ import asyncio
 import hashlib
 import hmac
 import json
+import logging
 
 import aiosqlite
 from contextlib import AsyncExitStack, asynccontextmanager
@@ -54,6 +55,10 @@ def create_app(
 
     @asynccontextmanager
     async def lifespan(app: FastAPI):
+        logger = logging.getLogger('travel_agent')
+        logger.setLevel(logging.INFO)
+        if not logger.handlers and not logging.getLogger().handlers:
+            logger.addHandler(logging.StreamHandler())
         async with AsyncExitStack() as stack:
             app.state.profile_db = None
             app.state.accounts = None
@@ -111,7 +116,7 @@ def create_app(
                     app.state.persistent = False
                 prompts = read_prompts()
                 models = {
-                    role: create_model(config, client, max_tokens=2800, timeout=20)
+                    role: create_model(config, client, max_tokens=4096, timeout=45, role=role)
                     for role in ("transport", "stays", "experience")
                 }
                 runners = {
@@ -130,13 +135,13 @@ def create_app(
                         ("experience", run_experience),
                     )
                 }
-                supervisor_model = create_model(config, client, max_tokens=2600, timeout=20)
+                supervisor_model = create_model(config, client, max_tokens=2600, timeout=35, role='supervisor')
                 app.state.graph = build_graph(
                     (llm_planner(supervisor_model, prompts["planner"]) if autonomous else llm_decider(supervisor_model, prompts["supervisor"])),
                     runners,
                     saver,
                     present=llm_presenter(
-                        create_model(config, client, max_tokens=3000, timeout=20),
+                        create_model(config, client, max_tokens=3000, timeout=35, role='presenter'),
                         prompts["response"],
                     ),
                     research=partial(
@@ -354,7 +359,7 @@ def create_app(
             run_id = str(uuid4())
             run_progress[progress_key] = {'run_id': run_id, 'status': 'running', 'sequence': 1, 'label': 'Запрос принят, планирую работу', 'previews': {}}
             try:
-                async with asyncio.timeout(240 if autonomous else 420):
+                async with asyncio.timeout(360 if autonomous else 420):
                     if autonomous:
                         async for kind, event in app.state.graph.astream(initial, config, stream_mode=['custom', 'updates']):
                             if kind == 'custom' and isinstance(event, dict) and event.get('label'):

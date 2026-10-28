@@ -279,3 +279,11 @@ test("map drops invalid coordinates and recovers a later valid copy of a place",
   assert.equal(points[0].id, "a");
   assert.equal(points[0].approximate, false);
 });
+
+test("reopening a running dialogue does not repeat a persisted pending message", async () => {
+  const { pendingText } = await import("./format.js");
+  const messages = [{ role: "assistant", text: "Когда поедете?" }, { role: "user", text: "В декабре" }];
+  assert.equal(pendingText(messages, "В декабре"), "");
+  assert.equal(pendingText(messages, "На неделю"), "На неделю");
+  assert.equal(pendingText([...messages, { role: "assistant", text: "Уточните даты" }], "В декабре"), "В декабре");
+});

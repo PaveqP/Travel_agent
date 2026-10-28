@@ -57,6 +57,11 @@ def apply_delta(current: TripConstraints, delta: TripDelta) -> tuple[TripConstra
         affected.add('experience')
     if 'origin' in patch:
         affected.add('transport')
+    if patch.keys() & {'origin', 'transport_modes'}:
+        for name in ('check_in', 'check_out'):
+            if name not in patch:
+                merged[name] = None
+        revised = TripConstraints.model_validate(merged)
     if 'hotel' in patch:
         affected.add('stays')
     if 'destination' in patch:
@@ -130,6 +135,8 @@ def offer_card(c: Candidate, trip: TripConstraints, now: datetime | None = None)
         warnings.append('outside_search_window')
     if c.role == 'transport' and trip.direct_only and c.transfers != 0:
         warnings.append('direct_flight_unverified')
+    if c.role == 'transport' and trip.baggage == 'required' and c.baggage_included is not True:
+        warnings.append('required_baggage_unverified')
     if c.price and trip.party_budget:
         amount = c.price.amount * (trip.adults or 1) if c.price.basis in ('person', 'ticket') else c.price.amount
         if amount > trip.party_budget:
@@ -154,6 +161,8 @@ def offer_card(c: Candidate, trip: TripConstraints, now: datetime | None = None)
         elif c.price.basis in ('party', 'room_stay') and c.adults:
             per_person = c.price.model_copy(update={'amount': (c.price.amount / c.adults).quantize(Decimal('0.01')), 'basis': 'person'})
     selectable = transport_matches(c, trip, now) if c.role == 'transport' else stay_matches(c, trip, now) if c.role == 'stays' else False
+    if 'required_baggage_unverified' in warnings:
+        selectable = False
     return OfferCard(id=c.id, kind=c.role, title=c.name, description=details,
                      aggregator=labels.get(c.source.provider, parsed.hostname or c.source.provider), provider=c.source.provider,
                      url=url, dates=OfferDates(start=c.start, end=c.end, departure_at=c.departure_at, arrival_at=c.arrival_at, return_departure_at=c.return_departure_at),
@@ -316,6 +325,9 @@ def simulate_purchase(state: dict, request: BookingRequest) -> dict:
     if option is None or not option.transport or not option.stay:
         raise ValueError('Incomplete trip')
     trip = TripConstraints.model_validate(state['constraints'])
+    if state.get('autonomous') and transport_matches(option.transport, trip, datetime.now(timezone.utc)):
+        trip = trip.model_copy(update={'start': option.transport.start, 'end': option.transport.end,
+            'check_in': option.stay.start, 'check_out': option.stay.end})
     if trip.baggage == 'required' and option.transport.baggage_included is not True:
         raise ValueError('Required baggage is unverified')
     if trip.ski_equipment == 'own' and option.transport.sports_equipment_included is not True:
@@ -357,11 +369,18 @@ def compose_packages(trip: TripConstraints, results: dict, revision: int) -> tup
     if transport and stays and not any((s.start, s.end) == (item.arrival_at.date(), item.return_departure_at.date()) for item in transport for s in stays):
         item = transport[0]
         feedback.append(PlanFeedback(role='stays', code='arrival_stay_mismatch', detail=f'Для {item.id} проживание нужно {item.arrival_at.date()}–{item.return_departure_at.date()}. Согласуй проживание с этими датами по найденным предложениям или дополнительному поиску.'))
+    elif transport and stays:
+        missing_modes = {c.transport_mode for c in transport} - {c.transport_mode for c in transport if any((s.start, s.end) == (c.arrival_at.date(), c.return_departure_at.date()) for s in stays)}
+        windows = list(dict.fromkeys((c.arrival_at.date(), c.return_departure_at.date()) for c in transport if c.transport_mode in missing_modes))[:3]
+        if windows:
+            feedback.append(PlanFeedback(role='stays', code='arrival_stay_mismatch', detail='Найдены другие виды транспорта без совместимого отеля. Добавь проживание на даты: ' + '; '.join(f'{start}–{end}' for start, end in windows) + '. Сохрани уже совместимые предложения.'))
     experience = parsed.get('experience')
     days = experience.days if experience else []
+    if experience and 'program_update_incomplete' in experience.warnings:
+        feedback.append(PlanFeedback(role='experience', code='program_update_incomplete', detail='Сохранён прежний календарь: запрошенное изменение программы не завершено. Внеси изменение по последнему запросу, сохрани остальные дни.'))
     activities = {c.id: c for c in candidates if c.role == 'experience' and usable(c, trip, now)}
     if not days:
-        feedback.append(PlanFeedback(role='experience', code='no_day_plan', detail=f'Нужна программа в days для ВСЕГО исходного периода {trip.start or trip.date_from or trip.travel_month}–{trip.end or trip.date_to or "окно поиска"}, с source_ids найденных мест и с учётом дней дороги. Не сокращай её под один ЖД-вариант.'))
+        feedback.append(PlanFeedback(role='experience', code='no_day_plan', detail=f'Нужна программа в days на период {trip.start or trip.date_from or trip.travel_month}–{trip.end or trip.date_to or "окно поиска"}, с source_ids найденных мест и с учётом дней дороги.'))
     unknown = any(ident not in activities for day in days for ident in day.source_ids)
     if unknown or len({d.date for d in days}) != len(days):
         feedback.append(PlanFeedback(role='experience', code='invalid_day_evidence', detail='Устрани неизвестные ID и дубли дат в программе.'))
@@ -402,7 +421,7 @@ def compose_packages(trip: TripConstraints, results: dict, revision: int) -> tup
     if trip.holiday_type == 'ski' and any(ident in activities and activities[ident].area != 'Красная Поляна' for day in days for ident in day.source_ids):
         feedback.append(PlanFeedback(role='experience', code='ski_program_mismatch', detail='Цель — горнолыжная поездка. Оставь полные дни в горном кластере, не добавляй побережье без запроса пользователя.'))
     if options and trip.mountain_days is not None and all(any(w.startswith('Горных дней') for w in o.warnings) for o in options):
-        feedback.append(PlanFeedback(role='experience', code='mountain_days_mismatch', detail=f'Нужно ровно {trip.mountain_days} горных дней с различными реальными местами, с учётом дат прибытия и выезда.'))
+        feedback.append(PlanFeedback(role='experience', code='mountain_days_mismatch', detail=f'Нужно ровно {trip.mountain_days} горных дней с проверенными местами, с учётом дат прибытия и выезда.'))
     if options and all(not any(d.candidates for d in o.days) for o in options):
         if not any(f.code == 'no_day_plan' for f in feedback):
             feedback.append(PlanFeedback(role='experience', code='empty_program', detail='Программа не содержит подходящих посещений на доступные дни поездки.'))
@@ -424,4 +443,13 @@ def compose_packages(trip: TripConstraints, results: dict, revision: int) -> tup
         alternative = next((o for o in options if o.transport.transport_mode == mode), None)
         if alternative and selected and not any(o.transport.transport_mode == mode for o in selected):
             selected[-1] = alternative
+    selected_ids = {o.id for o in selected}
+    for option in options:
+        if len(selected) >= trip.option_limit:
+            break
+        if trip.baggage == 'required' and any(o.transport.baggage_included is True for o in selected) and option.transport.baggage_included is not True:
+            continue
+        if option.id not in selected_ids:
+            selected.append(option)
+            selected_ids.add(option.id)
     return selected, feedback

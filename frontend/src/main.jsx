@@ -63,6 +63,7 @@ import {
   feedbackText,
   messageLinks,
   transportRoutes,
+  pendingText,
 } from "./format";
 import "./styles.css";
 
@@ -511,7 +512,7 @@ function Sidebar({
             <X size={21} />
           </button>
         </div>
-        <button className="new-trip-button" onClick={newTrip} disabled={busy}>
+        <button className="new-trip-button" onClick={newTrip}>
           <Plus size={18} /> Новая поездка <span>↗</span>
         </button>
         <nav className="sidebar-nav">
@@ -538,50 +539,6 @@ function Sidebar({
           </button>
         </nav>
         <div className="sidebar-scroll">
-          <div className="sidebar-section-title">
-            МОИ ПЛАНЫ{" "}
-            <span>
-              {trips.length ? String(trips.length).padStart(2, "0") : ""}
-            </span>
-          </div>
-          {trips.length ? (
-            <div className="recent-trips">
-              {trips.slice(0, 5).map((trip) => (
-                <button
-                  key={trip.trip_id}
-                  className={trip.trip_id === tripId ? "active" : ""}
-                  onClick={() => navigate("plan", trip.trip_id)}
-                >
-                  <span className="recent-trip-icon">
-                    <Icon
-                      of={
-                        /Полян|Хутор/.test(trip.state.constraints?.destination)
-                          ? Mountain
-                          : Waves
-                      }
-                      size={17}
-                    />
-                  </span>
-                  <span>
-                    <strong>
-                      {trip.state.constraints?.destination || "Новая поездка"}
-                    </strong>
-                    <small>
-                      {trip.state.constraints?.start
-                        ? `${date(trip.state.constraints.start)} — ${date(trip.state.constraints.end)}`
-                        : "Детали уточняются"}{" "}
-                      · {tripStatus(trip.state)}
-                    </small>
-                  </span>
-                </button>
-              ))}
-            </div>
-          ) : (
-            <p className="sidebar-empty">
-              Здесь будут ваши поездки.
-              <br />К ним всегда можно вернуться.
-            </p>
-          )}
           <div className="sidebar-section-title">
             {state?.autonomous && !state.selected && state.options?.length
               ? "ПРЕДПРОСМОТР ПОЕЗДКИ"
@@ -691,6 +648,7 @@ function Conversation({
   );
   const lastPresentation = messages.findLastIndex((message) => message.presentation);
   const hasConversation = messages.length > 0 || pendingMessage || busy;
+  const visiblePending = pendingText(messages, pendingMessage);
   const unavailable = tripId && !state && !busy && !loading;
   useEffect(() => {
     const target = busy ? thinking.current : latest.current;
@@ -743,7 +701,6 @@ function Conversation({
                 <br className="desktop-break" /> билеты, отель и впечатления в
                 одном разговоре.
               </p>
-              <TripMap preview />
               <div className="starter-prompts">
                 {inspiration.map((item) => (
                   <button key={item.image} onClick={() => prompt(item.text)}>
@@ -807,10 +764,10 @@ function Conversation({
                   </div>
                 </div>
               ))}
-              {pendingMessage && (
+              {visiblePending && (
                 <div className="conversation-message user">
                   <div className="conversation-message-body">
-                    <ChatText text={pendingMessage} />
+                    <ChatText text={visiblePending} />
                   </div>
                 </div>
               )}
@@ -1080,6 +1037,7 @@ function AutonomousPlan({
   download,
 }) {
   const staysOnly = state.focus === "stays";
+  const componentOnly = staysOnly || state.focus === "transport";
   const options = state.options || [];
   const candidates = Object.values(state.results || {}).flatMap(
     (result) => result.candidates || [],
@@ -1097,10 +1055,10 @@ function AutonomousPlan({
     );
   return (
     <section className="agent-recommendations" aria-label="Предложения агента">
-      {(options.length > 0 || (staysOnly && state.cards?.length > 0)) && (
+      {(options.length > 0 || state.cards?.length > 0) && (
         <div className="recommendation-heading">
           <h2>
-            {staysOnly ? "Проживание под ваш запрос" : "Варианты вашей поездки"}
+            {staysOnly ? "Проживание под ваш запрос" : componentOnly ? "Варианты проезда" : "Варианты вашей поездки"}
           </h2>
           <span>{tripStatus(state)}</span>
         </div>
@@ -1116,7 +1074,7 @@ function AutonomousPlan({
           <p>Обсудите изменения с агентом в чате.</p>
         </div>
       )}
-      {staysOnly ? (
+      {componentOnly || (!options.length && state.cards?.length > 0) ? (
         <>
           <div className="choices-grid offers-grid">
             {state.choices?.map((choice, index) => (
@@ -1124,13 +1082,13 @@ function AutonomousPlan({
                 key={choice.id}
                 choice={choice}
                 index={index}
-                state={{ ...state, stage: "stays" }}
+                state={{ ...state, stage: state.cards?.find((card) => card.id === choice.id)?.kind || state.focus }}
                 choose={choose}
                 busy={busy || state.selected_stay === choice.id}
               />
             ))}
           </div>
-          {state.selected_stay && (
+          {staysOnly && state.selected_stay && (
             <p className="notice">
               Отель выбран. Попросите агента добавить билеты и программу, чтобы
               собрать поездку.
@@ -1225,6 +1183,7 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
     different_party: "Другой состав гостей",
     outside_search_window: "Вне ваших дат",
     direct_flight_unverified: "Прямой рейс не подтверждён",
+    required_baggage_unverified: "Требуемый багаж не подтверждён",
     over_budget: "Выше бюджета",
     different_area: "Другой район",
   };
@@ -1335,7 +1294,7 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
             </div>
             <button
               className="primary"
-              disabled={busy || card?.freshness === "expired"}
+              disabled={busy || card?.selectable === false || card?.freshness === "expired"}
               onClick={() => choose(choice.id)}
             >
               Выбрать
@@ -2559,7 +2518,7 @@ function App() {
   const [guides, setGuides] = useState([]);
   const [progress, setProgress] = useState(null);
   const [value, setValue] = useState("");
-  const [busy, setBusy] = useState(false);
+  const [runningTrips, setRunningTrips] = useState(() => new Set());
   const [runStatus, setRunStatus] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -2568,6 +2527,7 @@ function App() {
   const [pendingMessage, setPendingMessage] = useState(null);
   const [mobileNav, setMobileNav] = useState(false);
   const [page, tripId] = route.split("/");
+  const busy = runningTrips.has(tripId || "new");
   useEffect(() => {
     setRunStatus(null);
     if (!busy || !tripId) return;
@@ -2581,10 +2541,14 @@ function App() {
     };
     return () => source.close();
   }, [busy, tripId]);
-  const operation = useRef(false);
+  const operation = useRef(new Set());
+  const snapshotVersion = useRef(0);
+  const draftVersion = useRef(0);
   const main = useRef(null);
   const navigate = (page, id) => {
-    window.location.hash = page + (id ? "/" + id : "");
+    const next = page + (id ? "/" + id : "");
+    setRoute(next);
+    window.location.hash = next;
     setMobileNav(false);
   };
   useEffect(() => {
@@ -2644,6 +2608,7 @@ function App() {
   }, [account]);
   useEffect(() => {
     let active = true;
+    const version = ++snapshotVersion.current;
     setState(null);
     setProgress(null);
     setLoading(false);
@@ -2651,7 +2616,7 @@ function App() {
     setLoading(true);
     api(`/trips/${tripId}`)
       .then((s) => {
-        if (active) setState(s);
+        if (active && snapshotVersion.current === version) setState(s);
       })
       .catch((e) => {
         if (active) setError(e.message);
@@ -2679,47 +2644,70 @@ function App() {
     }, 8000);
     return () => clearTimeout(timeout);
   }, [error, success]);
-  async function run(fn) {
+  async function run(fn, isCurrent) {
+    const startRoute = window.location.hash;
     setError("");
     try {
       return await fn();
     } catch (e) {
+      if (isCurrent ? !isCurrent() : window.location.hash !== startRoute) return null;
       setError(
         e.message || "Не удалось связаться с сервером. Проверьте соединение.",
       );
       if (e.status === 401) setAuth(true);
-      if ([409, 504].includes(e.status) && tripId) {
+      const activeTripId = window.location.hash.slice(1).split("/")[1];
+      if ([409, 504].includes(e.status) && activeTripId) {
         try {
-          setState(await api(`/trips/${tripId}`));
+          const current = await api(`/trips/${activeTripId}`);
+          if (window.location.hash.slice(1).split("/")[1] === activeTripId) {
+            snapshotVersion.current += 1;
+            setState(current);
+          }
         } catch {}
       }
       return null;
     }
   }
   async function mutate(fn) {
-    if (operation.current) return;
-    operation.current = true;
-    setBusy(true);
-    await run(fn);
-    setBusy(false);
-    operation.current = false;
+    const key = tripId || "new";
+    if (operation.current.has(key)) return;
+    const keys = new Set([key]);
+    operation.current.add(key);
+    setRunningTrips(new Set(operation.current));
+    try {
+      await run(() => fn(keys), () => keys.has(window.location.hash.slice(1).split("/")[1] || "new"));
+    } finally {
+      for (const id of keys) operation.current.delete(id);
+      setRunningTrips(new Set(operation.current));
+    }
   }
   async function send() {
-    if (!value.trim() || operation.current) return;
+    if (!value.trim() || operation.current.has(tripId || "new")) return;
     if (!account) {
       setAuth(true);
       return;
     }
     const text = value.trim();
+    const draft = draftVersion.current;
+    const requestId = crypto.randomUUID();
     setValue("");
-    setPendingMessage({ tripId, text });
+    setPendingMessage({ tripId, text, requestId });
     let sent = false;
-    await mutate(async () => {
+    let targetTripId = tripId;
+    await mutate(async (keys) => {
       let id = tripId;
       if (!id) {
         id = (await api("/trips", { method: "POST" })).trip_id;
-        setPendingMessage({ tripId: id, text });
-        navigate("plan", id);
+        targetTripId = id;
+        keys.add(id);
+        operation.current.add(id);
+        keys.delete("new");
+        operation.current.delete("new");
+        setRunningTrips(new Set(operation.current));
+        if (draftVersion.current === draft && window.location.hash.slice(1) === "plan") {
+          setPendingMessage({ tripId: id, text, requestId });
+          navigate("plan", id);
+        }
       }
       const current =
         id === tripId && state ? state : await api(`/trips/${id}`);
@@ -2729,13 +2717,16 @@ function App() {
         body: { message: text, revision: current.revision },
       });
       sent = true;
+      setPendingMessage((pending) => pending?.requestId === requestId ? null : pending);
       if (window.location.hash.slice(1) === startRoute) {
+        snapshotVersion.current += 1;
         setState(next);
+        setLoading(false);
       }
       await reloadTrips();
     });
-    setPendingMessage(null);
-    if (!sent) setValue((current) => current || text);
+    setPendingMessage((pending) => pending?.requestId === requestId ? null : pending);
+    if (!sent && window.location.hash.slice(1) === "plan" + (targetTripId ? "/" + targetTripId : "")) setValue((current) => current || text);
   }
   const removeTrip = async (id) => {
     await api(`/trips/${id}`, { method: "DELETE" });
@@ -2755,7 +2746,9 @@ function App() {
         { method: "POST" },
       );
       if (window.location.hash.slice(1) === "plan/" + tripId) {
+        snapshotVersion.current += 1;
         setState(next);
+        setLoading(false);
       }
       await reloadTrips();
     });
@@ -2765,7 +2758,11 @@ function App() {
         method: "POST",
         body: { stage, revision: state.revision },
       });
-      if (window.location.hash.slice(1) === "plan/" + tripId) setState(next);
+      if (window.location.hash.slice(1) === "plan/" + tripId) {
+        snapshotVersion.current += 1;
+        setState(next);
+        setLoading(false);
+      }
       await reloadTrips();
     });
   const download = () =>
@@ -2814,6 +2811,15 @@ function App() {
     });
   const planning = page === "plan";
   const newTrip = () => {
+    draftVersion.current += 1;
+    snapshotVersion.current += 1;
+    setState(null);
+    setProgress(null);
+    setLoading(false);
+    setRunStatus(null);
+    setPayment(false);
+    setPendingMessage(null);
+    setError("");
     setValue("");
     navigate("plan");
   };
