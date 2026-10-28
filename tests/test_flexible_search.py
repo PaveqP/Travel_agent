@@ -1,7 +1,7 @@
 import copy
-import json
 import unittest
 from datetime import date, datetime, timedelta, timezone
+from decimal import Decimal
 from unittest.mock import AsyncMock, Mock, patch
 
 import httpx
@@ -10,65 +10,170 @@ from langgraph.checkpoint.memory import InMemorySaver
 from pydantic import ValidationError
 
 from travel_agent.agents.supervisor.agent import llm_decider
-from travel_agent.engine import compose, offer_card, quote_current
+from travel_agent.engine import compose, offer_card, search_dates, transport_matches, usable
 from travel_agent.graph import build_graph, present_stage
 from travel_agent.schemas import Candidate, OfferCard, SpecialistResult, SupervisorDecision, TripConstraints, TripDelta
-from travel_agent.tools import build_tools
+from travel_agent.tools import build_tools, normalize
 from test_travel_agent import FIXTURES, TRIP, agreed_state, candidates, run
 
 
+def flight_data(args):
+    data = copy.deepcopy(FIXTURES['search_avia'])
+    data['meta']['pricing']['passengers']['full'] = args['adults']
+    for row in data['offers']:
+        row['offer_id'] += args['departure_date']
+        for field in ('departure_at', 'arrival_at'):
+            row[field] = args['departure_date'] + row[field][10:]
+        row['return_departure_at'] = args['return_date'] + row['return_departure_at'][10:]
+    return data
+
+
 class FlexibleDateTests(unittest.TestCase):
-    def test_flexible_dates_remain_user_constraints_without_python_probes(self):
-        trip=TripConstraints(origin='Москва',adults=2,date_from='2026-12-01',date_to='2026-12-20',nights=7)
-        self.assertIsNone(trip.start)
-        self.assertEqual(trip.date_to,date(2026,12,20))
+    def test_nearest_dates_keep_duration_and_respect_strict_dates(self):
+        pairs = search_dates(TRIP)
+        self.assertEqual(pairs[:3], [(TRIP.start, TRIP.end), (TRIP.start - timedelta(days=1), TRIP.end - timedelta(days=1)), (TRIP.start + timedelta(days=1), TRIP.end + timedelta(days=1))])
+        self.assertEqual(search_dates(TRIP.model_copy(update={'date_flexibility': 0})), [(TRIP.start, TRIP.end)])
+
+    def test_explicit_window_and_month_work_without_exact_dates(self):
+        trip = TripConstraints(origin='Санкт-Петербург', adults=4, date_from='2026-12-01', date_to='2026-12-20')
+        pairs = search_dates(trip)
+        self.assertEqual(pairs[0], (date(2026, 12, 1), date(2026, 12, 8)))
+        self.assertEqual(pairs[-1], (date(2026, 12, 13), date(2026, 12, 20)))
+        self.assertTrue(all(trip.date_from <= start < end <= trip.date_to for start, end in pairs))
+        month = TripConstraints(travel_month='2026-12', nights=7)
+        self.assertEqual(search_dates(month)[0], pairs[0])
+        self.assertEqual(search_dates(month)[-1][1], date(2026, 12, 31))
         with self.assertRaises(ValidationError):
-            TripConstraints(date_from='2026-12-20',date_to='2026-12-01')
+            TripConstraints(date_from='2026-12-20', date_to='2026-12-01')
 
     def test_cards_preserve_actual_money_dates_source_and_unknown_price(self):
-        flight=next(c for c in candidates() if c.role=='transport')
-        card=OfferCard.model_validate(offer_card(flight,TRIP).model_dump(mode='json'))
-        self.assertEqual(card.price.amount,flight.price.amount)
-        self.assertEqual(card.price.basis,'party')
-        self.assertEqual(card.price_per_person.amount,flight.price.amount/TRIP.adults)
-        self.assertEqual(card.action,'select')
-        flight.price=None
-        self.assertEqual(offer_card(flight,TRIP).action,'verify')
-        self.assertFalse(quote_current(flight))
+        flight = next(c for c in candidates() if c.role == 'transport')
+        card = OfferCard.model_validate(offer_card(flight, TRIP).model_dump(mode='json'))
+        self.assertEqual(card.aggregator, 'Туту')
+        self.assertEqual(card.url, flight.url)
+        self.assertEqual(card.dates.start, flight.start)
+        self.assertEqual(card.price.amount, flight.price.amount)
+        self.assertEqual(card.price.basis, 'party')
+        self.assertEqual(card.price_per_person.amount, flight.price.amount / TRIP.adults)
+        self.assertEqual(card.action, 'select')
+        activity = next(c for c in candidates() if c.role == 'experience')
+        place = offer_card(activity, TRIP)
+        self.assertTrue(place.url.startswith('https://2gis.ru/'))
+        self.assertIsNone(place.price)
+        self.assertEqual(place.action, 'view')
 
-    def test_no_card_limit_or_price_order_overrides_agent_order(self):
-        state=agreed_state('stays')
-        stay=Candidate.model_validate(state['results']['stays']['candidates'][0])
-        state['results']['stays']['candidates']=[stay.model_copy(update={'id':f'hotel:{i}'}).model_dump(mode='json') for i in range(40)]
-        state['results']['stays']['selected_ids']=['hotel:39']
-        result=present_stage(state)
-        self.assertEqual(len(result['cards']),40)
-        self.assertEqual(result['cards'][0]['id'],'hotel:39')
+    def test_cached_fare_is_visible_but_cannot_enter_checkout(self):
+        data = {'data': [{'origin': 'MOW', 'destination': 'AER', 'price': 12345, 'airline': 'SU', 'departure_at': '2026-11-12T08:00:00+03:00', 'return_at': '2026-11-16T19:00:00+03:00', 'link': '/search/MOW1211AER16111', 'transfers': 0}]}
+        cached = normalize('travelpayouts', '', data, TRIP, datetime.now(timezone.utc))[0]
+        card = offer_card(cached, TRIP)
+        self.assertEqual(card.price.basis, 'person')
+        self.assertEqual(card.price.amount, Decimal('12345'))
+        self.assertEqual(card.adults, 1)
+        self.assertEqual(card.evidence, 'cached')
+        self.assertEqual(card.action, 'verify')
+        self.assertIn('different_party', card.warnings)
+        self.assertIsNone(cached.arrival_at)
+        self.assertFalse(usable(cached, TRIP, datetime.now(timezone.utc)))
+        self.assertFalse(any(o.transport for o in compose(TRIP, [cached, *[c for c in candidates() if c.role == 'stays']], 1)))
+        self.assertTrue(card.url.startswith('https://www.aviasales.ru/search/'))
+
+    def test_hotel_without_verified_total_stays_visible_with_unknown_price(self):
+        data = copy.deepcopy(FIXTURES['search_hotels'])
+        data['hotels'][0]['best_offer'] = {}
+        rows = normalize('tutu', 'search_hotels', data, TRIP, datetime.now(timezone.utc))
+        self.assertEqual(len(rows), 3)
+        card = offer_card(rows[0], TRIP)
+        self.assertIsNone(card.price)
+        self.assertEqual(card.action, 'verify')
+        self.assertFalse(usable(rows[0], TRIP, datetime.now(timezone.utc)))
+
+    def test_all_ten_stays_and_all_activity_cards_are_presented(self):
+        state = agreed_state('stays')
+        stay = Candidate.model_validate(state['results']['stays']['candidates'][0])
+        state['results']['stays']['candidates'] = [stay.model_copy(update={'id': f'hotel:{i}'}).model_dump(mode='json') for i in range(10)]
+        result = present_stage(state)
+        self.assertEqual(len(result['cards']), 10)
+        self.assertEqual(len(result['choices']), 10)
+        self.assertTrue(all(c['url'] and c['aggregator'] and c['description'] for c in result['cards']))
+        activities = present_stage(agreed_state('itinerary'))['cards']
+        self.assertTrue(activities)
+        self.assertTrue(all(c['action'] == 'view' and c['price'] is None for c in activities))
 
 
 class FlexibleSearchTests(unittest.IsolatedAsyncioTestCase):
-    async def test_search_is_one_explicit_request_with_full_response(self):
-        data=copy.deepcopy(FIXTURES['search_avia'])
-        data['unknown_new_field']={'nested':[None,{'future_condition':'retained'}]}
-        with patch('travel_agent.tools.runtime_call',new=AsyncMock(return_value={'status':'ok','data':data})) as network:
-            async with httpx.AsyncClient() as client:
-                evidence={}
-                tools={t.name:t for t in build_tools('transport',TRIP,1,client,{},evidence,[],{'tools':0})}
-                result=await tools['search_flights'].ainvoke({'departure_date':'2026-12-03','return_date':'2026-12-10','page':2,'sort':'price_desc','service_class':'C'})
-        network.assert_awaited_once()
-        self.assertEqual(network.await_args.args[3]['page'],2)
-        self.assertEqual(network.await_args.args[3]['service_class'],'C')
-        self.assertEqual(result['data'],data)
-        self.assertEqual(next(iter(evidence.values())).data,data)
+    async def asyncSetUp(self):
+        self.client = httpx.AsyncClient(transport=httpx.MockTransport(lambda request: httpx.Response(200, json={})))
+        self.evidence = {}
+        self.warnings = []
+        self.counts = {'tools': 0}
 
-    async def test_web_context_is_not_truncated_or_converted_to_quotes(self):
-        data={'results':[{'url':'https://example.com','title':'T'*300,'content':'X'*12000}],'new_property':{'raw':True}}
-        async with httpx.AsyncClient(transport=httpx.MockTransport(lambda r:httpx.Response(200,json=data))) as client:
-            evidence={}
-            tools={t.name:t for t in build_tools('stays',TRIP,1,client,{'TAVILY_API_KEY':'test'},evidence,[],{'tools':0})}
-            result=await tools['tavily_search'].ainvoke({'query':'Условия'})
-        self.assertEqual(result['data'],data)
-        self.assertNotIn('candidates',result)
+    async def asyncTearDown(self):
+        await self.client.aclose()
+
+    def tools(self, trip=TRIP, role='transport', env=None):
+        return {t.name: t for t in build_tools(role, trip, 1, self.client, env or {}, self.evidence, self.warnings, self.counts)}
+
+    async def test_empty_exact_search_probes_neighbors_and_keeps_real_dates(self):
+        async def source(role, provider, method, args, env, owned):
+            data = flight_data(args)
+            if args['departure_date'] == str(TRIP.start):
+                data = {'offers': []}
+            return {'status': 'ok', 'data': data}
+
+        with patch('travel_agent.tools.runtime_call', new=AsyncMock(side_effect=source)) as network:
+            result = await self.tools()['search_flights'].ainvoke({})
+        self.assertEqual(network.await_count, 6)
+        self.assertTrue(self.evidence)
+        self.assertTrue(all(c.start != TRIP.start and transport_matches(c, TRIP, datetime.now(timezone.utc)) for c in self.evidence.values()))
+        self.assertFalse(result['exhaustive'])
+        self.assertTrue(all(c.args[3]['sort'] == 'price_asc' for c in network.await_args_list))
+
+    async def test_fresh_exact_offers_stop_additional_probes(self):
+        with patch('travel_agent.tools.runtime_call', new=AsyncMock(return_value={'status': 'ok', 'data': FIXTURES['search_avia']})) as network:
+            result = await self.tools()['search_flights'].ainvoke({})
+        self.assertEqual(network.await_count, 1)
+        self.assertTrue(result['candidates'])
+
+    async def test_window_uses_aggregator_filters_without_asking_exact_dates(self):
+        trip = TripConstraints(origin='Москва', adults=2, date_from='2026-12-01', date_to='2026-12-20', nights=7, direct_only=True)
+
+        async def source(role, provider, method, args, env, owned):
+            return {'status': 'ok', 'data': flight_data(args)}
+
+        with patch('travel_agent.tools.runtime_call', new=AsyncMock(side_effect=source)) as network:
+            await self.tools(trip)['search_flights'].ainvoke({})
+        self.assertLessEqual(network.await_count, 6)
+        for call in network.await_args_list:
+            args = call.args[3]
+            self.assertTrue(args['direct_only'])
+            self.assertTrue(trip.date_from <= date.fromisoformat(args['departure_date']) < date.fromisoformat(args['return_date']) <= trip.date_to)
+        self.assertTrue(self.evidence)
+
+    async def test_source_failure_does_not_repeat_six_identical_failures(self):
+        with patch('travel_agent.tools.runtime_call', new=AsyncMock(return_value={'status': 'forbidden'})) as network:
+            result = await self.tools()['search_flights'].ainvoke({})
+        self.assertEqual(network.await_count, 1)
+        self.assertEqual(result['status'], 'forbidden')
+
+    async def test_cached_fallback_resolves_known_origin_and_month_filters(self):
+        trip = TripConstraints(origin='Санкт-Петербург', adults=4, date_from='2026-12-01', date_to='2026-12-20')
+        response = httpx.Response(200, json={'success': True, 'data': []}, request=httpx.Request('GET', 'https://api.travelpayouts.com/'))
+        with patch('travel_agent.agents.transport.tools.travelpayouts.prices', new=AsyncMock(return_value=response)) as network:
+            await self.tools(trip, env={'TRAVELPAYOUTS_TOKEN': 'test-token'})['cached_flights'].ainvoke({})
+        self.assertEqual(network.await_args.args[2:], ('LED', '2026-12', '2026-12'))
+
+    async def test_web_hotel_reference_keeps_source_and_unknown_price(self):
+        data = {'results': [{'url': 'https://hotel.tutu.ru/hotel/example', 'title': 'Наблюдённый отель', 'content': 'Описание со страницы источника'}]}
+        response = httpx.Response(200, json=data, request=httpx.Request('POST', 'https://api.tavily.com/search'))
+        with patch.object(self.client, 'post', new=AsyncMock(return_value=response)):
+            await self.tools(role='stays', env={'TAVILY_API_KEY': 'test-key'})['tavily_search'].ainvoke({'query': 'Отель'})
+        card = offer_card(next(iter(self.evidence.values())), TRIP)
+        self.assertEqual(card.url, data['results'][0]['url'])
+        self.assertEqual(card.description, data['results'][0]['content'])
+        self.assertEqual(card.evidence, 'catalog')
+        self.assertIsNone(card.price)
+        self.assertFalse(card.selectable)
+
 
 class FlexibleGraphTests(unittest.IsolatedAsyncioTestCase):
     async def test_ten_expired_unselected_fares_refresh_and_remain_visible_on_failure(self):
@@ -101,11 +206,7 @@ class FlexibleGraphTests(unittest.IsolatedAsyncioTestCase):
     async def test_selecting_nearby_fare_accepts_dates_and_immediately_searches_stays(self):
         state = agreed_state()
         args = {'adults': 2, 'departure_date': '2026-11-13', 'return_date': '2026-11-17'}
-        flight = next(c for c in candidates() if c.role == 'transport')
-        for field in ('departure_at','arrival_at','return_departure_at'):
-            setattr(flight,field,getattr(flight,field)+timedelta(days=1))
-        flight.start += timedelta(days=1)
-        flight.end += timedelta(days=1)
+        flight = normalize('tutu', 'search_avia', flight_data(args), TripConstraints(origin='Москва', adults=2, start=args['departure_date'], end=args['return_date']), datetime.now(timezone.utc))[0]
         state['results']['transport']['candidates'] = [flight.model_dump(mode='json')]
         runner = AsyncMock(side_effect=run)
         graph = build_graph(AsyncMock(), runner, InMemorySaver())
@@ -131,7 +232,7 @@ class FlexibleGraphTests(unittest.IsolatedAsyncioTestCase):
     async def test_explicit_refresh_failure_keeps_previous_cards(self):
         state = agreed_state()
 
-        async def empty(role, trip, revision, task, previous, *, observations=None):
+        async def empty(role, trip, revision, task, previous):
             return SpecialistResult(role=role, revision=revision, status='partial', warnings=['tutu:timeout'])
 
         graph = build_graph(AsyncMock(return_value=SupervisorDecision(action='compose', refresh=['transport'])), empty, InMemorySaver())
@@ -147,10 +248,9 @@ class FlexibleGraphTests(unittest.IsolatedAsyncioTestCase):
             error = exc
         structured = AsyncMock(side_effect=[error, SupervisorDecision(action='compose', patch=TripDelta(date_from='2026-12-01', date_to='2026-12-20'))])
         model = Mock()
-        model.with_structured_output.return_value = Mock(ainvoke=structured)
+        model.with_structured_output.side_effect = lambda schema, **kwargs: Mock(ainvoke=AsyncMock(return_value=TripDelta())) if schema is TripDelta else Mock(ainvoke=structured)
         result = await llm_decider(model, 'Supervisor')({'messages': [HumanMessage(content='С 1 по 20 декабря')]})
-        model.with_structured_output.assert_called_once_with(SupervisorDecision, method='function_calling', strict=True)
-        self.assertEqual(json.loads(structured.await_args_list[0].args[0][2].content)['user_request'], 'С 1 по 20 декабря')
         self.assertEqual(result.patch.date_to, date(2026, 12, 20))
         self.assertEqual(structured.await_count, 2)
-        self.assertIn('patch.date_from/date_to', structured.await_args.args[0][-1].content)
+        self.assertEqual(structured.await_args.args[0][-1].content, 'С 1 по 20 декабря')
+        self.assertTrue(any('patch.date_from/date_to' in m.content for m in structured.await_args.args[0]))

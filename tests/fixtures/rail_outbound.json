@@ -1,0 +1,71 @@
+{
+  "offers": [
+    {
+      "offer_id": "282490625e9d4f23729a466315b41cd7",
+      "price": {
+        "amount": 4794.88,
+        "currency": "RUB"
+      },
+      "carriers": [
+        "ФПК"
+      ],
+      "departure_at": "2026-11-12T19:50:00+03:00",
+      "arrival_at": "2026-11-14T04:35:00+03:00",
+      "segments_count": 1,
+      "search_results_url": "https://www.tutu.ru/poezda/rasp_d.php?date=12.11.2026&nnst1=2000000&nnst2=2064130"
+    },
+    {
+      "offer_id": "adc57caaf6a2078dd633466af0e9028c",
+      "price": {
+        "amount": 4882.04,
+        "currency": "RUB"
+      },
+      "carriers": [
+        "ФПК"
+      ],
+      "departure_at": "2026-11-12T01:48:00+03:00",
+      "arrival_at": "2026-11-13T08:45:00+03:00",
+      "segments_count": 1,
+      "search_results_url": "https://www.tutu.ru/poezda/rasp_d.php?date=12.11.2026&nnst1=2000000&nnst2=2064130"
+    }
+  ],
+  "meta": {
+    "transport": "railway",
+    "checkout_hint": "When the user picks an offer — in any wording («беру», «самый быстрый», «оформи», «забронируй») — the normal hand-over is `create_checkout_link` with that offer's `checkout_ref`; put the returned link in your reply. This payload deliberately carries no ready checkout link: the link comes from that tool, never from URL parts you assemble yourself.",
+    "pricing": {
+      "basis": "per_seat",
+      "passengers": 1,
+      "note": "Every price on this page — `price`, `fares.price_from` / `price_to`, `seat_categories[].price_from` — is ONE SEAT (one ticket). Upstream prices this product per passenger and ignores the party size, so nothing here scales with it."
+    },
+    "from": {
+      "name": "Москва",
+      "geo_id": "2657260",
+      "region": "Москва"
+    },
+    "to": {
+      "name": "Сочи",
+      "geo_id": "2656918",
+      "region": "Краснодарский край"
+    },
+    "sort": "price_asc",
+    "page": 1,
+    "page_size": 3,
+    "total_returned": 3,
+    "total_matched": 6,
+    "total_matched_exact": true,
+    "has_more": true,
+    "post_filter_dropped_over_cap": 0,
+    "post_filter_dropped_not_direct": 0,
+    "post_filter_dropped_wrong_carrier": 0,
+    "post_filter_dropped_wrong_train_number": 0,
+    "post_filter_dropped_wrong_seat_category": 0,
+    "post_filter_unverified_seat_category": 0,
+    "carriers_available": [
+      {
+        "name": "ФПК",
+        "offers_count": 6,
+        "price_from": 4794.88
+      }
+    ]
+  }
+}

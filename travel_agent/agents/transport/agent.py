@@ -2,7 +2,7 @@ import httpx
 from langchain_core.language_models import BaseChatModel
 
 from travel_agent.agents.react import run_react
-from travel_agent.schemas import Candidate, SourceObservation, SpecialistResult, TripConstraints
+from travel_agent.schemas import Candidate, SpecialistResult, TripConstraints
 
 
 async def run(
@@ -16,7 +16,7 @@ async def run(
     env: dict[str, str],
     prompt: str,
     deadline: int = 90,
-    observations: list[SourceObservation] | None = None,
+    autonomous: bool = False,
 ) -> SpecialistResult:
     return await run_react(
         "transport",
@@ -27,7 +27,9 @@ async def run(
         client,
         env,
         prompt,
+        primary="search_flights",
+        fallback="cached_flights",
         deadline=deadline,
-        observations=observations,
+        autonomous=autonomous,
         previous=previous,
     )

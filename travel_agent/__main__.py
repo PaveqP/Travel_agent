@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import hashlib
 import json
+import logging
 import os
 import sys
 from contextlib import AsyncExitStack, contextmanager
@@ -32,6 +33,34 @@ def terminal_input() -> Iterator[None]:
         attributes = termios.tcgetattr(descriptor)
         attributes[0] = (attributes[0] & ~utf8_flag) | (original & utf8_flag)
         termios.tcsetattr(descriptor, termios.TCSANOW, attributes)
+
+
+async def send_message(client: httpx.AsyncClient, trip_id: str, text: str, revision: int) -> httpx.Response:
+    pending = asyncio.create_task(client.post(f"/trips/{trip_id}/messages", json={"message": text, "revision": revision}))
+    label = ''
+    seen = set()
+    try:
+        while not pending.done():
+            done, _ = await asyncio.wait({pending}, timeout=1)
+            if done:
+                break
+            status = await client.get(f"/trips/{trip_id}/status")
+            if status.status_code != 200:
+                continue
+            progress = status.json()
+            if progress.get('label') and progress['label'] != label:
+                label = progress['label']
+                print('Агент: ' + label + '…', flush=True)
+            for role, cards in progress.get('previews', {}).items():
+                if role in seen or not cards:
+                    continue
+                seen.add(role)
+                print('Агент: Уже нашёл: ' + '; '.join(c['title'] for c in cards[:2]) + '. Проверяю совместимость.', flush=True)
+        return await pending
+    finally:
+        if not pending.done():
+            pending.cancel()
+            await asyncio.gather(pending, return_exceptions=True)
 
 
 async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
@@ -106,10 +135,7 @@ async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
                 print("Агент:", response.json()["message"])
             else:
                 print("Агент: Думаю…")
-                response = await client.post(
-                    f"/trips/{trip_id}/messages",
-                    json={"message": text, "revision": revision},
-                )
+                response = await send_message(client, trip_id, text, revision)
                 response.raise_for_status()
                 print("\nАгент:", response.json()["answer"])
         except httpx.HTTPStatusError as exc:
@@ -149,6 +175,7 @@ async def main() -> None:
             token = token.split(",")[0]
             directory = Path(".travel-agent")
             directory.mkdir(mode=0o700, exist_ok=True)
+            logging.basicConfig(handlers=[logging.FileHandler(directory / 'agent.log', encoding='utf-8')], level=logging.WARNING)
             app = create_app(local_database=str(directory / "checkpoints.sqlite"))
             await stack.enter_async_context(app.router.lifespan_context(app))
             transport = httpx.ASGITransport(app=app)

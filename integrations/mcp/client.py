@@ -75,7 +75,7 @@ async def call(provider,name,args,case=None):
  except Exception as e:return record(provider,case,'call_error',tool=name,request=args,latency_ms=round((time.perf_counter()-t)*1000),**error_info(e))
 
 ROLE_METHODS = {
- 'transport': {'tutu': frozenset({'search_avia', 'search_rail', 'search_etrain', 'search_bus', 'get_offer_details', 'get_rail_seatmap', 'get_avia_instructions', 'get_rail_instructions', 'get_bus_instructions', 'get_etrain_instructions'})},
+ 'transport': {'tutu': frozenset({'search_avia', 'search_rail', 'search_etrain', 'get_offer_details'})},
  'stays': {'tutu': frozenset({'search_hotels', 'get_offer_details'})},
  'experience': {'2gis': frozenset({'search_places', 'geocode_address', 'build_route', 'calculate_distance_matrix'})},
 }
@@ -90,13 +90,7 @@ async def _runtime_attempt(role: str, provider: str, name: str, args: dict, env:
  if name == 'get_offer_details':
   product = args.get('product_type')
   ident = args.get('hotel_id') if product == 'hotels' else args.get('offer_id')
-  if (role == 'stays' and product != 'hotels') or (role == 'transport' and product not in {'avia', 'rail', 'etrain', 'bus'}) or (product, ident) not in owned:
-   return {'status': 'forbidden'}
- if name == 'get_rail_seatmap':
-  import json
-  from hashlib import sha256
-  reference = sha256(json.dumps(args.get('details_ref'), sort_keys=True).encode()).hexdigest()
-  if ('rail_ref', reference) not in owned:
+  if (role == 'stays' and product != 'hotels') or (role == 'transport' and product not in {'avia', 'rail', 'etrain'}) or (product, ident) not in owned:
    return {'status': 'forbidden'}
  try:
   async with asyncio.timeout(30):
@@ -105,19 +99,17 @@ async def _runtime_attempt(role: str, provider: str, name: str, args: dict, env:
     selected = next((t for t in listing.tools if t.name == name), None)
     if selected is None:
      return {'status': 'schema_error'}
-    try:
-     jsonschema.validate(args, selected.inputSchema)
-    except jsonschema.ValidationError as exc:
-     return {'status': 'schema_error', 'data': {'error': {'type': 'invalid_arguments', 'message': exc.message, 'path': list(exc.absolute_path)}}}
+    jsonschema.validate(args, selected.inputSchema)
     result = await session.call_tool(name, args)
+    if result.isError:
+     return {'status': 'schema_error'}
     from integrations.outcomes import payload
-    raw = result.model_dump(mode='json')
-    data = payload(raw)
-    status = 'schema_error' if result.isError else 'ok'
-    if isinstance(data, dict) and data.get('error'):
-     error = data['error']
-     status = 'no_availability' if isinstance(error, dict) and str(error.get('code')) == '2001' else 'schema_error'
-    return {'status': status, 'data': data, 'response': raw}
+    data = payload(result.model_dump(mode='json'))
+    if not isinstance(data, dict):
+     return {'status': 'schema_error'}
+    if data.get('error'):
+     return {'status': 'no_availability' if str(data['error'].get('code') if isinstance(data['error'], dict) else '') == '2001' else 'schema_error'}
+    return {'status': 'ok', 'data': data}
  except ExceptionGroup as group:
   expected, unexpected = group.split((TimeoutError, httpx.RequestError, httpx.HTTPStatusError, McpError))
   if unexpected:
@@ -126,7 +118,7 @@ async def _runtime_attempt(role: str, provider: str, name: str, args: dict, env:
  except (TimeoutError, httpx.TimeoutException):
   return {'status': 'timeout'}
  except httpx.HTTPStatusError as exc:
-  return {'status': {401: 'unauthorized', 402: 'payment_required', 403: 'forbidden', 429: 'rate_limited'}.get(exc.response.status_code, 'network_error')}
+  return {'status': {401: 'unauthorized', 403: 'forbidden', 429: 'rate_limited'}.get(exc.response.status_code, 'network_error')}
  except (httpx.RequestError, McpError):
   return {'status': 'network_error'}
  except (jsonschema.ValidationError, ValueError):
@@ -136,9 +128,9 @@ async def _runtime_attempt(role: str, provider: str, name: str, args: dict, env:
 def _mcp_error_status(error: BaseException) -> str:
  if isinstance(error, BaseExceptionGroup):
   statuses = {_mcp_error_status(child) for child in error.exceptions}
-  return next((status for status in ('forbidden', 'unauthorized', 'payment_required', 'rate_limited', 'timeout') if status in statuses), 'network_error')
+  return next((status for status in ('forbidden', 'unauthorized', 'rate_limited', 'timeout') if status in statuses), 'network_error')
  if isinstance(error, httpx.HTTPStatusError):
-  return {401: 'unauthorized', 402: 'payment_required', 403: 'forbidden', 429: 'rate_limited'}.get(error.response.status_code, 'network_error')
+  return {401: 'unauthorized', 403: 'forbidden', 429: 'rate_limited'}.get(error.response.status_code, 'network_error')
  return 'timeout' if isinstance(error, (TimeoutError, httpx.TimeoutException)) else 'network_error'
 
 

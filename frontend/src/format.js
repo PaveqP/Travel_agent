@@ -133,11 +133,52 @@ export function tripStatus(
   state,
   today = new Date().toLocaleDateString("en-CA", { timeZone: "Europe/Moscow" }),
 ) {
-  if (state?.stage !== "booked") return "Планируем";
+  if (state?.stage !== "booked") {
+    if (state?.autonomous) {
+      if (state.selected) return "Вариант выбран";
+      if (state.status === "partial") return "План требует уточнений";
+      if (state.focus === "stays" && state.cards?.length)
+        return "Отели найдены";
+      if (state.options?.length) return "Варианты готовы";
+    }
+    return "Планируем";
+  }
   const c = state.constraints || {};
   if (c.end && c.end < today) return "Воспоминания";
   if (c.start && c.start <= today) return "В путешествии";
   return "Скоро в путь";
+}
+
+export function canCheckout(state, now = Date.now()) {
+  const option = state?.options?.find((item) => item.id === state.selected);
+  return (
+    state?.stage === "review" &&
+    !!option &&
+    option.revision === state.revision &&
+    [option.transport, option.stay].every(
+      (item) =>
+        item?.price != null &&
+        item.source?.evidence === "live" &&
+        new Date(item.source.expires_at).getTime() > now,
+    )
+  );
+}
+
+export function feedbackText(feedback) {
+  return (
+    {
+      no_transport: "Не удалось подтвердить билеты на подходящие даты.",
+      no_stays: "Не удалось подтвердить проживание на выбранные даты.",
+      arrival_stay_mismatch:
+        "Нужно согласовать даты отеля с прибытием и выездом.",
+      no_day_plan: "Программа по дням пока не подтверждена.",
+      invalid_day_evidence: "Часть мест в программе требует проверки.",
+      empty_program: "Пока не найдены подходящие занятия на дни поездки.",
+      mountain_days_mismatch: "Нужно уточнить число дней в горах.",
+      ski_program_mismatch:
+        "Программа пока не соответствует горнолыжному отдыху.",
+    }[feedback.code] || "Часть поездки требует уточнения с агентом."
+  );
 }
 
 export const party = (adults, childrenAges = []) =>

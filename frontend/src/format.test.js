@@ -7,11 +7,84 @@ import {
   currentOption,
   tripParts,
   tripMapPoints,
+  canCheckout,
+  feedbackText,
 } from "./format.js";
 
 test("unknown costs are distinct from zero", () => {
   assert.equal(money(null), "Уточняется");
   assert.match(money(0), /0/);
+});
+
+test("autonomous status distinguishes packages, hotel search and incomplete plans", () => {
+  assert.equal(
+    tripStatus({ autonomous: true, options: [{ id: "a" }] }),
+    "Варианты готовы",
+  );
+  assert.equal(
+    tripStatus({ autonomous: true, options: [], status: "partial" }),
+    "План требует уточнений",
+  );
+  assert.equal(
+    tripStatus({ autonomous: true, focus: "stays", cards: [{ id: "hotel" }] }),
+    "Отели найдены",
+  );
+  assert.equal(
+    tripStatus({ autonomous: true, selected: "a" }),
+    "Вариант выбран",
+  );
+});
+
+test("checkout requires an explicitly selected current package with fresh live quotes", () => {
+  const now = Date.parse("2026-11-01T10:00:00Z");
+  const candidate = {
+    price: { amount: "10000" },
+    source: { evidence: "live", expires_at: "2026-11-01T10:10:00Z" },
+  };
+  const option = {
+    id: "a",
+    revision: 2,
+    transport: candidate,
+    stay: candidate,
+  };
+  const state = {
+    autonomous: true,
+    stage: "review",
+    revision: 2,
+    selected: "a",
+    options: [option],
+  };
+  assert.equal(canCheckout(state, now), true);
+  for (const change of [
+    { selected: null },
+    { selected: "missing" },
+    { revision: 3 },
+    { stage: "booked" },
+    { options: [{ ...option, stay: null }] },
+    {
+      options: [
+        {
+          ...option,
+          stay: {
+            ...candidate,
+            source: { ...candidate.source, evidence: "catalog" },
+          },
+        },
+      ],
+    },
+  ])
+    assert.equal(canCheckout({ ...state, ...change }, now), false);
+  assert.equal(canCheckout(state, now + 11 * 60 * 1000), false);
+  assert.equal(canCheckout(null, now), false);
+});
+
+test("planning feedback has a user-facing explanation without exposing internal tasks", () => {
+  assert.match(feedbackText({ code: "arrival_stay_mismatch" }), /даты отеля/);
+  assert.match(feedbackText({ code: "no_transport" }), /билеты/);
+  assert.equal(
+    feedbackText({ code: "new_code", detail: "internal task" }),
+    "Часть поездки требует уточнения с агентом.",
+  );
 });
 test("provider links cannot execute scripts or carry credentials", () => {
   for (const url of [

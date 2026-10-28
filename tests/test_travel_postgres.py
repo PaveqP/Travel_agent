@@ -42,3 +42,26 @@ class PostgresTests(unittest.IsolatedAsyncioTestCase):
             profile = await store.aget(('profiles', ident), 'preferences')
             self.assertEqual(profile.value['interests'], ['море'])
             self.assertIsNone(await store.aget(('profiles', 'foreign'), 'preferences'))
+
+    async def test_autonomous_packages_survive_restart(self):
+        from unittest.mock import AsyncMock
+        from travel_agent.schemas import TurnPlan
+        from test_autonomous_planning import ROLES, TRIP, result, task
+
+        config = {'configurable': {'thread_id': str(uuid4())}}
+        runners = {}
+        for role in ROLES:
+            async def specialist(trip, revision, goal, previous, role=role):
+                return result(role, trip, revision)
+            runners[role] = specialist
+        async with AsyncPostgresSaver.from_conn_string(os.environ['TRAVEL_TEST_DATABASE_URL']) as saver:
+            await saver.setup()
+            graph = build_graph(AsyncMock(return_value=TurnPlan(action='plan', tasks=[task(r) for r in ROLES])), runners, saver, autonomous=True)
+            planned = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json'), 'messages': [HumanMessage(content='Спланируй поездку')]}, config)
+            self.assertTrue(planned['options'])
+        async with AsyncPostgresSaver.from_conn_string(os.environ['TRAVEL_TEST_DATABASE_URL']) as saver:
+            graph = build_graph(AsyncMock(return_value=TurnPlan(action='answer')), runners, saver, autonomous=True)
+            saved = (await graph.aget_state(config)).values
+            self.assertEqual(saved['options'], planned['options'])
+            selected = await graph.ainvoke({'requested_choice': saved['options'][0]['id']}, config)
+            self.assertEqual(selected['selected'], saved['options'][0]['id'])

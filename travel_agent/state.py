@@ -4,6 +4,10 @@ from langgraph.graph.message import add_messages
 from travel_agent.schemas import Stage
 
 
+def merge_task_results(previous: dict, update: dict) -> dict:
+    return {**previous, **update}
+
+
 class TripState(TypedDict, total=False):
     messages: Annotated[list[BaseMessage], add_messages]
     constraints: dict
@@ -33,3 +37,12 @@ class TripState(TypedDict, total=False):
     profile_update: list[str] | None
     cards: list[dict]
     notice: str
+
+    focus: str | None
+    autonomous: bool
+    tasks: list[dict]
+    task_results: Annotated[dict, merge_task_results]
+    search_round: int
+    feedback: list[dict]
+    route: str
+    repair_decision: bool

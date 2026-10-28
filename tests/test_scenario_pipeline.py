@@ -12,7 +12,7 @@ from pydantic import ValidationError
 from travel_agent.engine import apply_delta, compose, diagnose, simulate_purchase
 from travel_agent.graph import supervise
 from travel_agent.graph import build_graph
-from travel_agent.schemas import BookingRequest, SpecialistResult, SupervisorDecision, TripDelta, TripScenario
+from travel_agent.schemas import BookingRequest, SpecialistResult, SupervisorDecision, TripDelta, TripScenario, TurnPlan
 from langchain_core.messages import HumanMessage
 from langgraph.checkpoint.memory import InMemorySaver
 from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
@@ -27,10 +27,10 @@ class ReliabilityTests(unittest.IsolatedAsyncioTestCase):
                 row.arrival_at += timedelta(days=1)
         options = compose(TRIP, rows, 1)
         self.assertTrue(options)
-        self.assertTrue(all(o.stay and o.transport for o in options))
-        self.assertTrue(all("Даты транспорта и проживания требуют согласования" in o.warnings for o in options))
+        self.assertTrue(all(o.stay and o.transport is None for o in options))
         diagnostics = diagnose(TRIP, rows)
-        diagnostics.suggested_check_in = TRIP.start + timedelta(days=1)
+        self.assertIn("arrival_stay_mismatch", diagnostics.reasons)
+        self.assertEqual(diagnostics.suggested_check_in, TRIP.start + timedelta(days=1))
         revised = TRIP.model_copy(update={"check_in": diagnostics.suggested_check_in})
         for row in rows:
             if row.role == "stays":
@@ -102,7 +102,7 @@ class StagedPlanningTests(unittest.IsolatedAsyncioTestCase):
         runner.assert_not_called()
 
     async def test_night_flight_choice_accepts_actual_hotel_dates(self):
-        async def run(role, trip, revision, task, previous, *, observations=None):
+        async def run(role, trip, revision, task, previous):
             rows = [c for c in candidates() if c.role == role]
             for row in rows:
                 if role == "transport":
@@ -205,7 +205,7 @@ class CheckoutTests(unittest.IsolatedAsyncioTestCase):
         variants.append(premature)
         expensive = deepcopy(state)
         expensive["constraints"].update(budget="1", budget_basis="party")
-        self.assertTrue(simulate_purchase(expensive, request)["simulated"])
+        variants.append(expensive)
         expired = deepcopy(state)
         expired["options"][0]["stay"]["source"]["expires_at"] = (datetime.now(timezone.utc) - timedelta(seconds=1)).isoformat()
         variants.append(expired)
@@ -261,9 +261,9 @@ class ProfileTests(unittest.TestCase):
         bob = {"Authorization": "Bearer bob"}
         async def decide(state):
             if state["messages"][-1].content == "Запомни прогулки":
-                return SupervisorDecision(action="remember", profile_interests=["прогулки"])
-            return SupervisorDecision(action="chat", reply="Привет!")
-        with tempfile.TemporaryDirectory() as directory, patch("travel_agent.api.environment", return_value=env), patch("travel_agent.api.llm_decider", return_value=decide):
+                return TurnPlan(action="remember", profile_interests=["прогулки"])
+            return TurnPlan(action="chat", reply="Привет!")
+        with tempfile.TemporaryDirectory() as directory, patch("travel_agent.api.environment", return_value=env), patch("travel_agent.api.llm_planner", return_value=decide):
             path = str(Path(directory) / "profiles.sqlite")
             with TestClient(create_app(local_database=path)) as api:
                 trip = api.post("/trips", headers=alice).json()["trip_id"]

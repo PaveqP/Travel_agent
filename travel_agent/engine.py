@@ -1,3 +1,4 @@
+from calendar import monthrange
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from hashlib import sha256
@@ -6,7 +7,7 @@ from uuid import uuid4
 from urllib.parse import urlparse
 
 from integrations.schemas.models import BudgetLine, Coordinates, calculate_budget
-from travel_agent.schemas import BookingRequest, Candidate, ItineraryDay, OfferCard, OfferDates, PlanDiagnostics, TripConstraints, TripDelta, TripOption
+from travel_agent.schemas import BookingRequest, Candidate, ItineraryDay, OfferCard, OfferDates, PlanDiagnostics, PlanFeedback, TripConstraints, TripDelta, TripOption
 
 CENTERS = {'Сочи': (43.585, 39.723), 'Адлер': (43.448, 39.907),
            'Сириус': (43.405, 39.96), 'Красная Поляна': (43.68, 40.2), 'Роза Хутор': (43.67, 40.29)}
@@ -34,25 +35,72 @@ def apply_delta(current: TripConstraints, delta: TripDelta) -> tuple[TripConstra
         for name in ('check_in', 'check_out'):
             if name not in patch:
                 patch[name] = None
-    revised = TripConstraints.model_validate({**current.model_dump(), **patch})
+    merged = {**current.model_dump(), **patch}
+    if merged['start'] and 'end' not in patch and 'end' not in delta.clear and ('start' in patch or merged['end'] is None):
+        duration = merged['nights'] or (merged['duration_days'] - 1 if merged['duration_days'] else None)
+        if duration is None and current.start and current.end:
+            duration = (current.end - current.start).days
+        if duration:
+            merged['end'] = merged['start'] + timedelta(days=duration)
+            patch['end'] = merged['end']
+    revised = TripConstraints.model_validate(merged)
     affected: set[str] = set()
-    if patch.keys() & {'start', 'end', 'adults', 'children_ages', 'transport_mode', 'service_class', 'requirements', 'travel_month', 'date_from', 'date_to', 'date_flexibility', 'direct_only'}:
+    if patch.keys() & {'start', 'end', 'adults', 'travel_month', 'date_from', 'date_to', 'date_flexibility', 'direct_only', 'duration_days', 'nights'}:
         affected.update(('transport', 'stays', 'experience'))
+    if patch.keys() & {'transport_modes', 'baggage', 'ski_equipment'}:
+        affected.add('transport')
+    if 'stay_preferences' in patch:
+        affected.add('stays')
+    if 'holiday_type' in patch:
+        affected.update(('stays', 'experience'))
+    if 'mountain_days' in patch:
+        affected.add('experience')
     if 'origin' in patch:
         affected.add('transport')
     if patch.keys() & {'destination', 'hotel'}:
         affected.update(('stays', 'experience'))
     if patch.keys() & {'check_in', 'check_out'}:
         affected.update(('stays', 'experience'))
-    if patch.keys() & {'purpose', 'interests'}:
+    if patch.keys() & {'purpose', 'interests', 'min_hotel_stars', 'min_hotel_rating'}:
         affected.update(('stays', 'experience'))
     return revised, affected
 
 
-def quote_current(c: Candidate, now: datetime | None = None) -> bool:
-    now = now or datetime.now(timezone.utc)
-    return bool(c.source.evidence == 'live' and c.source.expires_at and c.source.expires_at > now
-                and c.price is not None and c.price.basis != 'unknown')
+def search_dates(trip: TripConstraints, today: date | None = None) -> list[tuple[date, date]]:
+    today = today or date.today()
+    duration = trip.nights or (trip.duration_days - 1 if trip.duration_days and trip.duration_days > 1 else None) or ((trip.end - trip.start).days if trip.start and trip.end else 7)
+    lower, upper = trip.date_from, trip.date_to
+    if lower and not upper:
+        upper = lower + timedelta(days=31)
+    elif upper and not lower:
+        lower = max(today, trip.start or upper - timedelta(days=31))
+    if not lower and not upper and trip.travel_month and not trip.start:
+        year, month = map(int, trip.travel_month.split('-'))
+        lower, upper = date(year, month, 1), date(year, month, monthrange(year, month)[1])
+    if lower and upper:
+        starts = [lower + timedelta(days=i) for i in range(max((upper - lower).days - duration + 1, 0))]
+        if trip.start:
+            starts.sort(key=lambda start: (abs((start - trip.start).days), start))
+    elif trip.start:
+        starts = [trip.start]
+        starts += [trip.start + timedelta(days=shift) for offset in range(1, trip.date_flexibility + 1) for shift in (-offset, offset)]
+    else:
+        return []
+    return [(start, start + timedelta(days=duration)) for start in starts if start >= today]
+
+
+def transport_matches(c: Candidate, trip: TripConstraints, now: datetime) -> bool:
+    if trip.transport_modes and c.transport_mode not in trip.transport_modes:
+        return False
+    if c.role != 'transport' or c.source.evidence != 'live' or c.source.expires_at is None or c.source.expires_at <= now:
+        return False
+    if c.origin != trip.origin or c.destination != ('Сочи' if c.transport_mode == 'rail' else 'AER') or c.adults != trip.adults or c.price is None or c.price.currency != 'RUB' or c.price.basis not in ('party', 'person', 'ticket'):
+        return False
+    if (c.start, c.end) not in search_dates(trip):
+        return False
+    if trip.direct_only and c.transfers != 0:
+        return False
+    return flight_fits(c, trip.model_copy(update={'start': c.start, 'end': c.end}))
 
 
 def offer_card(c: Candidate, trip: TripConstraints, now: datetime | None = None) -> OfferCard:
@@ -70,14 +118,22 @@ def offer_card(c: Candidate, trip: TripConstraints, now: datetime | None = None)
         warnings.append('unverified_availability')
     if c.price is None:
         warnings.append('unknown_price')
-    if c.adults is not None and (c.adults != trip.adults or c.children_ages != trip.children_ages):
+    if c.adults is not None and c.adults != trip.adults:
         warnings.append('different_party')
     if c.role == 'transport' and (c.start, c.end) != (trip.start, trip.end):
         warnings.append('alternate_dates')
-    if c.price and c.price.currency == 'RUB' and trip.party_budget:
-        amount = c.price.amount * (trip.party_size or 1) if c.price.basis in ('person', 'ticket') else c.price.amount
+    if c.role == 'transport' and (c.start, c.end) not in search_dates(trip):
+        warnings.append('outside_search_window')
+    if c.role == 'transport' and trip.direct_only and c.transfers != 0:
+        warnings.append('direct_flight_unverified')
+    if c.price and trip.party_budget:
+        amount = c.price.amount * (trip.adults or 1) if c.price.basis in ('person', 'ticket') else c.price.amount
         if amount > trip.party_budget:
             warnings.append('over_budget')
+    if c.role == 'stays' and c.area != trip.destination:
+        warnings.append('different_area')
+    if c.role == 'stays' and trip.hotel and trip.hotel.casefold() not in c.name.casefold():
+        warnings.append('different_hotel')
     details = c.description
     if not details and c.role == 'transport':
         details = f"{c.origin or 'Город не подтверждён'} → {c.destination or 'Сочи'}"
@@ -92,61 +148,150 @@ def offer_card(c: Candidate, trip: TripConstraints, now: datetime | None = None)
         if c.price.basis in ('person', 'ticket'):
             per_person = c.price.model_copy(update={'basis': 'person'})
         elif c.price.basis in ('party', 'room_stay') and c.adults:
-            per_person = c.price.model_copy(update={'amount': (c.price.amount / (c.adults + len(c.children_ages))).quantize(Decimal('0.01')), 'basis': 'person'})
-    selectable = quote_current(c, now) and c.role in ('transport', 'stays')
+            per_person = c.price.model_copy(update={'amount': (c.price.amount / c.adults).quantize(Decimal('0.01')), 'basis': 'person'})
+    selectable = transport_matches(c, trip, now) if c.role == 'transport' else stay_matches(c, trip, now) if c.role == 'stays' else False
     return OfferCard(id=c.id, kind=c.role, title=c.name, description=details,
                      aggregator=labels.get(c.source.provider, parsed.hostname or c.source.provider), provider=c.source.provider,
                      url=url, dates=OfferDates(start=c.start, end=c.end, departure_at=c.departure_at, arrival_at=c.arrival_at, return_departure_at=c.return_departure_at),
-                     price=c.price, price_per_person=per_person, adults=c.adults, children_ages=c.children_ages, evidence=c.source.evidence,
+                     price=c.price, price_per_person=per_person, adults=c.adults, evidence=c.source.evidence,
                      freshness='expired' if expired else 'fresh' if c.source.expires_at else 'unknown', retrieved_at=c.source.retrieved_at,
-                     selectable=selectable, action='view' if c.role == 'experience' else 'select' if selectable else 'verify', warnings=warnings, facts=c.facts, transport_mode=c.transport_mode)
+                     selectable=selectable, action='view' if c.role == 'experience' else 'select' if selectable else 'verify', warnings=warnings)
+
+
+def stay_matches(c: Candidate, trip: TripConstraints, now: datetime) -> bool:
+    area = area_of(c.coordinates)
+    if area is None:
+        return False
+    return usable(c, trip.model_copy(update={'destination': area, 'hotel': None}), now)
+
+
+def usable(c: Candidate, trip: TripConstraints, now: datetime) -> bool:
+    if c.source.expires_at is None or c.source.expires_at <= now:
+        return False
+    if c.role in ('transport', 'stays'):
+        if c.source.evidence != 'live':
+            return False
+        dates = (trip.start, trip.end) if c.role == 'transport' else (trip.stay_start, trip.stay_end)
+        if (c.start, c.end, c.adults) != (*dates, trip.adults):
+            return False
+        if c.price is None or c.price.currency != 'RUB' or c.price.basis == 'unknown':
+            return False
+    if c.role == 'transport':
+        return c.origin == trip.origin and c.destination == ('Сочи' if c.transport_mode == 'rail' else 'AER') and c.arrival_at is not None and c.return_departure_at is not None
+    area = area_of(c.coordinates)
+    if area is None:
+        return False
+    if c.role == 'stays' and trip.holiday_type == 'ski' and area != 'Красная Поляна':
+        return False
+    expected = 'Красная Поляна' if trip.destination == 'Роза Хутор' else trip.destination
+    if c.role == 'stays' and trip.destination != 'Сочи' and area != expected:
+        return False
+    if c.role == 'stays' and trip.min_hotel_stars and (c.stars is None or c.stars < trip.min_hotel_stars):
+        return False
+    if c.role == 'stays' and trip.min_hotel_rating and (c.rating is None or c.rating < trip.min_hotel_rating):
+        return False
+    if c.role == 'stays' and trip.hotel and trip.hotel.casefold() not in c.name.casefold():
+        return False
+    return True
+
+
+def flight_fits(c: Candidate, trip: TripConstraints) -> bool:
+    return bool(c.arrival_at and c.return_departure_at and trip.start and trip.end
+                and trip.start <= c.arrival_at.date() < trip.end
+                and c.return_departure_at.date() == trip.end
+                and c.return_departure_at > c.arrival_at)
 
 
 def diagnose(trip: TripConstraints, candidates: list[Candidate], now: datetime | None = None) -> PlanDiagnostics:
+    now = now or datetime.now(timezone.utc)
     roles = ('transport', 'stays', 'experience')
-    ready = {role: sum(c.role == role and (role == 'experience' or quote_current(c, now)) for c in candidates) for role in roles}
-    return PlanDiagnostics(received={role: sum(c.role == role for c in candidates) for role in roles},
-        eligible=ready, reasons=['no_eligible_' + role for role in ('transport', 'stays') if not ready[role]],
-        rejected={'expired_quote': sum(bool(c.source.expires_at and c.source.expires_at <= (now or datetime.now(timezone.utc))) for c in candidates)})
+    eligible = [c for c in candidates if usable(c, trip, now)]
+    flights = [c for c in eligible if c.role == 'transport' and flight_fits(c, trip)]
+    stays = [c for c in eligible if c.role == 'stays']
+    reasons = []
+    if not flights:
+        reasons.append('no_eligible_transport')
+    if not stays:
+        reasons.append('no_eligible_stays')
+    mismatch = flights and stays and not any(
+        (f.arrival_at.date(), f.return_departure_at.date()) == (s.start, s.end)
+        for f in flights for s in stays
+    )
+    if mismatch:
+        reasons.append('arrival_stay_mismatch')
+    return PlanDiagnostics(
+        received={r: sum(c.role == r for c in candidates) for r in roles},
+        eligible={r: sum(c.role == r for c in eligible) for r in roles},
+        reasons=reasons,
+        suggested_check_in=min(f.arrival_at.date() for f in flights) if mismatch else None,
+        rejected={reason: sum(reason in offer_card(c, trip, now).warnings for c in candidates) for reason in ('expired_quote', 'alternate_dates', 'different_party', 'outside_search_window', 'direct_flight_unverified')},
+    )
 
 
 def compose(trip: TripConstraints, candidates: list[Candidate], revision: int, now: datetime | None = None, preferred_stays: list[str] | None = None) -> list[TripOption]:
-    transports = [c for c in candidates if c.role == 'transport']
-    stays = [c for c in candidates if c.role == 'stays']
-    activities = [c for c in candidates if c.role == 'experience']
-    if not transports and not stays:
+    now = now or datetime.now(timezone.utc)
+    if trip.missing():
         return []
+    valid = [c for c in candidates if usable(c, trip, now)]
+    flights = [c for c in valid if c.role == 'transport' and flight_fits(c, trip)]
+    stays = [c for c in valid if c.role == 'stays']
+    activities = [c for c in valid if c.role == 'experience']
     options = []
-    for transport, stay in product(transports or [None], stays or [None]):
+    pairs = [(f, s) for f, s in product(flights or [None], stays or [None])
+             if f is None or s is None or (f.arrival_at.date(), f.return_departure_at.date()) == (s.start, s.end)]
+    if not pairs:
+        pairs = [(None, s) for s in stays] or [(f, None) for f in flights]
+    for flight, stay in pairs:
+        if flight is None and stay is None:
+            continue
         lines = []
-        warnings = ['Поисковые тарифы; наличие не гарантировано. Полная стоимость неизвестна.']
-        for name, item in [('transport', transport), ('stay', stay)]:
+        for name, item in [('transport', flight), ('stay', stay)]:
             money = item.price if item else None
-            if money and money.currency != 'RUB':
-                warnings.append(name + ': требуется курс валюты; исходная цена сохранена в карточке')
-                money = None
-            quantity = (trip.party_size or 1) if money and money.basis in ('person', 'ticket') else 1
-            lines.append(BudgetLine(name=name, unit_price=money, quantity=quantity, evidence=item.source.evidence if item else 'unknown'))
-            if item and not quote_current(item, now):
-                warnings.append(name + ': требуется проверка котировки перед оформлением')
-        lines += [BudgetLine(name=name) for name in ('meals', 'local_transport', 'activities', 'extra_fees')]
+            quantity = trip.adults if money and money.basis in ('person', 'ticket') else 1
+            lines.append(BudgetLine(name=name, unit_price=money, quantity=quantity,
+                                    evidence=item.source.evidence if item else 'unknown'))
+        lines += [BudgetLine(name=k) for k in ('meals', 'local_transport', 'activities', 'extra_fees')]
         budget = calculate_budget(lines)
+        days = []
+        available = sorted(activities, key=lambda c: stay is not None and area_of(c.coordinates) != area_of(stay.coordinates))
+        for index in range((trip.end - trip.start).days + 1):
+            day = trip.start + timedelta(days=index)
+            selected = []
+            arrival = flight.arrival_at.date() if flight else trip.stay_start
+            if arrival < day < trip.end:
+                eligible_today = [c for c in available if not c.start or c.start == day]
+                regions = list(dict.fromkeys(area_of(c.coordinates) == 'Красная Поляна' for c in eligible_today))
+                mountain_day = regions[(index - 1) % len(regions)] if regions else None
+                target_area = next((area_of(c.coordinates) for c in eligible_today if (area_of(c.coordinates) == 'Красная Поляна') == mountain_day), None)
+                for activity in list(available):
+                    if activity.start and activity.start != day:
+                        continue
+                    if area_of(activity.coordinates) != target_area:
+                        continue
+                    if selected and area_of(activity.coordinates) != area_of(selected[0].coordinates):
+                        continue
+                    selected.append(activity)
+                    available.remove(activity)
+                    if len(selected) == 2:
+                        break
+            days.append(ItineraryDay(date=day, candidates=selected))
+        ident = sha256(f'{revision}:{flight.id if flight else ""}:{stay.id if stay else ""}'.encode()).hexdigest()[:16]
+        warnings = ['Поисковые тарифы; наличие не гарантировано. Полная стоимость неизвестна.']
         if trip.party_budget and budget.known_subtotal > trip.party_budget:
             warnings.append('Известная часть расходов превышает бюджет')
-        if transport and stay and transport.arrival_at and transport.return_departure_at and (transport.arrival_at.date(), transport.return_departure_at.date()) != (stay.start, stay.end):
-            warnings.append('Даты транспорта и проживания требуют согласования')
-        calendar: dict[date, list[Candidate]] = {}
-        if trip.start and trip.end:
-            for index in range((trip.end - trip.start).days + 1):
-                calendar[trip.start + timedelta(days=index)] = []
-        for activity in activities:
-            day = activity.scheduled_date or activity.start or trip.stay_start
-            if day is not None:
-                calendar.setdefault(day, []).append(activity)
-        days = [ItineraryDay(date=day, candidates=items) for day, items in sorted(calendar.items())]
-        ident = sha256(f'{revision}:{transport.id if transport else ""}:{stay.id if stay else ""}'.encode()).hexdigest()[:16]
-        options.append(TripOption(id=ident, revision=revision, transport=transport, stay=stay, budget=budget, days=days, warnings=warnings))
-    return options
+        options.append(TripOption(id=ident, revision=revision, transport=flight, stay=stay, budget=budget, days=days, warnings=warnings))
+    preferred = set(preferred_stays or [])
+    ordered = sorted(options, key=lambda o: (bool(preferred) and (o.stay is None or o.stay.id not in preferred), o.budget.known_subtotal))
+    diversified: list[TripOption] = []
+    seen: set[str] = set()
+    for option in ordered:
+        key = option.stay.id if option.stay else option.transport.id
+        if key not in seen:
+            diversified.append(option)
+            seen.add(key)
+        if len(diversified) == 5:
+            break
+    return diversified
 
 
 def simulate_purchase(state: dict, request: BookingRequest) -> dict:
@@ -167,18 +312,113 @@ def simulate_purchase(state: dict, request: BookingRequest) -> dict:
     if option is None or not option.transport or not option.stay:
         raise ValueError('Incomplete trip')
     trip = TripConstraints.model_validate(state['constraints'])
-    for candidate in (option.transport, option.stay):
-        if candidate.adults != trip.adults or candidate.children_ages != trip.children_ages:
-            raise ValueError('Passenger composition requires verification')
-        if candidate.price and candidate.price.currency != 'RUB':
-            raise ValueError('Currency conversion requires a dated rate')
-    if not all(quote_current(c) for c in (option.transport, option.stay)):
+    if trip.baggage == 'required' and option.transport.baggage_included is not True:
+        raise ValueError('Required baggage is unverified')
+    if trip.ski_equipment == 'own' and option.transport.sports_equipment_included is not True:
+        raise ValueError('Sports equipment is unverified')
+    if trip.mountain_days is not None and sum(any(area_of(c.coordinates) == 'Красная Поляна' for c in d.candidates) for d in option.days) != trip.mountain_days:
+        raise ValueError('Required mountain days are not satisfied')
+    if not all(usable(c, trip, datetime.now(timezone.utc)) for c in (option.transport, option.stay)):
         raise ValueError('Quotes expired; refresh search')
-    if not option.transport.arrival_at or not option.transport.return_departure_at or (option.transport.arrival_at.date(), option.transport.return_departure_at.date()) != (option.stay.start, option.stay.end):
+    if not flight_fits(option.transport, trip) or (option.transport.arrival_at.date(), option.transport.return_departure_at.date()) != (option.stay.start, option.stay.end):
         raise ValueError('Transport and stay dates are incompatible')
+    if trip.party_budget and option.budget.known_subtotal > trip.party_budget:
+        raise ValueError('Known subtotal exceeds the party budget')
     return {'id': str(uuid4()), 'option_id': request.option_id, 'revision': request.revision,
             'simulated': True, 'status': 'simulated', 'paid': False, 'reserved': False,
             'items': [{'kind': c.role, 'source_id': c.id, 'name': c.name, 'price': c.price.model_dump(mode='json'), 'url': offer_card(c, trip).url, 'provider': c.source.provider, 'aggregator': offer_card(c, trip).aggregator, 'details': c.model_dump(mode='json', exclude={'source', 'price', 'url'})} for c in (option.transport, option.stay)],
             'payment': {'simulated': True, 'status': 'succeeded', 'currency': 'RUB', 'amount': str(option.budget.known_subtotal), 'scope': 'transport_and_stay', 'method': request.payment_method},
             'missing_costs': option.budget.missing, 'itinerary': [d.model_dump(mode='json') for d in option.days],
             'message': 'Имитация покупки оформлена: билеты, проживание и маршрут сохранены в заказе. Реальные места не зарезервированы, оплата не выполнялась. Питание, трансферы, активности и сборы не оплачены.'}
+
+
+def compose_packages(trip: TripConstraints, results: dict, revision: int) -> tuple[list[TripOption], list[PlanFeedback]]:
+    from travel_agent.schemas import PlanFeedback, SpecialistResult
+
+    now = datetime.now(timezone.utc)
+    parsed = {role: SpecialistResult.model_validate(row) for role, row in results.items()}
+    candidates = [c for row in parsed.values() for c in row.candidates]
+    feedback = []
+    transport = [c for c in candidates if c.role == 'transport' and transport_matches(c, trip, now)]
+    window = search_dates(trip)
+    lower = min((p[0] for p in window), default=trip.start)
+    upper = max((p[1] for p in window), default=trip.end)
+    stays = [c for c in candidates if c.role == 'stays' and c.start and c.end and lower and upper
+             and lower <= c.start < c.end <= upper
+             and usable(c, trip.model_copy(update={'check_in': c.start, 'check_out': c.end}), now)]
+    if not transport:
+        feedback.append(PlanFeedback(role='transport', code='no_transport', detail='Нет совместимого свежего транспорта туда-обратно. Проверь другой разрешённый источник или даты в согласованном окне.'))
+    if not stays:
+        feedback.append(PlanFeedback(role='stays', code='no_stays', detail='Нет свежего проживания с проверенной ценой, районом и составом гостей.'))
+    if transport and stays and not any((s.start, s.end) == (item.arrival_at.date(), item.return_departure_at.date()) for item in transport for s in stays):
+        item = transport[0]
+        feedback.append(PlanFeedback(role='stays', code='arrival_stay_mismatch', detail=f'Для {item.id} проживание нужно {item.arrival_at.date()}–{item.return_departure_at.date()}. Выполни search_hotels с этими check_in/check_out.'))
+    experience = parsed.get('experience')
+    days = experience.days if experience else []
+    activities = {c.id: c for c in candidates if c.role == 'experience' and usable(c, trip, now)}
+    if not days:
+        feedback.append(PlanFeedback(role='experience', code='no_day_plan', detail=f'Нужна программа в days для ВСЕГО исходного периода {trip.start or trip.date_from or trip.travel_month}–{trip.end or trip.date_to or "окно поиска"}, с source_ids найденных мест и двумя пустыми днями дороги. Не сокращай её под один ЖД-вариант.'))
+    unknown = any(ident not in activities for day in days for ident in day.source_ids)
+    repeated = len([ident for day in days for ident in day.source_ids]) != len({ident for day in days for ident in day.source_ids})
+    if unknown or repeated or len({d.date for d in days}) != len(days):
+        feedback.append(PlanFeedback(role='experience', code='invalid_day_evidence', detail='Устрани неизвестные/повторяющиеся ID и дубли дат в программе.'))
+    options = []
+    for journey, stay in product(transport, stays):
+        if (stay.start, stay.end) != (journey.arrival_at.date(), journey.return_departure_at.date()):
+            continue
+        preview = trip.model_copy(update={'start': journey.start, 'end': journey.end, 'check_in': stay.start, 'check_out': stay.end})
+        base = compose(preview, [journey, stay], revision, now=now)
+        if not base:
+            continue
+        option = base[0]
+        planned = []
+        used = set()
+        for day in option.days:
+            proposal = next((d for d in days if d.date == day.date), None)
+            rows = []
+            if proposal and stay.start < day.date < stay.end:
+                for ident in proposal.source_ids:
+                    item = activities.get(ident)
+                    if item is None or ident in used or item.start and item.start != day.date:
+                        continue
+                    if trip.holiday_type == 'ski' and item.area != 'Красная Поляна':
+                        continue
+                    if rows and area_of(item.coordinates) != area_of(rows[0].coordinates):
+                        continue
+                    rows.append(item)
+                    used.add(ident)
+            planned.append(ItineraryDay(date=day.date, candidates=rows))
+        option.days = planned
+        if trip.mountain_days is not None:
+            count = sum(any(area_of(c.coordinates) == 'Красная Поляна' for c in d.candidates) for d in planned)
+            if count != trip.mountain_days:
+                option.warnings.append(f'Горных дней {count}, требуется {trip.mountain_days}')
+        if trip.baggage == 'required' and journey.baggage_included is not True:
+            option.warnings.append('Требуемый багаж не подтверждён; доплата неизвестна')
+        if trip.ski_equipment == 'own' and journey.sports_equipment_included is not True:
+            option.warnings.append('Перевозка своего спортивного снаряжения и доплата не подтверждены')
+        options.append(option)
+    if trip.holiday_type == 'ski' and any(ident in activities and activities[ident].area != 'Красная Поляна' for day in days for ident in day.source_ids):
+        feedback.append(PlanFeedback(role='experience', code='ski_program_mismatch', detail='Цель — горнолыжная поездка. Оставь полные дни в горном кластере, не добавляй побережье без запроса пользователя.'))
+    if options and trip.mountain_days is not None and all(any(w.startswith('Горных дней') for w in o.warnings) for o in options):
+        feedback.append(PlanFeedback(role='experience', code='mountain_days_mismatch', detail=f'Нужно ровно {trip.mountain_days} горных дней с различными реальными местами, с учётом дат прибытия и выезда.'))
+    if options and all(not any(d.candidates for d in o.days) for o in options):
+        if not any(f.code == 'no_day_plan' for f in feedback):
+            feedback.append(PlanFeedback(role='experience', code='empty_program', detail='Программа не содержит подходящих посещений на доступные дни поездки.'))
+    preferred = {ident: i for i, ident in enumerate(parsed['stays'].selected_ids)} if 'stays' in parsed else {}
+    transport_priority = {ident: i for i, ident in enumerate(parsed['transport'].selected_ids)} if 'transport' in parsed else {}
+    options.sort(key=lambda o: (bool(trip.party_budget and o.budget.known_subtotal > trip.party_budget), transport_priority.get(o.transport.id, 100), preferred.get(o.stay.id, 100), o.budget.known_subtotal))
+    selected = []
+    seen = set()
+    for option in options:
+        key = (option.transport.transport_mode, option.stay.id, option.stay.start)
+        if key not in seen:
+            selected.append(option)
+            seen.add(key)
+        if len(selected) == trip.option_limit:
+            break
+    for mode in ('avia', 'rail') if trip.option_limit > 1 else ():
+        alternative = next((o for o in options if o.transport.transport_mode == mode), None)
+        if alternative and selected and not any(o.transport.transport_mode == mode for o in selected):
+            selected[-1] = alternative
+    return selected, feedback

@@ -11,6 +11,7 @@ import {
   X,
   Plus,
   Plane,
+  TrainFront,
   Building2,
   MapPin,
   Mountain,
@@ -56,6 +57,8 @@ import {
   tripParts,
   tripMapPoints,
   tripStatus,
+  canCheckout,
+  feedbackText,
 } from "./format";
 import "./styles.css";
 
@@ -745,7 +748,10 @@ function Sidebar({
             </p>
           )}
           <div className="sidebar-section-title">
-            В ВАШЕЙ ПОЕЗДКЕ <Luggage size={13} />
+            {state?.autonomous && !state.selected && state.options?.length
+              ? "ПРЕДПРОСМОТР ПОЕЗДКИ"
+              : "В ВАШЕЙ ПОЕЗДКЕ"}{" "}
+            <Luggage size={13} />
           </div>
           {artifacts.length ? (
             <div className="saved-artifacts">
@@ -764,7 +770,11 @@ function Sidebar({
                       </small>
                     )}
                   </span>
-                  <Check size={13} />
+                  {state?.autonomous && !state.selected ? (
+                    <ArrowUpRight size={13} />
+                  ) : (
+                    <Check size={13} />
+                  )}
                 </button>
               ))}
             </div>
@@ -815,6 +825,7 @@ function Sidebar({
 }
 
 function Conversation({
+  runStatus,
   state,
   value,
   setValue,
@@ -939,12 +950,28 @@ function Conversation({
                         О! рядом <span>ваш агент путешествий</span>
                       </div>
                     )}
-                    <p>
-                      {message.role === "user" &&
-                      message.text.startsWith("/select ")
-                        ? "Выбираю этот вариант"
-                        : message.text}
-                    </p>
+                    {index === lastAssistant &&
+                    state?.autonomous &&
+                    message.text.length > 1000 &&
+                    (state.options?.length > 0 ||
+                      Object.values(state.results || {}).some(
+                        (result) => result.candidates?.length > 0,
+                      )) ? (
+                      <details className="agent-explanation">
+                        <summary>
+                          Рекомендация и пояснения агента{" "}
+                          <ChevronDown size={14} />
+                        </summary>
+                        <p>{message.text}</p>
+                      </details>
+                    ) : (
+                      <p>
+                        {message.role === "user" &&
+                        message.text.startsWith("/select ")
+                          ? "Выбираю этот вариант"
+                          : message.text}
+                      </p>
+                    )}
                     {index === lastAssistant && !busy && recommendations}
                   </div>
                 </div>
@@ -966,12 +993,17 @@ function Conversation({
                       </div>
                       <div className="agent-thinking">
                         <LoaderCircle size={16} className="spin" />
-                        <span>Собираю вашу поездку…</span>
+                        <span role="status" aria-live="polite">
+                          {runStatus?.status === "running"
+                            ? runStatus.label
+                            : "Собираю вашу поездку…"}
+                        </span>
                       </div>
                       <p className="thinking-note">
                         Сравниваю источники и проверяю варианты. Это может
                         занять несколько минут.
                       </p>
+                      <SearchPreviews previews={runStatus?.previews} />
                     </div>
                   </div>
                 )}
@@ -1028,6 +1060,247 @@ function SourceLink({ url, children }) {
       <ExternalLink size={12} />
     </a>
   ) : null;
+}
+
+function SearchPreviews({ previews }) {
+  const roles = {
+    transport: "Билеты",
+    stays: "Проживание",
+    experience: "Места и программа",
+  };
+  return (
+    Object.keys(previews || {}).length > 0 && (
+      <div
+        className="search-previews"
+        aria-label="Предварительные результаты поиска"
+      >
+        {Object.entries(previews).map(([role, cards]) => (
+          <div key={role}>
+            <strong>
+              <CheckCircle2 size={14} /> {roles[role]}
+            </strong>
+            {cards.map((card) => (
+              <span key={card.id}>{card.title}</span>
+            ))}
+          </div>
+        ))}
+        <p>Предварительные результаты. Агент ещё проверяет совместимость.</p>
+      </div>
+    )
+  );
+}
+
+function PackageCard({ option, index, state, choose, busy }) {
+  const selected = state.selected === option.id;
+  const trip = { ...state, options: [option], selected: option.id };
+  const people = state.constraints?.adults;
+  return (
+    <article className={`package-card ${selected ? "is-selected" : ""}`}>
+      <div className="package-heading">
+        <span className="choice-kicker">ВАРИАНТ {index + 1}</span>
+        {selected && (
+          <span className="package-selected">
+            <Check size={14} /> Выбран
+          </span>
+        )}
+      </div>
+      <h3>{option.stay?.name}</h3>
+      <p className="package-area">
+        <MapPin size={14} />
+        {option.stay?.area || "Большой Сочи"}
+      </p>
+      <div className="package-components">
+        <div>
+          <Icon
+            of={
+              option.transport?.transport_mode === "rail" ? TrainFront : Plane
+            }
+            size={18}
+          />
+          <span>
+            <strong>{option.transport?.name}</strong>
+            <small>
+              {date(option.transport?.start)} — {date(option.transport?.end)} ·
+              туда и обратно
+            </small>
+          </span>
+        </div>
+        <div>
+          <Building2 size={18} />
+          <span>
+            <strong>Проживание</strong>
+            <small>
+              {date(option.stay?.start)} — {date(option.stay?.end)}
+            </small>
+          </span>
+        </div>
+      </div>
+      <div className="package-price">
+        <strong>{money(option.budget?.known_subtotal)}</strong>
+        <span>билеты + отель за всех</span>
+        {people > 0 && (
+          <small>
+            {money(Number(option.budget?.known_subtotal) / people)} на человека
+          </small>
+        )}
+      </div>
+      <p className="small muted">
+        Питание, активности и местные переезды пока не посчитаны.
+      </p>
+      <details className="package-details">
+        <summary>
+          Программа и условия <ChevronDown size={14} />
+        </summary>
+        <DayPlan days={option.days || []} />
+        {option.warnings?.map((warning) => (
+          <p className="day-warning" key={warning}>
+            {warning}
+          </p>
+        ))}
+        <SourceLink url={option.transport?.url}>Билеты у поставщика</SourceLink>
+        <SourceLink url={option.stay?.url}>Отель у поставщика</SourceLink>
+      </details>
+      <button
+        className={selected ? "secondary" : "primary"}
+        disabled={busy || selected}
+        onClick={() => choose(option.id)}
+      >
+        {selected ? "Этот вариант выбран" : `Выбрать вариант ${index + 1}`}
+        <Check size={16} />
+      </button>
+      {selected && !canCheckout(trip) && (
+        <p className="small muted">Тарифы нужно обновить перед оформлением.</p>
+      )}
+    </article>
+  );
+}
+
+function AutonomousPlan({
+  state,
+  tripId,
+  busy,
+  choose,
+  pay,
+  navigate,
+  download,
+}) {
+  const staysOnly = state.focus === "stays";
+  const options = state.options || [];
+  const candidates = Object.values(state.results || {}).flatMap(
+    (result) => result.candidates || [],
+  );
+  if (state.stage === "booked")
+    return (
+      <Summary
+        state={state}
+        tripId={tripId}
+        pay={pay}
+        navigate={navigate}
+        download={download}
+        expanded
+      />
+    );
+  return (
+    <section className="agent-recommendations" aria-label="Предложения агента">
+      {(options.length > 0 || (staysOnly && state.cards?.length > 0)) && (
+        <div className="recommendation-heading">
+          <h2>
+            {staysOnly ? "Проживание под ваш запрос" : "Варианты вашей поездки"}
+          </h2>
+          <span>{tripStatus(state)}</span>
+        </div>
+      )}
+      {state.feedback?.length > 0 && (
+        <div className="plan-feedback" role="status">
+          <strong>Что ещё нужно уточнить</strong>
+          <ul>
+            {state.feedback.map((item, index) => (
+              <li key={index}>{feedbackText(item)}</li>
+            ))}
+          </ul>
+          <p>Обсудите изменения с агентом в чате.</p>
+        </div>
+      )}
+      {staysOnly ? (
+        <>
+          <div className="choices-grid offers-grid">
+            {state.choices?.map((choice, index) => (
+              <ChoiceCard
+                key={choice.id}
+                choice={choice}
+                index={index}
+                state={{ ...state, stage: "stays" }}
+                choose={choose}
+                busy={busy || state.selected_stay === choice.id}
+              />
+            ))}
+          </div>
+          {state.selected_stay && (
+            <p className="notice">
+              Отель выбран. Попросите агента добавить билеты и программу, чтобы
+              собрать поездку.
+            </p>
+          )}
+        </>
+      ) : options.length > 0 ? (
+        <>
+          <div className="packages-grid">
+            {options.map((option, index) => (
+              <PackageCard
+                key={option.id}
+                option={option}
+                index={index}
+                state={state}
+                choose={choose}
+                busy={busy}
+              />
+            ))}
+          </div>
+          {state.selected && (
+            <Summary
+              state={state}
+              tripId={tripId}
+              pay={pay}
+              navigate={navigate}
+              download={download}
+            />
+          )}
+        </>
+      ) : candidates.length > 0 ? (
+        <div className="partial-results">
+          <h3>Уже нашлось для вашей поездки</h3>
+          <p className="small muted">
+            Готового пакета пока нет. Сохранили найденное для продолжения
+            поиска.
+          </p>
+          {candidates.slice(0, 6).map((item) => (
+            <div className="partial-offer" key={item.id}>
+              <Icon
+                of={
+                  item.role === "stays"
+                    ? Building2
+                    : item.role === "transport"
+                      ? item.transport_mode === "rail"
+                        ? TrainFront
+                        : Plane
+                      : MapPin
+                }
+                size={18}
+              />
+              <div>
+                <strong>{item.name}</strong>
+                <p>
+                  {money(item.price?.amount, item.price?.currency)}
+                  {item.price && ` · ${basis(item.price.basis)}`}
+                </p>
+                <SourceLink url={item.url || item.source?.source_url} />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : null}
+    </section>
+  );
 }
 
 function ChoiceCard({ choice, state, index, choose, busy }) {
@@ -1292,7 +1565,12 @@ function DayPlan({ days = [], completed, toggle }) {
 
 function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
   const receipt = state.stage === "booked" ? state.receipt : null;
-  const c = state.constraints || {};
+  const option = currentOption(state);
+  const c = {
+    ...state.constraints,
+    start: option?.transport?.start || state.constraints?.start,
+    end: option?.transport?.end || state.constraints?.end,
+  };
   const parts = tripParts(state);
   const items =
     receipt?.items ||
@@ -1315,6 +1593,24 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
   );
   const stayCost = componentCost(items.find((i) => i.kind === "stays"));
   const costSum = transportCost + stayCost;
+  if (state.autonomous && !option && !receipt)
+    return (
+      <div className="empty-state">
+        <Luggage size={30} />
+        <h3>
+          {state.focus === "stays"
+            ? "Подбираем проживание"
+            : "Поездка ещё собирается"}
+        </h3>
+        <p>
+          Продолжите разговор с агентом. Готовые варианты появятся здесь после
+          поиска и проверки.
+        </p>
+        <button className="primary" onClick={() => navigate("plan", tripId)}>
+          Обсудить поездку
+        </button>
+      </div>
+    );
   return (
     <div className="trip-summary">
       <div className={`summary-banner ${receipt ? "booked" : ""}`}>
@@ -1323,7 +1619,11 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
         </span>
         <div>
           <span className="eyebrow">
-            {receipt ? "МОЖНО ПРЕДВКУШАТЬ" : "ПАЗЛ СЛОЖИЛСЯ"}
+            {receipt
+              ? "МОЖНО ПРЕДВКУШАТЬ"
+              : state.autonomous && !state.selected
+                ? "ПРЕДПРОСМОТР ВАРИАНТА"
+                : "ПАЗЛ СЛОЖИЛСЯ"}
           </span>
           <h2>{receipt ? "Ваш Сочи ждёт" : "Ваша поездка, целиком"}</h2>
           <p>
@@ -1347,7 +1647,16 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
           <details className="summary-component" key={i}>
             <summary>
               <span className="component-icon">
-                <Icon of={item.kind === "transport" ? Plane : Building2} />
+                <Icon
+                  of={
+                    item.kind === "transport"
+                      ? (item.transport_mode ||
+                          item.details?.transport_mode) === "rail"
+                        ? TrainFront
+                        : Plane
+                      : Building2
+                  }
+                />
               </span>
               <div>
                 <small>
@@ -1437,7 +1746,7 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
             <Compass size={17} />В поездку
           </button>
         ) : (
-          state.stage === "review" && (
+          canCheckout(state) && (
             <button className="primary" onClick={pay}>
               <CreditCard size={17} />
               Забронировать поездку
@@ -1445,6 +1754,11 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
           )
         )}
       </div>
+      {!receipt && state.selected && !canCheckout(state) && (
+        <p className="small muted">
+          Перед оформлением попросите агента обновить тарифы поездки.
+        </p>
+      )}
       {expanded && (
         <>
           <details className="itinerary-details">
@@ -1502,6 +1816,18 @@ function Planner({
   navigate,
   download,
 }) {
+  if (state.autonomous)
+    return (
+      <AutonomousPlan
+        state={state}
+        tripId={tripId}
+        busy={busy}
+        choose={choose}
+        pay={pay}
+        navigate={navigate}
+        download={download}
+      />
+    );
   const stage = state.stage || "scenarios";
   const index = stages.indexOf(stage);
   const titles = {
@@ -2065,7 +2391,9 @@ function Trips({ account, auth, trips, navigate, reload, run }) {
                 />
                 <span className="image-pill">{tripStatus(t.state)}</span>
                 <span className="history-step">
-                  {stageNames[stages.indexOf(t.state.stage || "scenarios")]}
+                  {t.state.autonomous
+                    ? tripStatus(t.state)
+                    : stageNames[stages.indexOf(t.state.stage || "scenarios")]}
                 </span>
               </div>
               <div className="history-content">
@@ -2365,6 +2693,7 @@ function App() {
   const [progress, setProgress] = useState(null);
   const [value, setValue] = useState("");
   const [busy, setBusy] = useState(false);
+  const [runStatus, setRunStatus] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -2372,6 +2701,19 @@ function App() {
   const [pendingMessage, setPendingMessage] = useState(null);
   const [mobileNav, setMobileNav] = useState(false);
   const [page, tripId] = route.split("/");
+  useEffect(() => {
+    setRunStatus(null);
+    if (!busy || !tripId) return;
+    const source = new EventSource(`/trips/${tripId}/events`);
+    source.onmessage = (event) => {
+      try {
+        setRunStatus(JSON.parse(event.data));
+      } catch {
+        source.close();
+      }
+    };
+    return () => source.close();
+  }, [busy, tripId]);
   const operation = useRef(false);
   const main = useRef(null);
   const navigate = (page, id) => {
@@ -2683,6 +3025,7 @@ function App() {
               <AccountRequired auth={() => setAuth(true)} />
             ) : (
               <Conversation
+                runStatus={runStatus}
                 state={state}
                 value={value}
                 setValue={setValue}

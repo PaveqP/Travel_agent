@@ -1,10 +1,9 @@
-from collections.abc import Awaitable, Callable
 import httpx
 from langchain_core.tools import BaseTool, tool
 
 from integrations.schemas.models import Coordinates
 from travel_agent.engine import CENTERS
-from travel_agent.schemas import Area, SourceObservation, TripConstraints
+from travel_agent.schemas import Area, Candidate, TripConstraints
 from integrations.providers import geoapify, openmeteo, opentripmap, timepad
 
 
@@ -26,12 +25,13 @@ def build_tools(
     trip: TripConstraints,
     client: httpx.AsyncClient,
     env: dict[str, str],
-    evidence: dict[str, SourceObservation],
-    mcp: Callable[[str, str, str, dict], Awaitable[dict]],
-    rest: Callable[..., Awaitable[dict]],
+    evidence: dict[str, Candidate],
+    mcp,
+    rest,
     center: Coordinates | None = None,
+    *, autonomous: bool = False,
 ) -> list[BaseTool]:
-    lat, lon = (center.lat, center.lon) if center else CENTERS[trip.destination]
+    lat, lon = (center.lat, center.lon) if center else CENTERS["Красная Поляна" if trip.holiday_type == "ski" else trip.destination]
 
     @tool
     async def search_places(
@@ -44,7 +44,7 @@ def build_tools(
             "2gis",
             "search_places",
             {
-                "query": query,
+                "query": query[:200],
                 "latitude": search_lat,
                 "longitude": search_lon,
                 "radius": 7000,
@@ -55,25 +55,31 @@ def build_tools(
     @tool
     async def route(source_id: str) -> dict:
         """Get a driving route from the hotel to a place found in this delegation."""
-        target = None
-        for observation in evidence.values():
-            if observation.provider == '2gis' and isinstance(observation.data, dict):
-                for row in observation.data.get('items', []):
-                    if row.get('id') == source_id.removeprefix('2gis:'):
-                        target = row.get('coordinates')
-        if target is None:
+        candidate = evidence.get(source_id)
+        if candidate is None or candidate.coordinates is None:
             return {"status": "forbidden"}
-        return await mcp("route", "2gis", "build_route", {
-            "points": [{"lat": lat, "lon": lon}, target], "transport": "driving"})
+        return await mcp(
+            "route",
+            "2gis",
+            "build_route",
+            {
+                "points": [
+                    {"lat": lat, "lon": lon},
+                    candidate.coordinates.model_dump(),
+                ],
+                "transport": "driving",
+            },
+        )
 
     @tool
-    async def geoapify_places() -> dict:
+    async def geoapify_places(area: Area | None = None) -> dict:
         """Search nearby sightseeing catalog with Geoapify."""
+        search_lat, search_lon = CENTERS[area] if area else (lat, lon)
         return await rest(
             "geoapify_places",
             "geoapify",
             "GEOAPIFY_API_KEY",
-            lambda: geoapify.places(client, env.get("GEOAPIFY_API_KEY", ""), lat, lon),
+            lambda: geoapify.places(client, env.get("GEOAPIFY_API_KEY", ""), search_lat, search_lon),
         )
 
     @tool

@@ -135,7 +135,7 @@ class PortalPostgresTests(unittest.TestCase):
             self.stack.enter_context(patch("travel_agent.api." + symbol, mocked))
         self.dsn = os.environ["TRAVEL_TEST_DATABASE_URL"]
         self.credentials = {"name": "Аня", "email": f"{uuid4()}@example.org", "password": "test-password-1234"}
-        self.client = self.stack.enter_context(TestClient(create_app(portal_database_url=self.dsn)))
+        self.client = self.stack.enter_context(TestClient(create_app(portal_database_url=self.dsn, autonomous=False)))
         response = self.client.post("/api/auth/register", json=self.credentials)
         self.assertEqual(response.status_code, 200, response.text)
         self.user = response.json()["id"]
@@ -237,7 +237,7 @@ class PortalPostgresTests(unittest.TestCase):
     def test_all_records_and_messages_survive_application_restart_and_are_isolated(self):
         trip_id, path, state = self.plan()
         cookies = dict(self.client.cookies)
-        with TestClient(create_app(portal_database_url=self.dsn)) as other:
+        with TestClient(create_app(portal_database_url=self.dsn, autonomous=False)) as other:
             other.cookies.update(cookies)
             restored = other.get(path)
             self.assertEqual(restored.status_code, 200, restored.text)
