@@ -56,6 +56,10 @@ test("autonomous status distinguishes packages, hotel search and incomplete plan
     "План требует уточнений",
   );
   assert.equal(
+    tripStatus({ autonomous: true, selected: "a", options: [{ id: "a" }], status: "partial" }),
+    "План требует уточнений",
+  );
+  assert.equal(
     tripStatus({ autonomous: true, focus: "stays", cards: [{ id: "hotel" }] }),
     "Отели найдены",
   );

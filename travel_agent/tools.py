@@ -380,7 +380,7 @@ def build_tools(
         started = time.monotonic()
         status = "ok"
         try:
-            async with asyncio.timeout(12 if method == "build_route" else 45 if autonomous else 65 if provider in ("tutu", "2gis") else 40):
+            async with asyncio.timeout((8 if name in ("geocode_destination", "weather", "events", "yandex_schedule") else 15) if autonomous else 12 if method == "build_route" else 65 if provider in ("tutu", "2gis") else 40):
                 response = await operation()
             if isinstance(response, httpx.Response):
                 response.raise_for_status()
@@ -493,6 +493,9 @@ def build_tools(
                 "context": str(data)[:6000],
                 "warning": "Context only, not a validated trip quote",
             }
+        except asyncio.CancelledError:
+            status = "cancelled"
+            raise
         except (TimeoutError, httpx.TimeoutException):
             status = "timeout"
         except httpx.HTTPStatusError as exc:

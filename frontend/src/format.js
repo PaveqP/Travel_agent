@@ -209,8 +209,8 @@ export function tripStatus(
 ) {
   if (state?.stage !== "booked") {
     if (state?.autonomous) {
-      if (state.selected) return "Вариант выбран";
       if (state.status === "partial") return "План требует уточнений";
+      if (state.selected) return "Вариант выбран";
       if (state.focus === "stays" && state.cards?.length)
         return "Отели найдены";
       if (state.options?.length) return "Варианты готовы";

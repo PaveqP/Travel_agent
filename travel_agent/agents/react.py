@@ -10,7 +10,9 @@ from langchain.agents.middleware import (
     ContextEditingMiddleware,
     ModelCallLimitMiddleware,
     ToolCallLimitMiddleware,
+    wrap_model_call,
 )
+from langchain.agents.middleware.types import ModelRequest, ModelResponse
 from langchain.agents.middleware.model_call_limit import ModelCallLimitExceededError
 from langchain.agents.middleware.tool_call_limit import ToolCallLimitExceededError
 from langchain.agents.structured_output import ToolStrategy, StructuredOutputError
@@ -33,6 +35,13 @@ from travel_agent.tools import build_tools
 from travel_agent.engine import search_dates
 
 
+@wrap_model_call
+async def finish_before_limit(request: ModelRequest, handler) -> ModelResponse:
+    if request.state.get('run_model_call_count', 0) >= 3:
+        request = request.override(tools=[])
+    return await handler(request)
+
+
 async def run_react(
     role: Role,
     trip: TripConstraints,
@@ -49,6 +58,7 @@ async def run_react(
     autonomous: bool = False,
     previous: list[Candidate] | None = None,
 ) -> SpecialistResult:
+    deadline = min(deadline, 50) if autonomous else deadline
     started = asyncio.get_running_loop().time()
     sources = []
     evidence: dict[str, Candidate] = {c.id: c for c in previous or [] if autonomous and c.role == role and c.source.expires_at and c.source.expires_at > datetime.now(timezone.utc)}
@@ -95,10 +105,11 @@ async def run_react(
                 middleware=[
                     ContextEditingMiddleware(edits=[ClearToolUsesEdit(trigger=6000, keep=2)]),
                     ModelCallLimitMiddleware(run_limit=4, exit_behavior="error"),
+                    finish_before_limit,
                     ToolCallLimitMiddleware(run_limit=12 if autonomous else 6, exit_behavior="continue"),
                 ],
             )
-            async with asyncio.timeout(max(deadline - 25, deadline * 0.6)):
+            async with asyncio.timeout(max(deadline - 15, deadline * 0.6) if autonomous else max(deadline - 25, deadline * 0.6)):
                 result = await agent.ainvoke(
                     {
                         "messages": [
@@ -142,7 +153,7 @@ async def run_react(
     remaining = deadline - (asyncio.get_running_loop().time() - started)
     if autonomous and evidence and remaining > 0 and (selection is None or role == 'experience' and not any(d.source_ids for d in selection.days)):
         try:
-            async with asyncio.timeout(min(25, remaining)):
+            async with asyncio.timeout(min(15 if autonomous else 25, remaining)):
                 prior_ids = {s.id for s in saved}
                 final_candidates = [c for c in evidence.values() if c.id not in prior_ids] + [evidence[c.id] for c in saved]
                 finalizer = model.with_structured_output(SpecialistSelection, method='function_calling')
@@ -155,7 +166,7 @@ async def run_react(
                     }, ensure_ascii=False)),
                 ]))
         except (TimeoutError, APIError, OutputParserException, ValidationError, StructuredOutputError) as exc:
-            logging.getLogger(__name__).warning('role=%s revision=%s phase=finalize outcome=%s', role, revision, type(exc).__name__)
+            logging.getLogger(__name__).warning('role=%s revision=%s phase=finalize outcome=%s fields=%s', role, revision, type(exc).__name__, [(e['loc'], e['type']) for e in exc.errors(include_input=False, include_url=False)] if isinstance(exc, ValidationError) else [])
             warnings.append('finalization_failed')
     if selection is not None:
         if any(ident not in evidence for ident in selection.source_ids):

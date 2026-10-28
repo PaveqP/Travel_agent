@@ -801,3 +801,72 @@ class ParallelSearchRegressionTests(unittest.IsolatedAsyncioTestCase):
                 source.assert_not_awaited()
                 await tools['search_places'].ainvoke({'radius': 40000})
                 self.assertEqual(source.await_args.args[3]['radius'], 40000)
+
+
+class TurnDeadlineTests(unittest.IsolatedAsyncioTestCase):
+    async def test_timeout_returns_saved_options_and_stops_pending_work(self):
+        cancelled = asyncio.Event()
+        async def present(state):
+            try:
+                await asyncio.Event().wait()
+            finally:
+                cancelled.set()
+        graph, runners = PlanningTests().graph([TurnPlan(action='plan', tasks=[task(r) for r in ROLES])], present=present)
+        app = create_app(graph, tokens=('alice',))
+        async with app.router.lifespan_context(app), httpx.AsyncClient(transport=httpx.ASGITransport(app), base_url='http://test', headers={'Authorization': 'Bearer alice'}) as client:
+            ident = (await client.post('/trips')).json()['trip_id']
+            import hashlib
+            config = {'configurable': {'thread_id': hashlib.sha256(b'alice').hexdigest() + ':' + ident}}
+            await graph.aupdate_state(config, {'constraints': TRIP.model_dump(mode='json')})
+            with patch('travel_agent.api.AUTONOMOUS_TURN_TIMEOUT_SECONDS', 0.5):
+                response = await asyncio.wait_for(client.post(f'/trips/{ident}/messages', json={'message': 'Полная поездка', 'revision': 0}), 2)
+            self.assertEqual(response.status_code, 200)
+            partial = response.json()
+            self.assertEqual(partial['status'], 'partial')
+            self.assertTrue(partial['options'])
+            self.assertIn('частичный результат', partial['answer'])
+            self.assertTrue(cancelled.is_set())
+            restored = (await client.get(f'/trips/{ident}')).json()
+            self.assertEqual(restored['options'], partial['options'])
+            self.assertEqual(restored['answer'], partial['answer'])
+            snapshot = await graph.aget_state(config)
+            self.assertEqual(snapshot.next, ())
+            self.assertEqual(len(snapshot.values['messages']), 2)
+            self.assertEqual([runners[r].await_count for r in ROLES], [1, 1, 1])
+
+    async def test_fourth_model_step_only_offers_structured_completion(self):
+        from langchain_core.language_models.fake_chat_models import FakeMessagesListChatModel
+        from travel_agent.agents.stays.agent import run
+        from travel_agent.prompts import load_prompt
+        from test_travel_agent import FIXTURES
+        bindings = []
+        class ToolModel(FakeMessagesListChatModel):
+            def bind_tools(self, tools, **kwargs):
+                bindings.append([t.name for t in tools])
+                return self
+        model = ToolModel(responses=[*[AIMessage(content='', tool_calls=[{'name': 'search_hotels', 'args': {'page': page}, 'id': f'search-{page}', 'type': 'tool_call'}]) for page in range(1,4)],
+            AIMessage(content='', tool_calls=[{'name': 'SpecialistSelection', 'args': {'source_ids': []}, 'id': 'done', 'type': 'tool_call'}])])
+        async with httpx.AsyncClient() as client:
+            with patch('travel_agent.tools.runtime_call', new=AsyncMock(return_value={'status': 'ok', 'data': FIXTURES['search_hotels']})) as source:
+                row = await run(TRIP, 1, 'Offline completion test', [], model=model, client=client, env={}, prompt=load_prompt('stays'), autonomous=True)
+        self.assertEqual(source.await_count, 3)
+        self.assertIn('hotel_details', bindings[2])
+        self.assertEqual(bindings[-1], ['SpecialistSelection'])
+        self.assertNotIn('agent_limit', row.warnings)
+        self.assertNotIn('finalization_failed', row.warnings)
+
+    async def test_cancelled_network_call_is_not_logged_as_success(self):
+        from travel_agent.tools import build_tools
+        started = asyncio.Event()
+        async def source(*args):
+            started.set()
+            await asyncio.Event().wait()
+        async with httpx.AsyncClient() as client:
+            tools = {t.name: t for t in build_tools('stays', TRIP, 1, client, {}, {}, [], {'tools':0}, autonomous=True)}
+            with patch('travel_agent.tools.runtime_call', side_effect=source), patch('travel_agent.tools.logger.info') as logs:
+                pending = asyncio.create_task(tools['search_hotels'].ainvoke({}))
+                await asyncio.wait_for(started.wait(), 1)
+                pending.cancel()
+                with self.assertRaises(asyncio.CancelledError):
+                    await pending
+            self.assertEqual([call.args[5] for call in logs.call_args_list], ['cancelled'])
