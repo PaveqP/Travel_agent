@@ -111,7 +111,7 @@ async def _runtime_attempt(role: str, provider: str, name: str, args: dict, env:
      return {'status': 'no_availability' if str(data['error'].get('code') if isinstance(data['error'], dict) else '') == '2001' else 'schema_error'}
     return {'status': 'ok', 'data': data}
  except ExceptionGroup as group:
-  expected, unexpected = group.split((TimeoutError, httpx.RequestError, httpx.HTTPStatusError, McpError))
+  expected, unexpected = group.split((TimeoutError, httpx.RequestError, httpx.HTTPStatusError, McpError, jsonschema.ValidationError, ValueError))
   if unexpected:
    raise unexpected
   return {'status': _mcp_error_status(group)}
@@ -126,9 +126,12 @@ async def _runtime_attempt(role: str, provider: str, name: str, args: dict, env:
 
 
 def _mcp_error_status(error: BaseException) -> str:
+ import jsonschema
  if isinstance(error, BaseExceptionGroup):
   statuses = {_mcp_error_status(child) for child in error.exceptions}
-  return next((status for status in ('forbidden', 'unauthorized', 'rate_limited', 'timeout') if status in statuses), 'network_error')
+  return next((status for status in ('forbidden', 'unauthorized', 'rate_limited', 'schema_error', 'timeout') if status in statuses), 'network_error')
+ if isinstance(error, (jsonschema.ValidationError, ValueError)):
+  return 'schema_error'
  if isinstance(error, httpx.HTTPStatusError):
   return {401: 'unauthorized', 403: 'forbidden', 429: 'rate_limited'}.get(error.response.status_code, 'network_error')
  return 'timeout' if isinstance(error, (TimeoutError, httpx.TimeoutException)) else 'network_error'

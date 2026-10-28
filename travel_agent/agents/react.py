@@ -95,7 +95,7 @@ async def run_react(
                 middleware=[
                     ContextEditingMiddleware(edits=[ClearToolUsesEdit(trigger=6000, keep=2)]),
                     ModelCallLimitMiddleware(run_limit=4, exit_behavior="error"),
-                    ToolCallLimitMiddleware(run_limit=8 if autonomous else 6, exit_behavior="error"),
+                    ToolCallLimitMiddleware(run_limit=12 if autonomous else 6, exit_behavior="continue"),
                 ],
             )
             async with asyncio.timeout(max(deadline - 25, deadline * 0.6)):
@@ -150,7 +150,7 @@ async def run_react(
                     SystemMessage(content=prompt), HumanMessage(content=json.dumps({
                         'mode': 'autonomous', 'phase': 'finalize', 'task': task,
                         'constraints': trip.model_dump(mode='json'),
-                        'candidates': [c.summary() for c in final_candidates[:24]],
+                        'candidates': [c.summary() for c in final_candidates[:24 if role == 'experience' else 8]],
                         'warnings': warnings,
                     }, ensure_ascii=False)),
                 ]))

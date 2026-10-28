@@ -381,3 +381,33 @@ class RetryTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(result["status"], "forbidden")
             self.assertEqual(result["attempts"], 1)
             connection.assert_called_once()
+
+
+class McpBoundaryRegressionTests(unittest.IsolatedAsyncioTestCase):
+    async def test_nested_schema_validation_becomes_partial_tool_result(self):
+        from contextlib import asynccontextmanager
+        import jsonschema
+        from integrations.mcp.client import runtime_call
+
+        @asynccontextmanager
+        async def broken_connection(*args):
+            raise ExceptionGroup('MCP', [ExceptionGroup('session', [jsonschema.ValidationError('radius exceeds maximum')])])
+            yield
+
+        with patch('integrations.mcp.client.connection', side_effect=broken_connection) as connection:
+            result = await runtime_call('experience', '2gis', 'search_places', {}, {'TWOGIS_API_KEY': 'offline-test'})
+        self.assertEqual(result, {'status': 'schema_error', 'attempts': 1})
+        connection.assert_called_once()
+
+    async def test_unknown_nested_error_is_not_hidden(self):
+        from contextlib import asynccontextmanager
+        from integrations.mcp.client import runtime_call
+
+        @asynccontextmanager
+        async def broken_connection(*args):
+            raise ExceptionGroup('MCP', [RuntimeError('unexpected defect')])
+            yield
+
+        with patch('integrations.mcp.client.connection', side_effect=broken_connection):
+            with self.assertRaises(ExceptionGroup):
+                await runtime_call('experience', '2gis', 'search_places', {}, {'TWOGIS_API_KEY': 'offline-test'})

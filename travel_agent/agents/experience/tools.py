@@ -1,6 +1,8 @@
 import asyncio
+from typing import Annotated
 
 import httpx
+from pydantic import Field
 from langchain_core.tools import BaseTool, tool
 
 from integrations.schemas.models import Coordinates
@@ -56,14 +58,14 @@ def build_tools(
     @tool
     async def search_places(query: str = 'Достопримечательности', area: str | None = None,
                             latitude: float | None = None, longitude: float | None = None,
-                            radius: int = 10000) -> dict:
+                            radius: Annotated[int, Field(ge=100, le=40000)] = 10000) -> dict:
         """Search real places in any Russian destination; explicit coordinates may come from geocoding."""
         place = await point(area, latitude, longitude)
         if place is None:
             return {'status': 'missing_location', 'reason': 'Resolve a city, resort or nearby settlement first'}
         return await mcp('search_places', '2gis', 'search_places', {
             'query': query[:200], 'latitude': place.lat, 'longitude': place.lon,
-            'radius': max(100, min(radius, 50000)), 'page_size': 10,
+            'radius': radius, 'page_size': 10,
         })
 
     @tool

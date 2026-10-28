@@ -746,3 +746,58 @@ class SupervisorQuestionTests(unittest.IsolatedAsyncioTestCase):
         required = TurnPlan.model_json_schema()['required']
         self.assertIn('patch', required)
         self.assertIn('reply', required)
+
+
+class ParallelSearchRegressionTests(unittest.IsolatedAsyncioTestCase):
+    async def test_experience_starts_with_transport_while_stays_wait_for_arrival(self):
+        experience_started, transport_done = asyncio.Event(), asyncio.Event()
+        async def transport(trip, revision, goal, previous):
+            await asyncio.wait_for(experience_started.wait(), 1)
+            transport_done.set()
+            return result('transport', trip, revision)
+        async def experience(trip, revision, goal, previous):
+            self.assertFalse(transport_done.is_set())
+            experience_started.set()
+            return result('experience', trip, revision)
+        async def stays(trip, revision, goal, previous):
+            self.assertTrue(transport_done.is_set())
+            return result('stays', trip, revision)
+        graph = build_graph(AsyncMock(return_value=TurnPlan(action='plan', tasks=[task('transport'), task('stays', ['transport']), task('experience')])),
+            {'transport': transport, 'stays': stays, 'experience': experience}, InMemorySaver(), autonomous=True)
+        state = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json')}, {'configurable': {'thread_id': 'parallel-discovery'}})
+        self.assertTrue(state['options'])
+        self.assertTrue(any(day['candidates'] for day in state['options'][0]['days']))
+
+    async def test_nine_tools_in_two_batches_can_finish_without_losing_second_batch(self):
+        from langchain_core.language_models.fake_chat_models import FakeMessagesListChatModel
+        from travel_agent.agents.stays.agent import run
+        from travel_agent.prompts import load_prompt
+        from test_travel_agent import FIXTURES
+        class ToolModel(FakeMessagesListChatModel):
+            def bind_tools(self, tools, **kwargs):
+                return self
+        def searches(pages):
+            return AIMessage(content='', tool_calls=[{'name': 'search_hotels', 'args': {'page': page}, 'id': f'page-{page}', 'type': 'tool_call'} for page in pages])
+        model = ToolModel(responses=[searches(range(1, 7)), searches(range(7, 10)),
+            AIMessage(content='', tool_calls=[{'name': 'SpecialistSelection', 'args': {'source_ids': []}, 'id': 'finish', 'type': 'tool_call'}])])
+        async with httpx.AsyncClient() as client:
+            with patch('travel_agent.tools.runtime_call', new=AsyncMock(return_value={'status': 'ok', 'data': FIXTURES['search_hotels']})) as source:
+                row = await run(TRIP, 1, 'Offline batch regression', [], model=model, client=client, env={}, prompt=load_prompt('stays'), autonomous=True)
+        self.assertEqual(source.await_count, 9)
+        self.assertEqual(row.tool_calls, 9)
+        self.assertTrue(row.candidates)
+        self.assertNotIn('agent_limit', row.warnings)
+        self.assertNotIn('finalization_failed', row.warnings)
+
+    async def test_search_radius_matches_provider_contract_before_network(self):
+        from travel_agent.tools import build_tools
+        async with httpx.AsyncClient() as client:
+            tools = {t.name: t for t in build_tools('experience', TRIP, 1, client, {'TWOGIS_API_KEY': 'offline-test'}, {}, [], {'tools': 0}, autonomous=True)}
+            schema = tools['search_places'].args_schema.model_json_schema()
+            self.assertEqual(schema['properties']['radius']['maximum'], 40000)
+            with patch('travel_agent.tools.runtime_call', new=AsyncMock(return_value={'status': 'ok', 'data': {}})) as source:
+                with self.assertRaises(ValidationError):
+                    await tools['search_places'].ainvoke({'radius': 50000})
+                source.assert_not_awaited()
+                await tools['search_places'].ainvoke({'radius': 40000})
+                self.assertEqual(source.await_args.args[3]['radius'], 40000)
