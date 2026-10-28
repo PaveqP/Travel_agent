@@ -99,7 +99,7 @@ def install(budget: Budget) -> None:
         provider = {'mcp.tutu.ru': 'tutu', 'mcp-2gis.api.2gis.com': '2gis',
                     'api.tavily.com': 'tavily', 'api.geoapify.com': 'geoapify',
                     'api.rasp.yandex-net.ru': 'yandex_rasp', 'api.travelpayouts.com': 'travelpayouts',
-                    'api.open-meteo.com': 'openmeteo', 'api.timepad.ru': 'timepad',
+                    'api.open-meteo.com': 'openmeteo', 'geocoding-api.open-meteo.com': 'openmeteo', 'api.timepad.ru': 'timepad',
                     'api.opentripmap.com': 'opentripmap'}.get(host)
         local = host in ('localhost', '127.0.0.1')
         if local:

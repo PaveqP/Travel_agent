@@ -116,7 +116,7 @@ def option_context(state: dict) -> list[dict]:
     return [
         {
             **{k: o[k] for k in ("id", "budget", "warnings")},
-            **{role: {k: value for k, value in (o.get(role) or {}).items() if k in ('id', 'name', 'area', 'price', 'start', 'end', 'arrival_at', 'return_departure_at', 'transport_mode', 'stars', 'rating', 'baggage_included', 'conditions', 'variant_id', 'source', 'duration_minutes', 'transfers')} for role in ('transport', 'stay')},
+            **{role: {k: value for k, value in (o.get(role) or {}).items() if k in ('id', 'name', 'area', 'price', 'start', 'end', 'departure_at', 'arrival_at', 'arrival_city', 'return_departure_at', 'return_arrival_at', 'transport_mode', 'stars', 'rating', 'baggage_included', 'conditions', 'variant_id', 'source', 'duration_minutes', 'transfers')} for role in ('transport', 'stay')},
             "days": [
                 {
                     "date": d["date"],
@@ -150,7 +150,7 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
         if trip.get('travel_month'):
             start, end = 'поиск в месяце ' + trip['travel_month'], 'даты каждого варианта ниже'
     lines.append(
-        f"{trip.get('origin', '')} → {trip.get('destination', 'Сочи')}, {start} — {end}; взрослых: {trip.get('adults', '')}."
+        f"{trip.get('origin', '')} → {trip.get('destination', 'Россия')}, {start} — {end}; взрослых: {trip.get('adults', '')}."
     )
     if state.get("diagnostics", {}).get("reasons"):
         lines.append(state.get("answer", ""))
@@ -178,6 +178,8 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
             )
             label = 'Поезд' if flight.get('transport_mode') == 'rail' else 'Перелёт'
             lines.append(f"{label}: {flight['name']}; прибытие {arrival}, отправление обратно {departure} (местное время).")
+            if flight.get('arrival_city'):
+                lines.append('Транспорт прибывает: ' + flight['arrival_city'] + '. Местный трансфер не включён.')
             conditions = flight.get('conditions') or {}
             if conditions.get('fare_family'):
                 lines.append('Тариф: ' + conditions['fare_family'] + '.')
@@ -204,7 +206,7 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
         if any("превышает бюджет" in w for w in option["warnings"]):
             lines.append("Известная сумма уже превышает ваш бюджет.")
     if state.get('options'):
-        mountain_days = sum(any(c.get('area') == 'Красная Поляна' for c in d['candidates']) for d in state['options'][0].get('days', []))
+        mountain_days = sum(d.get('mountain', False) for d in state['options'][0].get('days', []))
         lines.append(f'\nПрограмма первого варианта (горных дней: {mountain_days}):')
         for day in state['options'][0].get('days', []):
             lines.append(day['date'] + ': ' + (', '.join(c['name'] for c in day['candidates']) or 'дорога / свободное время') + '.')

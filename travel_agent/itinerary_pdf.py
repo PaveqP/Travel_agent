@@ -62,7 +62,7 @@ def itinerary_pdf(state: dict, trip_id: str) -> bytes:
 
     document = SimpleDocTemplate(output, pagesize=(210 * mm, 297 * mm), rightMargin=18 * mm, leftMargin=18 * mm,
                                  topMargin=34 * mm, bottomMargin=27 * mm, title="О! рядом - маршрут поездки", author="О! рядом")
-    story = [Spacer(1, 5 * mm), p("ВАШЕ МАЛЕНЬКОЕ ПРИКЛЮЧЕНИЕ", label), p(c.get("destination", "Большой Сочи"), title)]
+    story = [Spacer(1, 5 * mm), p("ВАШЕ МАЛЕНЬКОЕ ПРИКЛЮЧЕНИЕ", label), p(c.get("destination", "Россия"), title)]
     dates = f"{c.get('start') or 'Даты уточняются'} - {c.get('end') or 'дата уточняется'}"
     story.append(p(f"{dates}   /   Взрослых: {c.get('adults') or 'уточняется'}   /   Из: {c.get('origin') or 'уточняется'}"))
     story.append(p(f"Поездка {trip_id} · Версия плана {state.get('revision', 0)}", small))

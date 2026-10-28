@@ -41,7 +41,8 @@ def build_tools(
     async def search_flights(departure_date: date | None = None, return_date: date | None = None, direct_only: bool | None = None,
                              service_class: Literal['Y', 'S', 'C', 'F'] = 'Y', carriers: list[str] | None = None,
                              flight_numbers: list[str] | None = None, page: int = 1,
-                             sort: Literal['price_asc', 'price_desc', 'duration_asc', 'departure_asc'] = 'price_asc') -> dict:
+                             sort: Literal['price_asc', 'price_desc', 'duration_asc', 'departure_asc'] = 'price_asc',
+                             destination: str | None = None) -> dict:
         """Search the user's dates, then bounded nearby dates; explicit windows sample up to six date pairs."""
         allowed = search_dates(trip)
         if departure_date is not None or return_date is not None:
@@ -62,7 +63,7 @@ def build_tools(
                 try:
                     async with asyncio.timeout(63):
                         result = await mcp("search_flights", "tutu", "search_avia", {
-                            "origin": trip.origin, "destination": "AER", "departure_date": str(start),
+                            "origin": trip.origin, "destination": destination or trip.destination, "departure_date": str(start),
                             "return_date": str(end), "adults": trip.adults, "page_size": 10,
                             "sort": sort, "service_class": service_class, "page": page,
                             "direct_only": trip.direct_only or bool(direct_only),
@@ -87,7 +88,7 @@ def build_tools(
                 "searched_dates": searched, "exhaustive": False, "search_limit": 6}
 
     @tool
-    async def search_trains(mode: Literal["rail", "etrain"] = "rail") -> dict:
+    async def search_trains(mode: Literal["rail", "etrain"] = "rail", destination: str | None = None) -> dict:
         """In autonomous mode compare round-trip rail fares for the party; staged mode returns outbound schedules."""
         if not autonomous or mode == 'etrain':
             return await mcp(
@@ -96,7 +97,7 @@ def build_tools(
                 "search_" + mode,
                 {
                     "origin": trip.origin,
-                    "destination": "Сочи",
+                    "destination": destination or trip.destination,
                     "departure_date": str(trip.start),
                     "page_size": 10,
                 },
@@ -108,7 +109,7 @@ def build_tools(
         outbound, inbound = await asyncio.gather(*(
             mcp('search_trains', 'tutu', 'search_rail', {'origin': origin, 'destination': destination,
                 'departure_date': str(day), 'passengers': trip.adults, 'page_size': 5, 'direct_only': trip.direct_only})
-            for origin, destination, day in ((trip.origin, 'Сочи', start), ('Сочи', trip.origin, end))
+            for origin, destination, day in ((trip.origin, destination or trip.destination, start), (destination or trip.destination, trip.origin, end))
         ))
         if any(r['status'] not in ('ok', 'empty') for r in (outbound, inbound)):
             return {'status': next(r['status'] for r in (outbound, inbound) if r['status'] not in ('ok', 'empty'))}
@@ -132,27 +133,18 @@ def build_tools(
         )
 
     @tool
-    async def yandex_schedule(
-        origin: Literal["Сочи", "Адлер", "Роза Хутор"],
-        destination: Literal["Сочи", "Адлер", "Роза Хутор"],
-    ) -> dict:
-        """Read suburban schedules between verified station IDs; no seat guarantee."""
+    async def yandex_schedule(origin: str, destination: str, day: date | None = None,
+                              transport_type: Literal['suburban', 'train', 'plane', 'bus'] = 'suburban',
+                              result_timezone: str | None = None) -> dict:
+        """Read schedules using real Yandex station codes or city names resolved by Yandex."""
         stations = {"Сочи": "s9613034", "Адлер": "s9613054", "Роза Хутор": "s9812791"}
-        return await rest(
-            "yandex_schedule",
-            "yandex_rasp",
-            "YANDEX_RASP_API_KEY",
-            lambda: yandex_rasp.schedule(
-                client,
-                env.get("YANDEX_RASP_API_KEY", ""),
-                stations[origin],
-                stations[destination],
-                str(trip.start),
-            ),
-        )
+        return await rest('yandex_schedule', 'yandex_rasp', 'YANDEX_RASP_API_KEY',
+            lambda: yandex_rasp.schedule(client, env.get('YANDEX_RASP_API_KEY', ''),
+                stations.get(origin, origin), stations.get(destination, destination), str(day or trip.start),
+                transport_type=transport_type, result_timezone=result_timezone))
 
     @tool
-    async def cached_flights(origin_iata: str | None = None) -> dict:
+    async def cached_flights(origin_iata: str | None = None, destination_iata: str | None = None) -> dict:
         """Read Travelpayouts cached fares for a known origin IATA; not live availability."""
         if origin_iata is None:
             known = {"москва": "MOW", "санкт-петербург": "LED", "санкт петербург": "LED", "петербург": "LED"}
@@ -160,6 +152,8 @@ def build_tools(
             origin_iata = value.upper() if len(value) == 3 and value.isascii() else known.get(value.casefold())
         if not origin_iata or len(origin_iata) != 3 or not origin_iata.isascii() or not origin_iata.isalpha():
             return {"status": "schema_error"}
+        if not destination_iata:
+            return {"status": "schema_error", "reason": "Pass the destination IATA from a verified transport result"}
         pairs = search_dates(trip)
         if not pairs:
             return {"status": "empty"}
@@ -175,6 +169,7 @@ def build_tools(
                 origin_iata.upper(),
                 start.strftime("%Y-%m") if broad else str(start),
                 end.strftime("%Y-%m") if broad else str(end),
+                destination=destination_iata,
             ),
         )
 
@@ -194,8 +189,8 @@ def rail_candidates(outbound: dict, inbound: dict, trip: TripConstraints, start:
             raise ValueError('Rail pricing must explicitly state per-seat basis and party size')
     out_from, out_to = outbound['meta']['from'], outbound['meta']['to']
     back_from, back_to = inbound['meta']['from'], inbound['meta']['to']
-    if out_to.get('name', '').casefold() != 'сочи' or back_from.get('name', '').casefold() != 'сочи' or out_to.get('geo_id') != back_from.get('geo_id') or out_from.get('geo_id') != back_to.get('geo_id'):
-        raise ValueError('Rail route endpoints do not match a return trip to Sochi')
+    if out_to.get('geo_id') != back_from.get('geo_id') or out_from.get('geo_id') != back_to.get('geo_id'):
+        raise ValueError('Rail route endpoints do not match a return trip')
     now = datetime.now(timezone.utc)
     source = Provenance(provider='tutu', source_url='https://mcp.tutu.ru/mcp', retrieved_at=now,
                         expires_at=now + timedelta(minutes=10), evidence='live')
@@ -211,10 +206,10 @@ def rail_candidates(outbound: dict, inbound: dict, trip: TripConstraints, start:
         result.append(Candidate(id='rail:' + ident, role='transport', transport_mode='rail',
             name='ЖД: ' + ' / '.join(dict.fromkeys([*out.get('carriers', []), *back.get('carriers', [])])),
             source=source, price=Money(amount=amount, currency='RUB', basis='party'), start=start, end=end,
-            adults=trip.adults, origin=trip.origin, destination='Сочи', departure_at=depart, arrival_at=arrival,
+            adults=trip.adults, origin=trip.origin, destination=trip.destination, arrival_city=out_to.get('name'), departure_at=depart, arrival_at=arrival,
             return_departure_at=returning, duration_minutes=int((arrival-depart).total_seconds()/60),
             transfers=max(out.get('segments_count', 1)-1, back.get('segments_count', 1)-1),
-            legs=[TransportLeg(mode='rail', origin=trip.origin, destination='Сочи', departure_at=depart, arrival_at=arrival),
-                  TransportLeg(mode='rail', origin='Сочи', destination=trip.origin, departure_at=returning, arrival_at=home)],
+            legs=[TransportLeg(mode='rail', origin=out_from.get('name') or trip.origin, destination=out_to.get('name') or trip.destination, departure_at=depart, arrival_at=arrival),
+                  TransportLeg(mode='rail', origin=back_from.get('name') or trip.destination, destination=back_to.get('name') or trip.origin, departure_at=returning, arrival_at=home)],
             url=out.get('search_results_url'), description='Туда и обратно. Сумма рассчитана по тарифам за одно место для всей группы; наличие мест и итоговая цена перед покупкой требуют проверки.'))
     return result[:6]

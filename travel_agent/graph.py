@@ -32,7 +32,7 @@ async def supervise(state: TripState, decide) -> dict:
     try:
         decision = SupervisorDecision(action='choose', choice_id=state['requested_choice']) if state.get('requested_choice') else SupervisorDecision.model_validate(await decide(state))
         if decision.action == 'chat':
-            return {**stop(decision.reply or 'Привет! Я помогу спланировать поездку в Большой Сочи.'), 'status': state.get('status', 'needs_input')}
+            return {**stop(decision.reply or 'Привет! Я помогу спланировать поездку в Россия.'), 'status': state.get('status', 'needs_input')}
         if decision.action == 'remember':
             if decision.profile_interests is None:
                 return stop('Какие предпочтения сохранить для следующих поездок?')
@@ -81,7 +81,7 @@ async def supervise(state: TripState, decide) -> dict:
         elif 'experience' in affected:
             work['stage'] = 'itinerary' if work.get('selected_stay') else 'stays'
     if decision.action == 'unsupported':
-        return {**work, **stop('Полное планирование поддерживает Большой Сочи и поездки взрослых.', 'unsupported')}
+        return {**work, **stop('Полное планирование поддерживает поездки по России и поездки взрослых.', 'unsupported')}
     if decision.action == 'scenarios' or not work.get('selected_scenario') and work['stage'] != 'review':
         proposals = decision.scenarios or [TripScenario.model_validate(s) for s in work.get('scenarios', [])]
         if not proposals:

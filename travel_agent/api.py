@@ -165,7 +165,7 @@ def create_app(
                     stack.push_async_callback(app.state.bot.stop, task)
             yield
 
-    app = FastAPI(title="Greater Sochi Travel Agent", lifespan=lifespan)
+    app = FastAPI(title="Russia Travel Agent", lifespan=lifespan)
 
     async def owner(request: Request, authorization: str = Header(default="")) -> str:
         supplied = authorization.removeprefix("Bearer ")

@@ -90,6 +90,11 @@ def mount_portal(app: FastAPI, owner, require_trip, config_for, view, sync_trip,
             response.headers["Cache-Control"] = "no-store"
         return response
 
+    @app.get('/api/destinations')
+    async def destinations():
+        from travel_agent.destinations import DESTINATIONS
+        return DESTINATIONS
+
     @app.get("/api/config")
     async def public_config():
         bot = getattr(app.state, "bot", None)

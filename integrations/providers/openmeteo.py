@@ -8,5 +8,10 @@ async def run(h):
 
 async def forecast(client: httpx.AsyncClient, lat: float, lon: float) -> httpx.Response:
  return await client.get('https://api.open-meteo.com/v1/forecast', params={
-  'latitude':lat, 'longitude':lon, 'timezone':'Europe/Moscow',
+  'latitude':lat, 'longitude':lon, 'timezone':'auto',
   'daily':'temperature_2m_max,temperature_2m_min,precipitation_sum', 'forecast_days':16})
+
+
+async def geocode(client: httpx.AsyncClient, name: str) -> httpx.Response:
+ return await client.get('https://geocoding-api.open-meteo.com/v1/search', params={
+  'name':name, 'count':5, 'language':'ru', 'countryCode':'RU'})

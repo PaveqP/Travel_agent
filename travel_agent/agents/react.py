@@ -83,7 +83,7 @@ async def run_react(
                         {"tool": fallback, "result": await by_name[fallback].ainvoke({})}
                     )
                 if role in ("transport", "stays") and not evidence and env.get("TAVILY_API_KEY"):
-                    query = f"Авиабилеты {trip.origin} Сочи AER {trip.date_from or trip.start or trip.travel_month} {trip.date_to or trip.end or ''} Туту Aviasales расписание цены" if role == "transport" else f"Отели {trip.destination} {trip.hotel or ''} {trip.stay_start} {trip.stay_end} {trip.adults} взрослых Туту"
+                    query = f"Авиабилеты {trip.origin} {trip.destination} {trip.date_from or trip.start or trip.travel_month} {trip.date_to or trip.end or ''} Туту Aviasales расписание цены" if role == "transport" else f"Отели {trip.destination} {trip.hotel or ''} {trip.stay_start} {trip.stay_end} {trip.adults} взрослых Туту"
                     observations.append({"tool": "tavily_search", "result": await by_name["tavily_search"].ainvoke({
                         "query": query})})
             agent = create_agent(

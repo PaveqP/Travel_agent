@@ -155,7 +155,7 @@ class TelegramBot:
     async def show(self, chat_id: int, trip_id: str, state: dict) -> None:
         stage = state.get("stage", "scenarios")
         revision = state.get("revision", 0)
-        answer = state.get("answer") or state.get("plan_answer") or "Опишите поездку: откуда, когда, с кем и какой отдых хочется. Планируем Большой Сочи."
+        answer = state.get("answer") or state.get("plan_answer") or "Опишите поездку: откуда, когда, с кем и какой отдых хочется. Планируем Россия."
         buttons = [[self.button(f"{i + 1}. {choice['title']}", f"c:{trip_id}:{revision}:{i}")] for i, choice in enumerate(state.get("choices", []))]
         if stage == "review":
             buttons.append([self.button("💳 Проверить и оплатить (имитация)", "pay")])
@@ -175,14 +175,14 @@ class TelegramBot:
             command = "site"
         if command == "start":
             await self.app.state.accounts.bot_state(chat_id, trip_id, write=True)
-            await self.send(chat_id, "Привет! Я О! рядом — ваш помощник в Большом Сочи.\n\nСоберём поездку по шагам: идея → билеты → отель → программа. Можно менять выбор и задавать вопросы в любой момент. После оформления помогу в пути.\n\nПокупка и оплата — имитация. Начнём?", [
+            await self.send(chat_id, "Привет! Я О! рядом — ваш помощник в России.\n\nСоберём поездку по шагам: идея → билеты → отель → программа. Можно менять выбор и задавать вопросы в любой момент. После оформления помогу в пути.\n\nПокупка и оплата — имитация. Начнём?", [
                 [self.button("✦ Спланировать поездку", "new")], [self.button("Мои поездки", "trips"), self.button("Личный кабинет", "profile")], [self.button("Помощь и письма", "help")]])
             return
         if command == "new":
             result = await self.request(api, chat_id, "POST", "/trips")
             if result:
                 await self.app.state.accounts.bot_state(chat_id, result["trip_id"], write=True)
-                await self.send(chat_id, "Куда отправимся в Большом Сочи? Расскажите, какой отдых хочется. Например: «Из Москвы вдвоём в Сочи на 5 ночей в декабре, море и прогулки, до 120 000 ₽ на всех». Даты уточним в диалоге.")
+                await self.send(chat_id, "Куда отправимся в России? Расскажите, какой отдых хочется. Например: «Из Москвы вдвоём в Сочи на 5 ночей в декабре, море и прогулки, до 120 000 ₽ на всех». Даты уточним в диалоге.")
             return
         if command == "site":
             token = await self.app.state.accounts.web_login_link(user)

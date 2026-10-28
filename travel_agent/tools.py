@@ -98,7 +98,7 @@ def normalize(
         provider=provider,
         source_url="https://mcp.tutu.ru/mcp"
         if provider == "tutu"
-        else "https://2gis.ru/sochi",
+        else "https://2gis.ru/",
         retrieved_at=now,
         expires_at=now + timedelta(minutes=10 if provider == "tutu" else 60),
         evidence="live" if provider == "tutu" else "catalog",
@@ -130,6 +130,7 @@ def normalize(
                     role="stays",
                     name=row["name"],
                     stars=row.get("stars"), rating=row.get("rating"),
+                    conditions={k: offer[k] for k in ("free_cancellation", "breakfast_included", "meals", "refundable", "payment_type") if k in offer},
                     review_count=row.get("review_count"), address=row.get("address"),
                     amenities=hotel_amenities(row),
                     photos=hotel_photos(row),
@@ -140,7 +141,7 @@ def normalize(
                         row.get('address') or '',
                     ) if value)[:1000],
                     coordinates=coordinates,
-                    area=area_of(coordinates),
+                    area=area_of(coordinates) or trip.destination,
                     source=source if priced else source.model_copy(update={"evidence": "catalog"}),
                     start=trip.stay_start,
                     end=trip.stay_end,
@@ -173,10 +174,6 @@ def normalize(
                 or not returning.tzinfo
             ):
                 continue
-            if "AER" not in legs[0].get("to", "") or "AER" not in legs[1].get(
-                "from", ""
-            ):
-                continue
             result.append(
                 Candidate(
                     id="avia:" + row["offer_id"],
@@ -187,7 +184,8 @@ def normalize(
                     end=returning.date(),
                     adults=trip.adults,
                     origin=trip.origin,
-                    destination="AER",
+                    destination=trip.destination,
+                    arrival_city=data.get("meta", {}).get("to", {}).get("name"),
                     arrival_at=arrival,
                     baggage_included=row.get('baggage_included') if isinstance(row.get('baggage_included'), bool) else None,
                     sports_equipment_included=row.get('sports_equipment_included') if isinstance(row.get('sports_equipment_included'), bool) else None,
@@ -206,7 +204,7 @@ def normalize(
                     } for leg in legs if all(leg.get(k) for k in ("from", "to", "departure_at", "arrival_at"))],
                     price=Money(**row["price"], basis="party"),
                     url=row.get("search_results_url") or "https://www.tutu.ru/avia/",
-                    description="" if row.get("search_results_url") else "Поставщик не вернул ссылку на конкретный тариф; ссылка ведёт в общий поиск авиабилетов Туту.",
+                    description=("Прибытие: " + str(data.get("meta", {}).get("to", {}).get("name") or trip.destination)) if row.get("search_results_url") else "Поставщик не вернул ссылку на конкретный тариф; ссылка ведёт в общий поиск авиабилетов Туту.",
                 )
             )
             candidate = result[-1]
@@ -230,7 +228,7 @@ def normalize(
     elif provider == "travelpayouts":
         source = source.model_copy(update={"provider": provider, "source_url": "https://www.aviasales.ru/", "evidence": "cached"})
         for row in data.get("data", []):
-            if row.get("destination") != "AER" or not row.get("price") or not row.get("departure_at") or not row.get("return_at"):
+            if not row.get("destination") or not row.get("price") or not row.get("departure_at") or not row.get("return_at"):
                 continue
             departure = datetime.fromisoformat(row["departure_at"])
             returning = datetime.fromisoformat(row["return_at"])
@@ -241,7 +239,7 @@ def normalize(
                 id="aviasales:" + sha256(json.dumps(row, sort_keys=True).encode()).hexdigest()[:24],
                 role="transport", name="Aviasales — " + row.get("airline", "перелёт"), source=source,
                 start=departure.date(), end=returning.date(), departure_at=departure, return_departure_at=returning,
-                origin=row.get("origin"), destination="AER", adults=1, transfers=row.get("transfers"),
+                origin=row.get("origin"), destination=trip.destination, adults=1, transfers=row.get("transfers"),
                 duration_minutes=row.get("duration_to"), price=Money(amount=str(row["price"]), currency="RUB", basis="person"), url=link,
                 description="Цена из кэша поисков Aviasales за одного пассажира. Наличие для всей группы и точное время прилёта требуют проверки."))
     elif provider == "2gis" and method == "search_places":
@@ -259,8 +257,8 @@ def normalize(
                     description='; '.join(str(row[k]) for k in ('subtype', 'full_address_name') if row.get(k))[:1000],
                     source=source,
                     coordinates=point,
-                    area=area_of(point),
-                    url=row.get("url") or "https://2gis.ru/sochi/search/" + quote(row["name"], safe=""),
+                    area=area_of(point) or trip.destination,
+                    url=row.get("url") or "https://2gis.ru/search/" + quote(row["name"], safe=""),
                 )
             )
     elif provider == "geoapify":
@@ -279,7 +277,7 @@ def normalize(
                     name=props["name"],
                     source=source,
                     coordinates=point,
-                    area=area_of(point),
+                    area=area_of(point) or trip.destination,
                 )
             )
     elif provider == "opentripmap":
@@ -297,7 +295,7 @@ def normalize(
                     name=row["name"],
                     source=source,
                     coordinates=point,
-                    area=area_of(point),
+                    area=area_of(point) or trip.destination,
                 )
             )
     elif provider == "timepad":
@@ -323,7 +321,7 @@ def normalize(
                         name=row["name"],
                         source=source,
                         coordinates=point,
-                        area=area_of(point),
+                        area=area_of(point) or trip.destination,
                         start=day,
                         url=row.get("url"),
                     )
@@ -416,6 +414,8 @@ def build_tools(
                     "status": "ok",
                     "candidates": [c.summary() for c in candidates[:20]],
                     "total_candidates": len(candidates),
+                    **({'route': {direction: {k: v for k, v in data.get('meta', {}).get(direction, {}).items() if k in ('name', 'iata', 'geo_id', 'region')}
+                                  for direction in ('from', 'to')}} if provider == 'tutu' and method == 'search_avia' else {}),
                 }
             if method in (
                 "search_avia",
@@ -448,6 +448,10 @@ def build_tools(
                 if candidate is not None and details['hotel']:
                     web_evidence.append(WebEvidence(url=candidate.url or candidate.source.source_url,
                         title='Туту: ' + candidate.name, text=json.dumps(details, ensure_ascii=False)[:2000], retrieved_at=datetime.now(timezone.utc)))
+            if provider == "openmeteo" and name == "geocode_destination":
+                locations = [{k: row[k] for k in ('id', 'name', 'latitude', 'longitude', 'timezone', 'admin1', 'country_code') if k in row}
+                             for row in data.get('results', []) if row.get('country_code') == 'RU']
+                return {'status': 'ok' if locations else 'empty', 'locations': locations}
             if provider == "openmeteo":
                 daily = data.get("daily", {})
                 dates = daily.get("time", [])
@@ -521,7 +525,7 @@ def build_tools(
             return responses[key]
         query_trip = None
         if method == 'search_hotels':
-            query_trip = TripConstraints.model_validate({**trip.model_dump(), 'start': args['check_in'], 'end': args['check_out'], 'check_in': args['check_in'], 'check_out': args['check_out']})
+            query_trip = TripConstraints.model_validate({**trip.model_dump(), 'start': args['check_in'], 'end': args['check_out'], 'check_in': args['check_in'], 'check_out': args['check_out'], 'destination': args['city_name']})
         if method == "search_avia":
             query_trip = TripConstraints.model_validate({**trip.model_dump(), "start": args["departure_date"], "end": args["return_date"], "check_in": None, "check_out": None})
         result = await execute(

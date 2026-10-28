@@ -6,7 +6,7 @@ from pydantic import BaseModel, ConfigDict, Field, JsonValue, model_validator
 from integrations.schemas.models import Budget, Coordinates, Money, Provenance
 
 Role = Literal["transport", "stays", "experience"]
-Area = Literal["Сочи", "Адлер", "Сириус", "Красная Поляна", "Роза Хутор"]
+Area = Annotated[str, Field(min_length=1, max_length=160)]
 Stage = Literal["scenarios", "transport", "stays", "itinerary", "review", "booked"]
 
 
@@ -24,7 +24,7 @@ class TripScenario(BaseModel):
 class TripConstraints(BaseModel):
     model_config = ConfigDict(extra="forbid")
     origin: str | None = Field(default=None, min_length=1, max_length=120)
-    destination: Area = "Сочи"
+    destination: Area = "Россия"
     start: date | None = Field(default=None, description="Явно указанная дата отправления YYYY-MM-DD")
     end: date | None = Field(default=None, description="Явно указанная дата обратного отправления YYYY-MM-DD")
     check_in: date | None = None
@@ -61,8 +61,6 @@ class TripConstraints(BaseModel):
             raise ValueError("Trip must last 1–30 nights")
         if self.stay_start and self.stay_end and self.stay_start >= self.stay_end:
             raise ValueError("Check-out must follow check-in")
-        if self.check_in and self.start and self.check_in < self.start:
-            raise ValueError("Check-in precedes the trip")
         if self.check_out and self.end and self.check_out > self.end:
             raise ValueError("Check-out follows the trip")
         return self
@@ -85,7 +83,7 @@ class TripConstraints(BaseModel):
 
     def missing(self) -> list[str]:
         return [
-            k for k in ("origin", "start", "end", "adults") if getattr(self, k) is None
+            k for k in ("origin", "destination", "start", "end", "adults") if getattr(self, k) is None or k == "destination" and self.destination == "Россия"
         ]
 
 
@@ -188,6 +186,7 @@ class ProposedDay(BaseModel):
     date: date
     source_ids: list[str] = Field(default_factory=list, max_length=4)
     purpose: str = Field(default='', max_length=200)
+    mountain: bool = False
 
 
 class AgentTask(BaseModel):
@@ -206,9 +205,10 @@ class RepairPlan(BaseModel):
 class TurnPlan(BaseModel):
     model_config = ConfigDict(extra='forbid')
     focus: Literal['trip', 'transport', 'stays'] | None = None
-    action: Literal['plan', 'chat', 'clarify', 'answer', 'research', 'select', 'checkout', 'remember', 'unsupported']
+    action: Literal['plan', 'chat', 'clarify', 'answer', 'research', 'select', 'checkout', 'remember', 'unsupported', 'destinations']
     patch: TripDelta = Field(default_factory=TripDelta)
     tasks: list[AgentTask] = Field(default_factory=list, max_length=3)
+    scenarios: list[TripScenario] = Field(default_factory=list, max_length=8)
     reply: str = Field(default='', max_length=1000)
     source_ids: list[str] = Field(default_factory=list, max_length=10)
     research_role: Role = 'experience'
@@ -257,6 +257,7 @@ class Candidate(BaseModel):
     adults: int | None = None
     origin: str | None = None
     destination: str | None = None
+    arrival_city: str | None = None
     arrival_at: datetime | None = None
     departure_at: datetime | None = None
     duration_minutes: int | None = Field(default=None, ge=1)
@@ -276,7 +277,7 @@ class Candidate(BaseModel):
     def summary(self) -> dict[str, JsonValue]:
         data = self.model_dump(mode='json', exclude_none=True, include={
             'id', 'role', 'name', 'price', 'area', 'coordinates', 'start', 'end', 'adults',
-            'origin', 'destination', 'arrival_at', 'departure_at', 'return_departure_at',
+            'origin', 'destination', 'arrival_city', 'arrival_at', 'departure_at', 'return_departure_at',
             'duration_minutes', 'transfers', 'transport_mode', 'stars', 'rating', 'review_count', 'address', 'amenities',
             'baggage_included', 'sports_equipment_included', 'variant_id', 'conditions', 'description',
         })
@@ -321,6 +322,7 @@ class SpecialistResult(BaseModel):
 class ItineraryDay(BaseModel):
     model_config = ConfigDict(extra="forbid")
     date: date
+    mountain: bool = False
     candidates: list[Candidate] = Field(default_factory=list)
     warnings: list[str] = Field(
         default_factory=lambda: ["Время работы и местные переезды не подтверждены"]

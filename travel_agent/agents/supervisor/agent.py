@@ -9,6 +9,7 @@ from pydantic import ValidationError
 from travel_agent.schemas import Candidate, SupervisorDecision, TripDelta
 from travel_agent.prompts import load_prompt
 from travel_agent.state import TripState
+from travel_agent.destinations import DESTINATION_GROUPS
 from travel_agent.agents.supervisor.response import option_context
 
 
@@ -153,6 +154,7 @@ def llm_planner(model: BaseChatModel, prompt: str):
             'feedback': state.get('feedback', []), 'options': options[:5],
             'selected': state.get('selected'), 'focus': state.get('focus'),
             'scenarios': state.get('scenarios', []), 'receipt': state.get('receipt', {}),
+            'destination_ideas': DESTINATION_GROUPS if state.get('constraints', {}).get('destination', 'Россия') == 'Россия' else {},
             'results': {role: {'status': row['status'], 'warnings': row.get('warnings', []),
                 'candidates': [{'id': c['id'], 'name': c['name'], 'start': c.get('start'), 'end': c.get('end'), 'area': c.get('area')} for c in row.get('candidates', [])[:12]]}
                 for role, row in state.get('results', {}).items()},
@@ -184,8 +186,11 @@ def llm_planner(model: BaseChatModel, prompt: str):
                         raise
                     errors = [(e['loc'], e['type']) for e in exc.errors(include_input=False, include_url=False)] if isinstance(exc, ValidationError) else ['output_format']
                     extraction_messages.insert(1, HumanMessage(content=json.dumps({'validation_errors': errors})))
-            if delta.model_dump(exclude_none=True, exclude={'clear'}) or delta.clear:
-                decision.patch = delta
+            patch = {**decision.patch.model_dump(exclude_none=True, exclude={'clear'}), **delta.model_dump(exclude_none=True, exclude={'clear'})}
+            cleared = list(dict.fromkeys([name for name in decision.patch.clear if getattr(delta, name) is None] + delta.clear))
+            for name in cleared:
+                patch.pop(name, None)
+            decision.patch = TripDelta(**patch, clear=cleared)
         return decision
 
     return plan

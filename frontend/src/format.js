@@ -149,10 +149,10 @@ export function tripMapPoints(state) {
     if (
       !Number.isFinite(lon) ||
       !Number.isFinite(lat) ||
-      lon < 39.5 ||
-      lon > 40.4 ||
-      lat < 43.34 ||
-      lat > 43.85
+      lon < -180 ||
+      lon > 180 ||
+      lat < -90 ||
+      lat > 90
     )
       return [];
     seen.add(key);
@@ -195,8 +195,8 @@ export function tripMapUrls(points, activeId = null) {
       params.set("bbox", `${west - padLon},${south - padLat}~${east + padLon},${north + padLat}`);
     }
   } else {
-    params.set("ll", "39.96,43.57");
-    params.set("z", "10");
+    params.set("ll", "95,62");
+    params.set("z", "3");
   }
   return {
     embed: `https://yandex.ru/map-widget/v1/?${params}`,

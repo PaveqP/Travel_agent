@@ -32,9 +32,8 @@ def build_tools(
                             hotel_types: list[str] | None = None, price_max: int | None = None) -> dict:
         """Search hotels for the server's area, dates and adult party."""
         start, end = check_in or trip.stay_start, check_out or trip.stay_end
-        lower, upper = trip.date_from or trip.start, trip.date_to or trip.end
-        if not start or not end or not lower or not upper or not lower <= start < end <= upper:
-            return {'status': 'schema_error', 'reason': 'Hotel dates must be within the trip'}
+        if not start or not end or start >= end:
+            return {'status': 'schema_error', 'reason': 'Provide the actual local check-in and check-out dates'}
         stars = max(min_stars or 0, trip.min_hotel_stars or 0)
         rating = max(min_rating or 0, float(trip.min_hotel_rating or 0))
         if not 0 <= stars <= 5 or not 0 <= rating <= 10:
@@ -59,7 +58,7 @@ def build_tools(
             "tutu",
             "search_hotels",
             {
-                "city_name": area or ("Красная Поляна" if trip.holiday_type == "ski" else trip.destination),
+                "city_name": area or trip.destination,
                 "check_in": str(start),
                 "check_out": str(end),
                 "adults": trip.adults,

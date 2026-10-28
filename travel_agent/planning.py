@@ -12,7 +12,7 @@ from openai import APIError
 from pydantic import ValidationError
 
 from travel_agent.engine import offer_card, apply_delta, compose_packages, search_dates, simulate_purchase, transport_matches, usable
-from travel_agent.schemas import AgentTask, BookingRequest, Candidate, ResearchResult, SpecialistResult, TripConstraints, TurnPlan
+from travel_agent.schemas import AgentTask, BookingRequest, Candidate, ResearchResult, SpecialistResult, TripConstraints, TripDelta, TurnPlan
 from travel_agent.state import TripState
 
 LABELS = {'transport': 'Сравниваю способы добраться', 'stays': 'Подбираю проживание', 'experience': 'Составляю программу по дням'}
@@ -45,6 +45,27 @@ async def prepare(state: TripState, decide) -> dict:
             tasks = [t.model_copy(update={'depends_on': ['transport'] if t.role == 'stays' else []}) for t in tasks]
         return {'tasks': [t.model_dump() for t in tasks], 'search_round': 1, 'repair_decision': False,
                 'route': 'delegate' if tasks else 'respond'}
+    if decision.action == 'destinations':
+        try:
+            revised, _ = apply_delta(TripConstraints.model_validate(state.get('constraints', {})), decision.patch)
+        except ValidationError:
+            return {'route': 'finish', 'status': 'needs_input', 'answer': 'Уточните даты поездки: сейчас они противоречат друг другу.'}
+        proposals = decision.scenarios
+        answer = decision.reply or 'Выберите направление по России или назовите любой другой город.'
+        return {'route': 'finish', 'stage': 'scenarios', 'status': 'needs_input',
+                'constraints': revised.model_dump(mode='json'), 'revision': state.get('revision', 0) + 1,
+                'scenarios': [item.model_dump(mode='json') for item in proposals],
+                'choices': [{'id': item.id, 'title': item.destination + ' — ' + item.title,
+                             'details': item.purpose + ' ' + item.tradeoff} for item in proposals],
+                'options': [], 'cards': [], 'selected': None, 'selected_transport': None, 'selected_stay': None,
+                'selected_scenario': None, 'results': {}, 'tasks': [], 'answer': answer, 'plan_answer': answer,
+                'requested_choice': None}
+    if decision.action == 'select' and state.get('stage') == 'scenarios':
+        proposal = next((item for item in state.get('scenarios', []) if item['id'] == decision.option_id), None)
+        if proposal:
+            patch = decision.patch.model_dump(exclude_none=True, exclude={'clear'})
+            patch.update(destination=proposal['destination'], purpose=proposal['purpose'], interests=proposal['interests'])
+            decision = TurnPlan(action='plan', patch=TripDelta(**patch))
     if decision.action == 'select':
         chosen = next((o for o in state.get('options', []) if o['id'] == decision.option_id), {})
         patch = decision.patch
@@ -55,9 +76,9 @@ async def prepare(state: TripState, decide) -> dict:
             decision.action = 'plan'
             decision.tasks = []
     if decision.action == 'chat':
-        return {'route': 'finish', 'answer': decision.reply or 'Я помогу спланировать поездку по Большому Сочи. Расскажите, какой отдых вам хочется.', 'requested_choice': None}
+        return {'route': 'finish', 'answer': decision.reply or 'Я помогу спланировать поездку по России. Расскажите, какой отдых вам хочется.', 'requested_choice': None}
     if decision.action == 'unsupported':
-        return {'route': 'finish', 'status': 'unsupported', 'answer': decision.reply or 'Планирую поездки только по Большому Сочи для взрослых.'}
+        return {'route': 'finish', 'status': 'unsupported', 'answer': decision.reply or 'Планирую поездки только по России для взрослых.'}
     if decision.action == 'remember':
         return {'route': 'finish', 'profile_update': decision.profile_interests, 'answer': 'Предпочтения сохранены для следующих поездок.'}
     if decision.action in ('answer', 'research'):
@@ -71,7 +92,6 @@ async def prepare(state: TripState, decide) -> dict:
             selectable = candidate['id'] in {c['id'] for c in stay_cards(state)} if candidate['role'] == 'stays' else card.selectable
             if not selectable:
                 return {'route': 'finish', 'answer': 'Этот тариф устарел или не соответствует условиям. Обновите поиск.'}
-            from travel_agent.schemas import TripDelta
             if candidate['role'] == 'transport':
                 trip, _ = apply_delta(trip, TripDelta(start=candidate['start'], end=candidate['end'],
                     check_in=datetime.fromisoformat(candidate['arrival_at']).date(), check_out=datetime.fromisoformat(candidate['return_departure_at']).date()))
@@ -94,7 +114,6 @@ async def prepare(state: TripState, decide) -> dict:
         journey, stay = option.get('transport'), option.get('stay')
         if not journey or not stay:
             return {'route': 'finish', 'answer': 'Этот вариант пока неполный. Сначала обновим недостающий компонент.'}
-        from travel_agent.schemas import TripDelta
         trip, _ = apply_delta(trip, TripDelta(start=journey['start'], end=journey['end'], check_in=stay['start'], check_out=stay['end'], hotel=decision.patch.hotel))
         return {'route': 'finish', 'constraints': trip.model_dump(mode='json'), 'selected': option['id'],
                 'selected_transport': journey['id'], 'selected_stay': stay['id'], 'requested_choice': None,
@@ -127,8 +146,11 @@ async def prepare(state: TripState, decide) -> dict:
         tasks = [t.model_copy(update={'depends_on': []}) for t in tasks if t.role == focus]
     elif any(t.role == 'transport' for t in tasks) and (not revised.start or not revised.end):
         tasks = [t.model_copy(update={'depends_on': list(dict.fromkeys([*t.depends_on, 'transport'])) if t.role != 'transport' else []}) for t in tasks]
-    results = dict(state.get('results', {}))
+    destination_changed = revised.destination != current.destination
+    results = {} if destination_changed else dict(state.get('results', {}))
     baseline = next((o for o in state.get('options', []) if o['id'] == (decision.option_id or state.get('selected'))), {})
+    if destination_changed:
+        baseline = {}
     if baseline.get('days') and 'experience' in results and not results['experience'].get('days'):
         results['experience'] = {**results['experience'], 'days': [
             {'date': day['date'], 'source_ids': [c['id'] for c in day.get('candidates', [])]}
@@ -142,12 +164,14 @@ async def prepare(state: TripState, decide) -> dict:
               'selected_transport': (baseline.get('transport') or {}).get('id') or (None if 'transport' in affected else state.get('selected_transport')),
               'selected_stay': (baseline.get('stay') or {}).get('id') or (None if 'stays' in affected else state.get('selected_stay'))}
     missing = revised.missing()
+    if focus == 'stays':
+        missing = [name for name in missing if name != 'origin']
     if search_dates(revised):
         missing = [name for name in missing if name not in ('start', 'end')]
     if changed:
         update.update(options=[], choices=[], cards=[], plan_answer='', research={})
     if missing:
-        questions = {'origin': 'Из какого города поедете?', 'start': 'Когда хотите поехать?', 'end': 'До какого числа?', 'adults': 'Сколько взрослых поедет?'}
+        questions = {'destination': 'Какой город или регион России выбираем?', 'origin': 'Из какого города поедете?', 'start': 'Когда хотите поехать?', 'end': 'До какого числа?', 'adults': 'Сколько взрослых поедет?'}
         return {**update, 'route': 'finish', 'status': 'needs_input', 'answer': questions[missing[0]], 'tasks': []}
     if not (revised.start and revised.end) and not (revised.nights or revised.duration_days):
         return {**update, 'route': 'finish', 'status': 'needs_input',

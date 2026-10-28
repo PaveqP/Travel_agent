@@ -68,27 +68,47 @@ import {
 import "./styles.css";
 
 const TELEGRAM = "https://t.me/ostrovok_helper_ryadom_bot";
+function DestinationExplorer({ onSelect }) {
+  const [destinations, setDestinations] = useState([]);
+  const [query, setQuery] = useState("");
+  const [theme, setTheme] = useState("");
+  const [expanded, setExpanded] = useState(false);
+  useEffect(() => { let active = true; api("/api/destinations").then((items) => { if (active) setDestinations(items); }).catch(() => {}); return () => { active = false; }; }, []);
+  const filtered = destinations.filter((item) => (!theme || item.theme === theme) && `${item.name} ${item.theme}`.toLocaleLowerCase("ru").includes(query.toLocaleLowerCase("ru")));
+  return <section className="destination-explorer" aria-label="Направления России">
+    <h2>Куда хочется отправиться?</h2>
+    <p>Города, курорты и природа по всей России. Можно назвать любое другое направление.</p>
+    <input type="search" aria-label="Найти направление" placeholder="Найти город или формат отдыха…" value={query} onChange={(event) => setQuery(event.target.value)} />
+    <div className="destination-themes"><button className={!theme ? "active" : ""} onClick={() => setTheme("")}>Все направления</button>
+      {[...new Set(destinations.map((item) => item.theme))].map((value) => <button key={value} className={theme === value ? "active" : ""} onClick={() => setTheme(value)}>{value}</button>)}
+    </div>
+    <div className="destination-chips">{(expanded || query || theme ? filtered : filtered.slice(0, 21)).map((item) => <button key={item.name} title={item.theme} onClick={() => onSelect(`Хочу поехать в ${item.name}. Помоги подобрать поездку с учётом моих пожеланий.`)}><MapPin size={13} />{item.name}</button>)}</div>
+    {!expanded && !query && !theme && destinations.length > 21 && <button className="text-button" onClick={() => setExpanded(true)}>Показать все {destinations.length} направлений</button>}
+    {query && !filtered.length && <p>Этого города нет среди примеров — его всё равно можно указать в запросе.</p>}
+  </section>;
+}
+
 const inspiration = [
   {
     title: "В ритме моря",
-    place: "Сочи · Адлер · Сириус",
+    place: "Балтика · Чёрное море · Приморье",
     image: "sea",
     icon: Waves,
-    text: "Хочу в Сочи к морю: неспешные прогулки, вкусная еда и отель рядом с набережной",
+    text: "Хочу к морю в России. Сравни Калининградскую область, Чёрное море и Приморье: прогулки, вкусная еда и отель у воды",
   },
   {
     title: "Выше только облака",
-    place: "Красная Поляна · Роза Хутор",
+    place: "Кавказ · Алтай · Камчатка",
     image: "mountains",
     icon: Mountain,
-    text: "Хочу в Красную Поляну: горы, красивые виды и уютный отель. Помоги спланировать поездку",
+    text: "Хочу в горы: сравни Архыз, Домбай, Алтай и Шерегеш. Нужны красивые виды и уютный отель",
   },
   {
     title: "Всё и чуть больше",
-    place: "Большой Сочи",
+    place: "Россия",
     image: "cable",
     icon: Compass,
-    text: "Хочу совместить море, горы и интересные места в Большом Сочи. Предложи варианты поездки",
+    text: "Хочу путешествие по России, направление ещё не выбрал. Предложи 6–8 разных городов и объясни, кому какой подойдёт",
   },
 ];
 
@@ -324,7 +344,7 @@ function Composer({ value, setValue, send, busy, compact = false }) {
         placeholder={
           compact
             ? "Что изменим? Например, отель поближе к морю…"
-            : "Хочу в Сочи на пять ночей, вдвоём из Москвы. Море и один день в горах…"
+            : "Хочу на пять ночей вдвоём из Москвы. Сравни города России для прогулок, природы и вкусной еды…"
         }
         disabled={busy}
         onKeyDown={(e) => {
@@ -382,7 +402,7 @@ function TripMap({ state, preview = false }) {
   const content = (
     <>
       <div className="map-canvas">
-        <iframe src={urls.embed} title={selected ? `Карта: ${selected.name}` : "Яндекс Карты: места вашей поездки в Большом Сочи"}
+        <iframe src={urls.embed} title={selected ? `Карта: ${selected.name}` : "Яндекс Карты: места вашей поездки в России"}
           loading={expanded ? "eager" : "lazy"} allowFullScreen referrerPolicy="no-referrer" />
       </div>
       {points.length > 0 && (
@@ -403,18 +423,18 @@ function TripMap({ state, preview = false }) {
         {selected
           ? `${selected.name} · ${selected.approximate ? "ориентир района, точный адрес не подтверждён" : "по координатам источника"}`
           : points.length ? "Выберите место, чтобы приблизить его на карте."
-            : "Пока показан Большой Сочи. Места появятся, когда будут известны их координаты или район."}
+            : "Пока показана Россия. Места появятся, когда будут известны их координаты или район."}
         {!selected && points.some((point) => point.approximate) && " Метки «район» показывают приблизительное расположение."}
       </p>
     </>
   );
   return (
-    <section className={`trip-map ${preview ? "map-preview" : ""}`} aria-label="Карта Большого Сочи">
+    <section className={`trip-map ${preview ? "map-preview" : ""}`} aria-label="Карта путешествия по России">
       <div className="map-caption">
         <span className="map-icon"><Route size={17} /></span>
         <div>
           <strong>{title}</strong>
-          <span>{preview ? "Большой Сочи — маленький мир для большого отдыха" : "Отель и впечатления на Яндекс Картах"}</span>
+          <span>{preview ? "Откройте своё направление в России" : "Отель и впечатления на Яндекс Картах"}</span>
         </div>
       </div>
       {expanded ? (
@@ -701,6 +721,7 @@ function Conversation({
                 <br className="desktop-break" /> билеты, отель и впечатления в
                 одном разговоре.
               </p>
+              <DestinationExplorer onSelect={prompt} />
               <div className="starter-prompts">
                 {inspiration.map((item) => (
                   <button key={item.image} onClick={() => prompt(item.text)}>
@@ -957,7 +978,7 @@ function PackageCard({ option, index, state, choose, busy }) {
       <h3>{option.stay?.name}</h3>
       <p className="package-area">
         <MapPin size={14} />
-        {option.stay?.area || "Большой Сочи"}
+        {option.stay?.area || "Россия"}
       </p>
       <HotelDetails hotel={option.stay} />
       <div className="package-components">
@@ -1042,6 +1063,10 @@ function AutonomousPlan({
   const candidates = Object.values(state.results || {}).flatMap(
     (result) => result.candidates || [],
   );
+  if (state.stage === "scenarios" && state.choices?.length)
+    return <section className="agent-recommendations"><h2>Выберите направление</h2><div className="choices-grid scenarios-grid">
+      {state.choices.map((choice, index) => <ChoiceCard key={choice.id} choice={choice} index={index} state={state} choose={choose} busy={busy} />)}
+    </div></section>;
   if (state.stage === "booked")
     return (
       <Summary
@@ -1194,20 +1219,10 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
     >
       {stage === "scenarios" ? (
         <>
-          <div className="scenario-image">
-            <img
-              src={`/images/${/Полян|Хутор/.test(scenario?.destination) ? "mountains" : index % 2 ? "cable" : "sea"}.jpg`}
-              alt={scenario?.destination || "Большой Сочи"}
-            />
-            <span className="image-pill">
-              <MapPin size={12} />
-              {scenario?.destination || "Большой Сочи"}
-            </span>
-            {index === 0 && (
-              <span className="recommend-tag">
-                <Sparkles size={12} /> С этого начнём?
-              </span>
-            )}
+          <div className="destination-banner">
+            <MapPin size={30} />
+            <span>{scenario?.destination || "Россия"}</span>
+            <small>Идея поездки · цены и наличие ещё не проверены</small>
           </div>
           <div className="choice-content">
             <span className="choice-kicker">
@@ -1440,7 +1455,7 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
                 ? "ПРЕДПРОСМОТР ВАРИАНТА"
                 : "ПАЗЛ СЛОЖИЛСЯ"}
           </span>
-          <h2>{receipt ? "Ваш Сочи ждёт" : "Ваша поездка, целиком"}</h2>
+          <h2>{receipt ? "Ваше путешествие ждёт" : "Ваша поездка, целиком"}</h2>
           <p>
             {date(c.start)} — {date(c.end)} · {party(c.adults, c.children_ages)}{" "}
             · {c.origin || "Город уточняется"}
