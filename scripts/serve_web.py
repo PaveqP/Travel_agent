@@ -34,7 +34,7 @@ def main() -> None:
                 parser.error("Existing database volume: provide its TRAVEL_POSTGRES_PASSWORD; no password was changed")
             password = secrets.token_urlsafe(32)
         subprocess.run(["docker", "compose", "-p", "flinters", "up", "-d", "postgres"], env={**os.environ, "TRAVEL_POSTGRES_PASSWORD": password}, check=True)
-        env["TRAVEL_DATABASE_URL"] = f"postgresql://travel:{quote(password, safe='')}@127.0.0.1:55432/travel"
+        env["TRAVEL_DATABASE_URL"] = f"postgresql://travel:{quote(password, safe='')}@127.0.0.1:{env.get('TRAVEL_POSTGRES_PORT') or '55432'}/travel"
         for _ in range(30):
             status = subprocess.run(["docker", "compose", "-p", "flinters", "exec", "-T", "postgres", "pg_isready", "-U", "travel"], env={**os.environ, "TRAVEL_POSTGRES_PASSWORD": password}, capture_output=True)
             if status.returncode == 0:
