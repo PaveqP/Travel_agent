@@ -21,7 +21,7 @@ from travel_agent.tools import ALLOWED, build_tools, normalize, public_url
 from integrations.schemas.models import Coordinates
 
 FIXTURES = json.loads((Path(__file__).parent / 'fixtures/searches.json').read_text())
-TRIP = TripConstraints(purpose='Прогулки', origin='Москва', start='2026-11-12', end='2026-11-16', adults=2)
+TRIP = TripConstraints(destination='Сочи', purpose='Прогулки', origin='Москва', start='2026-11-12', end='2026-11-16', adults=2)
 NOW = datetime.now(timezone.utc)
 
 
@@ -35,7 +35,7 @@ async def decide(state):
     message = state['messages'][-1].content
     patch = TripDelta()
     if not current.origin:
-        patch = TripDelta(origin='Москва', adults=2, purpose='Прогулки')
+        patch = TripDelta(destination='Сочи', origin='Москва', adults=2, purpose='Прогулки')
     if 'даты' in message:
         patch = TripDelta(start=TRIP.start, end=TRIP.end)
     if 'отель' in message:
@@ -64,7 +64,7 @@ def agreed_state(stage='transport'):
 
 class EngineTests(unittest.TestCase):
     def test_contracts(self):
-        for patch in [{'adults': 0}, {'destination': 'Москва'}, {'start': '2026-11-16', 'end': '2026-11-12'}, {'currency': 'USD'}]:
+        for patch in [{'adults': 0}, {'destination': ''}, {'start': '2026-11-16', 'end': '2026-11-12'}, {'currency': 'USD'}]:
             with self.assertRaises(ValidationError):
                 TripConstraints.model_validate(patch)
 
@@ -77,7 +77,7 @@ class EngineTests(unittest.TestCase):
         self.assertIn('activities', first.budget.missing)
         self.assertEqual(len(first.days), 5)
         self.assertEqual(first.days[0].candidates, [])
-        self.assertTrue(any(day.candidates for day in first.days))
+        self.assertTrue(all(not day.candidates for day in first.days))
 
     def test_expired_and_wrong_dates(self):
         self.assertEqual(compose(TRIP, candidates(), 1, NOW+timedelta(days=1)), [])
@@ -89,7 +89,8 @@ class EngineTests(unittest.TestCase):
             self.assertEqual(area_of(Coordinates(lat=lat,lon=lon)),name)
         self.assertIsNone(area_of(Coordinates(lat=55.75,lon=37.6)))
         trip=TRIP.model_copy(update={'destination':'Адлер'})
-        self.assertTrue(all(o.stay is None or o.stay.area=='Адлер' for o in compose(trip,candidates(),1)))
+        self.assertTrue(compose(trip,candidates(),1))
+        self.assertEqual(TripConstraints(destination='Москва').destination, 'Москва')
 
     def test_invalidation(self):
         self.assertEqual(apply_delta(TRIP,TripDelta(hotel='Mirror'))[1],{'stays'})

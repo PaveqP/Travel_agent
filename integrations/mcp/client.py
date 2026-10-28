@@ -142,7 +142,7 @@ async def runtime_call(role: str, provider: str, name: str, args: dict, env: dic
     result = await _runtime_attempt(role, provider, name, args, env, owned)
     result['attempts'] = attempt + 1
     logging.getLogger(__name__).info('role=%s provider=%s tool=%s attempt=%s status=%s', role, provider, name, attempt + 1, result['status'])
-    if result['status'] not in {'timeout', 'network_error'} or attempt == 1:
+    if result['status'] != 'network_error' or attempt == 1:
      return result
     await asyncio.sleep(0.25)
  except TimeoutError:

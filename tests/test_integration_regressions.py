@@ -265,7 +265,7 @@ class IntegrationRegressionTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(structured.await_count, 1)
         self.assertIsNone(result.patch.start)
 
-    def test_selected_mountain_places_reach_program_alongside_coast(self):
+    def test_catalog_does_not_implicitly_create_a_program(self):
         from integrations.schemas.models import Coordinates
         from travel_agent.engine import area_of, compose
         from test_travel_agent import candidates
@@ -284,14 +284,13 @@ class IntegrationRegressionTests(unittest.IsolatedAsyncioTestCase):
         ]
         option = compose(TRIP, rows, 1)[0]
         areas = {area_of(c.coordinates) for day in option.days for c in day.candidates}
-        self.assertIn("Красная Поляна", areas)
-        self.assertIn("Сочи", areas)
+        self.assertEqual(areas, set())
         for day in option.days:
             self.assertLessEqual(
                 len({area_of(c.coordinates) for c in day.candidates}), 1
             )
 
-    def test_coastal_districts_do_not_displace_two_mountain_days(self):
+    def test_catalog_does_not_implicitly_schedule_mountain_days(self):
         from datetime import timedelta
         from integrations.schemas.models import Coordinates
         from travel_agent.engine import compose
@@ -330,5 +329,5 @@ class IntegrationRegressionTests(unittest.IsolatedAsyncioTestCase):
                 any(c.area == "Красная Поляна" for c in day.candidates)
                 for day in option.days
             ),
-            2,
+            0,
         )

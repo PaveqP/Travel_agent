@@ -76,7 +76,7 @@ class PlanningTests(unittest.IsolatedAsyncioTestCase):
         return build_graph(AsyncMock(side_effect=decisions), runners, saver or InMemorySaver(), present=present, research=research, autonomous=True), runners
 
     async def test_clarify_hotel_budget_dates_and_readonly_question(self):
-        decisions = [TurnPlan(action='clarify', patch=TripDelta(origin='Москва', adults=2, purpose='Море'), reply='Когда поедете?'),
+        decisions = [TurnPlan(action='clarify', patch=TripDelta(destination='Сочи', origin='Москва', adults=2, purpose='Море'), reply='Когда поедете?'),
                      TurnPlan(action='plan', patch=TripDelta(start=TRIP.start, end=TRIP.end), tasks=[task(r) for r in ROLES]),
                      TurnPlan(action='plan', patch=TripDelta(hotel='Mirror'), tasks=[task('stays'), task('experience')]),
                      TurnPlan(action='plan', patch=TripDelta(budget=100000)),
@@ -243,7 +243,7 @@ class AutonomousToolTests(unittest.IsolatedAsyncioTestCase):
         trip = TRIP.model_copy(update={'mountain_days': 2, 'baggage': 'required'})
         rows = {r: result(r, trip, 1).model_dump(mode='json') for r in ROLES}
         options, feedback = compose_packages(trip, rows, 1)
-        self.assertIn('mountain_days_mismatch', [f.code for f in feedback])
+        self.assertNotIn('mountain_days_mismatch', [f.code for f in feedback])
         self.assertTrue(any('багаж' in w for w in options[0].warnings))
         state = {'constraints': trip.model_dump(mode='json'), 'options': [o.model_dump(mode='json') for o in options], 'selected': options[0].id, 'revision': 1, 'stage': 'review'}
         with self.assertRaises(ValueError):
@@ -382,12 +382,12 @@ class RepairTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(runners['transport'].await_count, 1)
 
 class PlannerContractTests(unittest.IsolatedAsyncioTestCase):
-    async def test_focused_extraction_is_authoritative_and_history_stays_intact(self):
+    async def test_planner_extracts_in_one_call_and_history_stays_intact(self):
         from unittest.mock import Mock
         from travel_agent.agents.supervisor.agent import llm_planner
         from travel_agent.schemas import RepairPlan
         answers = {
-            TurnPlan: TurnPlan(action='plan', patch=TripDelta(start='2026-11-10', min_hotel_stars=4), tasks=[task(r) for r in ROLES]),
+            TurnPlan: TurnPlan(action='plan', patch=TripDelta(start=TRIP.start, end=TRIP.end, purpose='Отдых у моря'), tasks=[task(r) for r in ROLES]),
             TripDelta: TripDelta(start=TRIP.start, end=TRIP.end, purpose='Отдых у моря'),
             RepairPlan: RepairPlan(tasks=[]),
         }
@@ -401,6 +401,8 @@ class PlannerContractTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(decision.patch.end, TRIP.end)
         self.assertIsNone(decision.patch.min_hotel_stars)
         self.assertEqual(len(decision.tasks), 3)
+        clients[TripDelta].ainvoke.assert_not_awaited()
+        clients[TurnPlan].ainvoke.assert_awaited_once()
         self.assertEqual(state['messages'][0].content, previous.content)
         sent = clients[TurnPlan].ainvoke.await_args.args[0]
         self.assertLessEqual(len(next(m.content for m in sent if isinstance(m, AIMessage))), 500)
@@ -427,7 +429,7 @@ class SessionReliabilityTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_month_without_duration_clarifies_before_any_search(self):
         planner = AsyncMock(side_effect=[
-            TurnPlan(action='plan', patch=TripDelta(travel_month='2026-12', adults=2, purpose='Отдых')),
+            TurnPlan(action='plan', patch=TripDelta(destination='Сочи', travel_month='2026-12', adults=2, purpose='Отдых')),
             TurnPlan(action='plan', patch=TripDelta(origin='Санкт-Петербург')),
         ])
         graph, runners = self.graph(planner)
@@ -521,3 +523,165 @@ class SessionReliabilityTests(unittest.IsolatedAsyncioTestCase):
         options, _ = compose_packages(TRIP, rows, 1)
         self.assertGreater(len({o.transport.id for o in options}), 1)
         self.assertEqual(len({o.stay.id for o in options}), 1)
+
+
+class ScopeAndLatencyTests(unittest.IsolatedAsyncioTestCase):
+    async def test_hotel_only_http_never_requests_departure_or_runs_other_roles(self):
+        from unittest.mock import Mock
+        from travel_agent.agents.supervisor.agent import llm_planner
+        structured = Mock(ainvoke=AsyncMock(return_value=TurnPlan(action='plan', focus='stays',
+            patch=TripDelta(destination='Сочи', start=TRIP.start, end=TRIP.end, adults=2, option_limit=3),
+            tasks=[task('stays')])))
+        model = Mock(with_structured_output=Mock(return_value=structured))
+        runners = {role: AsyncMock(side_effect=lambda trip, revision, goal, previous, role=role: result(role, trip, revision)) for role in ROLES}
+        graph = build_graph(llm_planner(model, 'Offline planner'), runners, InMemorySaver(), autonomous=True)
+        app = create_app(graph, tokens=('alice',))
+        async with app.router.lifespan_context(app), httpx.AsyncClient(transport=httpx.ASGITransport(app), base_url='http://test', headers={'Authorization': 'Bearer alice'}) as client:
+            ident = (await client.post('/trips')).json()['trip_id']
+            response = await client.post(f'/trips/{ident}/messages', json={'message': 'Найди три отеля, сравни отмену и расположение', 'revision': 0})
+            self.assertEqual(response.status_code, 200)
+            state = response.json()
+            self.assertEqual(state['focus'], 'stays')
+            self.assertEqual(state['stage'], 'stays')
+            self.assertTrue(state['cards'])
+            self.assertEqual(state['options'], [])
+            self.assertNotIn('Из какого города', state['answer'])
+        structured.ainvoke.assert_awaited_once()
+        runners['stays'].assert_awaited_once()
+        runners['transport'].assert_not_awaited()
+        runners['experience'].assert_not_awaited()
+
+    async def test_component_scope_survives_clarification_and_can_expand_explicitly(self):
+        decisions = [TurnPlan(action='clarify', focus='stays', patch=TripDelta(destination='Сочи', adults=2)),
+            TurnPlan(action='plan', patch=TripDelta(start=TRIP.start, end=TRIP.end), tasks=[task('stays')]),
+            TurnPlan(action='plan', focus='trip', patch=TripDelta(origin='Москва'), tasks=[task(r) for r in ROLES])]
+        graph, runners = PlanningTests().graph(decisions)
+        config = {'configurable': {'thread_id': 'component-clarification'}}
+        first = await graph.ainvoke({'messages': [HumanMessage(content='Нужны отели')]}, config)
+        self.assertNotIn('города поедете', first['answer'])
+        self.assertEqual(first['focus'], 'stays')
+        for run in runners.values():
+            run.assert_not_awaited()
+        hotels = await graph.ainvoke({'messages': [HumanMessage(content='12–16 ноября')]}, config)
+        self.assertTrue(hotels['cards'])
+        runners['transport'].assert_not_awaited()
+        runners['experience'].assert_not_awaited()
+        full = await graph.ainvoke({'messages': [HumanMessage(content='Добавь билеты из Москвы и программу')]}, config)
+        self.assertIsNone(full['focus'])
+        self.assertTrue(full['options'])
+
+    async def test_single_role_task_infers_scope_without_expanding_missing_components(self):
+        graph, runners = PlanningTests().graph([TurnPlan(action='plan', tasks=[task('stays')])])
+        state = await graph.ainvoke({'constraints': TRIP.model_copy(update={'origin': None}).model_dump(mode='json')}, {'configurable': {'thread_id': 'inferred-scope'}})
+        self.assertEqual(state['focus'], 'stays')
+        self.assertTrue(state['cards'])
+        runners['stays'].assert_awaited_once()
+        runners['transport'].assert_not_awaited()
+        runners['experience'].assert_not_awaited()
+
+    async def test_explicit_component_scope_overrides_existing_package(self):
+        graph, runners = PlanningTests().graph([TurnPlan(action='plan', tasks=[task(r) for r in ROLES]),
+            TurnPlan(action='plan', focus='stays', tasks=[task('stays', ['transport'])])])
+        config = {'configurable': {'thread_id': 'narrow-existing'}}
+        await graph.ainvoke({'constraints': TRIP.model_dump(mode='json')}, config)
+        narrowed = await graph.ainvoke({'messages': [HumanMessage(content='Теперь покажи только отели')]}, config)
+        self.assertEqual(narrowed['focus'], 'stays')
+        self.assertEqual(narrowed['options'], [])
+        self.assertTrue(narrowed['cards'])
+        self.assertEqual([runners[r].await_count for r in ROLES], [1, 2, 1])
+
+    async def test_long_explanation_is_one_llm_call_and_preserves_trip(self):
+        from unittest.mock import Mock
+        from travel_agent.agents.supervisor.agent import llm_planner
+        reply = 'Сравнение по сохранённым ценам. ' * 70
+        structured = Mock(ainvoke=AsyncMock(return_value=TurnPlan(action='answer', reply=reply)))
+        model = Mock(with_structured_output=Mock(return_value=structured))
+        presenter = AsyncMock()
+        graph, runners = PlanningTests().graph([TurnPlan(action='plan', tasks=[task(r) for r in ROLES])])
+        config = {'configurable': {'thread_id': 'explain-existing'}}
+        first = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json')}, config)
+        graph = build_graph(llm_planner(model, 'Explain verified options'), runners, graph.checkpointer, present=presenter, autonomous=True)
+        answered = await graph.ainvoke({'messages': [HumanMessage(content='Почему первый, а не второй?')]}, config)
+        self.assertEqual(answered['answer'], reply)
+        for field in ('revision', 'options', 'selected', 'constraints', 'results'):
+            self.assertEqual(answered[field], first[field])
+        self.assertEqual([runners[r].await_count for r in ROLES], [1, 1, 1])
+        structured.ainvoke.assert_awaited_once()
+        presenter.assert_not_awaited()
+        context = json.loads(structured.ainvoke.await_args.args[0][1].content)
+        self.assertIn('coordinates', context['options'][0]['stay'])
+        self.assertIn('departure_at', context['options'][0]['transport'])
+
+    async def test_concurrent_duplicate_mcp_queries_make_one_network_call(self):
+        from travel_agent.tools import build_tools
+        from test_travel_agent import FIXTURES
+        async def source(*args):
+            await asyncio.sleep(0.01)
+            return {'status': 'ok', 'data': FIXTURES['search_hotels']}
+        async with httpx.AsyncClient() as client:
+            tools = {tool.name: tool for tool in build_tools('stays', TRIP, 1, client, {}, {}, [], {'tools': 0}, autonomous=True)}
+            with patch('travel_agent.tools.runtime_call', side_effect=source) as network:
+                first, second = await asyncio.gather(tools['search_hotels'].ainvoke({}), tools['search_hotels'].ainvoke({}))
+                self.assertEqual(first, second)
+                self.assertTrue(first['candidates'])
+                network.assert_awaited_once()
+
+    async def test_concurrent_geocoding_shares_one_request(self):
+        from travel_agent.agents.experience.tools import build_tools
+        async def source(*args):
+            await asyncio.sleep(0.01)
+            return {'locations': [{'latitude': 55.79, 'longitude': 49.12}]}
+        rest = AsyncMock(side_effect=source)
+        async with httpx.AsyncClient() as client:
+            tools = {tool.name: tool for tool in build_tools(TRIP.model_copy(update={'destination': 'Казань'}), client, {}, {}, AsyncMock(), rest, autonomous=True)}
+            await asyncio.gather(*(tools['geocode_destination'].ainvoke({}) for _ in range(3)))
+        rest.assert_awaited_once()
+
+    async def test_mcp_timeout_is_not_automatically_retried(self):
+        from integrations.mcp.client import runtime_call
+        with patch('integrations.mcp.client._runtime_attempt', new=AsyncMock(return_value={'status': 'timeout'})) as source:
+            response = await runtime_call('stays', 'tutu', 'search_hotels', {}, {})
+        source.assert_awaited_once()
+        self.assertEqual(response, {'status': 'timeout', 'attempts': 1})
+
+
+    async def test_hotel_checkin_dates_work_without_departure_dates_or_origin(self):
+        graph, runners = PlanningTests().graph([TurnPlan(action='plan', focus='stays',
+            patch=TripDelta(destination='Сочи', adults=2, check_in=TRIP.start, check_out=TRIP.end), tasks=[task('stays')])])
+        state = await graph.ainvoke({'messages': [HumanMessage(content='Заселение 12 ноября, выезд 16 ноября, двое')]}, {'configurable': {'thread_id': 'hotel-local-dates'}})
+        self.assertTrue(state['cards'])
+        self.assertEqual(state['constraints']['start'], str(TRIP.start))
+        self.assertEqual(state['constraints']['end'], str(TRIP.end))
+        runners['transport'].assert_not_awaited()
+        runners['experience'].assert_not_awaited()
+
+    async def test_explanation_does_not_upgrade_partial_search_or_mutate_constraints(self):
+        graph, runners = PlanningTests().graph([TurnPlan(action='answer', reply='Ни у одного варианта не проверено время местных переездов.', patch=TripDelta(budget=1))])
+        config = {'configurable': {'thread_id': 'partial-explanation'}}
+        state = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json'), 'revision': 4, 'status': 'partial', 'messages': [HumanMessage(content='Что известно?')]}, config)
+        self.assertEqual(state['status'], 'partial')
+        self.assertEqual(state['revision'], 4)
+        self.assertEqual(state['constraints'], TRIP.model_dump(mode='json'))
+        for run in runners.values():
+            run.assert_not_awaited()
+
+
+    async def test_standalone_hotel_dates_do_not_follow_an_old_overnight_flight(self):
+        graph, runners = PlanningTests().graph([TurnPlan(action='plan', focus='stays', tasks=[task('stays')])])
+        config = {'configurable': {'thread_id': 'old-overnight-flight'}}
+        journey = result('transport', TRIP, 1)
+        journey.candidates[0].arrival_at += timedelta(days=1)
+        observed = []
+        async def hotels(trip, revision, goal, previous):
+            observed.append(trip.stay_start)
+            context = json.loads(goal.split('\n', 1)[1])
+            self.assertEqual(context['transport_stays'], [])
+            self.assertIsNone(context['current_transport'])
+            return result('stays', trip, revision)
+        runners['stays'].side_effect = hotels
+        state = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json'),
+            'results': {'transport': journey.model_dump(mode='json')},
+            'selected_transport': journey.candidates[0].id}, config)
+        self.assertEqual(observed, [TRIP.start])
+        self.assertTrue(state['cards'])
+        runners['transport'].assert_not_awaited()

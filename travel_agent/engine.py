@@ -190,6 +190,8 @@ def usable(c: Candidate, trip: TripConstraints, now: datetime) -> bool:
             return False
         if c.price is None or c.price.currency != 'RUB' or c.price.basis == 'unknown':
             return False
+    if c.role == 'stays' and trip.hotel and trip.hotel.casefold() not in c.name.casefold():
+        return False
     if c.role == 'transport':
         return c.origin == trip.origin and destination_matches(c, trip) and c.arrival_at is not None and c.return_departure_at is not None
     return True

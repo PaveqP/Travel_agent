@@ -159,7 +159,7 @@ class FlexibleSearchTests(unittest.IsolatedAsyncioTestCase):
         trip = TripConstraints(origin='Санкт-Петербург', adults=4, date_from='2026-12-01', date_to='2026-12-20')
         response = httpx.Response(200, json={'success': True, 'data': []}, request=httpx.Request('GET', 'https://api.travelpayouts.com/'))
         with patch('travel_agent.agents.transport.tools.travelpayouts.prices', new=AsyncMock(return_value=response)) as network:
-            await self.tools(trip, env={'TRAVELPAYOUTS_TOKEN': 'test-token'})['cached_flights'].ainvoke({})
+            await self.tools(trip, env={'TRAVELPAYOUTS_TOKEN': 'test-token'})['cached_flights'].ainvoke({'destination_iata': 'AER'})
         self.assertEqual(network.await_args.args[2:], ('LED', '2026-12', '2026-12'))
 
     async def test_web_hotel_reference_keeps_source_and_unknown_price(self):
@@ -206,7 +206,7 @@ class FlexibleGraphTests(unittest.IsolatedAsyncioTestCase):
     async def test_selecting_nearby_fare_accepts_dates_and_immediately_searches_stays(self):
         state = agreed_state()
         args = {'adults': 2, 'departure_date': '2026-11-13', 'return_date': '2026-11-17'}
-        flight = normalize('tutu', 'search_avia', flight_data(args), TripConstraints(origin='Москва', adults=2, start=args['departure_date'], end=args['return_date']), datetime.now(timezone.utc))[0]
+        flight = normalize('tutu', 'search_avia', flight_data(args), TripConstraints(destination='Сочи', origin='Москва', adults=2, start=args['departure_date'], end=args['return_date']), datetime.now(timezone.utc))[0]
         state['results']['transport']['candidates'] = [flight.model_dump(mode='json')]
         runner = AsyncMock(side_effect=run)
         graph = build_graph(AsyncMock(), runner, InMemorySaver())

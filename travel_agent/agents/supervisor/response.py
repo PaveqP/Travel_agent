@@ -116,7 +116,7 @@ def option_context(state: dict) -> list[dict]:
     return [
         {
             **{k: o[k] for k in ("id", "budget", "warnings")},
-            **{role: {k: value for k, value in (o.get(role) or {}).items() if k in ('id', 'name', 'area', 'price', 'start', 'end', 'departure_at', 'arrival_at', 'arrival_city', 'return_departure_at', 'return_arrival_at', 'transport_mode', 'stars', 'rating', 'baggage_included', 'conditions', 'variant_id', 'source', 'duration_minutes', 'transfers')} for role in ('transport', 'stay')},
+            **{role: {k: value for k, value in (o.get(role) or {}).items() if k in ('id', 'name', 'area', 'price', 'start', 'end', 'departure_at', 'arrival_at', 'arrival_city', 'return_departure_at', 'return_arrival_at', 'transport_mode', 'stars', 'rating', 'baggage_included', 'conditions', 'variant_id', 'source', 'duration_minutes', 'transfers', 'coordinates', 'address', 'description', 'amenities')} for role in ('transport', 'stay')},
             "days": [
                 {
                     "date": d["date"],
@@ -237,7 +237,7 @@ def stay_cards(state: dict) -> list[dict]:
     duration = trip.nights or (trip.duration_days - 1 if trip.duration_days else None)
     candidates = [c for c in candidates if (not duration or c.start and c.end and (c.end - c.start).days == duration) and c.role == 'stays' and c.start and c.end and lower and upper and lower <= c.start < c.end <= upper
                   and usable(c, trip.model_copy(update={'start': c.start, 'end': c.end, 'check_in': c.start, 'check_out': c.end}), now)
-                  and (trip.holiday_type != 'ski' or c.area == 'Красная Поляна')]
+]
     candidates.sort(key=lambda c: (preferred.get(c.id, 100), c.price.amount))
     return [offer_card(c, trip).model_dump(mode='json') for c in candidates[:trip.option_limit]]
 

@@ -17,7 +17,7 @@ from travel_agent.tools import build_tools
 from test_travel_agent import candidates
 
 
-SKI = TripConstraints(origin='Санкт-Петербург', purpose='горнолыжный отдых', holiday_type='ski', adults=2, travel_month='2026-12', nights=7)
+SKI = TripConstraints(destination='Красная Поляна', origin='Санкт-Петербург', purpose='горнолыжный отдых', holiday_type='ski', adults=2, travel_month='2026-12', nights=7)
 
 
 def hotel_result(trip, revision):
@@ -80,7 +80,7 @@ class SkiDialogueTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(ValidationError) as caught:
             TripDelta(start='2026-12-10', clear=['start'])
         delta = TripDelta(date_from='2026-12-10', date_to='2026-12-25', clear=['start','end'])
-        routes = Mock(ainvoke=AsyncMock(side_effect=[caught.exception, TurnPlan(action='plan', focus='stays')]))
+        routes = Mock(ainvoke=AsyncMock(side_effect=[caught.exception, TurnPlan(action='plan', focus='stays', patch=delta)]))
         extraction = Mock(ainvoke=AsyncMock(side_effect=[caught.exception, delta]))
         model=Mock()
         model.with_structured_output.side_effect=lambda schema,**kwargs: {TurnPlan:routes, TripDelta:extraction, RepairPlan:Mock()}[schema]
@@ -88,7 +88,7 @@ class SkiDialogueTests(unittest.IsolatedAsyncioTestCase):
         result=await llm_planner(model,'Offline prompt')(state)
         self.assertEqual(result.patch.date_to,date(2026,12,25))
         self.assertEqual(routes.ainvoke.await_count,2)
-        self.assertEqual(extraction.ainvoke.await_count,2)
+        extraction.ainvoke.assert_not_awaited()
         self.assertEqual(state['constraints']['nights'],7)
 
     async def test_hotel_preferences_are_forwarded_to_mcp_and_dates_can_move_inside_window(self):
@@ -107,7 +107,8 @@ class SkiDialogueTests(unittest.IsolatedAsyncioTestCase):
         trip=TRIP.model_copy(update={'holiday_type':'ski'})
         results={r:result(r,trip,1).model_dump(mode='json') for r in ROLES}
         options,feedback=compose_packages(trip,results,1)
-        self.assertIn('ski_program_mismatch',[f.code for f in feedback])
+        self.assertNotIn('ski_program_mismatch',[f.code for f in feedback])
+        self.assertTrue(options)
 
     def test_existing_broken_state_can_recover_return_date(self):
         broken=SKI.model_copy(update={'start':date(2026,12,10),'end':None})

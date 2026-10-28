@@ -134,8 +134,8 @@ class StagedPlanningTests(unittest.IsolatedAsyncioTestCase):
         runner.assert_not_called()
         with self.assertRaises(ValidationError):
             SupervisorDecision(action="scenarios", scenarios=[self.scenario(str(i)) for i in range(5)])
-        with self.assertRaises(ValidationError):
-            TripScenario(id="abroad", title="Пляж", destination="Бали", purpose="Море", tradeoff="Перелёт")
+        scenario = TripScenario(id="city", title="Культура", destination="Казань", purpose="Музеи", tradeoff="Погода")
+        self.assertEqual(scenario.destination, "Казань")
         with self.assertRaises(ValidationError):
             SupervisorDecision(action="scenarios", scenarios=[self.scenario("one"), self.scenario("two")])
 

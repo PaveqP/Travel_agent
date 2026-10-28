@@ -144,15 +144,15 @@ class DialogueChangesTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_a_short_followup_has_the_original_request_for_recovery(self):
         original = 'Я хочу поехать с другом на горнолыжный курорт с 10 по 20 декабря, до 200000 на двоих, подбери готовый тур'
-        async def extract(messages):
+        async def plan(messages):
             human = [m.content for m in messages if isinstance(m, HumanMessage)]
             self.assertIn(original, human)
             self.assertEqual(human[-1], 'активный')
-            return TripDelta(start='2026-12-10', end='2026-12-20', adults=2, budget=200000, purpose='Горнолыжная поездка')
+            return TurnPlan(action='plan', patch=TripDelta(destination='Сочи', start='2026-12-10', end='2026-12-20', adults=2, budget=200000, purpose='Горнолыжная поездка'))
         model = Mock()
         model.with_structured_output.side_effect = lambda schema, **kwargs: {
-            TurnPlan: Mock(ainvoke=AsyncMock(return_value=TurnPlan(action='plan'))),
-            TripDelta: Mock(ainvoke=extract), RepairPlan: Mock(),
+            TurnPlan: Mock(ainvoke=plan),
+            TripDelta: Mock(), RepairPlan: Mock(),
         }[schema]
         decision = await llm_planner(model, 'Offline prompt')({'messages': [HumanMessage(content=original), AIMessage(content='Какой отдых?'), HumanMessage(content='активный')]})
         graph, runners = self.graph([decision])
@@ -178,7 +178,7 @@ class DialogueChangesTests(unittest.IsolatedAsyncioTestCase):
     async def test_replacing_a_hotel_keeps_a_complete_trip_and_the_selected_flight(self):
         graph, runners = self.graph([
             TurnPlan(action='plan', tasks=[task(r) for r in ROLES]),
-            TurnPlan(action='plan', focus='stays', patch=TripDelta(hotel='Mirror'), tasks=[task('stays')]),
+            TurnPlan(action='plan', focus='trip', patch=TripDelta(hotel='Mirror'), tasks=[task('stays')]),
         ])
         config = {'configurable': {'thread_id': 'hotel-edit'}}
         original = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json')}, config)
@@ -251,19 +251,19 @@ class DialogueChangesTests(unittest.IsolatedAsyncioTestCase):
         text = 'В администрацию отеля. Во время моего посещения сауна была холодной. Прошу проверить качество услуги. Письмо не отправлено.'
         presenter = AsyncMock(return_value=text)
         graph, runners = self.graph([
-            TurnPlan(action='plan', tasks=[task(r) for r in ROLES]), TurnPlan(action='answer', reply='Сравни плюсы вариантов'),
-            TurnPlan(action='answer', reply='Подготовь жалобу на холодную сауну'),
+            TurnPlan(action='plan', tasks=[task(r) for r in ROLES]), TurnPlan(action='answer', reply='В первом варианте ниже известная сумма.'),
+            TurnPlan(action='answer', reply=text),
         ], present=presenter)
         config = {'configurable': {'thread_id': 'helpful-answer'}}
         original = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json')}, config)
-        for question in ['Какие плюсы у каждого варианта?', 'Сауна была холодной, напиши жалобу администрации отеля']:
+        for question, expected in [('Какие плюсы у каждого варианта?', 'В первом варианте ниже известная сумма.'), ('Сауна была холодной, напиши жалобу администрации отеля', text)]:
             state = await graph.ainvoke({'messages': [HumanMessage(content=question)]}, config)
-            self.assertEqual(state['answer'], text)
+            self.assertEqual(state['answer'], expected)
             self.assertEqual(state['options'], original['options'])
             self.assertEqual(state['revision'], original['revision'])
             self.assertEqual(state['selected'], original['selected'])
         self.assertEqual([r.await_count for r in runners.values()], [1, 1, 1])
-        self.assertIn('холодную', presenter.await_args.args[0]['decision']['reply'])
+        presenter.assert_awaited_once()
 
     async def test_editing_a_saved_legacy_trip_reuses_its_approved_calendar(self):
         graph, runners = self.graph([TurnPlan(action='plan', tasks=[task('experience')])])

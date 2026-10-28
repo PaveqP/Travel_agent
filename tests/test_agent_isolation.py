@@ -344,7 +344,7 @@ class RetryTests(unittest.IsolatedAsyncioTestCase):
         with patch(
             "integrations.mcp.client._runtime_attempt",
             new=AsyncMock(
-                side_effect=[{"status": "timeout"}, {"status": "ok", "data": {}}]
+                side_effect=[{"status": "network_error"}, {"status": "ok", "data": {}}]
             ),
         ) as attempt:
             result = await runtime_call("stays", "tutu", "search_hotels", {}, {})

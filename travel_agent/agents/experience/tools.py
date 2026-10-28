@@ -1,3 +1,5 @@
+import asyncio
+
 import httpx
 from langchain_core.tools import BaseTool, tool
 
@@ -24,15 +26,17 @@ def build_tools(
     *, autonomous: bool = False,
 ) -> list[BaseTool]:
     locations: dict[str, dict] = {}
+    location_locks: dict[str, asyncio.Lock] = {}
 
     @tool
     async def geocode_destination(location: str | None = None) -> dict:
         """Resolve any Russian city or resort into coordinates, region and timezone. Review ambiguous matches."""
         name = (location or trip.destination).strip()
-        if name not in locations:
-            locations[name] = await rest('geocode_destination', 'openmeteo', None,
-                lambda: openmeteo.geocode(client, name))
-        return locations[name]
+        async with location_locks.setdefault(name, asyncio.Lock()):
+            if name not in locations:
+                locations[name] = await rest('geocode_destination', 'openmeteo', None,
+                    lambda: openmeteo.geocode(client, name))
+            return locations[name]
 
     async def point(area: str | None = None, latitude: float | None = None, longitude: float | None = None) -> Coordinates | None:
         if latitude is not None and longitude is not None:

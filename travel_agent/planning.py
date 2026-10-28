@@ -81,6 +81,13 @@ async def prepare(state: TripState, decide) -> dict:
         return {'route': 'finish', 'status': 'unsupported', 'answer': decision.reply or 'Планирую поездки только по России для взрослых.'}
     if decision.action == 'remember':
         return {'route': 'finish', 'profile_update': decision.profile_interests, 'answer': 'Предпочтения сохранены для следующих поездок.'}
+    if decision.action == 'answer' and decision.reply:
+        status = state.get('status', 'needs_input')
+        if status == 'error' and (state.get('options') or state.get('cards')):
+            status = 'partial' if state.get('feedback') or any(row.get('status') != 'ok' for row in state.get('results', {}).values()) else 'ready'
+        return {'route': 'finish', 'answer': decision.reply, 'decision': decision.model_dump(mode='json'),
+                'status': status,
+                'requested_choice': None}
     if decision.action in ('answer', 'research'):
         return {'route': decision.action, 'decision': {**decision.model_dump(mode='json'), 'task': decision.reply}, 'requested_choice': None}
     if decision.action == 'select':
@@ -135,7 +142,11 @@ async def prepare(state: TripState, decide) -> dict:
     except ValidationError:
         return {'route': 'finish', 'status': 'needs_input', 'answer': 'Даты или состав поездки противоречат друг другу. Уточните изменяемые параметры.'}
     tasks = list(decision.tasks)
-    focus = None if decision.focus == 'trip' or state.get('options') else decision.focus or state.get('focus')
+    focus = None if decision.focus == 'trip' else decision.focus or state.get('focus')
+    if not focus and decision.focus is None and not state.get('options') and len(tasks) == 1 and tasks[0].role in ('stays', 'transport'):
+        focus = tasks[0].role
+    if focus == 'stays' and revised.stay_start and revised.stay_end and not (revised.start and revised.end):
+        revised = TripConstraints.model_validate({**revised.model_dump(), 'start': revised.stay_start, 'end': revised.stay_end})
     affected.update(role for role in ('transport', 'stays', 'experience') if role not in state.get('results', {}))
     required = {dep for task in tasks for dep in task.depends_on if dep not in state.get('results', {})}
     affected.update(required - {t.role for t in tasks})
@@ -221,7 +232,7 @@ async def worker(state: dict, run, role: str) -> dict:
                'selected_stay': state.get('selected_stay')}
     if role == 'stays':
         transport_pending = any(t['role'] == 'transport' for t in state.get('tasks', [])) and not completed(state, 'transport')
-        journeys = [] if transport_pending else [Candidate.model_validate(c) for c in state.get('results', {}).get('transport', {}).get('candidates', [])]
+        journeys = [] if transport_pending or state.get('focus') == 'stays' else [Candidate.model_validate(c) for c in state.get('results', {}).get('transport', {}).get('candidates', [])]
         journeys = [c for c in journeys if transport_matches(c, requested_trip, datetime.now().astimezone())]
         preferred_modes = [next(c for c in journeys if c.transport_mode == mode) for mode in dict.fromkeys(c.transport_mode for c in journeys)]
         windows = list(dict.fromkeys((str(c.arrival_at.date()), str(c.return_departure_at.date())) for c in [*preferred_modes, *journeys]))[:3]
@@ -233,7 +244,7 @@ async def worker(state: dict, run, role: str) -> dict:
                 'check_in': chosen.arrival_at.date(), 'check_out': chosen.return_departure_at.date(),
                 'date_from': min(p[0] for p in pairs), 'date_to': max(p[1] for p in pairs)})
     context['current_transport'] = next((c for c in state.get('results', {}).get('transport', {}).get('candidates', [])
-                                         if c['id'] == state.get('selected_transport')), None)
+                                         if state.get('focus') != 'stays' and c['id'] == state.get('selected_transport')), None)
     if context['current_transport']:
         context['current_transport'] = {k: v for k, v in context['current_transport'].items() if k != 'provider_details'}
     if role == 'experience':
@@ -275,7 +286,7 @@ def evaluate(state: TripState) -> dict:
     if state.get('focus') in ('transport', 'stays'):
         from travel_agent.agents.supervisor.response import component_cards
         cards = component_cards({**state, 'results': results}, state['focus'])
-        return {'results': results, 'options': [], 'choices': [{'id': c['id'], 'title': c['title'], 'details': c['description']} for c in cards], 'cards': cards, 'feedback': [], 'status': 'ready' if cards else 'partial', 'route': 'respond', 'repair_decision': False, 'decision': {'action': 'compose'}}
+        return {'results': results, 'options': [], 'choices': [{'id': c['id'], 'title': c['title'], 'details': c['description']} for c in cards], 'cards': cards, 'feedback': [], 'stage': state['focus'], 'status': 'ready' if cards else 'partial', 'route': 'respond', 'repair_decision': False, 'decision': {'action': 'compose'}}
     package_results = dict(results)
     scheduled = {task['role'] for task in state.get('tasks', [])}
     for role, key in (('transport', 'selected_transport'), ('stays', 'selected_stay')):

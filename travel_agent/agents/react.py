@@ -94,8 +94,8 @@ async def run_react(
                 response_format=ToolStrategy(SpecialistSelection, handle_errors=True),
                 middleware=[
                     ContextEditingMiddleware(edits=[ClearToolUsesEdit(trigger=6000, keep=2)]),
-                    ModelCallLimitMiddleware(run_limit=6, exit_behavior="error"),
-                    ToolCallLimitMiddleware(run_limit=12 if autonomous else 6, exit_behavior="error"),
+                    ModelCallLimitMiddleware(run_limit=4, exit_behavior="error"),
+                    ToolCallLimitMiddleware(run_limit=8 if autonomous else 6, exit_behavior="error"),
                 ],
             )
             async with asyncio.timeout(max(deadline - 25, deadline * 0.6)):

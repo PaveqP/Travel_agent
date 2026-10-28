@@ -204,12 +204,12 @@ class RepairPlan(BaseModel):
 
 class TurnPlan(BaseModel):
     model_config = ConfigDict(extra='forbid')
-    focus: Literal['trip', 'transport', 'stays'] | None = None
+    focus: Literal['trip', 'transport', 'stays'] | None = Field(default=None, description='Область запроса: stays — только отели, transport — только дорога, trip — полная поездка. Сохраняй область при уточнениях.')
     action: Literal['plan', 'chat', 'clarify', 'answer', 'research', 'select', 'checkout', 'remember', 'unsupported', 'destinations']
     patch: TripDelta = Field(default_factory=TripDelta)
     tasks: list[AgentTask] = Field(default_factory=list, max_length=3)
     scenarios: list[TripScenario] = Field(default_factory=list, max_length=8)
-    reply: str = Field(default='', max_length=1000)
+    reply: str = Field(default='', max_length=12000, description='Для answer — готовый ответ по сохранённым фактам; для остальных действий — короткое сообщение или задача исследования.')
     source_ids: list[str] = Field(default_factory=list, max_length=10)
     research_role: Role = 'experience'
     option_id: str | None = None

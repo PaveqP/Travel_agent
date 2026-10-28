@@ -225,13 +225,15 @@ test("map distinguishes exact coordinates, district markers and unknown location
     ],
   };
   const points = tripMapPoints(state);
-  assert.equal(points.length, 3);
+  assert.equal(points.length, 4);
   assert.equal(points[0].kind, "transport");
   assert.equal(points[1].approximate, true);
   assert.equal(points[1].area, "Сириус");
   assert.equal(points[2].approximate, false);
   assert.equal(points[2].lon, 39.9);
   assert.equal(points[2].lat, 43.5);
+  assert.equal(points[3].lon, 37.62);
+  assert.equal(points[3].lat, 55.75);
   assert.deepEqual(tripMapPoints(null), []);
 });
 
@@ -264,7 +266,7 @@ test("map focuses the selected place without pretending district coordinates are
   assert.equal(tripMapUrls(points, "deleted").embed, tripMapUrls(points).embed);
   const empty = new URL(tripMapUrls([]).embed);
   assert.equal(empty.searchParams.get("pt"), null);
-  assert.equal(empty.searchParams.get("ll"), "39.96,43.57");
+  assert.equal(empty.searchParams.get("ll"), "95,62");
 });
 
 test("map drops invalid coordinates and recovers a later valid copy of a place", () => {

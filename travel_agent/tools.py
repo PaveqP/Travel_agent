@@ -361,6 +361,7 @@ def build_tools(
         and c.source.provider == 'tutu' and (c.start, c.end, c.adults) == (trip.stay_start, trip.stay_end, trip.adults)
     }
     responses: dict[str, dict] = {}
+    response_locks: dict[str, asyncio.Lock] = {}
     flight_details: dict[str, dict] = {
         c.provider_id or c.id.removeprefix('avia:'): c.provider_details
         for c in evidence.values() if role == 'transport' and c.role == 'transport'
@@ -521,23 +522,24 @@ def build_tools(
             if ref is not None:
                 args = {**args, 'details_ref': ref}
         key = json.dumps([name, provider, method, args], sort_keys=True)
-        if key in responses:
-            return responses[key]
-        query_trip = None
-        if method == 'search_hotels':
-            query_trip = TripConstraints.model_validate({**trip.model_dump(), 'start': args['check_in'], 'end': args['check_out'], 'check_in': args['check_in'], 'check_out': args['check_out'], 'destination': args['city_name']})
-        if method == "search_avia":
-            query_trip = TripConstraints.model_validate({**trip.model_dump(), "start": args["departure_date"], "end": args["return_date"], "check_in": None, "check_out": None})
-        result = await execute(
-            name,
-            provider,
-            lambda: runtime_call(role, provider, method, args, env, frozenset(owned)),
-            method,
-            query_trip,
-            (str(args['hotel_id']), args['check_in'], args['check_out']) if role == 'stays' and method == 'get_offer_details' else None,
-        )
-        responses[key] = result
-        return result
+        async with response_locks.setdefault(key, asyncio.Lock()):
+            if key in responses:
+                return responses[key]
+            query_trip = None
+            if method == 'search_hotels':
+                query_trip = TripConstraints.model_validate({**trip.model_dump(), 'start': args['check_in'], 'end': args['check_out'], 'check_in': args['check_in'], 'check_out': args['check_out'], 'destination': args['city_name']})
+            if method == "search_avia":
+                query_trip = TripConstraints.model_validate({**trip.model_dump(), "start": args["departure_date"], "end": args["return_date"], "check_in": None, "check_out": None})
+            result = await execute(
+                name,
+                provider,
+                lambda: runtime_call(role, provider, method, args, env, frozenset(owned)),
+                method,
+                query_trip,
+                (str(args['hotel_id']), args['check_in'], args['check_out']) if role == 'stays' and method == 'get_offer_details' else None,
+            )
+            responses[key] = result
+            return result
 
     async def rest(name: str, provider: str, key_name: str | None, operation) -> dict:
         if name not in ALLOWED[role]:

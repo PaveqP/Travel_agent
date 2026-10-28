@@ -47,7 +47,7 @@ class PipelineE2ETests(unittest.TestCase):
                 return SupervisorDecision(action="compose")
             message = state["messages"][-1].content
             patch = {
-                "начать": TripDelta(origin="Москва", adults=2, purpose="Прогулки"),
+                "начать": TripDelta(destination="Сочи", origin="Москва", adults=2, purpose="Прогулки"),
                 "даты": TripDelta(start=TRIP.start, end=TRIP.end),
                 "отель": TripDelta(hotel="Mirror"),
                 "бюджет": TripDelta(budget=80000),

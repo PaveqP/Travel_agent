@@ -142,8 +142,6 @@ def llm_planner(model: BaseChatModel, prompt: str):
     from travel_agent.schemas import TurnPlan, RepairPlan
 
     structured = model.with_structured_output(TurnPlan, method='function_calling')
-    extraction = model.with_structured_output(TripDelta, method='function_calling')
-    extraction_prompt = load_prompt('request')
     repair_model = model.with_structured_output(RepairPlan, method='function_calling')
 
     async def plan(state: TripState) -> TurnPlan:
@@ -151,10 +149,11 @@ def llm_planner(model: BaseChatModel, prompt: str):
         context = {
             'today': str(date.today()), 'constraints': state.get('constraints', {}),
             'phase': 'repair' if state.get('repair_decision') else 'user_turn',
-            'feedback': state.get('feedback', []), 'options': options[:5],
+            'feedback': state.get('feedback', []), 'options': options[:5], 'stage': state.get('stage'),
+            'cards': state.get('cards', [])[:10],
             'selected': state.get('selected'), 'focus': state.get('focus'),
             'scenarios': state.get('scenarios', []), 'receipt': state.get('receipt', {}),
-            'destination_ideas': DESTINATION_GROUPS if state.get('constraints', {}).get('destination', 'Россия') == 'Россия' else {},
+            'destination_ideas': DESTINATION_GROUPS if not state.get('options') and not state.get('results') and state.get('constraints', {}).get('destination', 'Россия') == 'Россия' else {},
             'results': {role: {'status': row['status'], 'warnings': row.get('warnings', []),
                 'candidates': [{'id': c['id'], 'name': c['name'], 'start': c.get('start'), 'end': c.get('end'), 'area': c.get('area')} for c in row.get('candidates', [])[:12]]}
                 for role, row in state.get('results', {}).items()},
@@ -171,26 +170,7 @@ def llm_planner(model: BaseChatModel, prompt: str):
                 if attempt:
                     raise
                 errors = [(e['loc'], e['type']) for e in exc.errors(include_input=False, include_url=False)] if isinstance(exc, ValidationError) else ['output_format']
-                messages.insert(1, HumanMessage(content=json.dumps({'validation_errors': errors, 'patch_extracted_separately': True})))
-        if not state.get('repair_decision') and (decision.action in ('plan', 'clarify') or decision.action == 'select' and decision.patch.model_dump(exclude_none=True, exclude={'clear'})):
-            extraction_messages = [SystemMessage(content=extraction_prompt), HumanMessage(content=json.dumps({
-                'today': context['today'], 'constraints': context['constraints'],
-                'proposed_patch': decision.patch.model_dump(mode='json', exclude_none=True),
-            }, ensure_ascii=False)), *[m for m in state.get('messages', []) if isinstance(m, HumanMessage)][-6:]]
-            for attempt in range(2):
-                try:
-                    delta = TripDelta.model_validate(await extraction.ainvoke(extraction_messages))
-                    break
-                except (ValidationError, OutputParserException) as exc:
-                    if attempt:
-                        raise
-                    errors = [(e['loc'], e['type']) for e in exc.errors(include_input=False, include_url=False)] if isinstance(exc, ValidationError) else ['output_format']
-                    extraction_messages.insert(1, HumanMessage(content=json.dumps({'validation_errors': errors})))
-            patch = {**decision.patch.model_dump(exclude_none=True, exclude={'clear'}), **delta.model_dump(exclude_none=True, exclude={'clear'})}
-            cleared = list(dict.fromkeys([name for name in decision.patch.clear if getattr(delta, name) is None] + delta.clear))
-            for name in cleared:
-                patch.pop(name, None)
-            decision.patch = TripDelta(**patch, clear=cleared)
+                messages.insert(1, HumanMessage(content=json.dumps({'validation_errors': errors})))
         return decision
 
     return plan
