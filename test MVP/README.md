@@ -1,24 +1,35 @@
-# Live E2E: результаты подготовки и блокировки
+# Повторное live E2E-тестирование
 
-Дата: 2026-10-28, 19:14–19:21 UTC (22:14–22:21 МСК); формирование отчёта: 2026-10-28T19:20:17.268953+00:00.
-Исследуемый Git SHA: `f3fdcad0ab206a260304e685ab52815caf92826f`. Backend package version: `0.1.0`; frontend: `1.0.0`.
+Дата: 2026-10-28, с 19:24 UTC (22:24 МСК); завершение/формирование: 2026-10-28T20:01:56.475383+00:00.
+Исследованный код приложения: `9c1836aaabfd47602f8195e46d213cb1c741da80`. Backend package `0.1.0`, frontend package `1.0.0`. Продуктовый код, промпты, модель, endpoints и валидация не изменены. Локальную пользовательскую правку `.gitignore` не включали в задачу.
 
-**Приложение с реальными настройками не запущено. Live E2E не выполнен: 0/5.**
-Все пять кейсов blocked до отправки пользовательских сообщений. Это отчёт о фактическом preflight и статическом исследовании, а не подтверждение качества live-системы.
+Приложение действительно запущено с новым существующим `.env`: модель `deepseek/deepseek-v4.1-flash-1017`, OpenRouter, реальные ключи источников. Значения секретов не публикуются. Настроек PostgreSQL не было, поэтому использован **существующий** `scripts/serve_web.py --local-postgres`: он поднимает штатный Compose PostgreSQL 17, создаёт пароль только процесса и умеет восстановить его из контейнера при restart. `.env` не менялся. Новые сервисы и отдельный frontend не создавались.
 
-Источник требований: [ТЗ Островка](https://docs.ostrovok.tech/s/0ee4d8b2-ae50-4dda-a2b5-112fcdb5398d), открыт настоящим Playwright-браузером. После уточнения заказчик разрешил собственную декомпозицию в пять комплексных сценариев. Их сопоставление: [USE_CASES.md](USE_CASES.md).
+Backend: FastAPI/LangGraph, autonomous=True, один worker, http://127.0.0.1:8000. `/health` HTTP 200 persistent=true, `/api/config` HTTP 200, Telegram не настроен. После backend restart история, constraints, revision, options, results и selected case_01 совпали полностью. Два перекрёстных запроса разных аккаунтов к чужой поездке вернули 404.
 
-Окружение: Linux, Python 3.13.7, Docker 29.1.3. Корневой `.env` отсутствует. MODEL/TOKEN/BASE_URL, настройки БД и ключи поставщиков отсутствуют также в процессе. Значения секретов не читались из других проектов. `.env` не создавался и не изменялся. Чужой PostgreSQL не использовался.
+Frontend `npm ci --no-audit --no-fund --fetch-retries=0 --fetch-timeout=20000` завершился ETIMEDOUT registry.npmjs.org. Поэтому пользовательские запросы пяти сессий отправлялись через **публичный HTTP API**; live LLM/MCP работали только в cases 01–04, case 05 заблокирован бюджетом до первого inference, с реальной регистрацией аккаунтов и отдельными cookie/поездками. Прямых вызовов агентов/graph для запуска пользовательских сценариев и подмены TripState нет. Instrumentation оборачивает вызовы для наблюдения и бюджетирования, не меняет их результаты.
 
-Проверено: Docker daemon доступен; backend startup завершился RuntimeError; HTTP health/config недоступны; Playwright доступен; Python suite и JS unit проходят. БД, LLM и MCP в live не проверены. Зависимости Python установлены по существующему lock через `uv pip install --python .venv/bin/python -r requirements.lock.txt`; код и версии не менялись. npm ci дважды завершился ETIMEDOUT; frontend не собран.
+Backend после завершения измерений остановлен, чтобы исключить дальнейший расход. PostgreSQL и данные остаются в штатном volume; ledger сохранён без сброса.
+
+## Артефакты
+
+- [USE_CASES.md](USE_CASES.md): пять согласованных комплексных сценариев, покрытие трёх User Story и шести основных задач исходного ТЗ.
+- [SUMMARY.md](SUMMARY.md): итоговые статусы, времена, токены, стоимость и MCP-метрики.
+- [COST_REPORT.md](COST_REPORT.md): общий лимит, реальные usage.cost, консервативные резервы и тарифы.
+- [PREFLIGHT.md](PREFLIGHT.md), [ARCHITECTURE.md](ARCHITECTURE.md), [RECOMMENDATIONS.md](RECOMMENDATIONS.md).
+- В case_01…case_05: полный безопасный диалог, safe trace и фактические MCP/API вызовы. Screenshots не создавались: метод backend_http_e2e.
+
+Сырые состояния, cookie, тестовые login credentials и серверный log остаются только локально в `/tmp/flinters-live-e2e/`/`/tmp/flinters-e2e-server.log`; в Git включаются только отфильтрованные события, публичные цены, синтетические сообщения и метаданные. Старый blocked preflight остаётся в истории коммита 9c1836a.
 
 ## Воспроизведение
 
-1. В рабочем окружении предоставить существующую конфигурацию проекта: `.env` с MODEL, TOKEN, BASE_URL, TRAVEL_POSTGRES_PASSWORD и ключами нужных источников. Для запуска с хоста нужен TRAVEL_DATABASE_URL. Секреты в отчёты не копировать.
-2. `uv pip install --python .venv/bin/python -r requirements.lock.txt`.
-3. `.venv/bin/python -m unittest discover -s tests -v`; `node --test frontend/src/format.test.js`.
-4. `docker compose up --build` — штатный полный запуск; UI на http://127.0.0.1:8000. Альтернатива: сборка frontend и `.venv/bin/uvicorn travel_agent.web:create_web_app --factory --host 127.0.0.1 --port 8000 --workers 1 --no-access-log` при существующей PostgreSQL.
-5. Сначала установить единый guard и тарифы, описанные в [COST_REPORT.md](COST_REPORT.md). Штатный сервер сейчас денежный лимит не гарантирует.
-6. Выполнить сценарии [USE_CASES.md](USE_CASES.md) последовательно в пяти новых пользовательских сессиях. Предпочтителен browser_e2e, при недоступности UI — backend_http_e2e; необходимы реальные LLM и источники. Текущие пустые conversation/mcp файлы означают отсутствие вызовов, а не успешную трассу.
+1. Установить зависимости по существующему lock: `uv pip install --python .venv/bin/python -r requirements.lock.txt`. Нужны существующие MODEL/TOKEN/BASE_URL и API keys в `.env`, Docker и доступ к сети.
+2. Прочитать COST_REPORT.md, перепроверить актуальные тарифы. В этом прогоне используется global $4.50 soft guard с запасом до $5. Каталоги тарифов не являются платным inference.
+3. `.venv/bin/python -u scripts/live_e2e_server.py` запускает **штатный** serve_web с budget/trace hooks. Путь приватного ledger фиксирован `/tmp/flinters-live-e2e`; при его наличии новый прогон отклоняется, расходы не сбрасываются. `--resume-budget` продолжает существующий ledger, сохраняет расходы и консервативно списывает незавершённые резервы. Для нового независимого бюджета нужен отдельный явно авторизованный запуск, а не удаление ledger.
+4. Для каждого номера последовательно: `.venv/bin/python -u scripts/live_e2e_client.py --case 01 --initial` (затем 02…05). Клиент регистрирует синтетический аккаунт/новую поездку и отправляет запрос из USE_CASES.md. Внутри кейса продолжать `--message '...'` по фактическим ответам. Конкретные сообщения данного прогона сохранены в conversation.json, включая ошибки и диагностические переформулировки.
+5. В case 03 после выдачи выполнялись `--select`, затем `--book` с явным confirm только симуляции. Для кейсов 04/05 отправлялись изменения из USE_CASES.md. При недостающих вводных отвечать в рамках сценария, не заменять требования.
+6. Offline: `.venv/bin/python -m unittest discover -s tests -v`; `node --test frontend/src/format.test.js`. Не запускать run_all.py или внутренний smoke вместо пользовательского E2E.
 
-[Preflight](PREFLIGHT.md), [архитектура](ARCHITECTURE.md), [сводка](SUMMARY.md), [рекомендации](RECOMMENDATIONS.md).
+Каждый будущий live replay снова расходует бюджет и может дать другие цены/наличие. Автоматическая реплика всего диалога не предусмотрена: исполнитель читает ответы и адаптирует следующие сообщения как пользователь.
+
+Offline validation: `.venv/bin/python -m unittest discover -s tests -v` — 194 tests, OK, 8 skipped (17.095s); JS — 17/17 passed. Подробности: [offline_tests.txt](offline_tests.txt).

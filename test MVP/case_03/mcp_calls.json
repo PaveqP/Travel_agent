@@ -1,1 +1,1302 @@
-[]
+[
+  {
+    "timestamp": "2026-10-28T19:41:26.060972+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "db691668-1399-4302-951b-0db8ed4e167e",
+    "provider": "travelpayouts",
+    "tool": "/aviasales/v3/prices_for_dates",
+    "agent": "transport",
+    "parameters": {
+      "origin": "MOW",
+      "destination": "AER",
+      "limit": "10"
+    },
+    "duration_ms": 806,
+    "logical_duration_ms": null,
+    "runtime_result_timestamp": null,
+    "correlation_method": null,
+    "status": "http_ok",
+    "http_status": 200,
+    "count": null,
+    "attempts": null,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.001",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:26.666279+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "a8f347c6-cec5-47ad-bb9f-f41362249bfa",
+    "provider": "2gis",
+    "tool": "search_places",
+    "agent": "experience",
+    "parameters": {
+      "query": "Набережная, прогулки у моря",
+      "latitude": 43.585,
+      "longitude": 39.723,
+      "radius": 7000,
+      "page_size": 10
+    },
+    "duration_ms": 851,
+    "logical_duration_ms": 3911,
+    "runtime_result_timestamp": "2026-10-28T19:41:27.527391+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.05",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:26.882557+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "7774891d-3acd-465b-b2c6-2e9d9b418482",
+    "provider": "2gis",
+    "tool": "search_places",
+    "agent": "experience",
+    "parameters": {
+      "query": "Горы, канатные дороги, обзорные точки",
+      "latitude": 43.68,
+      "longitude": 40.2,
+      "radius": 7000,
+      "page_size": 10
+    },
+    "duration_ms": 821,
+    "logical_duration_ms": 4117,
+    "runtime_result_timestamp": "2026-10-28T19:41:27.756854+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.05",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:27.377041+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "d7cf4c9d-ac59-4328-84a7-b45785faa704",
+    "provider": "2gis",
+    "tool": "search_places",
+    "agent": "experience",
+    "parameters": {
+      "query": "Набережная, парки у моря",
+      "latitude": 43.448,
+      "longitude": 39.907,
+      "radius": 7000,
+      "page_size": 10
+    },
+    "duration_ms": 971,
+    "logical_duration_ms": 4728,
+    "runtime_result_timestamp": "2026-10-28T19:41:28.356566+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 3,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.05",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:27.716819+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "6ebbfc3d-1847-41c8-9c33-054408d7242b",
+    "provider": "tutu",
+    "tool": "search_rail",
+    "agent": "transport",
+    "parameters": {
+      "origin": "Сочи",
+      "destination": "Москва",
+      "departure_date": "2026-11-23",
+      "passengers": 2,
+      "page_size": 5,
+      "direct_only": false
+    },
+    "duration_ms": 764,
+    "logical_duration_ms": 2409,
+    "runtime_result_timestamp": "2026-10-28T19:41:28.482674+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 5,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [
+      {
+        "id": "3f038bffc887bea19543a80f355077ee",
+        "price": {
+          "amount": 3945.05,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "452195cc5b3404abf442d11b45169c1a",
+        "price": {
+          "amount": 4674.22,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "455dad3a0d3a7c068a90765d5c507fd9",
+        "price": {
+          "amount": 5311.43,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "b7751151be91fcc37d83c8bdd9bba75e",
+        "price": {
+          "amount": 5752.28,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "f59463044ee318f4f36e336024f3fb4e",
+        "price": {
+          "amount": 7285.89,
+          "currency": "RUB"
+        },
+        "basis": null
+      }
+    ],
+    "pricing": {
+      "basis": "per_seat",
+      "passengers": 2,
+      "note": "Every price on this page — `price`, `fares.price_from` / `price_to`, `seat_categories[].price_from` — is ONE SEAT (one ticket). Upstream prices this product per passenger and ignores the party size, so nothing here scales with it. For the 2 passengers you searched, each offer also carries `price_party` = that offer's cheapest fare x 2. Quote it as «от»: it assumes all 2 travel on the SAME fare row, which holds only while that row still seats them (`seats_left >= 2`, visible in `view='full'`); a mixed-class party pays more."
+    },
+    "accounted_usd": "0",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:27.903919+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "d4e8c675-43cd-4c3b-9983-6dd8fe50bf4c",
+    "provider": "tutu",
+    "tool": "search_hotels",
+    "agent": "stays",
+    "parameters": {
+      "check_in": "2026-11-16",
+      "check_out": "2026-11-23",
+      "adults": 2,
+      "page_size": 10
+    },
+    "duration_ms": 986,
+    "logical_duration_ms": 2462,
+    "runtime_result_timestamp": "2026-10-28T19:41:28.891710+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [
+      {
+        "id": "13477034",
+        "price": {
+          "amount": 43800.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "11850323",
+        "price": {
+          "amount": 18000.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "13505185",
+        "price": {
+          "amount": 9600.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "9814449",
+        "price": {
+          "amount": 20100.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "7800875",
+        "price": {
+          "amount": 15218.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "11476016",
+        "price": {
+          "amount": 81900.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "11402705",
+        "price": {
+          "amount": 14500.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "10748613",
+        "price": {
+          "amount": 19400.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "7646397",
+        "price": {
+          "amount": 51740.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "10180284",
+        "price": {
+          "amount": 36572.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      }
+    ],
+    "pricing": null,
+    "accounted_usd": "0",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:27.907739+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "bf336c8a-cb16-40b9-891e-a3dd73f6860d",
+    "provider": "2gis",
+    "tool": "search_places",
+    "agent": "experience",
+    "parameters": {
+      "query": "Олимпийский парк, набережная",
+      "latitude": 43.405,
+      "longitude": 39.96,
+      "radius": 7000,
+      "page_size": 10
+    },
+    "duration_ms": 580,
+    "logical_duration_ms": 4851,
+    "runtime_result_timestamp": "2026-10-28T19:41:28.502030+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 5,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.05",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:27.929480+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "421fdefd-980b-428c-9856-8db2c5c8d0c9",
+    "provider": "tutu",
+    "tool": "search_hotels",
+    "agent": "stays",
+    "parameters": {
+      "check_in": "2026-11-16",
+      "check_out": "2026-11-23",
+      "adults": 2,
+      "page_size": 10
+    },
+    "duration_ms": 876,
+    "logical_duration_ms": 2366,
+    "runtime_result_timestamp": "2026-10-28T19:41:28.807018+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [
+      {
+        "id": "13477034",
+        "price": {
+          "amount": 43800.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "11850323",
+        "price": {
+          "amount": 18000.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "13505185",
+        "price": {
+          "amount": 9600.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "9814449",
+        "price": {
+          "amount": 20100.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "11476016",
+        "price": {
+          "amount": 81900.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "9475868",
+        "price": {
+          "amount": 96900.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "11850292",
+        "price": {
+          "amount": 19225.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "10627027",
+        "price": {
+          "amount": 10354.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "7646397",
+        "price": {
+          "amount": 51740.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "13390728",
+        "price": {
+          "amount": 12000.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      }
+    ],
+    "pricing": null,
+    "accounted_usd": "0",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:27.951314+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "aa9b95e9-f55d-43da-a423-6f581524d306",
+    "provider": "tutu",
+    "tool": "search_hotels",
+    "agent": "stays",
+    "parameters": {
+      "check_in": "2026-11-16",
+      "check_out": "2026-11-23",
+      "adults": 2,
+      "page_size": 10
+    },
+    "duration_ms": 2272,
+    "logical_duration_ms": 3808,
+    "runtime_result_timestamp": "2026-10-28T19:41:30.224874+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [
+      {
+        "id": "10692552",
+        "price": {
+          "amount": 31553.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "11736117",
+        "price": {
+          "amount": 8500.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "9573823",
+        "price": {
+          "amount": 22830.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "9487941",
+        "price": {
+          "amount": 17700.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "7653230",
+        "price": {
+          "amount": 30695.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "11844590",
+        "price": {
+          "amount": 24679.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "13505713",
+        "price": {
+          "amount": 16352.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "13551104",
+        "price": {
+          "amount": 5390.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "7646512",
+        "price": {
+          "amount": 23320.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      },
+      {
+        "id": "13505185",
+        "price": {
+          "amount": 9600.0,
+          "currency": "RUB"
+        },
+        "basis": "stay_total"
+      }
+    ],
+    "pricing": null,
+    "accounted_usd": "0",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:31.187078+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "94aa50b2-92d9-4bc4-8b38-7709fec9523d",
+    "provider": "geoapify",
+    "tool": "/v2/places",
+    "agent": "experience",
+    "parameters": {
+      "categories": "tourism.sights",
+      "limit": "10"
+    },
+    "duration_ms": 1135,
+    "logical_duration_ms": null,
+    "runtime_result_timestamp": null,
+    "correlation_method": null,
+    "status": "http_ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": null,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.01",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:31.188110+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "6c2a0c19-7612-4560-86b3-efc4dd7303ed",
+    "provider": "opentripmap",
+    "tool": "/0.1/ru/places/radius",
+    "agent": "experience",
+    "parameters": {
+      "radius": "5000",
+      "limit": "10"
+    },
+    "duration_ms": 666,
+    "logical_duration_ms": null,
+    "runtime_result_timestamp": null,
+    "correlation_method": null,
+    "status": "http_ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": null,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.001",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:31.189061+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "632eedb4-58de-4a8d-84b7-23e6444eadb8",
+    "provider": "openmeteo",
+    "tool": "/v1/forecast",
+    "agent": "experience",
+    "parameters": {
+      "latitude": "43.585",
+      "longitude": "39.723"
+    },
+    "duration_ms": 784,
+    "logical_duration_ms": null,
+    "runtime_result_timestamp": null,
+    "correlation_method": null,
+    "status": "http_ok",
+    "http_status": 200,
+    "count": null,
+    "attempts": null,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.001",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:31.190015+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "e649c5d3-4998-4b10-9160-d1ea158137bd",
+    "provider": "timepad",
+    "tool": "/v1/events",
+    "agent": "experience",
+    "parameters": {
+      "limit": "10",
+      "sort": "+starts_at"
+    },
+    "duration_ms": 641,
+    "logical_duration_ms": null,
+    "runtime_result_timestamp": null,
+    "correlation_method": null,
+    "status": "http_ok",
+    "http_status": 200,
+    "count": 5,
+    "attempts": null,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.001",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:37.321199+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "4baf072e-4539-47f8-aa4d-cd2b4f9bc677",
+    "provider": "2gis",
+    "tool": "search_places",
+    "agent": "experience",
+    "parameters": {
+      "query": "Достопримечательности",
+      "latitude": 43.448,
+      "longitude": 39.907,
+      "radius": 7000,
+      "page_size": 10
+    },
+    "duration_ms": 482,
+    "logical_duration_ms": 2710,
+    "runtime_result_timestamp": "2026-10-28T19:41:37.834103+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.05",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:37.422287+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "42b72e9b-c289-4f97-9902-451e0ef0540f",
+    "provider": "tutu",
+    "tool": "get_offer_details",
+    "agent": "stays",
+    "parameters": {
+      "product_type": "hotels",
+      "check_in": "2026-11-16",
+      "check_out": "2026-11-23",
+      "adults": 2
+    },
+    "duration_ms": 4689,
+    "logical_duration_ms": 6148,
+    "runtime_result_timestamp": "2026-10-28T19:41:42.113253+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": null,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:37.423515+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "a19ae8cb-9bde-45c3-b137-7a0f683252f0",
+    "provider": "tutu",
+    "tool": "get_offer_details",
+    "agent": "stays",
+    "parameters": {
+      "product_type": "hotels",
+      "check_in": "2026-11-16",
+      "check_out": "2026-11-23",
+      "adults": 2
+    },
+    "duration_ms": 5163,
+    "logical_duration_ms": 6590,
+    "runtime_result_timestamp": "2026-10-28T19:41:42.613447+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": null,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:37.544291+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "4284c454-c5b4-4d3c-b039-22e923c6860d",
+    "provider": "tutu",
+    "tool": "get_offer_details",
+    "agent": "stays",
+    "parameters": {
+      "product_type": "hotels",
+      "check_in": "2026-11-16",
+      "check_out": "2026-11-23",
+      "adults": 2
+    },
+    "duration_ms": 303,
+    "logical_duration_ms": 1849,
+    "runtime_result_timestamp": "2026-10-28T19:41:37.849227+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": null,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:37.545183+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "7a4b16cb-fa4d-4441-9f2e-1c182439ee39",
+    "provider": "tutu",
+    "tool": "get_offer_details",
+    "agent": "stays",
+    "parameters": {
+      "product_type": "hotels",
+      "check_in": "2026-11-16",
+      "check_out": "2026-11-23",
+      "adults": 2
+    },
+    "duration_ms": 2275,
+    "logical_duration_ms": 3850,
+    "runtime_result_timestamp": "2026-10-28T19:41:39.838075+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": null,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:37.747448+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "39bd031b-3628-49e0-bd9c-c8f72cd10f3a",
+    "provider": "2gis",
+    "tool": "search_places",
+    "agent": "experience",
+    "parameters": {
+      "query": "Достопримечательности",
+      "latitude": 43.585,
+      "longitude": 39.723,
+      "radius": 7000,
+      "page_size": 10
+    },
+    "duration_ms": 558,
+    "logical_duration_ms": 3237,
+    "runtime_result_timestamp": "2026-10-28T19:41:38.349027+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.05",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:52.954230+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "f78db8b2-e3d1-453f-a807-b9b02340ace1",
+    "provider": "tutu",
+    "tool": "get_offer_details",
+    "agent": "stays",
+    "parameters": {
+      "product_type": "hotels",
+      "check_in": "2026-11-16",
+      "check_out": "2026-11-23",
+      "adults": 2
+    },
+    "duration_ms": 4792,
+    "logical_duration_ms": 21737,
+    "runtime_result_timestamp": "2026-10-28T19:41:57.748606+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": null,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:41:57.015455+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "efcac84a-ad45-4351-96e0-84231dd782ac",
+    "provider": "tutu",
+    "tool": "search_rail",
+    "agent": "transport",
+    "parameters": {
+      "origin": "Москва",
+      "destination": "Сочи",
+      "departure_date": "2026-11-16",
+      "passengers": 2,
+      "page_size": 5,
+      "direct_only": false
+    },
+    "duration_ms": 1632,
+    "logical_duration_ms": 32588,
+    "runtime_result_timestamp": "2026-10-28T19:41:58.648903+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 0,
+    "attempts": 2,
+    "error_type": null,
+    "quotes": [],
+    "pricing": {
+      "basis": "per_seat",
+      "passengers": 2,
+      "note": "Every price on this page — `price`, `fares.price_from` / `price_to`, `seat_categories[].price_from` — is ONE SEAT (one ticket). Upstream prices this product per passenger and ignores the party size, so nothing here scales with it. For the 2 passengers you searched, each offer also carries `price_party` = that offer's cheapest fare x 2. Quote it as «от»: it assumes all 2 travel on the SAME fare row, which holds only while that row still seats them (`seats_left >= 2`, visible in `view='full'`); a mixed-class party pays more."
+    },
+    "accounted_usd": "0",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:42:01.571237+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "bdea6a2b-dfb0-4951-8332-29a80a7065ea",
+    "provider": "tutu",
+    "tool": "search_avia",
+    "agent": "transport",
+    "parameters": {
+      "origin": "Москва",
+      "destination": "AER",
+      "departure_date": "2026-11-16",
+      "return_date": "2026-11-23",
+      "adults": 2,
+      "page_size": 10,
+      "sort": "price_asc",
+      "direct_only": false
+    },
+    "duration_ms": 1747,
+    "logical_duration_ms": 2523,
+    "runtime_result_timestamp": "2026-10-28T19:42:03.332621+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [
+      {
+        "id": "fd0b1558a003925587e600809fed0d24+d20fd649b65a0d04a24c8b256897aa47",
+        "price": {
+          "amount": 16396.0,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "a02838c09ee554f55652cd95d8586597+d20fd649b65a0d04a24c8b256897aa47",
+        "price": {
+          "amount": 16396.0,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "a02838c09ee554f55652cd95d8586597+97ee208f53a62fee132555d952142cb9",
+        "price": {
+          "amount": 16396.0,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "fd0b1558a003925587e600809fed0d24+1f0bf3f70076475a55c5996d7171b35e",
+        "price": {
+          "amount": 16396.0,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "a02838c09ee554f55652cd95d8586597+1f0bf3f70076475a55c5996d7171b35e",
+        "price": {
+          "amount": 16396.0,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "fd0b1558a003925587e600809fed0d24+97ee208f53a62fee132555d952142cb9",
+        "price": {
+          "amount": 16396.0,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "8fed785bdb1b162ba599b13e676ebaf4+1f0bf3f70076475a55c5996d7171b35e",
+        "price": {
+          "amount": 17592.0,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "8fed785bdb1b162ba599b13e676ebaf4+97ee208f53a62fee132555d952142cb9",
+        "price": {
+          "amount": 17592.0,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "8fed785bdb1b162ba599b13e676ebaf4+d20fd649b65a0d04a24c8b256897aa47",
+        "price": {
+          "amount": 17592.0,
+          "currency": "RUB"
+        },
+        "basis": null
+      },
+      {
+        "id": "668742153977a606014db02cf89a5a8a+97ee208f53a62fee132555d952142cb9",
+        "price": {
+          "amount": 17716.0,
+          "currency": "RUB"
+        },
+        "basis": null
+      }
+    ],
+    "pricing": {
+      "basis": "party_total",
+      "passengers": {
+        "full": 2
+      },
+      "note": "Prices on this page already cover the WHOLE searched party — never multiply them by the passenger count."
+    },
+    "accounted_usd": "0",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:42:06.888679+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "6ffeb31e-bcef-4b38-bafa-e5e6c82e04be",
+    "provider": "tutu",
+    "tool": "get_offer_details",
+    "agent": "stays",
+    "parameters": {
+      "product_type": "hotels",
+      "check_in": "2026-11-16",
+      "check_out": "2026-11-23",
+      "adults": 2
+    },
+    "duration_ms": 494,
+    "logical_duration_ms": 31408,
+    "runtime_result_timestamp": "2026-10-28T19:42:07.384664+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": null,
+    "attempts": 2,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:42:53.347617+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "36d19047-8cc2-475a-b668-fcbd5a0ee75b",
+    "provider": "geoapify",
+    "tool": "/v2/places",
+    "agent": "experience",
+    "parameters": {
+      "categories": "tourism.sights",
+      "limit": "10"
+    },
+    "duration_ms": 948,
+    "logical_duration_ms": null,
+    "runtime_result_timestamp": null,
+    "correlation_method": null,
+    "status": "http_ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": null,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.01",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:42:53.348713+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "90d24b61-3062-404e-8b1c-988551826660",
+    "provider": "opentripmap",
+    "tool": "/0.1/ru/places/radius",
+    "agent": "experience",
+    "parameters": {
+      "radius": "5000",
+      "limit": "10"
+    },
+    "duration_ms": 818,
+    "logical_duration_ms": null,
+    "runtime_result_timestamp": null,
+    "correlation_method": null,
+    "status": "http_ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": null,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.001",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:42:55.236088+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "2da2ad4a-ad42-407d-b830-5607eff00698",
+    "provider": "2gis",
+    "tool": "search_places",
+    "agent": "experience",
+    "parameters": {
+      "query": "набережная и парк у моря",
+      "latitude": 43.585,
+      "longitude": 39.723,
+      "radius": 7000,
+      "page_size": 10
+    },
+    "duration_ms": 559,
+    "logical_duration_ms": 2498,
+    "runtime_result_timestamp": "2026-10-28T19:42:55.820857+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.05",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:43:25.567862+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "5f7e6fa3-4dd8-472b-8569-8794d1297cc8",
+    "provider": "2gis",
+    "tool": "search_places",
+    "agent": "experience",
+    "parameters": {
+      "query": "достопримечательности",
+      "latitude": 43.585,
+      "longitude": 39.723,
+      "radius": 7000,
+      "page_size": 10
+    },
+    "duration_ms": 426,
+    "logical_duration_ms": 32701,
+    "runtime_result_timestamp": "2026-10-28T19:43:26.036263+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": 2,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.05",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:43:31.165468+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "0702be2b-34ea-494a-93cf-54924e8dcb42",
+    "provider": "geoapify",
+    "tool": "/v2/places",
+    "agent": "experience",
+    "parameters": {
+      "categories": "tourism.sights",
+      "limit": "10"
+    },
+    "duration_ms": 1110,
+    "logical_duration_ms": null,
+    "runtime_result_timestamp": null,
+    "correlation_method": null,
+    "status": "http_ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": null,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.01",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:43:31.166568+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "801714cc-2799-4169-bd90-cb1e3d780194",
+    "provider": "geoapify",
+    "tool": "/v2/places",
+    "agent": "experience",
+    "parameters": {
+      "categories": "tourism.sights",
+      "limit": "10"
+    },
+    "duration_ms": 1054,
+    "logical_duration_ms": null,
+    "runtime_result_timestamp": null,
+    "correlation_method": null,
+    "status": "http_ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": null,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.01",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:43:31.167613+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "557eb5d8-41a1-4c63-a4fa-d6a89ff0d48e",
+    "provider": "openmeteo",
+    "tool": "/v1/forecast",
+    "agent": "experience",
+    "parameters": {
+      "latitude": "43.47609",
+      "longitude": "39.895496"
+    },
+    "duration_ms": 978,
+    "logical_duration_ms": null,
+    "runtime_result_timestamp": null,
+    "correlation_method": null,
+    "status": "http_ok",
+    "http_status": 200,
+    "count": null,
+    "attempts": null,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.001",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:43:31.168698+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "94865288-1620-44ce-9289-e3c65cc4bb3d",
+    "provider": "timepad",
+    "tool": "/v1/events",
+    "agent": "experience",
+    "parameters": {
+      "limit": "10",
+      "sort": "+starts_at"
+    },
+    "duration_ms": 979,
+    "logical_duration_ms": null,
+    "runtime_result_timestamp": null,
+    "correlation_method": null,
+    "status": "http_ok",
+    "http_status": 200,
+    "count": 5,
+    "attempts": null,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.001",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:43:33.011211+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "44461311-33cd-41f0-a026-d1d1fbc3d89d",
+    "provider": "2gis",
+    "tool": "search_places",
+    "agent": "experience",
+    "parameters": {
+      "query": "Достопримечательности",
+      "latitude": 43.585,
+      "longitude": 39.723,
+      "radius": 7000,
+      "page_size": 10
+    },
+    "duration_ms": 489,
+    "logical_duration_ms": 2389,
+    "runtime_result_timestamp": "2026-10-28T19:43:33.541068+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.05",
+    "reported_cost_usd": null
+  },
+  {
+    "timestamp": "2026-10-28T19:43:36.875871+00:00",
+    "case_id": "case_03",
+    "session_id": "571a7d29-a1a7-40d3-9ae1-eb9173c6344f",
+    "call_id": "47db7ecc-9313-48cc-a69e-b8df56265198",
+    "provider": "2gis",
+    "tool": "search_places",
+    "agent": "experience",
+    "parameters": {
+      "query": "Достопримечательности",
+      "latitude": 43.68,
+      "longitude": 40.2,
+      "radius": 7000,
+      "page_size": 10
+    },
+    "duration_ms": 463,
+    "logical_duration_ms": 1889,
+    "runtime_result_timestamp": "2026-10-28T19:43:37.350764+00:00",
+    "correlation_method": "temporal_same_role_tool_safe_parameters",
+    "status": "ok",
+    "http_status": 200,
+    "count": 10,
+    "attempts": 1,
+    "error_type": null,
+    "quotes": [],
+    "pricing": null,
+    "accounted_usd": "0.05",
+    "reported_cost_usd": null
+  }
+]

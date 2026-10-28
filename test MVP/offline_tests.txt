@@ -1,4 +1,4 @@
-Sanitized offline test summary; no raw prompts, responses, credentials or traces.
+Sanitized offline summary after live run; no prompts or credentials.
 test_a_real_portal_message_reaches_the_agent_instead_of_the_support_template (test_dialogue_changes.PortalAnswerTests.test_a_real_portal_message_reaches_the_agent_instead_of_the_support_template) ... skipped 'Separate PostgreSQL portal integration mode'
 test_all_records_and_messages_survive_application_restart_and_are_isolated (test_portal.PortalPostgresTests.test_all_records_and_messages_survive_application_restart_and_are_isolated) ... skipped 'Separate PostgreSQL portal integration mode'
 test_delete_trip_removes_saved_state_and_telegram_pointer_across_restart (test_portal.PortalPostgresTests.test_delete_trip_removes_saved_state_and_telegram_pointer_across_restart) ... skipped 'Separate PostgreSQL portal integration mode'
@@ -9,8 +9,9 @@ test_autonomous_packages_survive_restart (test_travel_postgres.PostgresTests.tes
 test_reopen_checkpoint_and_profile (test_travel_postgres.PostgresTests.test_reopen_checkpoint_and_profile) ... skipped 'Separate PostgreSQL integration mode'
 
 ----------------------------------------------------------------------
-Ran 189 tests in 24.608s
+Ran 194 tests in 17.095s
 
 OK (skipped=8)
-JS: node --test frontend/src/format.test.js: 17 tests, 17 pass, 0 fail.
-Final verification: Ran 189 tests in 16.492s; OK (skipped=8). JS rerun: 17/17 pass.
+New budget guard tests: 5 passed; included in 194 total.
+JS: node --test frontend/src/format.test.js: 17/17 pass.
+JSON/JSONL, local Markdown links, actual secret values, credential patterns and role/provider allowlist checks: passed.
