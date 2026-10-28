@@ -2492,128 +2492,44 @@ hr {
   border-radius: 10px;
   flex-shrink: 0;
 }
-.map-caption .map-region {
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 1.4px;
-  color: #92a595;
-  margin-left: auto;
+.map-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--line);
+}
+.map-actions .text-button {
+  font-size: 11px;
+  color: var(--blue);
 }
 .map-canvas {
-  position: relative;
-  aspect-ratio: 2.25;
-  overflow: hidden;
-  background: #eef1e7;
+  height: 420px;
+  background: #eef3f7;
 }
-.map-canvas > svg {
+.map-canvas > iframe {
   display: block;
   width: 100%;
   height: 100%;
+  border: 0;
 }
 .map-preview .map-canvas {
-  aspect-ratio: 3.05;
-}
-.map-preview .map-canvas > svg {
-  height: auto;
-  margin-top: -26px;
-}
-.map-postcards {
-  position: absolute;
-  display: flex;
-  gap: 10px;
-  top: 43px;
-  right: 29px;
-  transform: rotate(-3deg);
-}
-.map-postcards > span {
-  width: 124px;
-  height: 150px;
-  padding: 5px 5px 0;
-  background: #ffffffeb;
-  border: 1px solid white;
-  border-radius: 10px;
-  box-shadow: 0 8px 20px #50625413;
-}
-.map-postcards > span:last-child {
-  transform: rotate(8deg) translateY(12px);
-}
-.map-postcards img {
-  height: 111px;
-  border-radius: 6px;
-}
-.map-postcards > span > span {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  font-size: 9px;
-  padding-top: 9px;
-  color: #526e70;
-  font-weight: 650;
-}
-.map-footnote {
-  position: absolute;
-  bottom: 12px;
-  left: 16px;
-  font-size: 7px;
-  letter-spacing: 1.2px;
-  color: #709eac;
-  font-weight: 700;
-}
-.map-pin {
-  cursor: pointer;
-  outline-offset: 4px;
-}
-.map-pin:hover > circle:first-child,
-.map-pin:focus-visible > circle:first-child {
-  r: 24;
-  fill-opacity: 0.25;
-}
-.map-popover {
-  position: absolute;
-  bottom: 34px;
-  left: 16px;
-  right: 16px;
-  width: fit-content;
-  max-width: calc(100% - 32px);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid #fff;
-  border-radius: 12px;
-  background: #fffffff0;
-  box-shadow: 0 8px 30px #223c4f10;
-  padding: 12px;
-  color: var(--blue);
-}
-.map-popover > span {
-  min-width: 0;
-}
-.map-popover strong {
-  display: block;
-  font-size: 11px;
-  color: var(--ink);
-  overflow-wrap: anywhere;
-}
-.map-popover small {
-  display: block;
-  font-size: 9px;
-  color: #7f929c;
-  margin-top: 4px;
+  height: 260px;
 }
 .map-places {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  padding: 11px 13px;
-  font-size: 10px;
-  color: #849397;
+  padding: 12px 16px;
+  font-size: 11px;
+  color: #647780;
 }
 .map-places > button {
   display: flex;
-  gap: 5px;
+  gap: 6px;
   align-items: center;
-  padding: 6px 8px;
+  padding: 8px;
   border: 1px solid #e6ece9;
   border-radius: 7px;
   text-align: left;
@@ -2623,9 +2539,39 @@ hr {
   border-color: #b8cff8;
   color: var(--blue);
 }
+.map-places svg {
+  flex-shrink: 0;
+}
 .map-places small {
-  font-size: 9px;
-  color: #8d9e9d;
+  font-size: 10px;
+}
+.map-note {
+  margin: 0;
+  padding: 0 16px 14px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #647780;
+}
+.map-preview .map-note {
+  padding-top: 12px;
+}
+.map-expanded-placeholder {
+  display: grid;
+  place-items: center;
+  height: 420px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.map-modal {
+  width: 1180px;
+}
+.map-modal .map-canvas {
+  height: min(65dvh, 760px);
+  min-height: 280px;
+}
+.map-modal .map-places {
+  max-height: 160px;
+  overflow: auto;
 }
 .starter-prompts {
   display: flex;
@@ -3078,9 +3024,6 @@ hr {
   .composer-inner {
     max-width: 860px;
   }
-  .map-preview .map-canvas {
-    aspect-ratio: 2.9;
-  }
 }
 @media (max-width: 1100px) {
   .app-shell {
@@ -3102,20 +3045,6 @@ hr {
   }
   .conversation-intro h1 {
     font-size: 42px;
-  }
-  .map-postcards > span {
-    width: 100px;
-    height: 125px;
-  }
-  .map-postcards img {
-    height: 87px;
-  }
-  .map-postcards {
-    top: 30px;
-    right: 23px;
-  }
-  .map-caption .map-region {
-    display: none;
   }
   .scenarios-grid,
   .offers-grid {
@@ -3223,30 +3152,6 @@ hr {
     font-size: 8px;
     letter-spacing: 1px;
   }
-  .map-preview .map-canvas {
-    aspect-ratio: 2.15;
-  }
-  .map-preview .map-canvas > svg {
-    height: 100%;
-    width: 135%;
-    margin-top: 0;
-    margin-left: -17%;
-  }
-  .map-postcards {
-    top: 30px;
-    right: 17px;
-    gap: 7px;
-  }
-  .map-postcards > span {
-    width: 91px;
-    height: 115px;
-  }
-  .map-postcards img {
-    height: 78px;
-  }
-  .map-postcards > span > span {
-    font-size: 8px;
-  }
   .map-caption {
     padding: 13px 12px;
     gap: 8px;
@@ -3319,10 +3224,7 @@ hr {
     margin-left: 35px;
   }
   .map-canvas {
-    aspect-ratio: 1.6;
-  }
-  .map-canvas > svg {
-    object-fit: cover;
+    height: 340px;
   }
   .service-main {
     padding: 0 20px 28px;
@@ -3502,13 +3404,6 @@ hr {
   }
   .starter-prompts > button > svg {
     width: 13px;
-  }
-  .map-postcards > span {
-    width: 80px;
-    height: 103px;
-  }
-  .map-postcards img {
-    height: 68px;
   }
   .topbar-trip {
     font-size: 0;

@@ -139,12 +139,11 @@ export function tripMapPoints(state) {
   return places.flatMap((place) => {
     const key = place.id || place.source_id || place.name;
     if (seen.has(key)) return [];
-    seen.add(key);
     const region = regions.find(([pattern]) =>
       pattern.test(place.area || place.destination || ""),
     );
-    const lon = place.coordinates?.lon ?? region?.[1];
-    const lat = place.coordinates?.lat ?? region?.[2];
+    const lon = place.coordinates ? place.coordinates.lon : region?.[1];
+    const lat = place.coordinates ? place.coordinates.lat : region?.[2];
     if (
       !Number.isFinite(lon) ||
       !Number.isFinite(lat) ||
@@ -154,13 +153,14 @@ export function tripMapPoints(state) {
       lat > 43.85
     )
       return [];
+    seen.add(key);
     return [
       {
         id: key,
         name: place.name,
         area: place.area || place.destination,
-        x: (lon - 39.5) * 1000,
-        y: (43.85 - lat) * 900,
+        lon,
+        lat,
         approximate: !place.coordinates,
         kind:
           place === transport
@@ -171,6 +171,35 @@ export function tripMapPoints(state) {
       },
     ];
   });
+}
+
+export function tripMapUrls(points, activeId = null) {
+  const selected = points.find((point) => point.id === activeId);
+  const visible = selected ? [selected] : points;
+  const params = new URLSearchParams({ lang: "ru_RU", l: "map" });
+  if (visible.length) {
+    params.set("pt", visible.map((point) => `${point.lon},${point.lat}`).join("~"));
+    if (selected || visible.length === 1) {
+      const point = visible[0];
+      params.set("ll", `${point.lon},${point.lat}`);
+      params.set("z", point.approximate ? "12" : "16");
+    } else {
+      const lons = visible.map((point) => point.lon);
+      const lats = visible.map((point) => point.lat);
+      const west = Math.min(...lons), east = Math.max(...lons);
+      const south = Math.min(...lats), north = Math.max(...lats);
+      const padLon = Math.max((east - west) * 0.2, 0.008);
+      const padLat = Math.max((north - south) * 0.2, 0.008);
+      params.set("bbox", `${west - padLon},${south - padLat}~${east + padLon},${north + padLat}`);
+    }
+  } else {
+    params.set("ll", "39.96,43.57");
+    params.set("z", "10");
+  }
+  return {
+    embed: `https://yandex.ru/map-widget/v1/?${params}`,
+    external: `https://yandex.ru/maps/?${params}`,
+  };
 }
 export function tripStatus(
   state,

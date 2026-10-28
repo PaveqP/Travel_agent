@@ -85,7 +85,7 @@ def mount_portal(app: FastAPI, owner, require_trip, config_for, view, sync_trip,
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "no-referrer"
         response.headers["X-Frame-Options"] = "DENY"
-        response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; frame-src https://yandex.ru; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
         if not request.url.path.startswith("/assets/"):
             response.headers["Cache-Control"] = "no-store"
         return response

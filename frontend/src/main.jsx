@@ -43,6 +43,7 @@ import {
   Trash2,
   Link2,
   LockKeyhole,
+  Maximize2,
 } from "lucide-react";
 import {
   stages,
@@ -56,6 +57,7 @@ import {
   currentOption,
   tripParts,
   tripMapPoints,
+  tripMapUrls,
   tripStatus,
   canCheckout,
   feedbackText,
@@ -148,7 +150,7 @@ function Brand() {
   );
 }
 
-function Modal({ title, children, close, wide = false }) {
+function Modal({ title, children, close, wide = false, className = "" }) {
   const ref = useRef(null);
   useEffect(() => {
     const dialog = ref.current;
@@ -165,7 +167,7 @@ function Modal({ title, children, close, wide = false }) {
   return (
     <dialog
       ref={ref}
-      className={`modal ${wide ? "modal-wide" : ""}`}
+      className={`modal ${wide ? "modal-wide" : ""} ${className}`}
       onClick={(e) => {
         if (e.target === e.currentTarget) close();
       }}
@@ -359,238 +361,69 @@ function Composer({ value, setValue, send, busy, compact = false }) {
 
 function TripMap({ state, preview = false }) {
   const [active, setActive] = useState(null);
+  const [expanded, setExpanded] = useState(false);
   const points = tripMapPoints(state);
   const selected = points.find((point) => point.id === active);
-  const visible = points.filter(
-    (point, index) =>
-      points.findIndex(
-        (other) =>
-          Math.abs(other.x - point.x) < 1 && Math.abs(other.y - point.y) < 1,
-      ) === index,
+  const urls = tripMapUrls(points, active);
+  const title = preview ? "Море. Горы. И всё между ними." : "Ваша поездка на карте";
+  const actions = (
+    <div className="map-actions">
+      {!expanded && (
+        <button className="text-button" onClick={() => setExpanded(true)}>
+          <Maximize2 size={15} /> Развернуть карту
+        </button>
+      )}
+      <a className="text-button" href={urls.external} target="_blank" rel="noreferrer">
+        Открыть в Яндекс Картах <ExternalLink size={14} />
+      </a>
+    </div>
   );
-  return (
-    <section
-      className={`trip-map ${preview ? "map-preview" : ""}`}
-      aria-label="Карта Большого Сочи"
-    >
-      <div className="map-caption">
-        <span className="map-icon">
-          <Route size={17} />
-        </span>
-        <div>
-          <strong>
-            {preview
-              ? "Море. Горы. И всё между ними."
-              : "Ваша поездка на карте"}
-          </strong>
-          <span>
-            {preview
-              ? "Большой Сочи — маленький мир для большого отдыха"
-              : "Жильё и впечатления в одном взгляде"}
-          </span>
-        </div>
-        <span className="map-region">БОЛЬШОЙ СОЧИ</span>
-      </div>
+  const content = (
+    <>
       <div className="map-canvas">
-        <svg
-          viewBox="0 0 900 470"
-          role="img"
-          aria-label="Схема побережья: Сочи, Адлер, Сириус и Красная Поляна"
-        >
-          <defs>
-            <linearGradient id="map-sea" x2="0.7" y2="1">
-              <stop stopColor="#c6e8e9" />
-              <stop offset="1" stopColor="#9bced9" />
-            </linearGradient>
-            <pattern
-              id="map-grid"
-              width="36"
-              height="36"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M36 0H0V36"
-                fill="none"
-                stroke="#fff"
-                strokeOpacity=".13"
-              />
-            </pattern>
-          </defs>
-          <rect width="900" height="470" fill="#eef1e7" />
-          <path
-            d="M-40 145C150 160 230 238 350 302S450 360 500 405S740 495 940 510V500H-40Z"
-            fill="url(#map-sea)"
-          />
-          <rect width="900" height="470" fill="url(#map-grid)" />
-          <g fill="none" stroke="#dce4d6" strokeWidth="1.5">
-            <path d="M260-30Q330 110 930 180M300-40Q370 110 940 210M340-40Q410 110 940 240M380-40Q450 110 940 270M420-40Q490 110 940 300M460-40Q530 110 940 330" />
-            <path
-              d="M-40 145C150 160 230 238 350 302S450 360 500 405S740 495 940 510"
-              stroke="#fffdf5"
-              strokeWidth="10"
-            />
-          </g>
-          <g fill="#dfe7d8">
-            <path d="m550 115 43-52 43 52z" />
-            <path d="m735 84 49-60 49 60z" />
-            <path d="m775 268 56-68 56 68z" />
-            <path d="m460 167 34-42 34 42z" />
-          </g>
-          <g fill="#6f887c" fontSize="17" fontWeight="650" fontFamily="inherit">
-            <text x="172" y="195">
-              Сочи
-            </text>
-            <text x="365" y="341">
-              Адлер
-            </text>
-            <text x="506" y="429">
-              Сириус
-            </text>
-            <text x="652" y="127">
-              Красная Поляна
-            </text>
-          </g>
-          <text
-            x="95"
-            y="330"
-            transform="rotate(24 95 330)"
-            fill="#70a6b6"
-            fontSize="17"
-            letterSpacing="6"
-            fontFamily="inherit"
-          >
-            ЧЁРНОЕ МОРЕ
-          </text>
-          <g fill="#fff" stroke="#96ada0" strokeWidth="2">
-            <circle cx="220" cy="215" r="4" />
-            <circle cx="420" cy="368" r="4" />
-            <circle cx="490" cy="397" r="4" />
-            <circle cx="700" cy="150" r="4" />
-          </g>
-          {visible.length > 1 && (
-            <polyline
-              points={visible.map((point) => `${point.x},${point.y}`).join(" ")}
-              fill="none"
-              stroke="#2465e8"
-              strokeWidth="3"
-              strokeDasharray="7 6"
-              strokeLinecap="round"
-            />
-          )}
-          {visible.map((point) => (
-            <g
-              key={point.id}
-              className="map-pin"
-              role="button"
-              tabIndex={0}
-              aria-label={point.name}
-              onClick={() => setActive(point.id)}
-              onKeyDown={(event) => {
-                if (["Enter", " "].includes(event.key)) {
-                  event.preventDefault();
-                  setActive(point.id);
-                }
-              }}
-            >
-              <circle
-                cx={point.x}
-                cy={point.y}
-                r="18"
-                fill="#2365e8"
-                fillOpacity=".12"
-              />
-              <circle
-                cx={point.x}
-                cy={point.y}
-                r="9"
-                fill="#2365e8"
-                stroke="white"
-                strokeWidth="4"
-              />
-            </g>
-          ))}
-        </svg>
-        {preview && (
-          <div className="map-postcards">
-            <span>
-              <img src="/images/sea.jpg" alt="Побережье Большого Сочи" />
-              <span>
-                <Waves size={14} /> Жить у моря
-              </span>
-            </span>
-            <span>
-              <img src="/images/mountains.jpg" alt="Горы Красной Поляны" />
-              <span>
-                <Mountain size={14} /> Сбежать в горы
-              </span>
-            </span>
-          </div>
-        )}
-        {selected && (
-          <div className="map-popover">
-            <Icon
-              of={
-                selected.kind === "transport"
-                  ? Plane
-                  : selected.kind === "stay"
-                    ? Building2
-                    : MapPin
-              }
-              size={17}
-            />
-            <span>
-              <strong>{selected.name}</strong>
-              <small>
-                {selected.approximate
-                  ? `Примерно · район: ${selected.area || "Большой Сочи"}`
-                  : "По координатам источника"}
-              </small>
-            </span>
-            <button
-              className="icon-button"
-              aria-label="Закрыть точку"
-              onClick={() => setActive(null)}
-            >
-              <X size={15} />
-            </button>
-          </div>
-        )}
-        <span className="map-footnote">
-          {preview ? "СХЕМА РЕГИОНА" : "СХЕМА ПОЕЗДКИ · БЕЗ РАСЧЁТА ПЕРЕЕЗДОВ"}
-        </span>
+        <iframe src={urls.embed} title={selected ? `Карта: ${selected.name}` : "Яндекс Карты: места вашей поездки в Большом Сочи"}
+          loading={expanded ? "eager" : "lazy"} allowFullScreen referrerPolicy="no-referrer" />
       </div>
-      {!preview && (
-        <div className="map-places">
-          {points.length ? (
-            points.map((point) => (
-              <button
-                className={active === point.id ? "active" : ""}
-                key={point.id}
-                onClick={() => setActive(point.id)}
-              >
-                <Icon
-                  of={
-                    point.kind === "transport"
-                      ? Plane
-                      : point.kind === "stay"
-                        ? Building2
-                        : MapPin
-                  }
-                  size={14}
-                />
-                <span>
-                  {point.name}
-                  {point.approximate && <small> · район</small>}
-                </span>
-              </button>
-            ))
-          ) : (
-            <span>
-              Точки появятся, когда у выбранных мест будут координаты или район.
-            </span>
-          )}
+      {points.length > 0 && (
+        <div className="map-places" aria-label="Места поездки">
+          <button aria-pressed={!selected} className={!selected ? "active" : ""} onClick={() => setActive(null)}>
+            <MapPin size={14} /> Все места
+          </button>
+          {points.map((point) => (
+            <button key={point.id} aria-pressed={selected?.id === point.id}
+              className={selected?.id === point.id ? "active" : ""} onClick={() => setActive(point.id)}>
+              <Icon of={point.kind === "transport" ? Plane : point.kind === "stay" ? Building2 : MapPin} size={14} />
+              <span>{point.name}{point.approximate && <small> · район</small>}</span>
+            </button>
+          ))}
         </div>
       )}
+      <p className="map-note" role="status">
+        {selected
+          ? `${selected.name} · ${selected.approximate ? "ориентир района, точный адрес не подтверждён" : "по координатам источника"}`
+          : points.length ? "Выберите место, чтобы приблизить его на карте."
+            : "Пока показан Большой Сочи. Места появятся, когда будут известны их координаты или район."}
+        {!selected && points.some((point) => point.approximate) && " Метки «район» показывают приблизительное расположение."}
+      </p>
+    </>
+  );
+  return (
+    <section className={`trip-map ${preview ? "map-preview" : ""}`} aria-label="Карта Большого Сочи">
+      <div className="map-caption">
+        <span className="map-icon"><Route size={17} /></span>
+        <div>
+          <strong>{title}</strong>
+          <span>{preview ? "Большой Сочи — маленький мир для большого отдыха" : "Отель и впечатления на Яндекс Картах"}</span>
+        </div>
+      </div>
+      {expanded ? (
+        <>
+          <div className="map-expanded-placeholder">Карта открыта в большом окне</div>
+          <Modal title={title} close={() => setExpanded(false)} wide className="map-modal">
+            {actions}{content}
+          </Modal>
+        </>
+      ) : <>{actions}{content}</>}
     </section>
   );
 }

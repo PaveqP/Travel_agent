@@ -7,6 +7,7 @@ import {
   currentOption,
   tripParts,
   tripMapPoints,
+  tripMapUrls,
   canCheckout,
   feedbackText,
   messageLinks,
@@ -229,6 +230,52 @@ test("map distinguishes exact coordinates, district markers and unknown location
   assert.equal(points[1].approximate, true);
   assert.equal(points[1].area, "Сириус");
   assert.equal(points[2].approximate, false);
-  assert.ok(Math.abs(points[2].x - 400) < 0.001);
+  assert.equal(points[2].lon, 39.9);
+  assert.equal(points[2].lat, 43.5);
   assert.deepEqual(tripMapPoints(null), []);
+});
+
+test("map embeds all trip points and opens the same points in Yandex Maps", () => {
+  const points = [
+    { id: "hotel", lon: 39.72, lat: 43.59, approximate: false },
+    { id: "mountains", lon: 40.27, lat: 43.67, approximate: false },
+  ];
+  const urls = tripMapUrls(points);
+  const embed = new URL(urls.embed), external = new URL(urls.external);
+  assert.equal(embed.origin, "https://yandex.ru");
+  assert.equal(embed.pathname, "/map-widget/v1/");
+  assert.equal(embed.searchParams.get("pt"), "39.72,43.59~40.27,43.67");
+  assert.equal(external.pathname, "/maps/");
+  assert.equal(embed.search, external.search);
+  const [[west, south], [east, north]] = embed.searchParams.get("bbox").split("~").map((pair) => pair.split(",").map(Number));
+  assert.ok(west < 39.72 && south < 43.59 && east > 40.27 && north > 43.67);
+});
+
+test("map focuses the selected place without pretending district coordinates are exact", () => {
+  const points = [
+    { id: "hotel", lon: 39.72, lat: 43.59, approximate: false },
+    { id: "district", lon: 40.2, lat: 43.68, approximate: true },
+  ];
+  const exact = new URL(tripMapUrls(points, "hotel").embed);
+  assert.equal(exact.searchParams.get("pt"), "39.72,43.59");
+  assert.equal(exact.searchParams.get("ll"), "39.72,43.59");
+  assert.equal(exact.searchParams.get("z"), "16");
+  assert.equal(new URL(tripMapUrls(points, "district").embed).searchParams.get("z"), "12");
+  assert.equal(tripMapUrls(points, "deleted").embed, tripMapUrls(points).embed);
+  const empty = new URL(tripMapUrls([]).embed);
+  assert.equal(empty.searchParams.get("pt"), null);
+  assert.equal(empty.searchParams.get("ll"), "39.96,43.57");
+});
+
+test("map drops invalid coordinates and recovers a later valid copy of a place", () => {
+  const state = { options: [{ days: [{ candidates: [
+    { id: "a", area: "Сочи", coordinates: { lat: 43.59 } },
+    { id: "a", coordinates: { lat: 43.59, lon: 39.72 } },
+    { id: "b", coordinates: { lat: Infinity, lon: 39.72 } },
+    { id: "c", coordinates: { lat: "43.59", lon: "39.72" } },
+  ] }] }] };
+  const points = tripMapPoints(state);
+  assert.equal(points.length, 1);
+  assert.equal(points[0].id, "a");
+  assert.equal(points[0].approximate, false);
 });
