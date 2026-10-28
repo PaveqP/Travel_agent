@@ -98,7 +98,7 @@ def mount_portal(app: FastAPI, owner, require_trip, config_for, view, sync_trip,
     @app.get("/api/config")
     async def public_config():
         bot = getattr(app.state, "bot", None)
-        return {"telegram_url": "https://t.me/ostrovok_helper_ryadom_bot", "telegram_configured": bool(bot and bot.ready)}
+        return {"telegram_url": "https://t.me/" + (bot.username if bot else "ostrovok_helper_ryadom_bot"), "telegram_configured": bool(bot and bot.ready)}
 
     @app.post("/api/auth/register")
     async def register(data: AccountInput, request: Request, response: Response):
@@ -159,7 +159,9 @@ def mount_portal(app: FastAPI, owner, require_trip, config_for, view, sync_trip,
     @app.post("/api/telegram/link")
     async def link_telegram(user: str = Depends(account_owner)):
         token = await app.state.accounts.link(user)
-        return {"url": "https://t.me/ostrovok_helper_ryadom_bot?start=link_" + token, "expires_in": 600}
+        bot = getattr(app.state, "bot", None)
+        username = bot.username if bot else "ostrovok_helper_ryadom_bot"
+        return {"url": "https://t.me/" + username + "?start=link_" + token, "expires_in": 600}
 
     @app.delete("/api/telegram/link", status_code=204)
     async def unlink_telegram(user: str = Depends(account_owner)):

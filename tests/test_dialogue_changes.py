@@ -322,7 +322,7 @@ class PortalAnswerTests(unittest.TestCase):
         response_model = Mock()
         response_model.with_structured_output.return_value.ainvoke = AsyncMock(return_value=UserResponse(text=text))
         presenter = llm_presenter(response_model, read_prompts()['response'])
-        planner = AsyncMock(return_value=TurnPlan(action='answer', reply='Подготовь письмо по жалобе пользователя'))
+        planner = AsyncMock(return_value=TurnPlan(action='answer'))
         runners = {role: AsyncMock() for role in ROLES}
         graph = build_graph(planner, runners, InMemorySaver(), present=presenter, autonomous=True)
         with patch('travel_agent.api.environment', return_value={}), TestClient(create_app(graph, portal_database_url=os.environ['TRAVEL_TEST_DATABASE_URL'])) as client:
