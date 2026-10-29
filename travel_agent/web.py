@@ -86,7 +86,15 @@ def mount_portal(app: FastAPI, owner, require_trip, config_for, view, sync_trip,
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["Referrer-Policy"] = "no-referrer"
         response.headers["X-Frame-Options"] = "DENY"
-        response.headers["Content-Security-Policy"] = "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self'; connect-src 'self'; frame-src https://yandex.ru; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        documentation = request.url.path in {"/docs", "/docs/oauth2-redirect", "/redoc"}
+        styles = "'self' 'unsafe-inline'" + (" https://cdn.jsdelivr.net" if documentation else "")
+        scripts = "script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; " if documentation else ""
+        fonts = "'self'"
+        if request.url.path == "/redoc":
+            styles += " https://fonts.googleapis.com"
+            fonts += " https://fonts.gstatic.com"
+            scripts += "worker-src 'self' blob:; "
+        response.headers["Content-Security-Policy"] = f"default-src 'self'; {scripts}img-src 'self' data: https:; style-src {styles}; font-src {fonts}; connect-src 'self'; frame-src https://yandex.ru; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
         if not request.url.path.startswith("/assets/"):
             response.headers["Cache-Control"] = "no-store"
         return response

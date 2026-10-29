@@ -8,6 +8,7 @@ from unittest.mock import AsyncMock, patch
 from uuid import uuid4
 
 import httpx
+from fastapi import FastAPI
 from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
@@ -16,11 +17,32 @@ from travel_agent.api import create_app
 from travel_agent.itinerary_pdf import itinerary_pdf
 from travel_agent.support import support_letter, support_reply
 from travel_agent.telegram import TelegramBot
-from travel_agent.web import ProgressRequest, checklist, create_web_app
+from travel_agent.web import ProgressRequest, checklist, create_web_app, mount_portal
 from test_travel_agent import TRIP, agreed_state, decide, run
 
 
 class PortalUnitTests(unittest.TestCase):
+    def test_api_documentation_assets_are_allowed_without_relaxing_app_scripts(self):
+        app = FastAPI()
+        mount_portal(app, lambda: "test", None, None, None, None, None, {})
+        client = TestClient(app)
+        for path in ("/docs", "/docs/oauth2-redirect", "/redoc"):
+            response = client.get(path)
+            self.assertEqual(response.status_code, 200)
+            policy = dict(part.strip().split(" ", 1) for part in response.headers["Content-Security-Policy"].split(";") if part.strip())
+            self.assertIn("https://cdn.jsdelivr.net", policy["script-src"])
+            self.assertIn("'unsafe-inline'", policy["script-src"])
+            self.assertIn("https://cdn.jsdelivr.net", policy["style-src"])
+            if path == "/redoc":
+                self.assertIn("https://fonts.googleapis.com", policy["style-src"])
+                self.assertIn("https://fonts.gstatic.com", policy["font-src"])
+                self.assertIn("blob:", policy["worker-src"])
+        for path in ("/api/destinations", "/openapi.json", "/docs/unknown"):
+            policy = client.get(path).headers["Content-Security-Policy"]
+            self.assertNotIn("https://cdn.jsdelivr.net", policy)
+            self.assertNotIn("script-src", policy)
+            self.assertIn("default-src 'self'", policy)
+
     def test_container_uses_service_hostname_and_encodes_postgres_password(self):
         env = {"TRAVEL_POSTGRES_HOST": "postgres", "TRAVEL_POSTGRES_PASSWORD": "a@:/#?%$=", "TRAVEL_DATABASE_URL": "postgresql://old@localhost/travel"}
         with patch("travel_agent.web.environment", return_value=env), patch("travel_agent.api.create_app") as factory:

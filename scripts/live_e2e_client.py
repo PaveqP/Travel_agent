@@ -49,7 +49,7 @@ async def main() -> None:
         state = current.json()
         message = args.message
         if args.initial:
-            sections = re.split(r'\n## \d\d\.', (ROOT / 'test MVP/USE_CASES.md').read_text())
+            sections = re.split(r'\n## \d\d\.', (ROOT / 'docs/archive/live-e2e/USE_CASES.md').read_text())
             message = re.search(r'Первое сообщение: «(.*?)»', sections[int(args.case)], re.S).group(1)
         if args.select or args.book:
             options = state.get('options', [])

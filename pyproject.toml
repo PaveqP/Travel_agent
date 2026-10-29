@@ -1,7 +1,7 @@
 [project]
-name = "flinters-integration-research"
+name = "flinters-travel-agent"
 version = "0.1.0"
-description = "Reproducible API and MCP research for Greater Sochi"
+description = "AI travel planner for Russia with web and Telegram interfaces"
 requires-python = ">=3.11"
 dependencies = [
   "httpx>=0.28,<0.29",

@@ -15,6 +15,7 @@ secrets/
 *.pem
 *.key
 reports/raw/
+reports/latest_progress.json
 
 .mcp-venv/
 .research-vendor/

@@ -1,7 +1,0 @@
-Use case: logo-brand.
-Asset type: finished square Telegram bot avatar, 1024 x 1024, for a Russian travel assistant called «О! рядом».
-Create one polished, distinctive, minimal travel brand emblem. The main subject is a very large bold monogram «О!»: a thick white circular O like a navigation compass ring, paired with a warm sunny yellow exclamation mark. A small elegant white airplane silhouette is integrated into the upper right of the circular ring, pointing diagonally upwards, giving a clear travel cue without adding a separate busy illustration. The ring and exclamation mark must feel like one balanced, instantly recognizable emblem.
-Background: rich saturated cobalt blue, edge-to-edge, with a very subtle soft radial gradient. Palette: cobalt #1765E8, white, sunny yellow #FFCF33.
-Style: premium contemporary app icon, clean geometric forms, very restrained soft 3D volume with satin surfaces and gentle dimensional highlights, crisp bold silhouette, carefully balanced optical spacing. Friendly and confident, no cartoon face.
-Composition: emblem centered and large, all important shapes entirely inside the central 72% of the square, safe for a circular Telegram crop. Strong contrast and readability at 40 pixels. No outer border, no rounded-square container drawn inside the image, no presentation mockup.
-Text verbatim: «О!» only. O is white and the exclamation mark is yellow. Do not include the name, subtitles, other lettering, watermark, scenery, hotel buildings, extra pictograms, sparkles, or decorative dots. Deliver just the finished avatar artwork.
