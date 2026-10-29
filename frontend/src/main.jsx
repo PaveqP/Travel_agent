@@ -2982,7 +2982,7 @@ function App() {
         keys.delete("new");
         operation.current.delete("new");
         setRunningTrips(new Set(operation.current));
-        if (draftVersion.current === draft && window.location.hash.slice(1) === "plan") {
+        if (draftVersion.current === draft && (window.location.hash.slice(1) || "plan") === "plan") {
           setPendingMessages((current) => ({ ...Object.fromEntries(Object.entries(current).filter(([, pending]) => pending.requestId !== requestId)), [id]: { tripId: id, text, requestId } }));
           navigate("plan", id);
         }

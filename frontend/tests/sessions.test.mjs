@@ -88,7 +88,7 @@ async function openSession(t, options = {}) {
         const { message } = request.postDataJSON();
         trips.get(id).messages.push({ role: "user", text: message });
         options.started?.resolve(id);
-        if (id === "existing") await options.messageGate?.promise;
+        if (id === (options.messageTripId || "existing")) await options.messageGate?.promise;
         trips.get(id).messages.push({ role: "assistant", text: `Ответ для ${id}` });
         return json(trips.get(id));
       }
@@ -110,7 +110,7 @@ async function openSession(t, options = {}) {
     if (path.startsWith("/api/")) return json({});
     return route.continue();
   });
-  await page.goto(origin + (options.empty ? "/#plan" : "/#plan/existing"));
+  await page.goto(origin + (options.entryPath || (options.empty ? "/#plan" : "/#plan/existing")));
   await page.getByRole("textbox", { name: "Сообщение ассистенту" }).waitFor();
   return { page, trips, chats };
 }
@@ -141,6 +141,29 @@ test("phone welcome shows the glass introduction and an available composer", asy
   assert.equal(await page.getByRole("button", { name: "Отправить сообщение", exact: true }).isEnabled(), true);
   await page.screenshot({ path: "/tmp/flinters-welcome-mobile.png" });
 });
+
+for (const [device, viewport] of [["desktop", { width: 1440, height: 900 }], ["phone", { width: 390, height: 844 }]]) {
+  test(`a first request from the root URL stays visible on ${device}`, async (t) => {
+    const messageGate = deferred(), started = deferred();
+    t.after(() => messageGate.resolve());
+    const { page } = await openSession(t, { entryPath: "/", viewport, messageGate, started, messageTripId: "new-1" });
+    assert.equal(new URL(page.url()).hash, "");
+    await send(page, "Хочу на неделю в Казань");
+    assert.equal(await started.promise, "new-1");
+    assert.equal(new URL(page.url()).hash, "#plan/new-1");
+    await page.locator(".agent-thinking").waitFor();
+    await page.getByText("Хочу на неделю в Казань", { exact: true }).waitFor();
+    assert.equal(await page.getByRole("textbox", { name: "Сообщение ассистенту" }).isDisabled(), true);
+    messageGate.resolve();
+    await page.getByText("Ответ для new-1", { exact: true }).waitFor();
+    await page.waitForFunction(() => !document.querySelector(".agent-thinking"));
+    assert.equal(await page.getByText("Хочу на неделю в Казань", { exact: true }).count(), 1);
+    await page.reload();
+    await page.getByText("Ответ для new-1", { exact: true }).waitFor();
+    assert.equal(await page.getByText("Ответ для new-1", { exact: true }).count(), 1);
+    assert.equal(await page.getByText("Хочу на неделю в Казань", { exact: true }).count(), 1);
+  });
+}
 
 test("glass welcome cycles trip ideas, respects reduced motion and disappears when the dialogue starts", async (t) => {
   const { page } = await openSession(t, { empty: true });
