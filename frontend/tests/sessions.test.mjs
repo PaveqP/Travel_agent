@@ -209,38 +209,76 @@ function offersState() {
   return state;
 }
 
-test("right panel preserves chat, links offer names and selects the corresponding package", async (t) => {
-  const { page, trips } = await openSession(t, { state: offersState() });
+test("compact tour cards select one package and its details stay in the right panel", async (t) => {
+  const state = offersState();
+  const second = state.options[1];
+  second.stay.amenities = ["Бассейн", "Wi-Fi"];
+  second.stay.description = "Отель у моря с просторными номерами";
+  second.stay.photos = ["javascript:alert(1)", "https://images.example.org/hotel-b.jpg"];
+  second.transport = { ...second.transport, id: "flight-b", name: "Другой рейс", url: "https://www.tutu.ru/avia/second" };
+  second.days = [{ date: "2026-11-19", candidates: [{ id: "park", name: "Прогулка в парке" }] }];
+  const { page, trips } = await openSession(t, { state });
+  const chat = page.locator(".conversation-scroll");
   const panel = page.getByRole("complementary", { name: "Варианты поездки" });
   await panel.waitFor();
-  await panel.getByRole("heading", { name: "Туры под ключ", exact: true }).waitFor();
-  assert.equal(await panel.locator(".package-card").count(), 2);
-  await panel.getByRole("button", { name: "Выбрать вариант 2", exact: true }).click();
-  await page.waitForFunction(() => document.querySelector('.saved-artifacts').textContent.includes('Морской парк'));
+  await chat.getByText("Сохранил два отеля для сравнения.", { exact: true }).waitFor();
+  assert.equal(await chat.locator(".chat-tour-card").count(), 2);
+  assert.equal(await chat.locator(".chat-tour-card img").count(), 2);
+  assert.equal(await chat.locator(".presentation-links, .package-card, .day-plan, .transport-routes").count(), 0);
+  assert.equal(await chat.locator(".chat-tour-card").last().getByRole("img").getAttribute("src"), "/images/sea.jpg");
+  await chat.getByRole("button", { name: "Открыть тур 2: Морской парк", exact: true }).click();
+  await panel.getByRole("heading", { name: "Другой рейс", exact: true }).waitFor();
   assert.equal(trips.get("existing").selected, "option-1");
-  await panel.locator(".package-card").first().locator("summary").click();
-  await panel.locator(".package-card").first().locator(".day-plan").getByText("Прогулка у моря", { exact: true }).waitFor();
-  await page.screenshot({path:"/tmp/flinters-tours-desktop.png"});
-  await panel.getByRole("button", { name: "Выбрать вариант 1", exact: true }).click();
-  await page.waitForFunction(() => document.querySelector('.saved-artifacts').textContent.includes('Солнечный День'));
-  await panel.getByRole("button", { name: "Отели", exact: true }).click();
-  assert.equal(await page.locator(".conversation-scroll .package-card").count(), 0);
-  assert.equal(await panel.getByRole("link", { name: "Солнечный День" }).getAttribute("href"), "https://hotel.tutu.ru/hotel-a");
+  assert.equal(await panel.getByRole("link", { name: "Перейти к продавцу билетов" }).getAttribute("href"), "https://www.tutu.ru/avia/second");
+  assert.equal(await panel.getByRole("heading", { name: "Билеты Петербург — Сочи" }).count(), 0);
+  assert.equal(await panel.getByRole("button", { name: /оплат/ }).count(), 0);
+  await panel.getByRole("button", { name: "Отель", exact: true }).click();
+  await panel.getByText("Бассейн", { exact: true }).waitFor();
+  await panel.getByText("Отель у моря с просторными номерами", { exact: true }).waitFor();
+  assert.equal(await panel.getByRole("link", { name: "Посмотреть отель у продавца" }).getAttribute("href"), "https://hotel.tutu.ru/hotel-b");
+  assert.equal(await panel.getByRole("heading", { name: "Солнечный День" }).count(), 0);
+  await panel.getByRole("button", { name: "Программа", exact: true }).click();
+  await panel.getByText("Прогулка в парке", { exact: true }).waitFor();
+  assert.equal(await panel.getByText("Прогулка у моря", { exact: true }).count(), 0);
+  await page.screenshot({ path: "/tmp/flinters-tours-desktop.png" });
+  await chat.getByRole("button", { name: "Завершить и перейти к оплате", exact: true }).click();
+  const payment = page.getByRole("dialog");
+  await payment.getByRole("heading", { name: "И всё — можно собирать чемодан" }).waitFor();
+  await payment.getByText("Морской парк", { exact: true }).waitFor();
+  await payment.getByRole("button", { name: "Закрыть", exact: true }).click();
+  await chat.getByRole("button", { name: "Открыть тур 1: Солнечный День", exact: true }).click();
+  await panel.getByRole("heading", { name: "Билеты Петербург — Сочи", exact: true }).waitFor();
+  await panel.getByRole("button", { name: "Программа", exact: true }).click();
+  await panel.getByText("Прогулка у моря", { exact: true }).waitFor();
+  assert.equal(trips.get("existing").selected, "option-0");
+  await panel.getByRole("button", { name: "Закрыть панель вариантов" }).click();
+  await panel.waitFor({ state: "detached" });
+  assert.equal(await page.getByRole("textbox", { name: "Сообщение ассистенту" }).isVisible(), true);
+});
+
+test("saved tours without a presentation still show cards and expired prices block checkout", async (t) => {
+  const state = offersState();
+  delete state.messages.at(-1).presentation;
+  state.options[0].transport.source.expires_at = "2020-01-01T00:00:00Z";
+  const { page } = await openSession(t, { state });
+  await page.locator(".chat-tour-card").first().waitFor();
+  assert.equal(await page.locator(".chat-tour-card").count(), 2);
+  assert.equal(await page.getByRole("button", { name: "Завершить и перейти к оплате", exact: true }).isEnabled(), false);
+  await page.locator(".chat-checkout").getByText("Перед оформлением нужно подтвердить актуальность билетов и отеля.", { exact: true }).waitFor();
+});
+
+test("a hotel-only search keeps offer comparison and selects its associated package", async (t) => {
+  const state = offersState();
+  state.focus = "stays";
+  const { page, trips } = await openSession(t, { state });
+  const panel = page.getByRole("complementary", { name: "Варианты поездки" });
+  await panel.getByRole("heading", { name: "Отели", exact: true }).waitFor();
+  assert.equal(await page.locator(".chat-tour-card").count(), 0);
   await panel.getByRole("button", { name: /Сравнить · 2/ }).click();
   await panel.getByRole("group", { name: "Сравнение вариантов" }).waitFor();
   await panel.getByRole("button", { name: "Выбрать вариант", exact: true }).click();
-  await page.waitForFunction(() => document.querySelector('.saved-artifacts').textContent.includes('Морской парк'));
+  await page.waitForFunction(() => document.querySelector(".saved-artifacts").textContent.includes("Морской парк"));
   assert.equal(trips.get("existing").selected, "option-1");
-  await page.locator('.saved-artifacts button').filter({hasText:'Билеты'}).click();
-  await panel.getByRole("heading", { name: "Билеты", exact: true }).waitFor();
-  assert.equal(await panel.getByRole("link", { name: "Билеты Петербург — Сочи" }).getAttribute("href"), "https://www.tutu.ru/avia/");
-  await page.locator('.saved-artifacts button').filter({hasText:'Программа'}).click();
-  await panel.getByText("Прогулка у моря", {exact:true}).waitFor();
-  await page.locator('.saved-artifacts button').filter({hasText:'Бюджет'}).click();
-  await panel.getByRole("heading", { name: "Стоимость поездки" }).waitFor();
-  await panel.getByRole("button", { name: "Закрыть панель вариантов" }).click();
-  await panel.waitFor({state:'detached'});
-  assert.equal(await page.getByRole("textbox", {name:"Сообщение ассистенту"}).isVisible(), true);
 });
 
 test("help starts a separate trip chat, preserves plan and keeps chat drafts isolated", async (t) => {
@@ -293,7 +331,7 @@ test("on a phone the options panel is an accessible sheet and does not overflow"
   await page.getByRole('button',{name:'Открыть меню',exact:true}).click();
   await page.locator('.saved-artifacts button').filter({hasText:'Проживание'}).click();
   const sheet=page.getByRole('dialog');await sheet.waitFor();
-  await sheet.getByRole('heading',{name:'Отели',exact:true}).waitFor();
+  await sheet.getByRole('heading',{name:'Отель',exact:true}).waitFor();
   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true);
   await page.screenshot({path:'/tmp/flinters-options-mobile.png'});
   await sheet.getByRole('button',{name:'Закрыть',exact:true}).click();
@@ -338,12 +376,16 @@ test("tour sheet works on phones and Markdown stays safe and readable", async (t
   assert.equal(await page.locator(".chat-markdown li").count(), 2);
   assert.equal(await page.locator(".chat-markdown script").count(), 0);
   assert.equal(await page.evaluate(() => window.injected), undefined);
-  await page.getByRole("button", { name: "Открыть варианты поездки", exact: true }).click();
+  await page.getByRole("button", { name: "Открыть тур 2: Морской парк", exact: true }).click();
   const sheet = page.getByRole("dialog");
-  await sheet.getByRole("heading", { name: "Туры под ключ", exact: true }).waitFor();
-  assert.equal(await sheet.locator(".package-card").count(), 2);
-  await sheet.getByRole("button", { name: "Выбрать вариант 2", exact: true }).click();
-  await sheet.locator(".package-card").last().getByText("Выбран", { exact: true }).waitFor();
+  await sheet.getByRole("heading", { name: "Билеты", exact: true }).waitFor();
+  await sheet.locator(".tour-detail-summary").getByText("Морской парк", { exact: true }).waitFor();
+  await sheet.getByRole("button", { name: "Отель", exact: true }).click();
+  await sheet.getByRole("heading", { name: "Морской парк", exact: true }).waitFor();
+  assert.equal(await sheet.getByRole("heading", { name: "Солнечный День" }).count(), 0);
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
   await page.screenshot({ path: "/tmp/flinters-tours-mobile.png" });
+  await sheet.getByRole("button", { name: "Закрыть", exact: true }).click();
+  await page.locator(".chat-checkout").getByText("Морской парк", { exact: true }).waitFor();
+  assert.equal(await page.getByRole("button", { name: "Завершить и перейти к оплате", exact: true }).isEnabled(), true);
 });

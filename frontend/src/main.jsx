@@ -861,7 +861,7 @@ function Conversation({
                       <>
                       <ChatText text={message.role === "user" && message.text.startsWith("/select ")
                         ? "Выбираю этот вариант" : message.text} />
-                      {!chat && message.presentation && <PresentationLinks state={index === lastPresentation ? state : message.presentation} openPanel={openPanel} past={index !== lastPresentation} />}
+                      {!chat && message.presentation && <PresentationLinks state={index === lastPresentation ? state : message.presentation} openPanel={openPanel} choose={choose} busy={busy} past={index !== lastPresentation} />}
                       </>
                     )}
                   </div>
@@ -898,10 +898,17 @@ function Conversation({
                   </div>
                 )}
                 {!chat && !busy &&
-                  lastAssistant < 0 &&
+                  lastPresentation < 0 &&
                   hasConversation &&
-                  (state?.choices?.length && state.stage === "scenarios" ? recommendations : <PresentationLinks state={state} openPanel={openPanel} />)}
+                  (state?.choices?.length && state.stage === "scenarios" ? recommendations : <PresentationLinks state={state} openPanel={openPanel} choose={choose} busy={busy} />)}
               </div>
+              {state && !chat && state.stage !== "booked" && state.selected && state.options?.length > 0 && (
+                <div className="chat-checkout">
+                  <div><span className="eyebrow">ВАШ ВЫБОР</span><strong>{currentOption(state)?.stay?.name || "Ваша поездка"}</strong><span className="small muted">Билеты + отель · {money(currentOption(state)?.budget?.known_subtotal)} за всех</span></div>
+                  <button className="primary" disabled={busy || !canCheckout(state)} onClick={pay}><CreditCard size={20} />Завершить и перейти к оплате<ArrowRight size={20} /></button>
+                  <p className="small muted">{canCheckout(state) ? "Оплата — имитация. Места не резервируются. Дополнительные расходы оплачиваются отдельно." : "Перед оформлением нужно подтвердить актуальность билетов и отеля."}</p>
+                </div>
+              )}
               {state && !chat && !busy && hasConversation && (
                 <div className="conversation-suggestions">
                   {[
@@ -947,8 +954,26 @@ function OfferName({ item, children }) {
   return href ? <a className="offer-name" href={href} target="_blank" rel="noopener noreferrer">{children || item.name}<ExternalLink size={12} aria-label="Открыть у поставщика" /></a> : children || item?.name;
 }
 
-function PresentationLinks({ state, openPanel, past = false }) {
+function TourPhoto({ stay, destination }) {
+  const [failed, setFailed] = useState(false);
+  const photo = (stay?.photos || []).map(safeUrl).find((url) => url?.startsWith("https:"));
+  const fallback = /Полян|Хутор|гор|Алтай|Домбай|Архыз|Эльбрус|Шерегеш/i.test(`${destination} ${stay?.area}`) ? "mountains" : "sea";
+  return <img src={!failed && photo ? photo : `/images/${fallback}.jpg`} alt={!failed && photo ? stay?.name || "Отель" : "Иллюстрация путешествия"} loading="lazy" referrerPolicy="no-referrer" onError={() => setFailed(true)} />;
+}
+
+function TourCards({ state, openPanel, choose, busy }) {
+  return <div className="chat-tour-cards" role="group" aria-label="Готовые туры">
+    {state.options.map((option, index) => <button key={option.id} className={`chat-tour-card ${state.selected === option.id ? "is-selected" : ""}`} aria-label={`Открыть тур ${index + 1}: ${option.stay?.name || "Поездка"}`} aria-pressed={state.selected === option.id} disabled={busy || state.stage === "booked" && state.selected !== option.id} onClick={() => { openPanel("transport"); if (state.selected !== option.id) choose(option.id); }}>
+      <div className="chat-tour-photo"><TourPhoto key={option.stay?.id} stay={option.stay} destination={state.constraints?.destination} /><span>{state.selected === option.id ? <><Check size={12} />Выбран</> : `Тур ${index + 1}`}</span></div>
+      <div className="chat-tour-content"><h3>{option.stay?.name || state.constraints?.destination || "Поездка"}</h3><p>{option.stay?.area || state.constraints?.destination} · {date(option.transport?.start)} — {date(option.transport?.end)}</p><div><span><strong>{money(option.budget?.known_subtotal)}</strong><small>билеты + отель за всех</small></span><ArrowUpRight size={19} /></div></div>
+    </button>)}
+  </div>;
+}
+
+function PresentationLinks({ state, openPanel, choose, busy, past = false }) {
   if (!state || !openPanel) return null;
+  if (past) return null;
+  if (state.options?.length && !state.focus) return <TourCards state={state} openPanel={openPanel} choose={choose} busy={busy} />;
   const links = [[Luggage, "Туры под ключ", "tours", state.options?.length], [Plane, "Билеты", "transport", offerItems(state, "transport").length], [Building2, "Отели", "stays", offerItems(state, "stays").length], [Route, "Программа", "itinerary", tripParts(state).days.length]].filter((row) => row[3]);
   if (!links.length) return null;
   return <div className="presentation-links" aria-label="Варианты поездки">
@@ -958,7 +983,54 @@ function PresentationLinks({ state, openPanel, past = false }) {
   </div>;
 }
 
-function TripOptions({ kind, state, busy, choose, close, closing, changeKind, discuss, pay, tripId, navigate }) {
+function TripOptions(props) {
+  const { state } = props;
+  return state?.options?.length && !state.focus && (state.autonomous || ["review", "booked"].includes(state.stage)) ? <TourDetails {...props} /> : <OfferOptions {...props} />;
+}
+
+function TourDetails({ kind, state, busy, close, closing, changeKind, tripId, navigate }) {
+  const [compact, setCompact] = useState(() => window.matchMedia("(max-width: 1000px)").matches);
+  const heading = useRef(null);
+  const option = currentOption(state);
+  const parts = state.stage === "booked" ? tripParts(state) : { transport: option?.transport, stay: option?.stay, days: option?.days || [], total: option?.budget?.known_subtotal };
+  const tab = ["transport", "stays", "itinerary", "budget"].includes(kind) ? kind : "transport";
+  const title = { transport: "Билеты", stays: "Отель", itinerary: "Программа", budget: "Стоимость поездки" }[tab];
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 1000px)");
+    const update = () => setCompact(media.matches);
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+  useEffect(() => {
+    if (!compact) heading.current?.focus({ preventScroll: true });
+    const escape = (event) => { if (event.key === "Escape" && !document.querySelector("dialog[open]")) close(); };
+    window.addEventListener("keydown", escape);
+    return () => window.removeEventListener("keydown", escape);
+  }, [compact, tab]);
+  const item = tab === "transport" ? parts.transport : parts.stay;
+  const content = <>
+    <div className="tour-detail-summary"><span className="eyebrow">ТУР {state.options.indexOf(option) + 1}</span><strong>{parts.stay?.name || state.constraints?.destination}</strong><span>{date(parts.transport?.start)} — {date(parts.transport?.end)} · {money(parts.total)}</span></div>
+    <div className="options-tabs tour-detail-tabs" aria-label="Детали выбранного тура">
+      {[[Plane, "Билеты", "transport"], [Building2, "Отель", "stays"], [Route, "Программа", "itinerary"]].map(([Component, label, key]) => <button key={key} aria-pressed={tab === key} onClick={() => changeKind(key)}><Component size={16} />{label}</button>)}
+    </div>
+    <div className="options-panel-scroll" key={`${tab}-${option?.id}`} aria-busy={busy}>
+      {busy ? <div className="panel-empty" role="status"><LoaderCircle className="spin" size={24} />Обновляем выбранный тур…</div> : tab === "itinerary" ? parts.days.length ? <DayPlan days={parts.days} /> : <p className="muted">Программа ещё собирается. Обсудите пожелания с агентом.</p> : tab === "budget" ? <section className="panel-budget"><h3>Стоимость поездки</h3>{[["Билеты", parts.transport], ["Проживание", parts.stay]].map(([label, row]) => <div className="panel-budget-row" key={label}><span>{label}</span><div><strong>{money(row?.price?.amount, row?.price?.currency)}</strong>{row?.price && <small>{basis(row.price.basis)}</small>}</div></div>)}<div className="panel-budget-row"><span>Известная сумма</span><strong>{money(parts.total)}</strong></div><p className="small muted">Питание, активности и местные переезды могут оплачиваться отдельно.</p></section> : item ? <section className="tour-component-detail">
+        <h3>{item.name}</h3>
+        {tab === "stays" && <><p className="small muted">{item.address || item.area || state.constraints?.destination}</p><div className="tags">{item.stars != null && <span>{item.stars} ★</span>}{item.rating != null && <span>Оценка {item.rating} / 10</span>}</div><p className="small muted">Заезд {date(item.start)} · выезд {date(item.end)}</p></>}
+        <div className="panel-price"><strong>{money(item.price?.amount, item.price?.currency)}</strong><span>{basis(item.price?.basis)}</span></div>
+        {item.description && <p>{item.description}</p>}
+        {tab === "stays" ? <><HotelDetails hotel={item} />{!item.amenities?.length && <p className="small muted">Удобства отеля пока не указаны поставщиком.</p>}</> : <TransportRoutes candidate={item} constraints={state.constraints} />}
+        <SourceLink url={item.url || item.source?.source_url}>{tab === "transport" ? "Перейти к продавцу билетов" : "Посмотреть отель у продавца"}</SourceLink>
+        <p className="small muted">{item.source?.evidence === "live" ? "Цена найдена при поиске. Наличие и условия нужно подтвердить у продавца." : "Цена и наличие требуют подтверждения у продавца."}</p>
+      </section> : <p className="muted">Информация пока не найдена.</p>}
+      {state.notice && <p className="notice">{state.notice}</p>}
+    </div>
+    <div className="options-panel-footer"><button className="text-button" onClick={() => navigate("trip", tripId)}><Luggage size={15} />Вся поездка<ArrowUpRight size={14} /></button></div>
+  </>;
+  return compact ? <Modal title={title} close={close} className={`options-sheet ${closing ? "is-closing" : ""}`}><section id="trip-options-panel">{content}</section></Modal> : <aside className={`trip-options-panel ${closing ? "is-closing" : ""}`} id="trip-options-panel" aria-label="Варианты поездки"><div className="options-panel-head"><div><span className="eyebrow">ДЕТАЛИ ВЫБРАННОГО ТУРА</span><h2 ref={heading} tabIndex={-1}>{title}</h2></div><button className="icon-button" onClick={close} aria-label="Закрыть панель вариантов"><X size={19} /></button></div>{content}</aside>;
+}
+
+function OfferOptions({ kind, state, busy, choose, close, closing, changeKind, discuss, pay, tripId, navigate }) {
   const [compareIds, setCompareIds] = useState([]);
   const [comparing, setComparing] = useState(false);
   const [compact, setCompact] = useState(() => window.matchMedia("(max-width: 1000px)").matches);
