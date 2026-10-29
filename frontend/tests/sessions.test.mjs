@@ -122,7 +122,7 @@ async function send(page, text) {
 
 test("empty dialogue has no map or duplicate sidebar history", async (t) => {
   const { page } = await openSession(t, { empty: true });
-  await page.locator(".welcome-illustration img").waitFor();
+  await page.getByRole("heading", { name: "Тур за один запрос", exact: true }).waitFor();
   assert.equal(await page.locator("iframe").count(), 0);
   assert.equal(await page.getByText("МОИ ПЛАНЫ", { exact: false }).count(), 0);
   assert.equal(await page.getByRole("button", { name: /Мои поездки/ }).count(), 1);
@@ -132,14 +132,38 @@ test("empty dialogue has no map or duplicate sidebar history", async (t) => {
   await page.screenshot({ path: "/tmp/flinters-welcome-desktop.png" });
 });
 
-test("phone welcome shows only the illustration and an available composer", async (t) => {
+test("phone welcome shows the glass introduction and an available composer", async (t) => {
   const { page } = await openSession(t, { empty: true, viewport: { width: 390, height: 844 } });
-  await page.locator(".welcome-illustration img").waitFor();
+  await page.getByRole("heading", { name: "Тур за один запрос", exact: true }).waitFor();
   assert.equal(await page.locator(".conversation-intro input, .conversation-intro button").count(), 0);
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
   await page.getByRole("textbox", { name: "Сообщение ассистенту" }).fill("Хочу поехать в горы");
   assert.equal(await page.getByRole("button", { name: "Отправить сообщение", exact: true }).isEnabled(), true);
   await page.screenshot({ path: "/tmp/flinters-welcome-mobile.png" });
+});
+
+test("glass welcome cycles trip ideas, respects reduced motion and disappears when the dialogue starts", async (t) => {
+  const { page } = await openSession(t, { empty: true });
+  const welcome = page.getByRole("region", { name: "Начните диалог о путешествии" });
+  await welcome.waitFor();
+  await page.emulateMedia({ reducedMotion: "no-preference" });
+  await page.waitForFunction(() => document.querySelector(".glass-plane").getAnimations().some((animation) => animation.playState === "running"));
+  const requests = page.locator(".glass-requests > span");
+  const frame = (milliseconds) => requests.evaluateAll((nodes, time) => {
+    for (const node of nodes) for (const animation of node.getAnimations()) { animation.pause(); animation.currentTime = time; }
+    return nodes.filter((node) => Number(getComputedStyle(node).opacity) > 0.99).map((node) => node.textContent);
+  }, milliseconds);
+  assert.deepEqual(await frame(2000), ["На выходные в Казань"]);
+  assert.deepEqual(await frame(8000), ["К морю в Сочи"]);
+  assert.deepEqual(await frame(14000), ["В горы на Алтай"]);
+  await page.screenshot({ path: "/tmp/flinters-glass-animated.png" });
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  assert.equal(await welcome.evaluate((element) => element.getAnimations({ subtree: true }).length), 0);
+  assert.equal(await requests.first().isVisible(), true);
+  assert.equal(await requests.nth(1).isVisible(), false);
+  await send(page, "Хочу в горы");
+  await page.getByText("Ответ для new-1", { exact: true }).waitFor();
+  assert.equal(await welcome.count(), 0);
 });
 
 test("new trip can start while another session is still processing", async (t) => {
@@ -149,7 +173,7 @@ test("new trip can start while another session is still processing", async (t) =
   await send(page, "Подбери на неделю");
   await started.promise;
   await page.getByRole("button", { name: "Новая поездка" }).click();
-  await page.locator(".welcome-illustration img").waitFor();
+  await page.getByRole("heading", { name: "Тур за один запрос", exact: true }).waitFor();
   await send(page, "Другая поездка");
   await page.getByText("Ответ для new-1", { exact: true }).waitFor();
   const oldFinished = page.waitForResponse((response) => response.url().endsWith('/trips/existing/messages'));

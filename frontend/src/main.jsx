@@ -739,8 +739,24 @@ function Conversation({
           className={`conversation-content ${hasConversation ? "has-conversation" : ""}`}
         >
           {!hasConversation && !loading && !unavailable && !chat && (
-            <section className="conversation-intro welcome-illustration" aria-label="Начните диалог о путешествии">
-              <img src="/images/chat-welcome.webp" alt="Горная тропа к бирюзовому озеру — навстречу путешествию" />
+            <section className="conversation-intro glass-welcome" aria-label="Начните диалог о путешествии">
+              <div className="glass-scene">
+                <div className="glass-atmosphere" aria-hidden="true"><i /><i /></div>
+                <div className="glass-travel-elements" aria-hidden="true">
+                  <span className="glass-travel-icon glass-plane"><Plane size={28} strokeWidth={1.3} /></span>
+                  <span className="glass-travel-icon glass-hotel"><Building2 size={25} strokeWidth={1.3} /></span>
+                  <span className="glass-travel-icon glass-pin"><MapPin size={19} strokeWidth={1.3} /></span>
+                  <span className="glass-route"><Route size={14} />Всё сложится в маршрут</span>
+                </div>
+                <div className="glass-trip-card">
+                  <span className="glass-welcome-label"><Sparkles size={12} />О! РЯДОМ</span>
+                  <h1 aria-label="Тур за один запрос">Тур за один<br /><span>запрос.</span></h1>
+                  <div className="glass-requests" aria-hidden="true">
+                    {["На выходные в Казань", "К морю в Сочи", "В горы на Алтай"].map((text, index) => <span key={text} style={{ "--request-delay": `${index * 6}s` }}>{text}</span>)}
+                  </div>
+                </div>
+              </div>
+              <p className="glass-welcome-note">Билеты, отель и впечатления — вместе.</p>
             </section>
           )}
           {chat && !hasConversation && !loading && !chatError && <section className="chat-welcome">

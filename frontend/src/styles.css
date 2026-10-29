@@ -3451,8 +3451,47 @@ hr {
 .tour-variant-picker { display: flex; flex-direction: column; gap: 6px; font-size: 11px; color: var(--muted); margin-bottom: 20px; }
 .tour-variant-picker select { width: 100%; font-size: 12px; }
 .activity-price { display: block; margin: 7px 0; font-size: 11px; color: var(--muted); }
-.welcome-illustration { display: flex; align-items: center; justify-content: center; min-height: min(52vh, 460px); padding: 0; }
-.welcome-illustration img { display: block; width: 100%; max-width: 720px; max-height: 52dvh; object-fit: contain; border-radius: 24px; }
+.glass-welcome { display: flex; flex-direction: column; align-items: center; padding: 14px 0 0; }
+.glass-scene { position: relative; display: grid; place-items: center; width: min(100%, 520px); height: 330px; isolation: isolate; }
+.glass-atmosphere { position: absolute; inset: 40px 45px; z-index: -1; pointer-events: none; }
+.glass-atmosphere i { position: absolute; width: 190px; height: 190px; border-radius: 50%; filter: blur(32px); background: #dce8f8; opacity: .7; animation: glass-drift 14s ease-in-out infinite alternate; }
+.glass-atmosphere i:first-child { left: 18px; top: 0; }
+.glass-atmosphere i:last-child { right: 0; bottom: -10px; background: #dcece7; animation-delay: -7s; }
+.glass-trip-card { position: relative; width: 330px; padding: 29px 28px 23px; text-align: center; border: 1px solid #ffffffde; border-radius: 30px; background: linear-gradient(135deg, #ffffff94, #ffffff2b 55%, #ffffff7a); box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 #ffffff80, 0 16px 40px #35516c0b; backdrop-filter: blur(22px) saturate(125%); -webkit-backdrop-filter: blur(22px) saturate(125%); overflow: hidden; }
+.glass-trip-card::before { content: ""; position: absolute; width: 70px; top: -70px; bottom: -70px; left: -100px; background: linear-gradient(90deg, transparent, #ffffff70, transparent); transform: rotate(25deg); animation: glass-shimmer 12s ease-in-out infinite; pointer-events: none; }
+.glass-welcome-label { display: inline-flex; align-items: center; gap: 6px; font-size: 9px; letter-spacing: 2px; color: #7a91a5; }
+.glass-welcome h1 { position: relative; margin: 15px 0 19px; font-size: 36px; line-height: 1.18; letter-spacing: -1.6px; font-weight: 650; color: #344e65; }
+.glass-welcome h1 > span { background: linear-gradient(115deg, #718fa9, #547da4 50%, #91aaa7); background-clip: text; -webkit-background-clip: text; color: transparent; }
+.glass-requests { position: relative; height: 21px; font-size: 12px; color: #6f8599; }
+.glass-requests > span { position: absolute; inset: 0; opacity: 0; animation: glass-request 18s ease-in-out var(--request-delay) infinite both; }
+.glass-travel-elements { position: absolute; inset: 0; pointer-events: none; }
+.glass-travel-icon, .glass-route { position: absolute; display: flex; align-items: center; justify-content: center; border: 1px solid #ffffffea; background: linear-gradient(140deg, #ffffffb8, #ffffff35 70%); box-shadow: inset 0 1px 1px #fff, inset 0 -1px 1px #ffffff65, 0 10px 24px #43678b0b; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: #7894ad; animation: glass-float 8s ease-in-out infinite; }
+.glass-plane { left: 22px; top: 77px; width: 69px; height: 69px; border-radius: 23px; rotate: -15deg; z-index: 2; }
+.glass-hotel { right: 25px; bottom: 73px; width: 64px; height: 64px; border-radius: 21px; rotate: 12deg; animation-delay: -3s; z-index: 2; color: #8ca6a1; }
+.glass-pin { right: 68px; top: 23px; width: 43px; height: 43px; border-radius: 15px; rotate: 10deg; animation-delay: -5s; color: #92a7b8; }
+.glass-route { bottom: 11px; left: 88px; padding: 9px 12px; gap: 7px; font-size: 10px; border-radius: 12px; rotate: -4deg; animation-delay: -2s; }
+.glass-welcome > .glass-welcome-note { font-size: 12px; line-height: 1.6; margin: 13px 0 0; color: #91a0ad; text-align: center; }
+@keyframes glass-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+@keyframes glass-drift { from { transform: translate(-8px, 8px) scale(.95); } to { transform: translate(14px, -10px) scale(1.08); } }
+@keyframes glass-shimmer { 0%, 60% { left: -100px; opacity: 0; } 65% { opacity: .7; } 88%, 100% { left: calc(100% + 70px); opacity: 0; } }
+@keyframes glass-request { 0% { opacity: 0; transform: translateY(7px); filter: blur(3px); } 4%, 28% { opacity: 1; transform: translateY(0); filter: blur(0); } 33%, 100% { opacity: 0; transform: translateY(-7px); filter: blur(3px); } }
+@media (max-width: 600px) {
+  .glass-welcome { padding-top: 16px; }
+  .glass-scene { height: 300px; max-width: 390px; }
+  .glass-trip-card { width: calc(100% - 68px); max-width: 310px; padding: 26px 15px 22px; border-radius: 26px; }
+  .glass-welcome h1 { font-size: 31px; }
+  .glass-plane { left: 2px; top: 61px; width: 54px; height: 54px; border-radius: 18px; }
+  .glass-plane svg { width: 24px; }
+  .glass-hotel { right: 1px; bottom: 65px; width: 52px; height: 52px; border-radius: 18px; }
+  .glass-pin { right: 38px; top: 13px; }
+  .glass-route { left: 43px; bottom: 2px; }
+  .glass-welcome > .glass-welcome-note { font-size: 11px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-requests > span { display: none; }
+  .glass-requests > span:first-child { display: block; opacity: 1; transform: none; filter: none; }
+  .glass-trip-card::before { display: none; }
+}
 @media (max-width: 1000px) {
   .resizable-options-panel { display: contents; }
   .options-resize-handle, .options-width-control { display: none; }
