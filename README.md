@@ -260,12 +260,4 @@ age -r age1932fu7f70rwyfhaxflyfszz4gf6avxwc95wc0yjwm6zns9tspycqpgdnc0 -o secrets
 Команды для тега и чек-лист записи видео — в
 [инструкции по сдаче](docs/SUBMISSION.md).
 
-Исследовательский этап API/MCP и первоначальная реализация для Большого Сочи —
-история проекта, а не описание текущих ограничений географии:
-[сравнение источников](docs/API_COMPARISON.md),
-[каталог API](docs/API_CATALOG.md),
-[история архитектуры](docs/ADAPTIVE_AGENT.md).
-Основа автономного backend перенесена из
-[KilArtur/Flinters, коммит `f1dc3bf`](https://github.com/KilArtur/Flinters/commit/f1dc3bf).
-
 В приложении всё готово для полноценной интеграции с Telegram.
