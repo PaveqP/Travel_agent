@@ -112,7 +112,7 @@ async def prepare(state: TripState, decide, *, reviewed: bool = False) -> dict:
         if candidate is not None:
             trip = TripConstraints.model_validate(state['constraints'])
             card = offer_card(Candidate.model_validate(candidate), trip)
-            from travel_agent.agents.supervisor.response import stay_cards
+            from travel_agent.agents.supervisor.response import component_cards, stay_cards
             selectable = candidate['id'] in {c['id'] for c in stay_cards(state)} if candidate['role'] == 'stays' else card.selectable
             if not selectable:
                 return {'route': 'finish', 'answer': 'Этот тариф устарел или не соответствует условиям. Обновите поиск.'}
@@ -120,12 +120,14 @@ async def prepare(state: TripState, decide, *, reviewed: bool = False) -> dict:
                 trip, _ = apply_delta(trip, TripDelta(start=candidate['start'], end=candidate['end'],
                     check_in=datetime.fromisoformat(candidate['arrival_at']).date(), check_out=datetime.fromisoformat(candidate['return_departure_at']).date()))
                 standalone = state.get('focus') == 'transport'
+                cards = component_cards({**state, 'constraints': trip.model_dump(mode='json')}, 'transport') if standalone else []
                 tasks = [] if standalone else [AgentTask(role=role, goal='Обнови компонент для выбранного транспорта и актуальных дат.') for role in ('stays', 'experience')]
                 return {'route': 'finish' if standalone else 'delegate', 'constraints': trip.model_dump(mode='json'),
                     'revision': state.get('revision', 0) + 1, 'selected_transport': candidate['id'], 'selected_stay': None,
                     'selected': None, 'requested_choice': None, 'preserved_roles': ['transport'],
                     'tasks': [t.model_dump() for t in tasks], 'search_round': 0, 'repair_decision': False, 'feedback': [],
-                    'options': [], 'choices': [], 'cards': [], 'plan_answer': '', 'answer': 'Билеты выбраны: ' + candidate['name'] + '.',
+                    'options': [], 'choices': [{'id': card['id'], 'title': card['title'], 'details': card['description']} for card in cards],
+                    'cards': cards, 'plan_answer': '', 'answer': 'Билеты выбраны: ' + candidate['name'] + '.',
                     'decision': {'action': 'compose'}}
             trip, _ = apply_delta(TripConstraints.model_validate(state['constraints']), TripDelta(hotel=candidate['name'], start=candidate['start'], end=candidate['end']))
             return {'route': 'finish', 'constraints': trip.model_dump(mode='json'), 'selected_stay': candidate['id'], 'selected': None, 'requested_choice': None,
@@ -339,7 +341,8 @@ async def respond(state: TripState, present) -> dict:
 
 
 def finish(state: TripState) -> dict:
-    return {'messages': [AIMessage(content=state.get('answer', ''))], 'repair_decision': False}
+    metadata = {'component_comparison': True} if state.get('route') == 'respond' and state.get('focus') in ('transport', 'stays') else {}
+    return {'messages': [AIMessage(content=state.get('answer', ''), response_metadata=metadata)], 'repair_decision': False}
 
 
 def build_planning_graph(decide, runners, checkpointer, present=None, research=None):

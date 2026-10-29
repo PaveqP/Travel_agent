@@ -323,6 +323,28 @@ test("a hotel-only search keeps offer comparison and selects its associated pack
   assert.equal(trips.get("existing").selected, "option-1");
 });
 
+test("offer cards only select permitted choices and use assistant labels", async (t) => {
+  const state = offersState();
+  state.focus = "transport";
+  state.options = [];
+  state.cards = [{ ...state.results.transport.candidates[0], kind: "transport", title: "Билеты Петербург — Сочи", selectable: true }];
+  state.choices = [{ id: "flight" }];
+  state.results.transport.candidates.push({ ...state.results.transport.candidates[0], id: "expired", name: "Устаревший тариф" });
+  const { page, trips } = await openSession(t, { state });
+  const panel = page.getByRole("complementary", { name: "Варианты поездки" });
+  await panel.waitFor();
+  await page.getByRole("button", { name: "Диалог с ассистентом", exact: true }).waitFor();
+  assert.equal(await panel.getByRole("option", { name: "Как предложил ассистент", exact: true }).count(), 1);
+  assert.equal(await page.getByRole("button", { name: /Обсудить (выбор|вариант)/ }).count(), 0);
+  assert.equal(await panel.getByRole("button", { name: "Обсудить", exact: true }).count(), 0);
+  assert.equal(await panel.locator(".panel-offer").filter({ hasText: "Устаревший тариф" }).getByRole("button", { name: "Выбрать вариант", exact: true }).count(), 0);
+  assert.equal(await panel.getByRole("button", { name: "Выбрать вариант", exact: true }).count(), 1);
+  await panel.getByRole("button", { name: "Выбрать вариант", exact: true }).click();
+  await page.waitForFunction(() => !document.querySelector(".agent-thinking"));
+  assert.equal(trips.get("existing").selected, "flight");
+  assert.equal(await page.locator("textarea").inputValue(), "");
+});
+
 test("price ranking works in every tour tab and selecting a ranked tour keeps its details", async (t) => {
   const state = offersState();
   state.options[0].transport = { ...state.options[0].transport, price: { amount: "30000", currency: "RUB", basis: "party" } };
@@ -351,7 +373,7 @@ test("price ranking works in every tour tab and selecting a ranked tour keeps it
   assert.equal(trips.get("existing").selected, "option-1");
 });
 
-test("desktop panel resizes by dragging, slider and keyboard without hiding the chat", async (t) => {
+test("desktop panel resizes by dragging and keyboard without a width slider", async (t) => {
   const { page } = await openSession(t, { state: offersState() });
   const panel = page.getByRole("complementary", { name: "Варианты поездки" });
   await panel.waitFor();
@@ -366,9 +388,8 @@ test("desktop panel resizes by dragging, slider and keyboard without hiding the 
   await handle.focus();
   await handle.press("Home");
   assert.ok((await panel.boundingBox()).width <= 301);
-  const slider = page.getByRole("slider", { name: "Ширина панели", exact: true });
-  await slider.focus();
-  await slider.press("End");
+  assert.equal(await page.getByRole("slider", { name: "Ширина панели", exact: true }).count(), 0);
+  await handle.press("End");
   assert.ok((await panel.boundingBox()).width >= 700);
   await panel.getByRole("button", { name: "Отель", exact: true }).click();
   assert.ok((await panel.boundingBox()).width >= 700);

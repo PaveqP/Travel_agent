@@ -213,6 +213,8 @@ def render_components(state: dict) -> str:
             lines.append('Даты найденного проживания не совпадают с прибытием и обратным отправлением. Компоненты сохранены, но пока не образуют готовый тур.\n')
         else:
             lines.append('Для готового тура нужны совместимые дорога туда-обратно, проживание и программа. Пока доступны отдельные компоненты.\n')
+    candidates = {c['id']: c for row in state.get('results', {}).values() for c in row.get('candidates', [])}
+    facts_by_id = {}
     for index, card in enumerate(cards[:5], 1):
         price = card.get("price")
         basis = {'person': 'на человека', 'ticket': 'за билет', 'party': 'за группу', 'room_stay': 'за проживание'}
@@ -220,6 +222,49 @@ def render_components(state: dict) -> str:
         url = card.get("url")
         name = f"[{card['title']}]({url})" if url else card["title"]
         lines.append(f"- **{index}.** {name}{cost}")
+        candidate = candidates.get(card['id'], {})
+        conditions = candidate.get('conditions') or {}
+        facts = []
+        service_class = conditions.get('service_class')
+        cabin = {'C': 'бизнес-класс', 'BUSINESS': 'бизнес-класс', 'Y': 'экономкласс', 'ECONOMIC': 'экономкласс',
+                 'S': 'премиум-эконом', 'PREMIUM_ECONOMY': 'премиум-эконом', 'F': 'первый класс', 'FIRST': 'первый класс'}
+        if isinstance(service_class, str) and service_class in cabin:
+            facts.append(cabin[service_class])
+        if candidate.get('baggage_included') is True:
+            baggage = conditions.get('baggage') or {}
+            facts.append(f"багаж {baggage['kg']} кг" if isinstance(baggage, dict) and baggage.get('kg') is not None else 'багаж включён')
+        elif role == 'transport':
+            facts.append('багаж не включён' if candidate.get('baggage_included') is False else 'багаж не подтверждён')
+        if candidate.get('transfers') == 0:
+            facts.append('прямой рейс')
+        if candidate.get('duration_minutes'):
+            facts.append(f"дорога туда {candidate['duration_minutes']} мин")
+        if candidate.get('departure_at'):
+            facts.append('отправление ' + datetime.fromisoformat(candidate['departure_at']).strftime('%d.%m в %H:%M'))
+        if candidate.get('arrival_at'):
+            facts.append('прибытие ' + datetime.fromisoformat(candidate['arrival_at']).strftime('%d.%m в %H:%M'))
+        if role == 'stays' and candidate.get('rating') is not None:
+            facts.append(f"оценка {candidate['rating']}/10")
+        facts_by_id[card['id']] = facts
+        if role and facts:
+            lines.append('  ' + '; '.join(facts) + '.')
+    if role and cards:
+        eligible = [card for card in cards[:5] if card.get('selectable')]
+        if eligible:
+            preferred = eligible[0]
+            price = preferred.get('price')
+            comparable = [card for card in eligible if price and card.get('price') and
+                          (card['price']['currency'], card['price']['basis']) == (price['currency'], price['basis'])]
+            reasons = facts_by_id.get(preferred['id'], [])[:3]
+            if comparable and Decimal(price['amount']) == min(Decimal(card['price']['amount']) for card in comparable):
+                reasons = ['минимальная цена среди сопоставимых отобранных предложений', *reasons]
+            if reasons:
+                lines.append(f"\n**Рекомендую начать с варианта {cards.index(preferred) + 1}**: {'; '.join(reasons[:4])}.")
+            if comparable:
+                cheaper = min(comparable, key=lambda card: Decimal(card['price']['amount']))
+                if Decimal(cheaper['price']['amount']) < Decimal(price['amount']):
+                    difference = f"{Decimal(price['amount']) - Decimal(cheaper['price']['amount']):,.0f}".replace(',', ' ')
+                    lines.append(f"Вариант {cards.index(cheaper) + 1} дешевле на {difference} {price['currency']} при той же основе цены; сопоставьте подтверждённые условия и время отправления перед выбором.")
     if not role:
         next_step = 'Можно проверить другие даты в согласованном окне или обсудить другой город отправления.' if 'no_transport' in codes else 'Можно продолжить подбор проживания на даты прибытия и обратного отправления.'
         lines.append('\n' + next_step + ' После проверки недостающих компонентов соберу варианты туров для сравнения.')
@@ -272,12 +317,23 @@ def llm_presenter(model, prompt: str):
 
     async def present(state: dict) -> str:
         planning = state.get("decision", {}).get("action") == "compose"
-        if planning:
+        cards = state.get('cards') or (component_cards(state, state['focus']) if state.get('focus') in ('transport', 'stays') else [])
+        component_comparison = planning and state.get('focus') in ('transport', 'stays') and bool(cards)
+        if planning and not component_comparison:
             return render_options(state) if state.get("options") else render_components(state)
+        card_ids = {card['id'] for card in cards}
+        candidates = {candidate['id']: candidate for row in state.get('results', {}).values() for candidate in row.get('candidates', [])}
+        components = [{**{key: value for key, value in candidates.get(card['id'], {}).items() if key in
+                       ('id', 'name', 'price', 'start', 'end', 'departure_at', 'arrival_at', 'return_departure_at',
+                        'return_arrival_at', 'duration_minutes', 'transfers', 'legs', 'conditions', 'baggage_included',
+                        'stars', 'rating', 'area', 'amenities', 'source')}, 'selectable': card.get('selectable', False)}
+                      for card in cards[:5]]
         research = state.get("research", {}) if state.get("decision", {}).get("action") == "research" else {}
         sources = research.get("sources", [])
         context = {
-            "phase": "answer_question",
+            "phase": "compare_components" if component_comparison else "answer_question",
+            "focus": state.get('focus'),
+            "components": components,
             "stays": stay_cards(state) if state.get("focus") == "stays" else [],
             "now": datetime.now(timezone.utc).isoformat(),
             "constraints": state.get("constraints", {}),
@@ -293,7 +349,7 @@ def llm_presenter(model, prompt: str):
             "scenarios": state.get("scenarios", []),
             "research": research,
         }
-        fallback = 'Поездка сохранена. Напишите, какие детали хотите обсудить.' if state.get('autonomous') else state.get('answer', '')
+        fallback = render_components(state) if component_comparison else 'Поездка сохранена. Напишите, какие детали хотите обсудить.' if state.get('autonomous') else state.get('answer', '')
         if (
             state.get("decision", {}).get("action") == "research"
             and not sources
@@ -309,8 +365,10 @@ def llm_presenter(model, prompt: str):
                     ]
                 )
             )
-            allowed = {o["id"] for o in state.get("options", [])}
+            allowed = {o["id"] for o in state.get("options", [])} | card_ids
             if any(o.option_id not in allowed for o in result.options):
+                return fallback
+            if component_comparison and (not result.options or not any(card['id'] == result.options[0].option_id and card.get('selectable') for card in cards)):
                 return fallback
             urls = {s["url"] for s in sources}
             if any(url not in urls for url in result.source_urls):

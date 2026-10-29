@@ -292,7 +292,7 @@ export function feedbackText(feedback) {
       mountain_days_mismatch: "Нужно уточнить число дней в горах.",
       ski_program_mismatch:
         "Программа пока не соответствует горнолыжному отдыху.",
-    }[feedback.code] || "Часть поездки требует уточнения с агентом."
+    }[feedback.code] || "Часть поездки требует уточнения с ассистентом."
   );
 }
 

@@ -1,9 +1,10 @@
 import asyncio
 import copy
 import hashlib
+import json
 import unittest
 from datetime import datetime, timezone
-from unittest.mock import AsyncMock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
 import httpx
 from fastapi.testclient import TestClient
@@ -18,6 +19,62 @@ from test_travel_agent import FIXTURES, TRIP, agreed_state, decide, run
 
 
 class PresentationTests(unittest.TestCase):
+    def test_component_recommendation_survives_api_reload_and_direct_selection(self):
+        from decimal import Decimal
+        from travel_agent.agents.supervisor.response import llm_presenter
+        from travel_agent.prompts import load_prompt
+        from travel_agent.schemas import AgentTask, SpecialistResult, TurnPlan, UserResponse
+
+        base = normalize('tutu', 'search_avia', FIXTURES['search_avia'], TRIP, datetime.now(timezone.utc))[0]
+        business = base.model_copy(update={'id': 'avia:business', 'name': 'Бизнес с багажом', 'baggage_included': True,
+                                          'price': base.price.model_copy(update={'amount': Decimal('80000')}),
+                                          'conditions': {'service_class': 'BUSINESS', 'baggage': {'kg': 23}}})
+        economy = base.model_copy(update={'id': 'avia:economy', 'name': 'Эконом без багажа', 'baggage_included': False,
+                                         'price': base.price.model_copy(update={'amount': Decimal('30000')}),
+                                         'conditions': {'service_class': 'ECONOMIC', 'baggage': {'kg': 0}}})
+        text = 'Для ваших пожеланий рекомендую «Бизнес с багажом»: бизнес-класс, багаж 23 кг. Эконом дешевле на 50 000 RUB за группу, но без багажа и не соответствует запросу на комфорт.'
+        model = Mock()
+        model.with_structured_output.return_value.ainvoke = AsyncMock(return_value=UserResponse(text=text, options=[
+            {'option_id': business.id, 'benefit': 'Бизнес-класс и багаж 23 кг', 'tradeoff': 'На 50 000 RUB дороже эконома'}]))
+        runner = AsyncMock(side_effect=lambda trip, revision, goal, previous: SpecialistResult(role='transport', revision=revision, status='ok',
+                           candidates=[business, economy], selected_ids=[business.id, economy.id]))
+        planner = AsyncMock(return_value=TurnPlan(action='plan', focus='transport', tasks=[AgentTask(role='transport', goal='Сравни бизнес и эконом с учётом багажа')]))
+        graph = build_graph(planner, {'transport': runner, 'stays': AsyncMock(), 'experience': AsyncMock()},
+                            InMemorySaver(), autonomous=True, present=llm_presenter(model, load_prompt('response')))
+        with TestClient(create_app(graph, tokens=('alice',))) as client:
+            client.headers['Authorization'] = 'Bearer alice'
+            trip_id = client.post('/trips').json()['trip_id']
+            config = {'configurable': {'thread_id': hashlib.sha256(b'alice').hexdigest() + ':' + trip_id}}
+            constraints = TRIP.model_copy(update={'baggage': 'required', 'requirements': ['Сравни бизнес-класс с экономом']})
+            client.portal.call(graph.aupdate_state, config, {'constraints': constraints.model_dump(mode='json'), 'revision': 1, 'stage': 'transport', 'focus': 'transport', 'autonomous': True})
+            path = '/trips/' + trip_id
+            response = client.post(path + '/messages', json={'message': 'Какой перелёт лучше именно мне: бизнес-класс с багажом?', 'revision': 1})
+            self.assertEqual(response.status_code, 200, response.text)
+            shown = response.json()
+            self.assertEqual(shown['answer'], text)
+            self.assertEqual(shown['messages'][-1]['text'], text)
+            self.assertTrue(shown['messages'][-1]['presentation']['cards'])
+            reloaded = client.get(path).json()
+            self.assertEqual(reloaded['answer'], text)
+            self.assertEqual(reloaded['messages'][-1]['text'], text)
+            context = json.loads(model.with_structured_output.return_value.ainvoke.await_args.args[0][1].content)
+            self.assertEqual(context['phase'], 'compare_components')
+            self.assertEqual(context['components'][0]['conditions']['service_class'], 'BUSINESS')
+            self.assertEqual(context['components'][0]['conditions']['baggage']['kg'], 23)
+            self.assertFalse(context['components'][1]['selectable'])
+            self.assertNotIn('provider_details', context['components'][0])
+            chosen = client.post(path + '/select/' + business.id + '?revision=' + str(shown['revision']))
+            self.assertEqual(chosen.status_code, 200, chosen.text)
+            self.assertEqual(chosen.json()['selected_transport'], business.id)
+            self.assertIn(business.id, {choice['id'] for choice in chosen.json()['choices']})
+            rejected = client.post(path + '/select/' + economy.id + '?revision=' + str(chosen.json()['revision']))
+            self.assertEqual(rejected.status_code, 200, rejected.text)
+            self.assertEqual(rejected.json()['selected_transport'], business.id)
+            self.assertIn('не соответствует условиям', rejected.json()['answer'])
+            self.assertEqual(client.get(path).json()['messages'][1]['text'], text)
+            model.with_structured_output.return_value.ainvoke.assert_awaited_once()
+            runner.assert_awaited_once()
+
     def test_saved_tour_reopens_with_summary_program_and_unchanged_checkpoint(self):
         from travel_agent.engine import compose_packages
         from travel_agent.schemas import TurnPlan

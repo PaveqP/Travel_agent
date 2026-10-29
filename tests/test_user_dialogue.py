@@ -51,6 +51,20 @@ def planned():
 
 
 class DialogueTests(unittest.IsolatedAsyncioTestCase):
+    async def test_component_comparison_rejects_invented_recommendation_and_falls_back_to_facts(self):
+        from travel_agent.agents.supervisor.response import component_cards, render_components
+        state = planned()
+        state.update(focus='transport', options=[], results={'transport': {'status': 'ok', 'candidates': [c.model_dump(mode='json') for c in candidates() if c.role == 'transport']}})
+        state['cards'] = component_cards(state, 'transport')
+        response = UserResponse(text='Выберите выдуманный рейс.', options=[{'option_id': 'made-up', 'benefit': 'Лучший', 'tradeoff': 'Нет'}])
+        model = ResponseModel(response)
+        answer = await llm_presenter(model, load_prompt('response'))(state)
+        self.assertEqual(answer, render_components(state))
+        self.assertIn('Рекомендую начать с варианта', answer)
+        self.assertIn('отправление', answer)
+        self.assertIn('багаж не подтверждён', answer)
+        self.assertNotIn('выдуманный', answer)
+
     async def test_purpose_required_before_any_search_and_can_continue(self):
         async def decide(state):
             return SupervisorDecision(

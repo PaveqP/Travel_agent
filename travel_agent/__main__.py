@@ -50,12 +50,12 @@ async def send_message(client: httpx.AsyncClient, trip_id: str, text: str, revis
             progress = status.json()
             if progress.get('label') and progress['label'] != label:
                 label = progress['label']
-                print('Агент: ' + label + '…', flush=True)
+                print('Ассистент: ' + label + '…', flush=True)
             for role, cards in progress.get('previews', {}).items():
                 if role in seen or not cards:
                     continue
                 seen.add(role)
-                print('Агент: Уже нашёл: ' + '; '.join(c['title'] for c in cards[:2]) + '. Проверяю совместимость.', flush=True)
+                print('Ассистент: Уже нашёл: ' + '; '.join(c['title'] for c in cards[:2]) + '. Проверяю совместимость.', flush=True)
         return await pending
     finally:
         if not pending.done():
@@ -90,7 +90,7 @@ async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
             revision = state["revision"]
             if text == "/show":
                 print(
-                    "\nАгент:",
+                    "\nАссистент:",
                     state.get("plan_answer")
                     or state["answer"]
                     or "Пока нет вариантов. Расскажите о поездке.",
@@ -107,12 +107,12 @@ async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
                     f"/trips/{trip_id}/select/{selected}", params={"revision": revision}
                 )
                 response.raise_for_status()
-                print("\nАгент:", response.json().get("answer") or "Вариант выбран.")
+                print("\nАссистент:", response.json().get("answer") or "Вариант выбран.")
             elif text.startswith("/profile "):
                 interests = [value.strip() for value in text.split(maxsplit=1)[1].split(",") if value.strip()]
                 response = await client.put("/profile", json=interests)
                 response.raise_for_status()
-                print("Агент: Предпочтения сохранены для следующих поездок.")
+                print("Ассистент: Предпочтения сохранены для следующих поездок.")
             elif text.startswith("/book"):
                 if text != "/book confirm":
                     print(
@@ -132,12 +132,12 @@ async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
                     },
                 )
                 response.raise_for_status()
-                print("Агент:", response.json()["message"])
+                print("Ассистент:", response.json()["message"])
             else:
-                print("Агент: Думаю…")
+                print("Ассистент: Думаю…")
                 response = await send_message(client, trip_id, text, revision)
                 response.raise_for_status()
-                print("\nАгент:", response.json()["answer"])
+                print("\nАссистент:", response.json()["answer"])
         except httpx.HTTPStatusError as exc:
             messages = {
                 401: "Не удалось авторизоваться.",
@@ -145,14 +145,14 @@ async def dialogue(client: httpx.AsyncClient, trip_id: str) -> None:
                 504: "Поиск занял слишком долго. Посмотрите /show: часть результатов могла сохраниться.",
             }
             print(
-                "Агент:",
+                "Ассистент:",
                 messages.get(
                     exc.response.status_code,
                     "Не удалось обработать запрос. Повторите сообщение.",
                 ),
             )
         except httpx.RequestError:
-            print("Агент: Не удалось связаться с сервисом. Попробуйте ещё раз.")
+            print("Ассистент: Не удалось связаться с сервисом. Попробуйте ещё раз.")
 
 
 async def main() -> None:

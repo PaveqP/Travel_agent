@@ -234,10 +234,11 @@ def create_app(
                 ("receipt", {}),
             )
         }
+        visible_messages = [m for m in values.get("messages", []) if isinstance(m, (HumanMessage, AIMessage)) and isinstance(m.content, str) and m.content]
         result["messages"] = [
             {"role": "user" if isinstance(m, HumanMessage) else "assistant", "text": m.content,
              "presentation": m.response_metadata.get("presentation") if isinstance(m, AIMessage) else None}
-            for m in values.get("messages", []) if isinstance(m, (HumanMessage, AIMessage)) and isinstance(m.content, str) and m.content
+            for m in visible_messages
         ]
         if result["messages"] and result["messages"][-1]["role"] == "assistant":
             last = values.get("messages", [])[-1]
@@ -260,13 +261,14 @@ def create_app(
                 return {**plan, 'options': options}
 
             result = display_options(result)
-            for message in result['messages']:
+            for message, original in zip(result['messages'], visible_messages):
                 plan = message.get('presentation')
                 if not plan or not plan.get('autonomous') or plan.get('stage') in ('scenarios', 'booked'):
                     continue
                 plan = display_options(plan)
                 message['presentation'] = plan
-                message['text'] = render_options(plan) if plan.get('options') else render_components(plan)
+                if not original.response_metadata.get('component_comparison'):
+                    message['text'] = render_options(plan) if plan.get('options') else render_components(plan)
             if values.get('answer') == values.get('plan_answer') and result['messages'] and result['messages'][-1].get('presentation'):
                 result['answer'] = result['plan_answer'] = result['messages'][-1]['text']
         return result

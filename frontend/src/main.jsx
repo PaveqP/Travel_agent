@@ -519,7 +519,7 @@ function Sidebar({
             className={page === "plan" ? "active" : ""}
             onClick={() => navigate("plan", tripId)}
           >
-            <MessageCircle size={18} /> Диалог с агентом
+            <MessageCircle size={18} /> Диалог с ассистентом
           </button>
           <button
             className={["trips", "trip"].includes(page) ? "active" : ""}
@@ -799,7 +799,7 @@ function Conversation({
                   <div className="conversation-message-body">
                     {message.role === "assistant" && (
                       <div className="agent-label">
-                        О! рядом <span>ваш агент путешествий</span>
+                        О! рядом <span>ваш ассистент путешествий</span>
                       </div>
                     )}
                     {!chat && message.presentation && message.presentation.stage === "scenarios" && message.presentation.choices?.length && !offerItems(message.presentation, "stays").length && !offerItems(message.presentation, "transport").length ? (
@@ -937,7 +937,7 @@ function PresentationLinks({ state, openPanel, choose, busy, past = false }) {
 }
 
 function PriceSort({ value, onChange }) {
-  return <label className="price-sort"><SlidersHorizontal size={14} /><span>По цене</span><select aria-label="Сортировка по цене" value={value} onChange={(event) => onChange(event.target.value)}><option value="">Как предложил агент</option><option value="asc">Сначала дешевле</option><option value="desc">Сначала дороже</option></select></label>;
+  return <label className="price-sort"><SlidersHorizontal size={14} /><span>По цене</span><select aria-label="Сортировка по цене" value={value} onChange={(event) => onChange(event.target.value)}><option value="">Как предложил ассистент</option><option value="asc">Сначала дешевле</option><option value="desc">Сначала дороже</option></select></label>;
 }
 
 function TripOptions(props) {
@@ -965,7 +965,6 @@ function TripOptions(props) {
       onPointerUp={(event) => { if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }}
       onKeyDown={(event) => { if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) { event.preventDefault(); resize(event.key === "Home" ? 300 : event.key === "End" ? maxWidth : width + (event.key === "ArrowLeft" ? 20 : -20)); } }} />
     {content}
-    <label className="options-width-control"><span>Ширина панели</span><input type="range" aria-label="Ширина панели" min={300} max={maxWidth} step={1} value={width} onChange={(event) => resize(Number(event.target.value))} /></label>
   </div>;
 }
 
@@ -999,7 +998,7 @@ function TourDetails({ kind, state, busy, choose, close, closing, changeKind, tr
     <div className="options-panel-scroll" key={`${tab}-${option?.id}`} aria-busy={busy}>
       <PriceSort value={priceOrder} onChange={setPriceOrder} />
       {state.stage !== "booked" && <label className="tour-variant-picker"><span>{tab === "transport" ? "Туры по стоимости билетов" : tab === "stays" ? "Туры по стоимости отеля" : "Туры по общей стоимости"}</span><select aria-label="Тур для просмотра" value={option?.id || ""} disabled={busy} onChange={(event) => choose(event.target.value)}>{options.map((row) => <option key={row.id} value={row.id}>Тур {state.options.indexOf(row) + 1} · {row.stay?.name} · {money(tourPrice(row)?.amount, tourPrice(row)?.currency)}</option>)}</select></label>}
-      {busy ? <div className="panel-empty" role="status"><LoaderCircle className="spin" size={24} />Обновляем выбранный тур…</div> : tab === "itinerary" ? parts.days.length ? <DayPlan days={parts.days} priceOrder={priceOrder} /> : <p className="muted">Программа ещё собирается. Обсудите пожелания с агентом.</p> : tab === "budget" ? <section className="panel-budget"><h3>Стоимость поездки</h3>{sortByPrice([["Билеты", parts.transport], ["Проживание", parts.stay]], priceOrder, (row) => row[1]?.price).map(([label, row]) => <div className="panel-budget-row" key={label}><span>{label}</span><div><strong>{money(row?.price?.amount, row?.price?.currency)}</strong>{row?.price && <small>{basis(row.price.basis)}</small>}</div></div>)}<div className="panel-budget-row"><span>Известная сумма</span><strong>{money(parts.total)}</strong></div><p className="small muted">Питание, активности и местные переезды могут оплачиваться отдельно.</p></section> : item ? <section className="tour-component-detail">
+      {busy ? <div className="panel-empty" role="status"><LoaderCircle className="spin" size={24} />Обновляем выбранный тур…</div> : tab === "itinerary" ? parts.days.length ? <DayPlan days={parts.days} priceOrder={priceOrder} /> : <p className="muted">Программа ещё собирается. Обсудите пожелания с ассистентом.</p> : tab === "budget" ? <section className="panel-budget"><h3>Стоимость поездки</h3>{sortByPrice([["Билеты", parts.transport], ["Проживание", parts.stay]], priceOrder, (row) => row[1]?.price).map(([label, row]) => <div className="panel-budget-row" key={label}><span>{label}</span><div><strong>{money(row?.price?.amount, row?.price?.currency)}</strong>{row?.price && <small>{basis(row.price.basis)}</small>}</div></div>)}<div className="panel-budget-row"><span>Известная сумма</span><strong>{money(parts.total)}</strong></div><p className="small muted">Питание, активности и местные переезды могут оплачиваться отдельно.</p></section> : item ? <section className="tour-component-detail">
         <h3>{item.name}</h3>
         {tab === "stays" && <><p className="small muted">{item.address || item.area || state.constraints?.destination}</p><div className="tags">{item.stars != null && <span>{item.stars} ★</span>}{item.rating != null && <span>Оценка {item.rating} / 10</span>}</div><p className="small muted">Заезд {date(item.start)} · выезд {date(item.end)}</p></>}
         <div className="panel-price"><strong>{money(item.price?.amount, item.price?.currency)}</strong><span>{basis(item.price?.basis)}</span></div>
@@ -1050,9 +1049,9 @@ function OfferOptions({ kind, state, busy, choose, close, closing, changeKind, d
     const other = option?.[kind === "stays" ? "transport" : "stay"];
     return <div className="panel-choice-action">
       {other && !selected && <small>В составе варианта: {other.name} · билеты + отель {money(option.budget?.known_subtotal)}</small>}
-      <button className={selected ? "secondary" : "primary"} disabled={busy || selected} onClick={() => id ? choose(id) : discuss(`Хочу выбрать ${kind === "stays" ? "отель" : "билеты"}: ${item.name}. Проверь условия и обнови план.`)}>
-        {selected ? <Check size={15} /> : id ? <Plus size={15} /> : <MessageCircle size={15} />}{selected ? "Выбрано" : id ? "Выбрать вариант" : "Обсудить выбор"}
-      </button>
+      {id || selected ? <button className={selected ? "secondary" : "primary"} disabled={busy || selected} onClick={() => choose(id)}>
+        {selected ? <Check size={15} /> : <Plus size={15} />}{selected ? "Выбрано" : "Выбрать вариант"}
+      </button> : <small>Предложение недоступно для выбора: требуется актуальный тариф, соответствующий условиям поездки.</small>}
     </div>;
   };
   const content = <>
@@ -1078,7 +1077,7 @@ function OfferOptions({ kind, state, busy, choose, close, closing, changeKind, d
           <p className="small muted">{date(item.start)} — {date(item.end)}</p>
           <div className="panel-price"><strong>{money(item.price?.amount, item.price?.currency)}</strong><span>{basis(item.price?.basis)}</span></div>
           {selection(item)}
-          <div className="panel-offer-links"><button className="text-button" aria-expanded={details === item.id} onClick={() => setDetails(details === item.id ? null : item.id)}>Детали<ChevronDown size={14} /></button><button className="text-button" onClick={() => discuss(`Расскажи подробнее о варианте «${item.name}».`)}><MessageCircle size={14} />Обсудить</button></div>
+          <div className="panel-offer-links"><button className="text-button" aria-expanded={details === item.id} onClick={() => setDetails(details === item.id ? null : item.id)}>Детали<ChevronDown size={14} /></button></div>
           {details === item.id && <div className="panel-offer-details">{item.description && <p>{item.description}</p>}{kind === "stays" ? <HotelDetails hotel={item} /> : <TransportRoutes candidate={item} constraints={state.constraints} />}<p className="small muted">{item.source?.evidence === "live" ? "Цена найдена при поиске. Подтверждение потребуется перед оформлением." : "Наличие и стоимость требуют подтверждения у поставщика."}</p></div>}
         </article>)}
         {!items.length && <div className="panel-empty"><Icon of={kind === "stays" ? Building2 : Plane} size={28} /><h3>Вариантов пока нет</h3><p>Продолжите разговор — найденные предложения появятся здесь.</p><button className="secondary" onClick={() => discuss(kind === "stays" ? "Подбери варианты проживания для моей поездки" : "Подбери билеты для моей поездки")}>Попросить ассистента</button></div>}
@@ -1185,7 +1184,7 @@ function SearchPreviews({ previews }) {
             ))}
           </div>
         ))}
-        <p>Предварительные результаты. Агент ещё проверяет совместимость.</p>
+        <p>Предварительные результаты. Ассистент ещё проверяет совместимость.</p>
       </div>
     )
   );
@@ -1298,7 +1297,7 @@ function AutonomousPlan({
       />
     );
   return (
-    <section className="agent-recommendations" aria-label="Предложения агента">
+    <section className="agent-recommendations" aria-label="Предложения ассистента">
       {(options.length > 0 || state.cards?.length > 0) && (
         <div className="recommendation-heading">
           <h2>
@@ -1323,7 +1322,7 @@ function AutonomousPlan({
           </div>
           {staysOnly && state.selected_stay && (
             <p className="notice">
-              Отель выбран. Попросите агента добавить билеты и программу, чтобы
+              Отель выбран. Попросите ассистента добавить билеты и программу, чтобы
               собрать поездку.
             </p>
           )}
@@ -1642,7 +1641,7 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
             : "Поездка ещё собирается"}
         </h3>
         <p>
-          Продолжите разговор с агентом. Готовые варианты появятся здесь после
+          Продолжите разговор с ассистентом. Готовые варианты появятся здесь после
           поиска и проверки.
         </p>
         <button className="primary" onClick={() => navigate("plan", tripId)}>
@@ -1777,7 +1776,7 @@ function Summary({ state, tripId, pay, navigate, download, expanded = false }) {
       </div>
       {!receipt && state.selected && !canCheckout(state) && (
         <p className="small muted">
-          Перед оформлением попросите агента обновить тарифы поездки.
+          Перед оформлением попросите ассистента обновить тарифы поездки.
         </p>
       )}
       {expanded && (
@@ -1862,7 +1861,7 @@ function Planner({
   const c = state.constraints || {};
   const parts = tripParts(state);
   return (
-    <section className="agent-recommendations" aria-label="Предложения агента">
+    <section className="agent-recommendations" aria-label="Предложения ассистента">
       {index < 4 && (
         <div className="recommendation-heading">
           <h2>{titles[stage]}</h2>
@@ -1892,7 +1891,7 @@ function Planner({
         <div className="notice warning">
           <CalendarDays size={18} />
           <span>
-            Прибытие {date(state.pending_check_in)}. Обсудите с агентом новую
+            Прибытие {date(state.pending_check_in)}. Обсудите с ассистентом новую
             дату заселения и подтвердите её в чате.
           </span>
         </div>
@@ -1956,7 +1955,7 @@ function Planner({
           <MessageCircle size={17} />
           <span>
             {state.status === "error"
-              ? "Поиск не завершился. Напишите агенту, чтобы попробовать ещё раз."
+              ? "Поиск не завершился. Напишите ассистенту, чтобы попробовать ещё раз."
               : "Продолжим в разговоре — уточните пожелания, и я подберу варианты."}
           </span>
         </div>
@@ -2476,7 +2475,7 @@ function Trips({ account, auth, trips, navigate, reload, run, removeTrip, busy }
       )}
       {removing && (
         <Modal title="Удалить поездку?" close={() => { if (!deleting) setRemoving(null); }}>
-          <p>Поездка «{removing.state.constraints?.destination || "Новая история"}» и переписка с агентом будут удалены.</p>
+          <p>Поездка «{removing.state.constraints?.destination || "Новая история"}» и переписка с ассистентом будут удалены.</p>
           <div className="modal-actions">
             <button className="secondary" disabled={deleting} onClick={() => setRemoving(null)}>Отмена</button>
             <button className="primary danger-button" disabled={deleting} onClick={async () => {
@@ -3197,7 +3196,7 @@ function App() {
               <small>
                 {planning
                   ? chatId ? "Отдельный разговор в вашей поездке" : "Один запрос · один общий план"
-                  : "О! рядом · ваш агент путешествий"}
+                  : "О! рядом · ваш ассистент путешествий"}
               </small>
             </span>
             {planning && (
@@ -3350,7 +3349,7 @@ function App() {
               </div>
             )
           ) : (
-            <div className="empty-state"><h3>Страница не найдена</h3><p>Откройте диалог или выберите сохранённую поездку.</p><a className="primary" href="#plan">К диалогу с агентом</a></div>
+            <div className="empty-state"><h3>Страница не найдена</h3><p>Откройте диалог или выберите сохранённую поездку.</p><a className="primary" href="#plan">К диалогу с ассистентом</a></div>
           )}
         </main>
       </div>

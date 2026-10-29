@@ -20,7 +20,7 @@ COMMANDS = [
     ("start", "Начать и открыть меню"), ("new", "Новая поездка"), ("trips", "История поездок"),
     ("show", "Текущий план и варианты"), ("plan", "Полные варианты поездки"),
     ("hotels", "Отели и фотографии"), ("tickets", "Билеты туда и обратно"),
-    ("history", "Переписка с агентом"), ("cancel", "Отменить ввод"), ("back", "Вернуться на шаг назад"), ("profile", "Личный кабинет"),
+    ("history", "Переписка с ассистентом"), ("cancel", "Отменить ввод"), ("back", "Вернуться на шаг назад"), ("profile", "Личный кабинет"),
     ("pay", "Проверить имитацию оплаты"), ("pdf", "Скачать маршрутный лист"),
     ("track", "План и отметки по поездке"), ("map", "Отель и места на карте"), ("help", "Помощь и шаблоны писем"),
     ("site", "Продолжить на сайте с теми же поездками"),
@@ -395,7 +395,7 @@ class TelegramBot:
         response = await api.request(method, path, **kwargs)
         if response.status_code >= 400:
             messages = {401: "Сессия завершена. Начните с /start.", 404: "Эта поездка недоступна. Откройте /trips.",
-                        409: "План или котировки изменились. Откройте /show и выберите актуальный вариант. Обновить поиск можно сообщением агенту.",
+                        409: "План или котировки изменились. Откройте /show и выберите актуальный вариант. Обновить поиск можно сообщением ассистенту.",
                         422: "Проверьте введённые данные.", 504: "Поиск занял больше времени. Откройте /show перед повтором."}
             await self.send(chat_id, messages.get(response.status_code, "Не удалось выполнить действие. Повторите позднее."))
             return None
@@ -449,11 +449,11 @@ class TelegramBot:
         if state.get("notice"):
             lines.append(state["notice"])
         if state.get("feedback"):
-            lines.append("План требует уточнений. Найденное сохранено; обсудите недостающие компоненты с агентом.")
+            lines.append("План требует уточнений. Найденное сохранено; обсудите недостающие компоненты с ассистентом.")
         if state.get("stage") == "booked":
             lines.append("Заказ оформлен в режиме имитации. Деньги не списаны, места не зарезервированы. /orders — состав заказов.")
         if entries:
-            lines.append("Откройте детали или выберите вариант. Вопрос агенту можно написать обычным сообщением.")
+            lines.append("Откройте детали или выберите вариант. Вопрос ассистенту можно написать обычным сообщением.")
         else:
             lines.append(answer if kind == "p" else "В сохранённом плане пока нет таких предложений.")
         await self.send(chat_id, "\n\n".join(line for line in lines if line))
@@ -482,8 +482,8 @@ class TelegramBot:
             buttons.insert(0, [self.button("Собрать полный план", "extend")])
             buttons.insert(1, [self.button("Подобрать отели", "search:stays"), self.button("Найти билеты", "search:transport")])
         if state.get("plan_answer"):
-            buttons.append([self.button("Объяснение агента", "explain")])
-        await self.send(chat_id, "Продолжим? Напишите вопрос или новые пожелания агенту.", buttons)
+            buttons.append([self.button("Объяснение ассистента", "explain")])
+        await self.send(chat_id, "Продолжим? Напишите вопрос или новые пожелания ассистенту.", buttons)
 
     async def search(self, api: httpx.AsyncClient, chat_id: int, trip_id: str, state: dict, text: str) -> dict | None:
         await self.send(chat_id, "Запрос принят. Подбираю варианты…")
@@ -652,22 +652,22 @@ class TelegramBot:
             await self.show(chat_id, trip_id, state, {"plan": "p", "hotels": "h", "tickets": "t"}[command])
             return
         if command in ("edit", "back") and state.get("autonomous"):
-            await self.send(chat_id, "Напишите, что изменить: даты, бюджет, отель, билеты или программу. Агент обновит зависимые части плана; остальные сохранит.", self.navigation(trip_id, state))
+            await self.send(chat_id, "Напишите, что изменить: даты, бюджет, отель, билеты или программу. Ассистент обновит зависимые части плана; остальные сохранит.", self.navigation(trip_id, state))
             return
         if command == "history" or command.startswith("history:"):
             messages = state.get("messages", [])
             if not messages:
-                await self.send(chat_id, "Переписка пока пуста. Напишите агенту пожелания к поездке.")
+                await self.send(chat_id, "Переписка пока пуста. Напишите ассистенту пожелания к поездке.")
             end = int(command[8:]) if command.startswith("history:") and command[8:].isdigit() else len(messages)
             end = min(end, len(messages))
             for message in messages[max(0, end - 5):end]:
-                await self.send(chat_id, ("Вы" if message["role"] == "user" else "Агент") + ":\n" + message["text"])
+                await self.send(chat_id, ("Вы" if message["role"] == "user" else "Ассистент") + ":\n" + message["text"])
             buttons = []
             if end > 5:
                 buttons.append([self.button("← Ранее", f"history:{end - 5}")])
             if end < len(messages):
                 buttons.append([self.button("Позднее →", f"history:{min(len(messages), end + 5)}")])
-            await self.send(chat_id, "Переписка сохранена. Напишите агенту, чтобы продолжить.", buttons + self.navigation(trip_id, state))
+            await self.send(chat_id, "Переписка сохранена. Напишите ассистенту, чтобы продолжить.", buttons + self.navigation(trip_id, state))
             return
         if command == "map":
             option = next((o for o in state.get("options", []) if o["id"] == state.get("selected")), None)
@@ -739,10 +739,10 @@ class TelegramBot:
                 return
             option = next((o for o in state["options"] if o["id"] == state["selected"]), None)
             if not option or not option.get("transport") or not option.get("stay"):
-                await self.send(chat_id, "Вариант пока неполный. Попросите агента дополнить поездку.")
+                await self.send(chat_id, "Вариант пока неполный. Попросите ассистента дополнить поездку.")
                 return
             if not checkout_available(option, state):
-                await self.send(chat_id, "Котировки устарели или не подтверждены для этой версии плана. Попросите агента обновить поиск перед оформлением.")
+                await self.send(chat_id, "Котировки устарели или не подтверждены для этой версии плана. Попросите ассистента обновить поиск перед оформлением.")
                 return
             option_index = state["options"].index(option)
             await self.send(chat_id, package_text(option, state, detailed=True))

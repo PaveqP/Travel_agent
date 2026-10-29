@@ -148,7 +148,7 @@ test("planning feedback has a user-facing explanation without exposing internal 
   assert.match(feedbackText({ code: "no_transport" }), /билеты/);
   assert.equal(
     feedbackText({ code: "new_code", detail: "internal task" }),
-    "Часть поездки требует уточнения с агентом.",
+    "Часть поездки требует уточнения с ассистентом.",
   );
 });
 test("provider links cannot execute scripts or carry credentials", () => {
