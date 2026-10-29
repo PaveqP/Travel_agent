@@ -312,9 +312,7 @@ test("a hotel-only search keeps offer comparison and selects its associated pack
   const panel = page.getByRole("complementary", { name: "Варианты поездки" });
   await panel.getByRole("heading", { name: "Отели", exact: true }).waitFor();
   assert.equal(await page.locator(".chat-tour-card").count(), 0);
-  await panel.getByRole("combobox", { name: "Сортировка по цене" }).selectOption("desc");
-  assert.deepEqual(await panel.locator(".panel-offer h3").allTextContents(), ["Морской парк", "Солнечный День"]);
-  await panel.getByRole("combobox", { name: "Сортировка по цене" }).selectOption("asc");
+  assert.equal(await panel.getByRole("combobox").count(), 0);
   assert.deepEqual(await panel.locator(".panel-offer h3").allTextContents(), ["Солнечный День", "Морской парк"]);
   await panel.getByRole("button", { name: /Сравнить · 2/ }).click();
   await panel.getByRole("group", { name: "Сравнение вариантов" }).waitFor();
@@ -334,7 +332,7 @@ test("offer cards only select permitted choices and use assistant labels", async
   const panel = page.getByRole("complementary", { name: "Варианты поездки" });
   await panel.waitFor();
   await page.getByRole("button", { name: "Диалог с ассистентом", exact: true }).waitFor();
-  assert.equal(await panel.getByRole("option", { name: "Как предложил ассистент", exact: true }).count(), 1);
+  assert.equal(await panel.getByRole("combobox").count(), 0);
   assert.equal(await page.getByRole("button", { name: /Обсудить (выбор|вариант)/ }).count(), 0);
   assert.equal(await panel.getByRole("button", { name: "Обсудить", exact: true }).count(), 0);
   assert.equal(await panel.locator(".panel-offer").filter({ hasText: "Устаревший тариф" }).getByRole("button", { name: "Выбрать вариант", exact: true }).count(), 0);
@@ -345,31 +343,20 @@ test("offer cards only select permitted choices and use assistant labels", async
   assert.equal(await page.locator("textarea").inputValue(), "");
 });
 
-test("price ranking works in every tour tab and selecting a ranked tour keeps its details", async (t) => {
-  const state = offersState();
-  state.options[0].transport = { ...state.options[0].transport, price: { amount: "30000", currency: "RUB", basis: "party" } };
-  state.options[0].days = [
-    { date: "2026-11-18", candidates: [{ id: "paid", name: "Экскурсия", price: { amount: "2000", currency: "RUB", basis: "person" } }, { id: "free", name: "Прогулка", price: { amount: "0", currency: "RUB", basis: "person" } }, { id: "unknown", name: "Музей" }] },
-    { date: "2026-11-19", candidates: [{ id: "next-day", name: "Следующий день" }] },
-  ];
-  const { page, trips } = await openSession(t, { state });
+test("selected tour tabs show its details without sorting or a tour picker", async (t) => {
+  const { page, trips } = await openSession(t, { state: offersState() });
   const panel = page.getByRole("complementary", { name: "Варианты поездки" });
-  const sorting = panel.getByRole("combobox", { name: "Сортировка по цене" });
-  const picker = panel.getByRole("combobox", { name: "Тур для просмотра" });
   await page.getByRole("button", { name: "Открыть тур 1: Солнечный День", exact: true }).click();
-  await sorting.selectOption("asc");
-  assert.deepEqual(await picker.locator("option").evaluateAll((rows) => rows.map((row) => row.value)), ["option-1", "option-0"]);
-  assert.equal(trips.get("existing").selected, "option-0");
-  await panel.getByRole("button", { name: "Отель", exact: true }).click();
-  assert.deepEqual(await picker.locator("option").evaluateAll((rows) => rows.map((row) => row.value)), ["option-0", "option-1"]);
-  await sorting.selectOption("desc");
-  assert.deepEqual(await picker.locator("option").evaluateAll((rows) => rows.map((row) => row.value)), ["option-1", "option-0"]);
-  await panel.getByRole("button", { name: "Программа", exact: true }).click();
-  await sorting.selectOption("asc");
-  assert.deepEqual(await panel.locator(".day-item").first().locator(".activity strong").allTextContents(), ["Прогулка", "Экскурсия", "Музей"]);
-  assert.equal(await panel.locator(".day-item").last().locator(".activity strong").textContent(), "Следующий день");
-  await picker.selectOption("option-1");
+  for (const tab of ["Билеты", "Отель", "Программа"]) {
+    await panel.getByRole("button", { name: tab, exact: true }).click();
+    assert.equal(await panel.getByRole("combobox").count(), 0);
+    await panel.locator(".tour-detail-summary").getByText("Солнечный День", { exact: true }).waitFor();
+  }
   await panel.getByText("Прогулка у моря", { exact: true }).waitFor();
+  assert.equal(trips.get("existing").selected, "option-0");
+  await page.getByRole("button", { name: "Открыть тур 2: Морской парк", exact: true }).click();
+  await panel.locator(".tour-detail-summary").getByText("Морской парк", { exact: true }).waitFor();
+  assert.equal(await panel.getByRole("combobox").count(), 0);
   assert.equal(trips.get("existing").selected, "option-1");
 });
 

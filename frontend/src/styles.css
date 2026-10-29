@@ -3443,12 +3443,6 @@ hr {
 .options-resize-handle::after { content: ""; position: absolute; width: 3px; height: 42px; border-radius: 3px; top: 50%; left: 3px; background: #c5d1e1; transition: background 150ms; }
 .options-resize-handle:hover::after, .options-resize-handle:focus-visible::after { background: var(--blue); }
 .options-resize-handle:focus-visible { outline: 2px solid var(--blue); outline-offset: -3px; }
-.price-sort { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 11px; margin-bottom: 14px; }
-.price-sort select, .tour-variant-picker select { min-width: 0; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--ink); font: inherit; padding: 9px 7px; }
-.price-sort select { flex: 1; }
-.tour-variant-picker { display: flex; flex-direction: column; gap: 6px; font-size: 11px; color: var(--muted); margin-bottom: 20px; }
-.tour-variant-picker select { width: 100%; font-size: 12px; }
-.activity-price { display: block; margin: 7px 0; font-size: 11px; color: var(--muted); }
 .glass-welcome { display: flex; flex-direction: column; align-items: center; padding: 14px 0 0; }
 .glass-scene { position: relative; display: grid; place-items: center; width: min(100%, 520px); height: 330px; isolation: isolate; }
 .glass-atmosphere { position: absolute; inset: 40px 45px; z-index: -1; pointer-events: none; }
