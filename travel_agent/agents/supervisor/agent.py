@@ -170,6 +170,9 @@ def llm_planner(model: BaseChatModel, prompt: str):
                 decision = TurnPlan.model_validate(await structured.ainvoke(messages))
                 logging.getLogger(__name__).info('planner action=%s focus=%s patch_fields=%s', decision.action, decision.focus,
                     sorted(decision.patch.model_dump(exclude_none=True, exclude={'clear'})))
+                if not attempt and decision.action in ('answer', 'chat') and not state.get('options') and state.get('results') and not state.get('focus'):
+                    messages.insert(2, HumanMessage(content=json.dumps({'plan_review': {'unassembled_trip': True}})))
+                    continue
                 if decision.action == 'plan':
                     trip, _ = apply_delta(TripConstraints.model_validate(state.get('constraints', {})), decision.patch)
                     focus = decision.focus if decision.focus != 'trip' else None

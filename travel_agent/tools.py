@@ -392,7 +392,7 @@ def build_tools(
         started = time.monotonic()
         status = "ok"
         try:
-            async with asyncio.timeout((8 if name in ("geocode_destination", "weather", "events", "yandex_schedule") else 15) if autonomous else 12 if method == "build_route" else 65 if provider in ("tutu", "2gis") else 40):
+            async with asyncio.timeout((32 if method == 'search_avia' else 8 if name in ("geocode_destination", "weather", "events", "yandex_schedule") else 15) if autonomous else 12 if method == "build_route" else 65 if provider in ("tutu", "2gis") else 40):
                 response = await operation()
             if isinstance(response, httpx.Response):
                 response.raise_for_status()
@@ -402,7 +402,7 @@ def build_tools(
                 data = response.get("data", {})
             if status != "ok":
                 warnings.append(provider + ":" + status)
-                return {"status": status}
+                return {"status": status, **({'reason': response['reason']} if response.get('reason') else {})}
             if isinstance(data, dict) and (
                 data.get("error") or data.get("success") is False
             ):

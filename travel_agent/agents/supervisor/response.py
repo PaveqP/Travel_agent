@@ -181,10 +181,10 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
         benefits = benefits or ['совместимые даты дороги и проживания']
         tradeoffs = tradeoffs or ['питание, местные переезды и активности оплачиваются отдельно']
         lines.append(f"- **Вариант {index}: {name}** · {start}–{end} · {journey['name']} · билеты и проживание **{amount} ₽ за группу**.\n  **Плюсы:** {'; '.join(benefits[:2])}. **Минусы:** {'; '.join(tradeoffs[:2])}.")
-    eligible = [o for o in complete if trip.get('baggage') != 'required' or o['transport'].get('baggage_included') is True]
+    eligible = [o for o in complete if trip.get('baggage') != 'required' or o['transport'].get('transport_mode') == 'rail' or o['transport'].get('baggage_included') is True]
     recommended = min(eligible or complete, key=lambda o: Decimal(o['budget']['known_subtotal']))
     index = options.index(recommended) + 1
-    criterion = 'С требуемым багажом' if trip.get('baggage') == 'required' and eligible else 'По цене'
+    criterion = 'С требуемым багажом' if trip.get('baggage') == 'required' and eligible and recommended['transport'].get('transport_mode') != 'rail' else 'По цене'
     lines.append(f"\n**{criterion} рекомендую вариант {index}**: у него минимальная известная стоимость по этому критерию. Питание, местные переезды и платные активности в указанную сумму не входят.")
     selected = next((o for o in options if o["id"] == state.get("selected")), options[0])
     journey = selected.get("transport") or {}
@@ -233,10 +233,10 @@ def render_components(state: dict) -> str:
         if candidate.get('baggage_included') is True:
             baggage = conditions.get('baggage') or {}
             facts.append(f"багаж {baggage['kg']} кг" if isinstance(baggage, dict) and baggage.get('kg') is not None else 'багаж включён')
-        elif role == 'transport':
+        elif role == 'transport' and candidate.get('transport_mode') != 'rail':
             facts.append('багаж не включён' if candidate.get('baggage_included') is False else 'багаж не подтверждён')
         if candidate.get('transfers') == 0:
-            facts.append('прямой рейс')
+            facts.append('без пересадок' if candidate.get('transport_mode') == 'rail' else 'прямой рейс')
         if candidate.get('duration_minutes'):
             facts.append(f"дорога туда {candidate['duration_minutes']} мин")
         if candidate.get('departure_at'):
@@ -266,7 +266,7 @@ def render_components(state: dict) -> str:
                     difference = f"{Decimal(price['amount']) - Decimal(cheaper['price']['amount']):,.0f}".replace(',', ' ')
                     lines.append(f"Вариант {cards.index(cheaper) + 1} дешевле на {difference} {price['currency']} при той же основе цены; сопоставьте подтверждённые условия и время отправления перед выбором.")
     if not role:
-        next_step = 'Можно проверить другие даты в согласованном окне или обсудить другой город отправления.' if 'no_transport' in codes else 'Можно продолжить подбор проживания на даты прибытия и обратного отправления.'
+        next_step = 'Условия поездки сохранены. Можно повторить проверку билетов на те же даты; отели и программу заново выбирать не нужно.' if 'no_transport' in codes else 'Можно продолжить подбор проживания на даты прибытия и обратного отправления.'
         lines.append('\n' + next_step + ' После проверки недостающих компонентов соберу варианты туров для сравнения.')
     else:
         lines.append("\nВыберите вариант или напишите, что изменить." if cards else "\nПожелания к поездке сохранены. Можно изменить даты, бюджет или предпочтения.")

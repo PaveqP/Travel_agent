@@ -65,7 +65,7 @@ def build_tools(
                         result = await mcp("search_flights", "tutu", "search_avia", {
                             "origin": trip.origin, "destination": destination or trip.destination, "departure_date": str(start),
                             "return_date": str(end), "adults": trip.adults, "page_size": 10,
-                            "sort": sort, "service_class": service_class, "page": page,
+                            "sort": sort, "service_class": service_class, "page": page, "view": "full",
                             "direct_only": trip.direct_only or bool(direct_only),
                             **({'carriers': carriers} if carriers is not None else {}),
                             **({'flight_numbers': flight_numbers} if flight_numbers is not None else {})})
@@ -85,7 +85,8 @@ def build_tools(
             first = {"status": "timeout"}
         return {"status": ("partial" if first["status"] == "timeout" else "ok") if found else first["status"],
                 "candidates": list(found.values())[:20], "total_candidates": len(found),
-                "searched_dates": searched, "exhaustive": False, "search_limit": 6}
+                "searched_dates": searched, "exhaustive": False, "search_limit": 6,
+                **({'reason': first['reason']} if first.get('reason') else {})}
 
     @tool
     async def search_trains(mode: Literal["rail", "etrain"] = "rail", destination: str | None = None,

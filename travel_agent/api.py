@@ -38,7 +38,7 @@ from travel_agent.schemas import (
 from datetime import datetime, timezone
 
 
-AUTONOMOUS_TURN_TIMEOUT_SECONDS = 120
+AUTONOMOUS_TURN_TIMEOUT_SECONDS = 300
 
 def create_app(
     graph=None,
@@ -412,14 +412,17 @@ def create_app(
                 if not autonomous:
                     raise HTTPException(504, 'Turn deadline exceeded; read current trip state before retrying') from None
                 from travel_agent.agents.supervisor.response import component_cards, render_components, render_options
+                from travel_agent.planning import evaluate
 
                 result = dict((await app.state.graph.aget_state(config)).values)
+                assembled = evaluate(result, final=True) if result.get('constraints') and result.get('revision') else {}
+                result.update(assembled)
                 cards = result.get('cards', [])
                 if not result.get('options'):
                     roles = [result['focus']] if result.get('focus') in ('transport', 'stays') else ['transport', 'stays']
                     cards = [card for role in roles for card in component_cards(result, role)]
                 answer = render_options(result) if result.get('options') else render_components({**result, 'cards': cards})
-                update = {'status': 'partial', 'answer': answer, 'plan_answer': answer, 'cards': cards,
+                update = {**assembled, 'status': 'partial', 'answer': answer, 'plan_answer': answer, 'cards': cards,
                           'messages': [AIMessage(content=answer)], 'tasks': [], 'repair_decision': False, 'route': 'finish'}
                 await app.state.graph.aupdate_state(config, update, as_node='finish')
                 result = dict((await app.state.graph.aget_state(config)).values)
@@ -446,7 +449,7 @@ def create_app(
                 if revision != snapshot.values.get("revision", 0):
                     raise HTTPException(409, "Stale revision")
                 try:
-                    async with asyncio.timeout(150):
+                    async with asyncio.timeout(AUTONOMOUS_TURN_TIMEOUT_SECONDS if autonomous else 150):
                         result = await app.state.graph.ainvoke({"requested_choice": option_id, "calls": 0, "messages": [HumanMessage(content="/select " + option_id)]}, config)
                 except TimeoutError:
                     raise HTTPException(504, "Stage deadline exceeded; read current trip state") from None

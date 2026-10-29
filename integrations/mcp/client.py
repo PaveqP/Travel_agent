@@ -102,13 +102,16 @@ async def _runtime_attempt(role: str, provider: str, name: str, args: dict, env:
     jsonschema.validate(args, selected.inputSchema)
     result = await session.call_tool(name, args)
     if result.isError:
-     return {'status': 'schema_error'}
+     reason = ' '.join(item.text for item in result.content if item.type == 'text')[:600]
+     return {'status': 'schema_error', 'reason': reason}
     from integrations.outcomes import payload
     data = payload(result.model_dump(mode='json'))
     if not isinstance(data, dict):
      return {'status': 'schema_error'}
     if data.get('error'):
-     return {'status': 'no_availability' if str(data['error'].get('code') if isinstance(data['error'], dict) else '') == '2001' else 'schema_error'}
+     error = data['error']
+     return {'status': 'no_availability' if str(error.get('code') if isinstance(error, dict) else '') == '2001' else 'schema_error',
+             'reason': str(error.get('message') or error.get('code') or 'Provider rejected request')[:600] if isinstance(error, dict) else str(error)[:600]}
     return {'status': 'ok', 'data': data}
  except ExceptionGroup as group:
   expected, unexpected = group.split((TimeoutError, httpx.RequestError, httpx.HTTPStatusError, McpError, jsonschema.ValidationError, ValueError))
@@ -121,7 +124,9 @@ async def _runtime_attempt(role: str, provider: str, name: str, args: dict, env:
   return {'status': {401: 'unauthorized', 403: 'forbidden', 429: 'rate_limited'}.get(exc.response.status_code, 'network_error')}
  except (httpx.RequestError, McpError):
   return {'status': 'network_error'}
- except (jsonschema.ValidationError, ValueError):
+ except jsonschema.ValidationError as exc:
+  return {'status': 'schema_error', 'reason': 'Invalid tool arguments: ' + '.'.join(map(str, exc.absolute_path))}
+ except ValueError:
   return {'status': 'schema_error'}
 
 

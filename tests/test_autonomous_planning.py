@@ -47,7 +47,7 @@ class PlanningTests(unittest.IsolatedAsyncioTestCase):
         started, gate = set(), asyncio.Event()
         async def run(role, trip, revision, goal, previous):
             started.add(role)
-            if len(started) == 3:
+            if {'transport', 'experience'} <= started:
                 gate.set()
             await asyncio.wait_for(gate.wait(), 1)
             return result(role, trip, revision)

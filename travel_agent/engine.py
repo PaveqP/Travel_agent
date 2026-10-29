@@ -155,7 +155,7 @@ def offer_card(c: Candidate, trip: TripConstraints, now: datetime | None = None)
         warnings.append('outside_search_window')
     if c.role == 'transport' and trip.direct_only and c.transfers != 0:
         warnings.append('direct_flight_unverified')
-    if c.role == 'transport' and trip.baggage == 'required' and c.baggage_included is not True:
+    if c.role == 'transport' and c.transport_mode == 'avia' and trip.baggage == 'required' and c.baggage_included is not True:
         warnings.append('required_baggage_unverified')
     if c.price and trip.party_budget:
         amount = c.price.amount * (trip.adults or 1) if c.price.basis in ('person', 'ticket') else c.price.amount
@@ -313,7 +313,7 @@ def simulate_purchase(state: dict, request: BookingRequest) -> dict:
     if state.get('autonomous') and transport_matches(option.transport, trip, datetime.now(timezone.utc)):
         trip = trip.model_copy(update={'start': option.transport.start, 'end': option.transport.end,
             'check_in': option.stay.start, 'check_out': option.stay.end})
-    if trip.baggage == 'required' and option.transport.baggage_included is not True:
+    if option.transport.transport_mode == 'avia' and trip.baggage == 'required' and option.transport.baggage_included is not True:
         raise ValueError('Required baggage is unverified')
     if trip.ski_equipment == 'own' and option.transport.sports_equipment_included is not True:
         raise ValueError('Sports equipment is unverified')
@@ -418,7 +418,7 @@ def compose_packages(trip: TripConstraints, results: dict, revision: int) -> tup
             count = sum(d.mountain for d in planned)
             if count != trip.mountain_days:
                 option.warnings.append(f'Горных дней {count}, требуется {trip.mountain_days}')
-        if trip.baggage == 'required' and journey.baggage_included is not True:
+        if journey.transport_mode == 'avia' and trip.baggage == 'required' and journey.baggage_included is not True:
             option.warnings.append('Требуемый багаж не подтверждён; доплата неизвестна')
         if trip.ski_equipment == 'own' and journey.sports_equipment_included is not True:
             option.warnings.append('Перевозка своего спортивного снаряжения и доплата не подтверждены')
@@ -426,11 +426,12 @@ def compose_packages(trip: TripConstraints, results: dict, revision: int) -> tup
     if options and all(not any(d.candidates for d in o.days) for o in options):
         if not any(f.code == 'no_day_plan' for f in feedback):
             feedback.append(PlanFeedback(role='experience', code='empty_program', detail='Программа не содержит подходящих посещений на доступные дни поездки.'))
-    if trip.baggage == 'required' and transport and not any(c.baggage_included is True for c in transport):
+    flights = [c for c in transport if c.transport_mode == 'avia']
+    if trip.baggage == 'required' and flights and not any(c.baggage_included is True for c in flights):
         feedback.append(PlanFeedback(role='transport', code='unverified_baggage', detail='Проверь тарифные варианты и условия багажа у найденных перелётов; нужен тариф с зарегистрированным багажом.'))
     preferred = {ident: i for i, ident in enumerate(parsed['stays'].selected_ids)} if 'stays' in parsed else {}
     transport_priority = {ident: i for i, ident in enumerate(parsed['transport'].selected_ids)} if 'transport' in parsed else {}
-    options.sort(key=lambda o: (trip.baggage == 'required' and o.transport.baggage_included is not True, bool(trip.party_budget and o.budget.known_subtotal > trip.party_budget), transport_priority.get(o.transport.id, 100), preferred.get(o.stay.id, 100), o.budget.known_subtotal))
+    options.sort(key=lambda o: (trip.baggage == 'required' and o.transport.transport_mode == 'avia' and o.transport.baggage_included is not True, bool(trip.party_budget and o.budget.known_subtotal > trip.party_budget), transport_priority.get(o.transport.id, 100), preferred.get(o.stay.id, 100), o.budget.known_subtotal))
     selected = []
     seen = set()
     for option in options:
