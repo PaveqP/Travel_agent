@@ -18,6 +18,23 @@ backend и PostgreSQL; оформление заказа и оплата вып�
 ```bash
 git clone https://github.com/ostrovok-hackathon-2026/flinters.git
 cd flinters
+```
+
+**Для жюри:** в корне находится `secrets.env.age` с зашифрованной рабочей
+конфигурацией. Установите [age](https://github.com/FiloSottile/age#installation)
+и расшифруйте её закрытым ключом организаторов:
+
+```bash
+age --decrypt -i /path/to/organizers-age-key.txt -o .env secrets.env.age
+```
+
+Замените путь на расположение закрытого ключа организаторов. После расшифровки
+перейдите к `docker compose up --build`; дополнительные ключи заполнять не нужно.
+Существующий рабочий `.env` сохраните перед расшифровкой.
+
+**Для самостоятельной настройки без закрытого ключа организаторов:**
+
+```bash
 cp .env.example .env
 ```
 
@@ -78,10 +95,14 @@ Dockerfile используют multi-stage build. Процессы backend, ngi
 работают без root. В Compose явно указана `platform: linux/amd64`, в том числе
 для сборки на Apple Silicon.
 
+Рабочая конфигурация для жюри: провайдер **OpenRouter**, модель `deepseek/deepseek-v4.1-flash-1017`.
+
 ## Переменные окружения
 
 Конфигурация передаётся backend через `env_file: .env`; frontend не получает
-ключей. Настоящие `.env` и секреты исключены из Git и Docker-контекстов.
+ключей. Открытый `.env` исключён из Git и Docker-контекстов. В Git хранится
+только зашифрованный `secrets.env.age`, созданный по
+[инструкции организаторов](https://docs.ostrovok.tech/s/b9e6ec5e-5ad6-4091-9c85-a48eee9b21cc/doc/shifrovanie-sekretov-klyuchej-6Qhc4gJOPZ).
 
 | Переменная | Значение по умолчанию | Для чего нужна |
 |---|---|---|
@@ -108,8 +129,11 @@ Dockerfile используют multi-stage build. Процессы backend, ngi
 дополнительного источника или его сбой может дать частичный результат; сервис
 не заменяет неизвестные данные выдуманными ценами.
 
-Шаблон содержит только настройки приложения — [`.env.example`](.env.example).
-Ключи исследовательских адаптеров не нужны для запуска.
+В [`.env.example`](.env.example) все значения пустые. Значения по умолчанию
+из таблицы выше задаются приложением и Compose. В шаблоне также перечислены
+существующие исследовательские настройки `TRAVELPAYOUTS_MARKER`, `LITEAPI_API_KEY`,
+`ORS_API_KEY` и совместимое имя `TAVILY`; исследовательские адаптеры для запуска
+не нужны. `TAVILY` используется как ключ Tavily при пустом `TAVILY_API_KEY`.
 [Подключение источников](docs/API_KEYS_SETUP.md) и
 [аудит интеграций](docs/INTEGRATION_AUDIT.md).
 
@@ -235,6 +259,14 @@ PostgreSQL, backend и frontend имеют healthcheck и зависимости
 - Проверить чистый запуск по инструкции выше с действующими LLM-ключами.
   Скрипты `run_all.py` и live smoke не нужны для развёртывания и могут расходовать
   квоты; платные проверки запускаются отдельно с явным бюджетом.
+
+Если изменился рабочий `.env`, обновите зашифрованный файл перед отправкой:
+
+```bash
+age -r age1932fu7f70rwyfhaxflyfszz4gf6avxwc95wc0yjwm6zns9tspycqpgdnc0 -o secrets.env.age .env
+```
+
+Используйте `-o` и бинарный формат; открытый `.env` в Git не добавляйте.
 
 Команды для тега и чек-лист записи видео — в
 [инструкции по сдаче](docs/SUBMISSION.md).
