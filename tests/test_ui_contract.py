@@ -44,7 +44,7 @@ class PresentationTests(unittest.TestCase):
             config = {'configurable': {'thread_id': hashlib.sha256(b'alice').hexdigest() + ':' + trip_id}}
             client.portal.call(graph.aupdate_state, config, saved)
             shown = client.get('/trips/' + trip_id).json()
-            self.assertLess(len(shown['answer']), 1200)
+            self.assertLess(len(shown['answer']), 3000)
             self.assertNotIn('timeout', shown['answer'])
             self.assertNotIn('Не удалось', shown['answer'])
             self.assertTrue(any(d['candidates'] for d in shown['options'][0]['days']))

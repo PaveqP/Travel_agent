@@ -681,6 +681,79 @@ class SessionReliabilityTests(unittest.IsolatedAsyncioTestCase):
 
 
 class ScopeAndLatencyTests(unittest.IsolatedAsyncioTestCase):
+    async def test_full_tour_replaces_cached_transport_without_researching_compatible_parts(self):
+        graph, runners = PlanningTests().graph([TurnPlan(action='plan', focus='trip')])
+        saved = {role: result(role, TRIP, 1).model_dump(mode='json') for role in ROLES}
+        cached = saved['transport']['candidates'][0]
+        cached.update(origin='MOW', adults=1, arrival_at=None)
+        cached['source']['evidence'] = 'cached'
+        saved['transport']['candidates'] = [cached]
+        state = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json'), 'results': saved,
+            'focus': 'stays', 'messages': [HumanMessage(content='Собери мне полный тур по наилучшим условиям и объясни почему стоит выбрать его')]},
+            {'configurable': {'thread_id': 'full-tour-from-cached'}})
+        self.assertIsNone(state['focus'])
+        self.assertEqual(state['status'], 'ready')
+        self.assertGreater(len(state['options']), 1)
+        self.assertTrue(all(o['transport']['source']['evidence'] == 'live' and o['stay'] and any(d['candidates'] for d in o['days']) for o in state['options']))
+        self.assertEqual([runners[r].await_count for r in ROLES], [1, 0, 0])
+        self.assertEqual(state['search_round'], 0)
+        self.assertEqual(state['results']['stays'], saved['stays'])
+        self.assertEqual(state['results']['experience'], saved['experience'])
+
+    async def test_unavailable_transport_does_not_present_hotels_as_finished_tours(self):
+        runners = {role: AsyncMock(side_effect=lambda trip, revision, goal, previous, role=role: result(role, trip, revision)) for role in ROLES}
+        async def cached_only(trip, revision, goal, previous):
+            row = result('transport', trip, revision)
+            for candidate in row.candidates:
+                candidate.source.evidence = 'cached'
+                candidate.origin, candidate.adults, candidate.arrival_at = 'MOW', 1, None
+            return row
+        runners['transport'].side_effect = cached_only
+        graph, _ = PlanningTests().graph([TurnPlan(action='plan'), TurnPlan(action='plan')], runners)
+        state = await graph.ainvoke({'constraints': TRIP.model_dump(mode='json')}, {'configurable': {'thread_id': 'no-fake-tour'}})
+        self.assertEqual(state['options'], [])
+        self.assertEqual(state['status'], 'partial')
+        self.assertIn('Тур пока не собран', state['answer'])
+        self.assertIn('проезд туда-обратно', state['answer'])
+        self.assertIn('отели и места сохранены', state['answer'])
+        self.assertNotIn('Выберите вариант', state['answer'])
+        self.assertEqual([runners[r].await_count for r in ROLES], [2, 1, 1])
+
+    def test_every_tour_explains_price_travel_and_hotel_tradeoffs(self):
+        from travel_agent.agents.supervisor.response import render_options
+        rows = {role: result(role, TRIP, 1).model_dump(mode='json') for role in ROLES}
+        options, _ = compose_packages(TRIP, rows, 1)
+        first, second = [o.model_dump(mode='json') for o in options[:2]]
+        first['budget']['known_subtotal'], second['budget']['known_subtotal'] = '70000', '90000'
+        first['transport']['duration_minutes'], second['transport']['duration_minutes'] = 180, 120
+        first['stay']['rating'], second['stay']['rating'] = '8', '9'
+        state = {'constraints': TRIP.model_dump(mode='json'), 'options': [second, first], 'selected': second['id']}
+        answer = render_options(state)
+        self.assertEqual(answer.count('**Плюсы:**'), 2)
+        self.assertEqual(answer.count('**Минусы:**'), 2)
+        self.assertIn('на 20 000 ₽ дороже', answer)
+        self.assertIn('на 60 мин дольше', answer)
+        self.assertIn('оценка жилья 9/10', answer)
+        self.assertIn('По цене рекомендую вариант 2', answer)
+        self.assertIn('платные активности в указанную сумму не входят', answer)
+        self.assertEqual(state['options'][0]['budget']['known_subtotal'], '90000')
+        state['constraints']['baggage'] = 'required'
+        first['transport']['baggage_included'], second['transport']['baggage_included'] = None, True
+        self.assertIn('С требуемым багажом рекомендую вариант 1', render_options(state))
+
+    async def test_single_task_does_not_change_planner_validation_to_hotel_only(self):
+        from unittest.mock import Mock
+        from travel_agent.agents.supervisor.agent import llm_planner
+        structured = Mock(ainvoke=AsyncMock(side_effect=[
+            TurnPlan(action='plan', tasks=[task('stays')]),
+            TurnPlan(action='clarify', reply='Из какого города поедете?')]))
+        model = Mock(with_structured_output=Mock(return_value=structured))
+        decision = await llm_planner(model, 'Offline planner')({'constraints': TRIP.model_copy(update={'origin': None}).model_dump(mode='json')})
+        self.assertEqual(decision.action, 'clarify')
+        self.assertEqual(structured.ainvoke.await_count, 2)
+        review = json.loads(structured.ainvoke.await_args.args[0][2].content)
+        self.assertIn('origin', review['plan_review']['unresolved_fields'])
+
     async def test_hotel_only_http_never_requests_departure_or_runs_other_roles(self):
         from unittest.mock import Mock
         from travel_agent.agents.supervisor.agent import llm_planner
@@ -984,7 +1057,7 @@ class TurnDeadlineTests(unittest.IsolatedAsyncioTestCase):
             self.assertTrue(partial['options'])
             self.assertIn('Туры под ключ', partial['answer'])
             self.assertNotIn('лимит', partial['answer'].lower())
-            self.assertLess(len(partial['answer']), 1200)
+            self.assertLess(len(partial['answer']), 3000)
             self.assertTrue(cancelled.is_set())
             restored = (await client.get(f'/trips/{ident}')).json()
             self.assertEqual(restored['options'], partial['options'])

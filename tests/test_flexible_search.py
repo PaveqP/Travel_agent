@@ -113,6 +113,25 @@ class FlexibleSearchTests(unittest.IsolatedAsyncioTestCase):
     def tools(self, trip=TRIP, role='transport', env=None):
         return {t.name: t for t in build_tools(role, trip, 1, self.client, env or {}, self.evidence, self.warnings, self.counts)}
 
+    async def test_month_schedule_uses_a_real_date_and_rail_can_search_another_pair(self):
+        from travel_agent.agents.transport.tools import build_tools as transport_tools
+        trip = TRIP.model_copy(update={'start': None, 'end': None, 'travel_month': '2027-02', 'duration_days': 7})
+        mcp, rest = AsyncMock(return_value={'status': 'empty', 'context': {}}), AsyncMock()
+        tools = {t.name: t for t in transport_tools(trip, self.client, {}, self.evidence, mcp, rest, autonomous=True)}
+        await tools['search_trains'].ainvoke({'departure_date': '2027-02-08', 'return_date': '2027-02-14'})
+        self.assertEqual({call.args[3]['departure_date'] for call in mcp.await_args_list}, {'2027-02-08', '2027-02-14'})
+        self.assertEqual({call.args[3]['origin'] for call in mcp.await_args_list}, {trip.origin, trip.destination})
+        mcp.reset_mock()
+        forbidden = await tools['search_trains'].ainvoke({'departure_date': '2027-02-08', 'return_date': '2027-03-01'})
+        self.assertEqual(forbidden['status'], 'forbidden')
+        mcp.assert_not_awaited()
+        with patch('travel_agent.agents.transport.tools.yandex_rasp.schedule', new=AsyncMock(return_value={})) as schedule:
+            async def fetch(tool, provider, key, callback):
+                return await callback()
+            rest.side_effect = fetch
+            await tools['yandex_schedule'].ainvoke({'origin': 'Тула', 'destination': 'Мурманск', 'transport_type': 'train'})
+        self.assertEqual(schedule.await_args.args[4], '2027-02-01')
+
     async def test_empty_exact_search_probes_neighbors_and_keeps_real_dates(self):
         async def source(role, provider, method, args, env, owned):
             data = flight_data(args)

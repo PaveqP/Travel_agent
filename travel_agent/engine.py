@@ -368,7 +368,7 @@ def compose_packages(trip: TripConstraints, results: dict, revision: int) -> tup
     stays = [c for c in candidates if c.role == 'stays' and c.start and c.end
              and usable(c, trip.model_copy(update={'check_in': c.start, 'check_out': c.end}), now)]
     if not transport:
-        feedback.append(PlanFeedback(role='transport', code='no_transport', detail='Нет совместимого свежего транспорта туда-обратно. Проверь другой разрешённый источник или даты в согласованном окне.'))
+        feedback.append(PlanFeedback(role='transport', code='no_transport', detail='Нет совместимого свежего транспорта туда-обратно. Нужен live-тариф из согласованного города для всей группы, с прибытием и обратным отправлением на подходящие даты. Кэш без прибытия и тарифы из другого города не подходят. Проверь другой разрешённый источник или другую пару дат в согласованном окне; повтор того же кэша не исправляет пробел.'))
     if not stays:
         feedback.append(PlanFeedback(role='stays', code='no_stays', detail='Нет свежего проживания с проверенной ценой, районом и составом гостей.'))
     if transport and stays and not any((s.start, s.end) == (item.arrival_at.date(), item.return_departure_at.date()) for item in transport for s in stays):

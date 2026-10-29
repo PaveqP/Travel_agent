@@ -168,6 +168,9 @@ async def prepare(state: TripState, decide, *, reviewed: bool = False) -> dict:
     if focus == 'stays' and revised.stay_start and revised.stay_end and not (revised.start and revised.end):
         revised = TripConstraints.model_validate({**revised.model_dump(), 'start': revised.stay_start, 'end': revised.stay_end})
     affected.update(role for role in ('transport', 'stays', 'experience') if role not in state.get('results', {}))
+    if not focus and not search_requirements(revised):
+        _, feedback = compose_packages(revised, state.get('results', {}), state.get('revision', 0))
+        affected.update(item.role for item in feedback)
     required = {dep for task in tasks for dep in task.depends_on if dep not in state.get('results', {})}
     affected.update(required - {t.role for t in tasks})
     for role in sorted(affected - {t.role for t in tasks}):

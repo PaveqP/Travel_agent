@@ -138,6 +138,14 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
         return render_components(state)
     trip = state.get("constraints", {})
     lines = [f"**{trip.get('origin', '')} → {trip.get('destination', 'Россия')}**", ""]
+    complete = [o for o in options if o.get('transport') and o.get('stay')]
+    if not complete:
+        return render_components(state)
+    cheapest = min(Decimal(o['budget']['known_subtotal']) for o in complete)
+    durations = [o['transport']['duration_minutes'] for o in complete if o['transport'].get('duration_minutes')]
+    fastest = min(durations) if durations else None
+    ratings = [Decimal(str(o['stay']['rating'])) for o in complete if o['stay'].get('rating') is not None]
+    highest_rating = max(ratings) if ratings else None
     for index, option in enumerate(options[:5], 1):
         journey, stay = option.get("transport"), option.get("stay")
         if not journey or not stay:
@@ -146,7 +154,38 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
         end = date.fromisoformat(journey["end"]).strftime("%d.%m.%Y")
         amount = f"{Decimal(option['budget']['known_subtotal']):,.0f}".replace(",", " ")
         name = stay["name"] if len(stay["name"]) <= 70 else stay["name"][:67] + "…"
-        lines.append(f"- **Вариант {index}: {name}** · {start}–{end} · билеты и проживание **{amount} ₽ за группу**.")
+        subtotal = Decimal(option['budget']['known_subtotal'])
+        benefits, tradeoffs = [], []
+        if subtotal == cheapest:
+            benefits.append('минимальная цена среди этих туров')
+        else:
+            extra = f"{subtotal - cheapest:,.0f}".replace(',', ' ')
+            tradeoffs.append(f'на {extra} ₽ дороже самого дешёвого')
+        duration = journey.get('duration_minutes')
+        if duration and fastest:
+            if duration == fastest:
+                benefits.append('самая короткая дорога туда среди этих туров')
+            else:
+                tradeoffs.append(f'дорога туда на {duration - fastest} мин дольше самой быстрой')
+        rating = stay.get('rating')
+        if rating is not None:
+            label = f"оценка жилья {rating}/10"
+            if Decimal(str(rating)) == highest_rating:
+                benefits.append(label)
+            else:
+                tradeoffs.append(label + f', у альтернатив до {highest_rating}/10')
+        if journey.get('baggage_included') is True:
+            benefits.append('багаж включён')
+        if trip.get('budget') and subtotal > Decimal(str(trip['budget'])) * (trip.get('adults', 1) if trip.get('budget_basis') == 'person' else 1):
+            tradeoffs.append('билеты и жильё уже превышают бюджет')
+        benefits = benefits or ['совместимые даты дороги и проживания']
+        tradeoffs = tradeoffs or ['питание, местные переезды и активности оплачиваются отдельно']
+        lines.append(f"- **Вариант {index}: {name}** · {start}–{end} · {journey['name']} · билеты и проживание **{amount} ₽ за группу**.\n  **Плюсы:** {'; '.join(benefits[:2])}. **Минусы:** {'; '.join(tradeoffs[:2])}.")
+    eligible = [o for o in complete if trip.get('baggage') != 'required' or o['transport'].get('baggage_included') is True]
+    recommended = min(eligible or complete, key=lambda o: Decimal(o['budget']['known_subtotal']))
+    index = options.index(recommended) + 1
+    criterion = 'С требуемым багажом' if trip.get('baggage') == 'required' and eligible else 'По цене'
+    lines.append(f"\n**{criterion} рекомендую вариант {index}**: у него минимальная известная стоимость по этому критерию. Питание, местные переезды и платные активности в указанную сумму не входят.")
     selected = next((o for o in options if o["id"] == state.get("selected")), options[0])
     journey = selected.get("transport") or {}
     baggage = (journey.get("conditions") or {}).get("baggage") or {}
@@ -162,8 +201,18 @@ def render_options(state: dict, response: UserResponse | None = None) -> str:
 def render_components(state: dict) -> str:
     role = state.get("focus")
     cards = state.get("cards") or (stay_cards(state) if role == "stays" else [])
-    title = "Варианты отелей" if role == "stays" else "Варианты проезда" if role == "transport" else "Подбор поездки"
+    title = "Варианты отелей" if role == "stays" else "Варианты проезда" if role == "transport" else "Тур пока не собран"
     lines = [f"**{title}**", ""]
+    if not role:
+        codes = {item['code'] for item in state.get('feedback', [])}
+        if 'no_transport' in codes:
+            lines.append('Не найден проверенный тариф на проезд туда-обратно на ваши даты и состав группы. Найденные отели и места сохранены, но готового тура с общей ценой пока нет.\n')
+        elif 'no_stays' in codes:
+            lines.append('Пока нет подходящего проживания с проверенной ценой на нужные даты и состав гостей. Найденные компоненты сохранены, но готового тура с общей ценой пока нет.\n')
+        elif 'arrival_stay_mismatch' in codes:
+            lines.append('Даты найденного проживания не совпадают с прибытием и обратным отправлением. Компоненты сохранены, но пока не образуют готовый тур.\n')
+        else:
+            lines.append('Для готового тура нужны совместимые дорога туда-обратно, проживание и программа. Пока доступны отдельные компоненты.\n')
     for index, card in enumerate(cards[:5], 1):
         price = card.get("price")
         basis = {'person': 'на человека', 'ticket': 'за билет', 'party': 'за группу', 'room_stay': 'за проживание'}
@@ -171,7 +220,11 @@ def render_components(state: dict) -> str:
         url = card.get("url")
         name = f"[{card['title']}]({url})" if url else card["title"]
         lines.append(f"- **{index}.** {name}{cost}")
-    lines.append("\nВыберите вариант или напишите, что изменить." if cards else "\nПожелания к поездке сохранены. Можно изменить даты, бюджет или предпочтения.")
+    if not role:
+        next_step = 'Можно проверить другие даты в согласованном окне или обсудить другой город отправления.' if 'no_transport' in codes else 'Можно продолжить подбор проживания на даты прибытия и обратного отправления.'
+        lines.append('\n' + next_step + ' После проверки недостающих компонентов соберу варианты туров для сравнения.')
+    else:
+        lines.append("\nВыберите вариант или напишите, что изменить." if cards else "\nПожелания к поездке сохранены. Можно изменить даты, бюджет или предпочтения.")
     return "\n".join(lines)
 
 

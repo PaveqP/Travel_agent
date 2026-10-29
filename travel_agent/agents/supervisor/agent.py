@@ -158,7 +158,7 @@ def llm_planner(model: BaseChatModel, prompt: str):
             'scenarios': state.get('scenarios', []), 'receipt': state.get('receipt', {}),
             'destination_ideas': DESTINATION_GROUPS if not state.get('options') and not state.get('results') and state.get('constraints', {}).get('destination', 'Россия') == 'Россия' else {},
             'results': {role: {'status': row['status'], 'warnings': row.get('warnings', []),
-                'candidates': [{'id': c['id'], 'name': c['name'], 'start': c.get('start'), 'end': c.get('end'), 'area': c.get('area')} for c in row.get('candidates', [])[:12]]}
+                'candidates': [Candidate.model_validate(c).summary() for c in row.get('candidates', [])[:12]]}
                 for role, row in state.get('results', {}).items()},
         }
         messages = [SystemMessage(content=prompt), HumanMessage(content=json.dumps(context, ensure_ascii=False)), *[AIMessage(content=m.content[:500]) if isinstance(m, AIMessage) and isinstance(m.content, str) else m for m in state.get('messages', [])[-6:]]]
@@ -175,8 +175,6 @@ def llm_planner(model: BaseChatModel, prompt: str):
                     focus = decision.focus if decision.focus != 'trip' else None
                     if decision.focus is None:
                         focus = state.get('focus')
-                        if not focus and not state.get('options') and len(decision.tasks) == 1:
-                            focus = decision.tasks[0].role
                     missing = search_requirements(trip, focus)
                     if missing and not attempt:
                         messages.insert(2, HumanMessage(content=json.dumps({'plan_review': {'unresolved_fields': missing}}, ensure_ascii=False)))

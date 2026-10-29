@@ -88,8 +88,17 @@ def build_tools(
                 "searched_dates": searched, "exhaustive": False, "search_limit": 6}
 
     @tool
-    async def search_trains(mode: Literal["rail", "etrain"] = "rail", destination: str | None = None) -> dict:
+    async def search_trains(mode: Literal["rail", "etrain"] = "rail", destination: str | None = None,
+                            departure_date: date | None = None, return_date: date | None = None) -> dict:
         """In autonomous mode compare round-trip rail fares for the party; staged mode returns outbound schedules."""
+        pairs = search_dates(trip)
+        if departure_date is not None or return_date is not None:
+            if (departure_date, return_date) not in pairs:
+                return {'status': 'forbidden', 'reason': 'Dates outside the agreed search window'}
+            pairs = [(departure_date, return_date)]
+        if not pairs:
+            return {'status': 'schema_error'}
+        start, end = pairs[0]
         if not autonomous or mode == 'etrain':
             return await mcp(
                 "search_trains",
@@ -98,14 +107,10 @@ def build_tools(
                 {
                     "origin": trip.origin,
                     "destination": destination or trip.destination,
-                    "departure_date": str(trip.start),
+                    "departure_date": str(start),
                     "page_size": 10,
                 },
             )
-        pairs = search_dates(trip)
-        if not pairs:
-            return {'status': 'schema_error'}
-        start, end = pairs[0]
         outbound, inbound = await asyncio.gather(*(
             mcp('search_trains', 'tutu', 'search_rail', {'origin': origin, 'destination': destination,
                 'departure_date': str(day), 'passengers': trip.adults, 'page_size': 5, 'direct_only': trip.direct_only})
@@ -138,9 +143,13 @@ def build_tools(
                               result_timezone: str | None = None) -> dict:
         """Read schedules using real Yandex station codes or city names resolved by Yandex."""
         stations = {"Сочи": "s9613034", "Адлер": "s9613054", "Роза Хутор": "s9812791"}
+        pairs = search_dates(trip)
+        search_day = day or (pairs[0][0] if pairs else None)
+        if search_day is None:
+            return {'status': 'schema_error'}
         return await rest('yandex_schedule', 'yandex_rasp', 'YANDEX_RASP_API_KEY',
             lambda: yandex_rasp.schedule(client, env.get('YANDEX_RASP_API_KEY', ''),
-                stations.get(origin, origin), stations.get(destination, destination), str(day or trip.start),
+                stations.get(origin, origin), stations.get(destination, destination), str(search_day),
                 transport_type=transport_type, result_timezone=result_timezone))
 
     @tool
