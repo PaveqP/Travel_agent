@@ -71,53 +71,11 @@ import {
   offerChoice,
   offerSelected,
   counted,
+  sortByPrice,
 } from "./format";
 import "./styles.css";
 
 const TELEGRAM = "https://t.me/ostrovok_helper_ryadom_bot";
-function DestinationExplorer({ onSelect }) {
-  const [destinations, setDestinations] = useState([]);
-  const [query, setQuery] = useState("");
-  const [theme, setTheme] = useState("");
-  const [expanded, setExpanded] = useState(false);
-  useEffect(() => { let active = true; api("/api/destinations").then((items) => { if (active) setDestinations(items); }).catch(() => {}); return () => { active = false; }; }, []);
-  const filtered = destinations.filter((item) => (!theme || item.theme === theme) && `${item.name} ${item.theme}`.toLocaleLowerCase("ru").includes(query.toLocaleLowerCase("ru")));
-  return <section className="destination-explorer" aria-label="Направления России">
-    <h2>Куда хочется отправиться?</h2>
-    <p>Города, курорты и природа по всей России. Можно назвать любое другое направление.</p>
-    <input type="search" aria-label="Найти направление" placeholder="Найти город или формат отдыха…" value={query} onChange={(event) => setQuery(event.target.value)} />
-    <div className="destination-themes"><button className={!theme ? "active" : ""} onClick={() => setTheme("")}>Все направления</button>
-      {[...new Set(destinations.map((item) => item.theme))].map((value) => <button key={value} className={theme === value ? "active" : ""} onClick={() => setTheme(value)}>{value}</button>)}
-    </div>
-    <div className="destination-chips">{(expanded || query || theme ? filtered : filtered.slice(0, 21)).map((item) => <button key={item.name} title={item.theme} onClick={() => onSelect(`Хочу поехать в ${item.name}. Помоги подобрать поездку с учётом моих пожеланий.`)}><MapPin size={13} />{item.name}</button>)}</div>
-    {!expanded && !query && !theme && destinations.length > 21 && <button className="text-button" onClick={() => setExpanded(true)}>Показать все {destinations.length} направлений</button>}
-    {query && !filtered.length && <p>Этого города нет среди примеров — его всё равно можно указать в запросе.</p>}
-  </section>;
-}
-
-const inspiration = [
-  {
-    title: "В ритме моря",
-    place: "Балтика · Чёрное море · Приморье",
-    image: "sea",
-    icon: Waves,
-    text: "Хочу к морю в России. Сравни Калининградскую область, Чёрное море и Приморье: прогулки, вкусная еда и отель у воды",
-  },
-  {
-    title: "Выше только облака",
-    place: "Кавказ · Алтай · Камчатка",
-    image: "mountains",
-    icon: Mountain,
-    text: "Хочу в горы: сравни Архыз, Домбай, Алтай и Шерегеш. Нужны красивые виды и уютный отель",
-  },
-  {
-    title: "Всё и чуть больше",
-    place: "Россия",
-    image: "cable",
-    icon: Compass,
-    text: "Хочу путешествие по России, направление ещё не выбрал. Предложи 6–8 разных городов и объясни, кому какой подойдёт",
-  },
-];
 
 async function api(path, options = {}) {
   const response = await fetch(path, {
@@ -154,6 +112,7 @@ async function api(path, options = {}) {
   }
   return response.status === 204 ? null : response.json();
 }
+
 
 function Icon({ of: Component, ...props }) {
   return <Component size={20} strokeWidth={1.7} {...props} />;
@@ -780,30 +739,8 @@ function Conversation({
           className={`conversation-content ${hasConversation ? "has-conversation" : ""}`}
         >
           {!hasConversation && !loading && !unavailable && !chat && (
-            <section className="conversation-intro">
-              <span className="intro-eyebrow">
-                <span /> О!ДИН ЗАПРОС — ЦЕЛАЯ ПОЕЗДКА
-              </span>
-              <h1>
-                Ваш отпуск начинается
-                <br />с <span>«хочу».</span>
-                <Sparkles size={31} />
-              </h1>
-              <p>
-                Расскажите, как хотите отдохнуть. Ваш агент соберёт
-                <br className="desktop-break" /> билеты, отель и впечатления в
-                одном разговоре.
-              </p>
-              <DestinationExplorer onSelect={prompt} />
-              <div className="starter-prompts">
-                {inspiration.map((item) => (
-                  <button key={item.image} onClick={() => prompt(item.text)}>
-                    <Icon of={item.icon} size={16} />
-                    <span>{item.title}</span>
-                    <ArrowUpRight size={14} />
-                  </button>
-                ))}
-              </div>
+            <section className="conversation-intro welcome-illustration" aria-label="Начните диалог о путешествии">
+              <img src="/images/chat-welcome.webp" alt="Горная тропа к бирюзовому озеру — навстречу путешествию" />
             </section>
           )}
           {chat && !hasConversation && !loading && !chatError && <section className="chat-welcome">
@@ -983,18 +920,48 @@ function PresentationLinks({ state, openPanel, choose, busy, past = false }) {
   </div>;
 }
 
-function TripOptions(props) {
-  const { state } = props;
-  return state?.options?.length && !state.focus && (state.autonomous || ["review", "booked"].includes(state.stage)) ? <TourDetails {...props} /> : <OfferOptions {...props} />;
+function PriceSort({ value, onChange }) {
+  return <label className="price-sort"><SlidersHorizontal size={14} /><span>По цене</span><select aria-label="Сортировка по цене" value={value} onChange={(event) => onChange(event.target.value)}><option value="">Как предложил агент</option><option value="asc">Сначала дешевле</option><option value="desc">Сначала дороже</option></select></label>;
 }
 
-function TourDetails({ kind, state, busy, close, closing, changeKind, tripId, navigate }) {
+function TripOptions(props) {
+  const { state } = props;
+  const [width, setWidth] = useState(380);
+  const [maxWidth, setMaxWidth] = useState(720);
+  const [priceOrder, setPriceOrder] = useState("");
+  const panel = useRef(null);
+  useEffect(() => {
+    const update = () => {
+      const max = Math.max(300, Math.min(720, (panel.current?.parentElement.clientWidth || 1060) - 340));
+      setMaxWidth(max);
+      setWidth((current) => Math.min(max, current));
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+  const resize = (next) => setWidth(Math.max(300, Math.min(maxWidth, next)));
+  const content = state?.options?.length && !state.focus && (state.autonomous || ["review", "booked"].includes(state.stage)) ? <TourDetails {...props} priceOrder={priceOrder} setPriceOrder={setPriceOrder} /> : <OfferOptions {...props} priceOrder={priceOrder} setPriceOrder={setPriceOrder} />;
+  return <div className="resizable-options-panel" ref={panel} style={{ "--options-width": `${width}px` }}>
+    <div className="options-resize-handle" role="separator" aria-label="Изменить ширину панели" aria-orientation="vertical" aria-valuemin={300} aria-valuemax={maxWidth} aria-valuenow={width} tabIndex={0}
+      onPointerDown={(event) => { if (event.button === 0) { event.preventDefault(); event.currentTarget.setPointerCapture(event.pointerId); } }}
+      onPointerMove={(event) => { if (event.currentTarget.hasPointerCapture(event.pointerId)) resize(panel.current.parentElement.getBoundingClientRect().right - event.clientX); }}
+      onPointerUp={(event) => { if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId); }}
+      onKeyDown={(event) => { if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) { event.preventDefault(); resize(event.key === "Home" ? 300 : event.key === "End" ? maxWidth : width + (event.key === "ArrowLeft" ? 20 : -20)); } }} />
+    {content}
+    <label className="options-width-control"><span>Ширина панели</span><input type="range" aria-label="Ширина панели" min={300} max={maxWidth} step={1} value={width} onChange={(event) => resize(Number(event.target.value))} /></label>
+  </div>;
+}
+
+function TourDetails({ kind, state, busy, choose, close, closing, changeKind, tripId, navigate, priceOrder, setPriceOrder }) {
   const [compact, setCompact] = useState(() => window.matchMedia("(max-width: 1000px)").matches);
   const heading = useRef(null);
   const option = currentOption(state);
   const parts = state.stage === "booked" ? tripParts(state) : { transport: option?.transport, stay: option?.stay, days: option?.days || [], total: option?.budget?.known_subtotal };
   const tab = ["transport", "stays", "itinerary", "budget"].includes(kind) ? kind : "transport";
   const title = { transport: "Билеты", stays: "Отель", itinerary: "Программа", budget: "Стоимость поездки" }[tab];
+  const tourPrice = (row) => ["transport", "stays"].includes(tab) ? row[tab === "transport" ? "transport" : "stay"]?.price : { amount: row.budget?.known_subtotal, currency: "RUB" };
+  const options = sortByPrice(state.options, priceOrder, tourPrice);
   useEffect(() => {
     const media = window.matchMedia("(max-width: 1000px)");
     const update = () => setCompact(media.matches);
@@ -1014,7 +981,9 @@ function TourDetails({ kind, state, busy, close, closing, changeKind, tripId, na
       {[[Plane, "Билеты", "transport"], [Building2, "Отель", "stays"], [Route, "Программа", "itinerary"]].map(([Component, label, key]) => <button key={key} aria-pressed={tab === key} onClick={() => changeKind(key)}><Component size={16} />{label}</button>)}
     </div>
     <div className="options-panel-scroll" key={`${tab}-${option?.id}`} aria-busy={busy}>
-      {busy ? <div className="panel-empty" role="status"><LoaderCircle className="spin" size={24} />Обновляем выбранный тур…</div> : tab === "itinerary" ? parts.days.length ? <DayPlan days={parts.days} /> : <p className="muted">Программа ещё собирается. Обсудите пожелания с агентом.</p> : tab === "budget" ? <section className="panel-budget"><h3>Стоимость поездки</h3>{[["Билеты", parts.transport], ["Проживание", parts.stay]].map(([label, row]) => <div className="panel-budget-row" key={label}><span>{label}</span><div><strong>{money(row?.price?.amount, row?.price?.currency)}</strong>{row?.price && <small>{basis(row.price.basis)}</small>}</div></div>)}<div className="panel-budget-row"><span>Известная сумма</span><strong>{money(parts.total)}</strong></div><p className="small muted">Питание, активности и местные переезды могут оплачиваться отдельно.</p></section> : item ? <section className="tour-component-detail">
+      <PriceSort value={priceOrder} onChange={setPriceOrder} />
+      {state.stage !== "booked" && <label className="tour-variant-picker"><span>{tab === "transport" ? "Туры по стоимости билетов" : tab === "stays" ? "Туры по стоимости отеля" : "Туры по общей стоимости"}</span><select aria-label="Тур для просмотра" value={option?.id || ""} disabled={busy} onChange={(event) => choose(event.target.value)}>{options.map((row) => <option key={row.id} value={row.id}>Тур {state.options.indexOf(row) + 1} · {row.stay?.name} · {money(tourPrice(row)?.amount, tourPrice(row)?.currency)}</option>)}</select></label>}
+      {busy ? <div className="panel-empty" role="status"><LoaderCircle className="spin" size={24} />Обновляем выбранный тур…</div> : tab === "itinerary" ? parts.days.length ? <DayPlan days={parts.days} priceOrder={priceOrder} /> : <p className="muted">Программа ещё собирается. Обсудите пожелания с агентом.</p> : tab === "budget" ? <section className="panel-budget"><h3>Стоимость поездки</h3>{sortByPrice([["Билеты", parts.transport], ["Проживание", parts.stay]], priceOrder, (row) => row[1]?.price).map(([label, row]) => <div className="panel-budget-row" key={label}><span>{label}</span><div><strong>{money(row?.price?.amount, row?.price?.currency)}</strong>{row?.price && <small>{basis(row.price.basis)}</small>}</div></div>)}<div className="panel-budget-row"><span>Известная сумма</span><strong>{money(parts.total)}</strong></div><p className="small muted">Питание, активности и местные переезды могут оплачиваться отдельно.</p></section> : item ? <section className="tour-component-detail">
         <h3>{item.name}</h3>
         {tab === "stays" && <><p className="small muted">{item.address || item.area || state.constraints?.destination}</p><div className="tags">{item.stars != null && <span>{item.stars} ★</span>}{item.rating != null && <span>Оценка {item.rating} / 10</span>}</div><p className="small muted">Заезд {date(item.start)} · выезд {date(item.end)}</p></>}
         <div className="panel-price"><strong>{money(item.price?.amount, item.price?.currency)}</strong><span>{basis(item.price?.basis)}</span></div>
@@ -1030,15 +999,15 @@ function TourDetails({ kind, state, busy, close, closing, changeKind, tripId, na
   return compact ? <Modal title={title} close={close} className={`options-sheet ${closing ? "is-closing" : ""}`}><section id="trip-options-panel">{content}</section></Modal> : <aside className={`trip-options-panel ${closing ? "is-closing" : ""}`} id="trip-options-panel" aria-label="Варианты поездки"><div className="options-panel-head"><div><span className="eyebrow">ДЕТАЛИ ВЫБРАННОГО ТУРА</span><h2 ref={heading} tabIndex={-1}>{title}</h2></div><button className="icon-button" onClick={close} aria-label="Закрыть панель вариантов"><X size={19} /></button></div>{content}</aside>;
 }
 
-function OfferOptions({ kind, state, busy, choose, close, closing, changeKind, discuss, pay, tripId, navigate }) {
+function OfferOptions({ kind, state, busy, choose, close, closing, changeKind, discuss, pay, tripId, navigate, priceOrder, setPriceOrder }) {
   const [compareIds, setCompareIds] = useState([]);
   const [comparing, setComparing] = useState(false);
   const [compact, setCompact] = useState(() => window.matchMedia("(max-width: 1000px)").matches);
   const [details, setDetails] = useState(null);
   const heading = useRef(null);
   const title = { tours: "Туры под ключ", transport: "Билеты", stays: "Отели", itinerary: "Программа по дням", budget: "Бюджет" }[kind];
-  const items = offerItems(state, kind);
-  const signature = items.map((item) => item.id).join("|");
+  const items = sortByPrice(offerItems(state, kind), priceOrder);
+  const signature = items.map((item) => item.id).sort().join("|");
   useEffect(() => {
     setCompareIds(items.slice(0, 2).map((item) => item.id));
     setComparing(false);
@@ -1075,9 +1044,10 @@ function OfferOptions({ kind, state, busy, choose, close, closing, changeKind, d
       {[[Luggage, "Туры", "tours"], [Plane, "Билеты", "transport"], [Building2, "Отели", "stays"], [Route, "Программа", "itinerary"], [Wallet, "Бюджет", "budget"]].map(([Component, label, key]) => <button key={key} aria-pressed={kind === key} onClick={() => changeKind(key)}><Component size={15} />{label}</button>)}
     </div>
     <div className="options-panel-scroll" key={kind}>
+      <PriceSort value={priceOrder} onChange={setPriceOrder} />
       {!state ? <div className="panel-empty"><LoaderCircle className="spin" />Загружаем поездку…</div> : kind === "tours" ? <section className="panel-tours" aria-label="Готовые туры">
         <p className="small muted">Дорога туда и обратно, проживание и предложенная программа — в одном варианте.</p>
-        {state.options?.map((option, index) => <PackageCard key={option.id} option={option} index={index} state={state} choose={choose} busy={busy} />)}
+        {sortByPrice(state.options || [], priceOrder, (option) => ({ amount: option.budget?.known_subtotal })).map((option) => <PackageCard key={option.id} option={option} index={state.options.indexOf(option)} state={state} choose={choose} busy={busy} />)}
         {!state.options?.length && <p>Расскажите о поездке — здесь появятся готовые туры.</p>}
         {canCheckout(state) && <button className="primary" disabled={busy} onClick={pay}><CreditCard size={16} />К имитации оплаты</button>}
       </section> : ["transport", "stays"].includes(kind) ? <>
@@ -1096,7 +1066,7 @@ function OfferOptions({ kind, state, busy, choose, close, closing, changeKind, d
           {details === item.id && <div className="panel-offer-details">{item.description && <p>{item.description}</p>}{kind === "stays" ? <HotelDetails hotel={item} /> : <TransportRoutes candidate={item} constraints={state.constraints} />}<p className="small muted">{item.source?.evidence === "live" ? "Цена найдена при поиске. Подтверждение потребуется перед оформлением." : "Наличие и стоимость требуют подтверждения у поставщика."}</p></div>}
         </article>)}
         {!items.length && <div className="panel-empty"><Icon of={kind === "stays" ? Building2 : Plane} size={28} /><h3>Вариантов пока нет</h3><p>Продолжите разговор — найденные предложения появятся здесь.</p><button className="secondary" onClick={() => discuss(kind === "stays" ? "Подбери варианты проживания для моей поездки" : "Подбери билеты для моей поездки")}>Попросить ассистента</button></div>}
-      </> : kind === "itinerary" ? parts.days.length ? <DayPlan days={parts.days} /> : <div className="panel-empty"><Route size={28} /><h3>Программа ещё собирается</h3><button className="secondary" onClick={() => discuss("Составь программу моей поездки по дням")}>Обсудить программу</button></div> : <section className="panel-budget"><h3>Стоимость поездки</h3>{[["Билеты", parts.transport], ["Проживание", parts.stay]].map(([label, item]) => <div className="panel-budget-row" key={label}><span>{label}</span><div><strong>{money(item?.price?.amount, item?.price?.currency)}</strong>{item?.price && <small>{basis(item.price.basis)}</small>}</div></div>)}<div className="panel-budget-row"><span>Известная сумма</span><strong>{money(parts.total)}</strong></div><p className="small muted">Неизвестные расходы не включены. Питание, активности и местные переезды могут оплачиваться отдельно.</p>{state.stage === "booked" ? <span className="panel-selected"><Check size={15} />Имитация бронирования выполнена</span> : canCheckout(state) ? <button className="primary" disabled={busy} onClick={pay}><CreditCard size={16} />К имитации оплаты</button> : <button className="secondary" disabled={busy} onClick={() => discuss("Проверь актуальность выбранных тарифов и подготовь поездку к оформлению")}>Проверить тарифы</button>}</section>}
+      </> : kind === "itinerary" ? parts.days.length ? <DayPlan days={parts.days} priceOrder={priceOrder} /> : <div className="panel-empty"><Route size={28} /><h3>Программа ещё собирается</h3><button className="secondary" onClick={() => discuss("Составь программу моей поездки по дням")}>Обсудить программу</button></div> : <section className="panel-budget"><h3>Стоимость поездки</h3>{sortByPrice([["Билеты", parts.transport], ["Проживание", parts.stay]], priceOrder, (row) => row[1]?.price).map(([label, item]) => <div className="panel-budget-row" key={label}><span>{label}</span><div><strong>{money(item?.price?.amount, item?.price?.currency)}</strong>{item?.price && <small>{basis(item.price.basis)}</small>}</div></div>)}<div className="panel-budget-row"><span>Известная сумма</span><strong>{money(parts.total)}</strong></div><p className="small muted">Неизвестные расходы не включены. Питание, активности и местные переезды могут оплачиваться отдельно.</p>{state.stage === "booked" ? <span className="panel-selected"><Check size={15} />Имитация бронирования выполнена</span> : canCheckout(state) ? <button className="primary" disabled={busy} onClick={pay}><CreditCard size={16} />К имитации оплаты</button> : <button className="secondary" disabled={busy} onClick={() => discuss("Проверь актуальность выбранных тарифов и подготовь поездку к оформлению")}>Проверить тарифы</button>}</section>}
       {state?.notice && <p className="notice">{state.notice}</p>}
       {kind === "itinerary" && state?.stage === "itinerary" && state.choices?.map((choice) => <button className="primary panel-approve" key={choice.id} disabled={busy} onClick={() => choose(choice.id)}>Мне подходит, собери поездку<ArrowRight size={15} /></button>)}
     </div>
@@ -1554,7 +1524,7 @@ function ChoiceCard({ choice, state, index, choose, busy }) {
   );
 }
 
-function DayPlan({ days = [], completed, toggle }) {
+function DayPlan({ days = [], completed, toggle, priceOrder = "" }) {
   return (
     <div className="day-plan">
       {days.map((day, i) => (
@@ -1575,20 +1545,21 @@ function DayPlan({ days = [], completed, toggle }) {
               <span>{date(day.date)}</span>
             </div>
             {day.candidates?.length ? (
-              day.candidates.map((c, index) => (
+              sortByPrice(day.candidates, priceOrder).map((c) => (
                 <div className="activity" key={c.id}>
                   {toggle && (
                     <input
                       aria-label={`Отметить: ${c.name}`}
                       type="checkbox"
-                      checked={!!completed?.[`${day.date}:${index}`]}
-                      onChange={() => toggle(`${day.date}:${index}`)}
+                      checked={!!completed?.[`${day.date}:${day.candidates.indexOf(c)}`]}
+                      onChange={() => toggle(`${day.date}:${day.candidates.indexOf(c)}`)}
                     />
                   )}
                   <MapPin size={17} />
                   <div>
                     <strong>{c.name}</strong>
                     {c.description && <p>{c.description}</p>}
+                    {priceOrder && <span className="activity-price">{money(c.price?.amount, c.price?.currency)}{c.price && ` · ${basis(c.price.basis)}`}</span>}
                     <SourceLink url={c.url || c.source?.source_url} />
                   </div>
                 </div>

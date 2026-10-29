@@ -57,6 +57,14 @@ def public_url(url: str) -> bool:
         return True
 
 
+def avia_offer_url(offer: dict[str, Any], variant: dict[str, Any] | None = None) -> str:
+    reference = offer.get('checkout_ref') or {}
+    links = [(variant or {}).get('search_results_url'), offer.get('search_results_url'),
+             reference.get('search_results_url') if isinstance(reference, dict) else None]
+    urls = [link for link in links if isinstance(link, str) and public_url(link)]
+    return next((url for url in urls if urlparse(url).fragment), next(iter(urls), 'https://www.tutu.ru/avia/'))
+
+
 def hotel_amenities(hotel: dict[str, Any]) -> list[str]:
     labels: list[str] = []
 
@@ -203,11 +211,13 @@ def normalize(
                         "flight_numbers": [s["voyage_no"] for s in leg.get("segments", []) if s.get("voyage_no")][:10],
                     } for leg in legs if all(leg.get(k) for k in ("from", "to", "departure_at", "arrival_at"))],
                     price=Money(**row["price"], basis="party"),
-                    url=row.get("search_results_url") or "https://www.tutu.ru/avia/",
-                    description=("Прибытие: " + str(data.get("meta", {}).get("to", {}).get("name") or trip.destination)) if row.get("search_results_url") else "Поставщик не вернул ссылку на конкретный тариф; ссылка ведёт в общий поиск авиабилетов Туту.",
+                    url=avia_offer_url(row),
+                    description="Прибытие: " + str(data.get("meta", {}).get("to", {}).get("name") or trip.destination),
                 )
             )
             candidate = result[-1]
+            if not row.get('variants') and not urlparse(candidate.url).fragment:
+                candidate.description += '. Поставщик не вернул ссылку с идентификатором предложения; ссылка ведёт в поиск билетов.'
             candidate.provider_id = row['offer_id']
             candidate.provider_details = row
             if row.get('variants'):
@@ -221,9 +231,11 @@ def normalize(
                     result.append(candidate.model_copy(update={
                         'id': candidate.id + '@' + sha256(variant['variant_id'].encode()).hexdigest()[:12],
                         'variant_id': variant['variant_id'], 'conditions': conditions,
+                        'url': avia_offer_url(row, variant),
                         'price': Money(**variant['price'], basis='party'), 'baggage_included': included,
                         'description': '; '.join(filter(None, [candidate.description, conditions.get('fare_family'),
-                            f"Багаж: {baggage['kg']} кг" if isinstance(baggage, dict) and baggage.get('kg') is not None else None]))[:1000],
+                            f"Багаж: {baggage['kg']} кг" if isinstance(baggage, dict) and baggage.get('kg') is not None else None,
+                            'Поставщик не вернул ссылку с идентификатором предложения; ссылка ведёт в поиск билетов.' if not urlparse(avia_offer_url(row, variant)).fragment else None]))[:1000],
                     }))
     elif provider == "travelpayouts":
         source = source.model_copy(update={"provider": provider, "source_url": "https://www.aviasales.ru/", "evidence": "cached"})

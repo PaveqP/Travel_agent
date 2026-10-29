@@ -16,7 +16,21 @@ import {
   offerChoice,
   offerSelected,
   counted,
+  sortByPrice,
 } from "./format.js";
+
+test("price ranking keeps unknown costs last, preserves ties and does not mutate agent order", () => {
+  const items = [
+    { id: "unknown" }, { id: "paid", price: { amount: "100", currency: "RUB" } },
+    { id: "free", price: { amount: "0", currency: "RUB" } },
+    { id: "same", price: { amount: "100", currency: "RUB" } },
+    { id: "missing", price: { amount: null } },
+  ];
+  assert.deepEqual(sortByPrice(items, "asc").map((item) => item.id), ["free", "paid", "same", "unknown", "missing"]);
+  assert.deepEqual(sortByPrice(items, "desc").map((item) => item.id), ["paid", "same", "free", "unknown", "missing"]);
+  assert.equal(sortByPrice(items, ""), items);
+  assert.equal(items[0].id, "unknown");
+});
 
 test("panel merges matching evidence with cards and selects only current permitted choices", () => {
   const hotel = { id: "h", role: "stays", name: "Отель", url: "https://example.org/h", price: {amount:"100",currency:"RUB",basis:"room_stay"} };

@@ -122,10 +122,24 @@ async function send(page, text) {
 
 test("empty dialogue has no map or duplicate sidebar history", async (t) => {
   const { page } = await openSession(t, { empty: true });
-  await page.getByRole("heading", { name: /Ваш отпуск начинается/ }).waitFor();
+  await page.locator(".welcome-illustration img").waitFor();
   assert.equal(await page.locator("iframe").count(), 0);
   assert.equal(await page.getByText("МОИ ПЛАНЫ", { exact: false }).count(), 0);
   assert.equal(await page.getByRole("button", { name: /Мои поездки/ }).count(), 1);
+  assert.equal(await page.locator(".conversation-intro input, .conversation-intro button").count(), 0);
+  assert.equal(await page.locator(".destination-explorer, .starter-prompts").count(), 0);
+  assert.equal(await page.getByRole("textbox", { name: "Сообщение ассистенту" }).isEnabled(), true);
+  await page.screenshot({ path: "/tmp/flinters-welcome-desktop.png" });
+});
+
+test("phone welcome shows only the illustration and an available composer", async (t) => {
+  const { page } = await openSession(t, { empty: true, viewport: { width: 390, height: 844 } });
+  await page.locator(".welcome-illustration img").waitFor();
+  assert.equal(await page.locator(".conversation-intro input, .conversation-intro button").count(), 0);
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
+  await page.getByRole("textbox", { name: "Сообщение ассистенту" }).fill("Хочу поехать в горы");
+  assert.equal(await page.getByRole("button", { name: "Отправить сообщение", exact: true }).isEnabled(), true);
+  await page.screenshot({ path: "/tmp/flinters-welcome-mobile.png" });
 });
 
 test("new trip can start while another session is still processing", async (t) => {
@@ -135,7 +149,7 @@ test("new trip can start while another session is still processing", async (t) =
   await send(page, "Подбери на неделю");
   await started.promise;
   await page.getByRole("button", { name: "Новая поездка" }).click();
-  await page.getByRole("heading", { name: /Ваш отпуск начинается/ }).waitFor();
+  await page.locator(".welcome-illustration img").waitFor();
   await send(page, "Другая поездка");
   await page.getByText("Ответ для new-1", { exact: true }).waitFor();
   const oldFinished = page.waitForResponse((response) => response.url().endsWith('/trips/existing/messages'));
@@ -215,7 +229,7 @@ test("compact tour cards select one package and its details stay in the right pa
   second.stay.amenities = ["Бассейн", "Wi-Fi"];
   second.stay.description = "Отель у моря с просторными номерами";
   second.stay.photos = ["javascript:alert(1)", "https://images.example.org/hotel-b.jpg"];
-  second.transport = { ...second.transport, id: "flight-b", name: "Другой рейс", url: "https://www.tutu.ru/avia/second" };
+  second.transport = { ...second.transport, id: "flight-b", name: "Другой рейс", url: "https://www.tutu.ru/avia/second#specific-flight" };
   second.days = [{ date: "2026-11-19", candidates: [{ id: "park", name: "Прогулка в парке" }] }];
   const { page, trips } = await openSession(t, { state });
   const chat = page.locator(".conversation-scroll");
@@ -229,7 +243,7 @@ test("compact tour cards select one package and its details stay in the right pa
   await chat.getByRole("button", { name: "Открыть тур 2: Морской парк", exact: true }).click();
   await panel.getByRole("heading", { name: "Другой рейс", exact: true }).waitFor();
   assert.equal(trips.get("existing").selected, "option-1");
-  assert.equal(await panel.getByRole("link", { name: "Перейти к продавцу билетов" }).getAttribute("href"), "https://www.tutu.ru/avia/second");
+  assert.equal(await panel.getByRole("link", { name: "Перейти к продавцу билетов" }).getAttribute("href"), "https://www.tutu.ru/avia/second#specific-flight");
   assert.equal(await panel.getByRole("heading", { name: "Билеты Петербург — Сочи" }).count(), 0);
   assert.equal(await panel.getByRole("button", { name: /оплат/ }).count(), 0);
   await panel.getByRole("button", { name: "Отель", exact: true }).click();
@@ -274,11 +288,69 @@ test("a hotel-only search keeps offer comparison and selects its associated pack
   const panel = page.getByRole("complementary", { name: "Варианты поездки" });
   await panel.getByRole("heading", { name: "Отели", exact: true }).waitFor();
   assert.equal(await page.locator(".chat-tour-card").count(), 0);
+  await panel.getByRole("combobox", { name: "Сортировка по цене" }).selectOption("desc");
+  assert.deepEqual(await panel.locator(".panel-offer h3").allTextContents(), ["Морской парк", "Солнечный День"]);
+  await panel.getByRole("combobox", { name: "Сортировка по цене" }).selectOption("asc");
+  assert.deepEqual(await panel.locator(".panel-offer h3").allTextContents(), ["Солнечный День", "Морской парк"]);
   await panel.getByRole("button", { name: /Сравнить · 2/ }).click();
   await panel.getByRole("group", { name: "Сравнение вариантов" }).waitFor();
   await panel.getByRole("button", { name: "Выбрать вариант", exact: true }).click();
   await page.waitForFunction(() => document.querySelector(".saved-artifacts").textContent.includes("Морской парк"));
   assert.equal(trips.get("existing").selected, "option-1");
+});
+
+test("price ranking works in every tour tab and selecting a ranked tour keeps its details", async (t) => {
+  const state = offersState();
+  state.options[0].transport = { ...state.options[0].transport, price: { amount: "30000", currency: "RUB", basis: "party" } };
+  state.options[0].days = [
+    { date: "2026-11-18", candidates: [{ id: "paid", name: "Экскурсия", price: { amount: "2000", currency: "RUB", basis: "person" } }, { id: "free", name: "Прогулка", price: { amount: "0", currency: "RUB", basis: "person" } }, { id: "unknown", name: "Музей" }] },
+    { date: "2026-11-19", candidates: [{ id: "next-day", name: "Следующий день" }] },
+  ];
+  const { page, trips } = await openSession(t, { state });
+  const panel = page.getByRole("complementary", { name: "Варианты поездки" });
+  const sorting = panel.getByRole("combobox", { name: "Сортировка по цене" });
+  const picker = panel.getByRole("combobox", { name: "Тур для просмотра" });
+  await page.getByRole("button", { name: "Открыть тур 1: Солнечный День", exact: true }).click();
+  await sorting.selectOption("asc");
+  assert.deepEqual(await picker.locator("option").evaluateAll((rows) => rows.map((row) => row.value)), ["option-1", "option-0"]);
+  assert.equal(trips.get("existing").selected, "option-0");
+  await panel.getByRole("button", { name: "Отель", exact: true }).click();
+  assert.deepEqual(await picker.locator("option").evaluateAll((rows) => rows.map((row) => row.value)), ["option-0", "option-1"]);
+  await sorting.selectOption("desc");
+  assert.deepEqual(await picker.locator("option").evaluateAll((rows) => rows.map((row) => row.value)), ["option-1", "option-0"]);
+  await panel.getByRole("button", { name: "Программа", exact: true }).click();
+  await sorting.selectOption("asc");
+  assert.deepEqual(await panel.locator(".day-item").first().locator(".activity strong").allTextContents(), ["Прогулка", "Экскурсия", "Музей"]);
+  assert.equal(await panel.locator(".day-item").last().locator(".activity strong").textContent(), "Следующий день");
+  await picker.selectOption("option-1");
+  await panel.getByText("Прогулка у моря", { exact: true }).waitFor();
+  assert.equal(trips.get("existing").selected, "option-1");
+});
+
+test("desktop panel resizes by dragging, slider and keyboard without hiding the chat", async (t) => {
+  const { page } = await openSession(t, { state: offersState() });
+  const panel = page.getByRole("complementary", { name: "Варианты поездки" });
+  await panel.waitFor();
+  const initial = (await panel.boundingBox()).width;
+  const handle = page.getByRole("separator", { name: "Изменить ширину панели" });
+  const box = await handle.boundingBox();
+  await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(box.x - 100, box.y + box.height / 2);
+  await page.mouse.up();
+  assert.ok((await panel.boundingBox()).width > initial + 80);
+  await handle.focus();
+  await handle.press("Home");
+  assert.ok((await panel.boundingBox()).width <= 301);
+  const slider = page.getByRole("slider", { name: "Ширина панели", exact: true });
+  await slider.focus();
+  await slider.press("End");
+  assert.ok((await panel.boundingBox()).width >= 700);
+  await panel.getByRole("button", { name: "Отель", exact: true }).click();
+  assert.ok((await panel.boundingBox()).width >= 700);
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), true);
+  assert.equal(await page.getByRole("textbox", { name: "Сообщение ассистенту" }).isVisible(), true);
+  await page.screenshot({ path: "/tmp/flinters-resized-panel.png" });
 });
 
 test("help starts a separate trip chat, preserves plan and keeps chat drafts isolated", async (t) => {

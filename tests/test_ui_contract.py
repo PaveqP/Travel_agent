@@ -106,6 +106,34 @@ class PresentationTests(unittest.TestCase):
 
 
 class CardDataTests(unittest.IsolatedAsyncioTestCase):
+    def test_flight_offer_fragment_survives_normalization_and_agent_links(self):
+        from travel_agent.agents.supervisor.response import render_components
+        from travel_agent.engine import offer_card
+
+        data = copy.deepcopy(FIXTURES['search_avia'])
+        row = data['offers'][0]
+        exact = row['search_results_url'] + '#408dgdc4mzj'
+        row['checkout_ref'] = {'search_results_url': exact}
+        candidate = normalize('tutu', 'search_avia', data, TRIP, datetime.now(timezone.utc))[0]
+        self.assertEqual(candidate.url, exact)
+        card = offer_card(candidate, TRIP).model_dump(mode='json')
+        self.assertEqual(card['url'], exact)
+        self.assertIn(exact, render_components({'focus': 'transport', 'cards': [card]}))
+
+    def test_flight_fare_links_use_their_own_fragment_and_never_invent_one(self):
+        data = copy.deepcopy(FIXTURES['search_avia'])
+        row = data['offers'][0]
+        general = row['search_results_url']
+        row['variants'] = [
+            {'variant_id': 'basic', 'price': row['price'], 'search_results_url': general + '#exact-basic'},
+            {'variant_id': 'baggage', 'price': row['price'], 'search_results_url': general + '#exact-baggage'},
+            {'variant_id': 'missing-link', 'price': row['price'], 'offer_hash': 'internal-hash'},
+        ]
+        candidates = normalize('tutu', 'search_avia', data, TRIP, datetime.now(timezone.utc))[:3]
+        self.assertEqual([c.url for c in candidates], [general + '#exact-basic', general + '#exact-baggage', general])
+        self.assertNotIn('ссылка ведёт в поиск', candidates[0].description)
+        self.assertIn('ссылка ведёт в поиск', candidates[2].description)
+
     def test_roundtrip_normalization_keeps_distinct_return_flight_details(self):
         candidate = normalize("tutu", "search_avia", FIXTURES["search_avia"], TRIP, datetime.now(timezone.utc))[0]
         self.assertEqual(len(candidate.legs), 2)

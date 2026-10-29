@@ -22,6 +22,16 @@ export const money = (value, currency = "RUB") =>
         currency,
         maximumFractionDigits: 0,
       }).format(Number(value));
+export function sortByPrice(items, order, priceOf = (item) => item.price) {
+  if (!order) return items;
+  return [...items].sort((left, right) => {
+    const a = priceOf(left), b = priceOf(right);
+    const known = (price) => price?.amount != null && Number.isFinite(Number(price.amount));
+    if (!known(a) || !known(b)) return Number(known(b)) - Number(known(a));
+    const currency = (a.currency || "RUB").localeCompare(b.currency || "RUB");
+    return currency || (Number(a.amount) - Number(b.amount)) * (order === "desc" ? -1 : 1);
+  });
+}
 export const date = (value) =>
   value
     ? new Intl.DateTimeFormat("ru-RU", {
