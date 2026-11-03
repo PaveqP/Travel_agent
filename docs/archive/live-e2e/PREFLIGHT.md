@@ -23,4 +23,4 @@
 
 Старые сообщения password/Pool warnings относятся к первым секундам старта новой БД; затем pool и приложение поднялись. Ошибки не скрывались повторным платным preflight: первый настоящий inference включён в case 01.
 
-Результаты offline-проверок — [исторический лог offline-проверок](https://github.com/ostrovok-hackathon-2026/flinters/blob/5876f5bc3e89d1a5a50cdeef4e49ba0c747af5d6/test%20MVP/offline_tests.txt). Полный тестовый лог, сырой state, cookie и credentials остаются локальными и не включены в Git. Пять бюджетных unittest проверяют общий pending, списание unknown billing, soft limit и redaction.
+Результаты offline-проверок — [исторический лог offline-проверок](https://github.com/PaveqP/Travel_agent/blob/5876f5bc3e89d1a5a50cdeef4e49ba0c747af5d6/test%20MVP/offline_tests.txt). Полный тестовый лог, сырой state, cookie и credentials остаются локальными и не включены в Git. Пять бюджетных unittest проверяют общий pending, списание unknown billing, soft limit и redaction.

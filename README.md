@@ -16,8 +16,8 @@ AI-помощник собирает поездку по России из св�
 и PostgreSQL на хосте для этого способа запуска устанавливать не нужно.
 
 ```bash
-git clone https://github.com/ostrovok-hackathon-2026/flinters.git
-cd flinters
+git clone https://github.com/PaveqP/Travel_agent.git
+cd Travel_agent
 ```
 
 **Для жюри:** в корне находится `secrets.env.age` с зашифрованной рабочей

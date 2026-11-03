@@ -38,7 +38,7 @@ React показывает состав семьи и универсальные
 
 ## Проверка поведения
 
-[Исторические тесты адаптивности](https://github.com/ostrovok-hackathon-2026/flinters/blob/297cc4e/tests/test_adaptive_agent.py) запускали настоящий ReAct с mock LLM/MCP, проверяя вызовы, аргументы, сохранённые данные и итоговые цены:
+[Исторические тесты адаптивности](https://github.com/PaveqP/Travel_agent/blob/297cc4e/tests/test_adaptive_agent.py) запускали настоящий ReAct с mock LLM/MCP, проверяя вызовы, аргументы, сохранённые данные и итоговые цены:
 
 | Случай | Проверяемое поведение |
 |---|---|

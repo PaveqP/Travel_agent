@@ -39,4 +39,4 @@ LLM calls 145; input 1228864, output 113902, всего 1342766; cached input 39
 
 Главные подтверждённые проблемы: повторные уточнения уже заданных дат; потеря параметров в patch; недостроенный календарь при большом каталоге POI; ошибки presenter и перепутанные arrival/departure; timeout Tutu. Защита booking не пропускает пакет без обязательного горного дня. PostgreSQL выдержал restart, межпользовательский доступ возвращает 404. Подробности и границы измерений — в case reports, COST_REPORT.md и RECOMMENDATIONS.md.
 
-Offline validation: `.venv/bin/python -m unittest discover -s tests -v` — 194 tests, OK, 8 skipped (17.095s); JS — 17/17 passed. Подробности: [исторический лог offline-проверок](https://github.com/ostrovok-hackathon-2026/flinters/blob/5876f5bc3e89d1a5a50cdeef4e49ba0c747af5d6/test%20MVP/offline_tests.txt).
+Offline validation: `.venv/bin/python -m unittest discover -s tests -v` — 194 tests, OK, 8 skipped (17.095s); JS — 17/17 passed. Подробности: [исторический лог offline-проверок](https://github.com/PaveqP/Travel_agent/blob/5876f5bc3e89d1a5a50cdeef4e49ba0c747af5d6/test%20MVP/offline_tests.txt).

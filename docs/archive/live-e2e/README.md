@@ -3,7 +3,7 @@
 Это архив результатов прежней версии, не инструкция запуска и не приёмка текущего кода.
 Актуальная проверка сдачи — в [SUBMISSION.md](../../SUBMISSION.md).
 Сырые трассировки и промежуточные JSON убраны из текущего дерева; они доступны
-в [истории Git](https://github.com/ostrovok-hackathon-2026/flinters/tree/5876f5bc3e89d1a5a50cdeef4e49ba0c747af5d6/test%20MVP).
+в [истории Git](https://github.com/PaveqP/Travel_agent/tree/5876f5bc3e89d1a5a50cdeef4e49ba0c747af5d6/test%20MVP).
 Итоговые отчёты сохранены, включая неуспешные сценарии.
 
 Дата: 2026-10-28, с 19:24 UTC (22:24 МСК); завершение/формирование: 2026-10-28T20:01:56.475383+00:00.
@@ -38,4 +38,4 @@ Backend после завершения измерений остановлен,
 
 Каждый будущий live replay снова расходует бюджет и может дать другие цены/наличие. Автоматическая реплика всего диалога не предусмотрена: исполнитель читает ответы и адаптирует следующие сообщения как пользователь.
 
-Offline validation: `.venv/bin/python -m unittest discover -s tests -v` — 194 tests, OK, 8 skipped (17.095s); JS — 17/17 passed. Подробности: [исторический лог offline-проверок](https://github.com/ostrovok-hackathon-2026/flinters/blob/5876f5bc3e89d1a5a50cdeef4e49ba0c747af5d6/test%20MVP/offline_tests.txt).
+Offline validation: `.venv/bin/python -m unittest discover -s tests -v` — 194 tests, OK, 8 skipped (17.095s); JS — 17/17 passed. Подробности: [исторический лог offline-проверок](https://github.com/PaveqP/Travel_agent/blob/5876f5bc3e89d1a5a50cdeef4e49ba0c747af5d6/test%20MVP/offline_tests.txt).
